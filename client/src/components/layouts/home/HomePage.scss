@@ -1,0 +1,10 @@
+.home-page-container {
+  background: var(--color-gray);
+  height: 100%;
+  .new-feed-container {
+    display: flex;
+    .new-feed {
+      padding-left: 250px;
+    }
+  }
+}
