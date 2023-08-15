@@ -2,7 +2,7 @@ import React from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { Box, Typography } from '@mui/material';
-import { carousel1, carousel2 } from '../../../utils/consts';
+import { carousel1, carousel2 } from 'src/utils/consts';
 
 const Carousels = () => {
   return (

@@ -13,7 +13,7 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import './Header.scss';
-import { headerRoute } from '../../../utils/consts';
+import { headerRoute } from 'src/utils/consts';
 import { RiSearchLine } from 'react-icons/ri';
 import { HiOutlineSun } from 'react-icons/hi';
 import { BiGroup } from 'react-icons/bi';

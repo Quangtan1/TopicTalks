@@ -23,7 +23,7 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 import { FcGoogle } from 'react-icons/fc';
 import './AuthPage.scss';
 import Carousels from './Carousels';
-import { logo } from '../../../utils/consts';
+import { logo } from 'src/utils/consts';
 
 const LoginPage = () => {
   const navigate = useNavigate();
