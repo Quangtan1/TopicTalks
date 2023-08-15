@@ -5,6 +5,7 @@ import Header from '../header/Header';
 import SideBar from '../sidebar/SideBar';
 import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
+import { useGetAllExample } from 'src/queries';
 
 const HomePage = () => {
   return (
