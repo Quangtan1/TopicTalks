@@ -1,29 +1,39 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Button } from '@mui/material';
 import './HomePage.scss';
 import Header from '../header/Header';
 import SideBar from '../sidebar/SideBar';
 import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
-// import { useGetAllExample, useUpdateExample } from 'src/queries';
-// import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
+import { BiArrowToTop } from 'react-icons/bi';
 
-const HomePage = () => {
-  // ======================= EXAMPLE QUERY =======================
-  // const { example, setParams } = useGetAllExample();
-  // useEffect(() => {
-  //   setParams({ page: 1, limit: 10 });
-  // }, [setParams]);
+const HomePage = observer(() => {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  // ======================= EXAMPLE MUTATION =======================
-  // const { onUpdateExample, isSuccess } = useUpdateExample();
-  // useEffect(() => {
-  //   const body = {
-  //     id: '1',
-  //     name: 'test',
-  //     class: '',
-  //   };
-  //   onUpdateExample(body);
-  // }, [onUpdateExample]);
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    console.log('aaaccc', accountStore?.account);
+    window.addEventListener('scroll', toggleVisibility);
+    return () => {
+      window.removeEventListener('scroll', toggleVisibility);
+    };
+  }, []);
 
   return (
     <Box className="home-page-container">
@@ -39,8 +49,13 @@ const HomePage = () => {
           </Grid>
         </Grid>
       </Box>
+      {isVisible && (
+        <Button className="scroll-to-top" onClick={scrollToTop}>
+          <BiArrowToTop />
+        </Button>
+      )}
     </Box>
   );
-};
+});
 
 export default HomePage;

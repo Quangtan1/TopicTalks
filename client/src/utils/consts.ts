@@ -2,7 +2,9 @@
 import carousel1 from '../assets/images/carousel1.png';
 import carousel2 from '../assets/images/carousel2.png';
 import logo from '../assets/images/logo.png';
-export { logo, carousel1, carousel2 };
+import loading from '../assets/images/loading.png';
+import iconTopic from 'src/assets/icons/icon_topic_sidebar.svg';
+export { logo, carousel1, carousel2, iconTopic, loading };
 
 // router data
 export const headerRoute = [

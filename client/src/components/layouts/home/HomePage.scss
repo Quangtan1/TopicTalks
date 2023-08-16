@@ -7,4 +7,16 @@
       padding-left: 250px;
     }
   }
+  .scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 50px;
+    svg {
+      border-radius: 50%;
+      padding: 5px;
+      font-size: 40px;
+      color: #fff;
+      background: var(--main-color);
+    }
+  }
 }

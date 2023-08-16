@@ -1,9 +1,9 @@
 import { Box, List, ListItem, Typography, Divider } from '@mui/material';
 import React, { useState } from 'react';
-import { logo } from 'src/utils/consts';
+import { logo } from '../../../utils/consts';
 import './SideBar.scss';
 //icon
-import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineHeart, AiFillSetting } from 'react-icons/ai';
 import { RiCompassDiscoverFill } from 'react-icons/ri';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { SiMessenger } from 'react-icons/si';
@@ -47,18 +47,11 @@ const listSideBar = [
 
 const SideBar = () => {
   const [navigation, setNavigation] = useState<string>('/newfeed');
-
-  const goToNewFeedPage = () => {
-    setNavigation('/newfeed');
-  };
-
   return (
     <Box className="side-bar-container">
-      <Box className="logo-sidebar-wrap" onClick={goToNewFeedPage}>
-        <Typography variant="h5">TopicTalks</Typography>
-        <Box className="logo-sidebar">
-          <img src={logo} alt="logo" />
-        </Box>
+      <Box className="logo-sidebar">
+        <img src={logo} alt="logo" />
+        <Typography>TopicTalks</Typography>
       </Box>
       <List className="list-item">
         {listSideBar.map((item, index) => (

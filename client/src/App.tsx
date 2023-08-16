@@ -27,7 +27,7 @@ function App() {
           <Route path="/" element={<AuthPage />} />
           <Route path="/newfeed" element={<HomePage />} />
         </Routes>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </BrowserRouter>
   );
