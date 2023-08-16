@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useQuery, useQueryClient, UseQueryOptions } from 'react-query';
 import apiClient from 'src/services';
 import { API_QUERIES } from '../keys';
-import { PaginationResponseType, responseWrapper, toData } from './helpers';
-import { IExample } from './types';
+import { PaginationResponseType, toData } from './helpers';
+import { GetPropertiesParams, IExample } from '../types';
 
 export function useGetAllExample(options?: UseQueryOptions<PaginationResponseType<IExample>, Error>) {
-  const [params, setParams] = useState({});
+  const [params, setParams] = useState<GetPropertiesParams>({});
 
   const {
     data,
@@ -15,11 +15,7 @@ export function useGetAllExample(options?: UseQueryOptions<PaginationResponseTyp
     isFetching,
     refetch: onGetAllData,
   } = useQuery<PaginationResponseType<IExample>, Error>([API_QUERIES.EXAMPLE, params], {
-    queryFn: (query) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, ...params] = query.queryKey;
-      return responseWrapper<PaginationResponseType<IExample>>(apiClient.getExample, params);
-    },
+    queryFn: () => apiClient.getExample(params),
     notifyOnChangeProps: ['data', 'isFetching'],
     keepPreviousData: true,
     select: (data) => toData(data),
@@ -31,7 +27,6 @@ export function useGetAllExample(options?: UseQueryOptions<PaginationResponseTyp
   const handleInvalidateAllApiExample = () => queryClient.invalidateQueries(API_QUERIES.EXAMPLE);
 
   const { data: example, hasNext, payloadSize, totalRecords } = data || {};
-  console.log('🚀 ~ file: useQueryExample.ts:34 ~ useGetAllExample ~ example:', example);
 
   return {
     example,
