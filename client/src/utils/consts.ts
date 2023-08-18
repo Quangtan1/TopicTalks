@@ -4,7 +4,8 @@ import carousel2 from '../assets/images/carousel2.png';
 import logo from '../assets/images/logo.png';
 import loading from '../assets/images/loading.png';
 import iconTopic from 'src/assets/icons/icon_topic_sidebar.svg';
-export { logo, carousel1, carousel2, iconTopic, loading };
+import preminnum from 'src/assets/icons/preminium.svg';
+export { logo, carousel1, carousel2, iconTopic, loading, preminnum };
 
 // router data
 export const headerRoute = [

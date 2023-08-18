@@ -17,6 +17,14 @@ import { logo } from 'src/utils/consts';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 
+const dataUser = {
+  userName: 'Robert William',
+  email: 'quangtanc12345@gmail.com',
+  password: 'dqweqiweuqiowebkajsd',
+  avatar: 'https://res.cloudinary.com/tantqdev/image/upload/v1689862756/SocialMedia/dimpnaooavhzypitz7yb.jpg',
+  topic: ['Math', 'Social', 'Gym'],
+};
+
 const LoginPage = observer(() => {
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState(true);
@@ -30,9 +38,9 @@ const LoginPage = observer(() => {
       email: formData.get('email'),
       password: formData.get('password'),
     };
-    accountStore?.setAccount(user);
+    accountStore?.setAccount(dataUser);
     navigate('/newfeed');
-    console.log('user', user);
+    // console.log('user', user);
   };
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {

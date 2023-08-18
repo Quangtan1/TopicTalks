@@ -2,7 +2,7 @@
   padding: 22px 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
   .active-user-box {
     background: #fff;
     padding: 10px 20px;
@@ -20,7 +20,6 @@
     }
   }
   .hot-topic-container {
-    width: 100%;
     padding: 10px 20px;
     background: #fff;
     border-radius: 10px;
@@ -49,6 +48,83 @@
           }
         }
       }
+    }
+  }
+  .friend-box-container {
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    .friend-suggest {
+      font-weight: 600;
+      padding: 5px 0px;
+    }
+    .friend-list-item {
+      display: flex;
+      justify-content: space-between;
+      .content-item {
+        display: flex;
+        gap: 20px;
+        .topic-content {
+          display: flex;
+          gap: 5px;
+          color: var(--color-menu-font);
+          p {
+            font-size: 14px;
+          }
+        }
+      }
+      .friend-action {
+        display: flex;
+        gap: 10px;
+
+        svg {
+          transition: all 0.45s ease-in-out;
+          font-size: 20px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        svg:nth-child(1) {
+          color: blue;
+          background: #eaeff8;
+        }
+        svg:nth-child(1):hover {
+          color: #fff;
+          background: rgb(71, 71, 241);
+        }
+        svg:nth-child(2) {
+          color: red;
+          background: rgba(241, 70, 70, 0.08627450980392157);
+        }
+        svg:nth-child(2):hover {
+          color: #fff;
+          background: red;
+        }
+      }
+    }
+  }
+  .try-prenium {
+    position: relative;
+    background: #fff;
+    border-radius: 10px;
+    button {
+      position: absolute;
+      top: 50%;
+      left: 40%;
+      z-index: 2;
+      background: var(--main-color);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 15px;
+    }
+    button:hover {
+      background: #fff;
+      color: #000;
+    }
+    img {
+      width: 100%;
+      max-width: 400px;
+      height: 350px;
+      object-fit: contain;
     }
   }
 }

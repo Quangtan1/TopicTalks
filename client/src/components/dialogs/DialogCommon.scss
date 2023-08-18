@@ -1,0 +1,29 @@
+.dialog-common {
+  .MuiPaper-root {
+    width: 450px;
+  }
+
+  .dialog-title {
+    display: flex;
+    gap: 10px;
+  }
+  .dialog-content {
+    font-size: 16px;
+  }
+  .close-icon {
+    position: absolute;
+    right: 15px;
+    top: 7px;
+  }
+  .dialog-action {
+    button {
+      color: #fff;
+      background: var(--main-color);
+      font-size: 12px;
+    }
+    button:hover {
+      background: #fff;
+      color: #000;
+    }
+  }
+}

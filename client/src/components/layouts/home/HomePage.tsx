@@ -13,7 +13,7 @@ const HomePage = observer(() => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const toggleVisibility = () => {
-    if (window.pageYOffset > 300) {
+    if (window.pageYOffset > 250) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
