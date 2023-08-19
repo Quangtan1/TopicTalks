@@ -4,27 +4,9 @@ import Header from '../header/Header';
 import SideBar from '../sidebar/SideBar';
 import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
-// import { useGetAllExample, useUpdateExample } from 'src/queries';
-// import { useEffect } from 'react';
+import MyComponent from './MyComponents';
 
 const HomePage = () => {
-  // ======================= EXAMPLE QUERY =======================
-  // const { example, setParams } = useGetAllExample();
-  // useEffect(() => {
-  //   setParams({ page: 1, limit: 10 });
-  // }, [setParams]);
-
-  // ======================= EXAMPLE MUTATION =======================
-  // const { onUpdateExample, isSuccess } = useUpdateExample();
-  // useEffect(() => {
-  //   const body = {
-  //     id: '1',
-  //     name: 'test',
-  //     class: '',
-  //   };
-  //   onUpdateExample(body);
-  // }, [onUpdateExample]);
-
   return (
     <Box className="home-page-container">
       <Header />
@@ -36,6 +18,7 @@ const HomePage = () => {
           </Grid>
           <Grid item md={4.5}>
             <SuggestBox />
+            <MyComponent />
           </Grid>
         </Grid>
       </Box>

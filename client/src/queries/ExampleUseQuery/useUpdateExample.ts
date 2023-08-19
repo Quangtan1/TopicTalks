@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions } from 'react-query';
-import apiClient from 'src/services';
 import { IExample } from '../types';
+import { updateExample } from 'src/services/api';
 
 export function useUpdateExample(options?: UseMutationOptions<any, Error, IExample>) {
   const {
@@ -10,7 +10,7 @@ export function useUpdateExample(options?: UseMutationOptions<any, Error, IExamp
     isError,
     error,
   } = useMutation<any, Error, IExample>({
-    mutationFn: (payload: IExample) => apiClient.updateExample(payload),
+    mutationFn: (payload: IExample) => updateExample(payload),
     onError: ({ message }) => console.log('🚀 Error mutation: ', message),
     ...options,
   });
