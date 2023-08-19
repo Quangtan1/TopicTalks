@@ -4,7 +4,6 @@ import Header from '../header/Header';
 import SideBar from '../sidebar/SideBar';
 import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
-import MyComponent from './MyComponents';
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
@@ -47,7 +46,6 @@ const HomePage = observer(() => {
           </Grid>
           <Grid item md={4.5}>
             <SuggestBox />
-            <MyComponent />
           </Grid>
         </Grid>
       </Box>

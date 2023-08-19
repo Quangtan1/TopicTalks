@@ -28,7 +28,8 @@ const dataUser = {
 const LoginPage = observer(() => {
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState(true);
-  const emailRegex = /^[^\s@]+@fpt\.edu\.vn$/;
+  // const emailRegex = /^[^\s@]+@fpt\.edu\.vn$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,7 +55,7 @@ const LoginPage = observer(() => {
     ) {
       toast.error('Please not empty textbox');
     } else if (!emailRegex.test(formData.get('email'))) {
-      toast.error('Please check fpt mail');
+      toast.error('Please input correct email');
     } else if (!passwordRegex.test(formData.get('password'))) {
       toast.error('Password must contain capital letters,numbers and more than 8 characters ');
     } else {
