@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import AuthPage from '../src/components/layouts/auth/AuthPage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/layouts/home/HomePage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -24,10 +24,11 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/" element={<AuthPage />} />
+          <Route path="/" element={<Navigate to="/newfeed" />} />
+          <Route path="/login" element={<AuthPage />} />
           <Route path="/newfeed" element={<HomePage />} />
         </Routes>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </BrowserRouter>
   );

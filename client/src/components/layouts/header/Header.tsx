@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Grid,
@@ -21,22 +21,39 @@ import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
 
-const Header = () => {
-  const [anchorEl, setAnchorEl] = useState(false);
+//consts
+const LOGOUT_CONTENT = 'Do you want to logout?';
+
+const Header = observer(() => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const account = accountStore?.account;
 
   const handleClose = () => {
     setAnchorEl(false);
   };
 
-  const handleLogOut = () => {
-    const result = window.confirm('Bạn có chắc là muốn đăng xuất chứ');
-    if (result) {
-      setAnchorEl(false);
-      navigate('/');
-    }
+  const onConfirm = () => {
+    accountStore?.setAccount(null);
+    accountStore?.clearStore();
+    setAnchorEl(false);
+    navigate('/login');
   };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    account === null && navigate('/login');
+  }, []);
+
   return (
     <Box className="header-container">
       <Grid container>
@@ -70,10 +87,11 @@ const Header = () => {
                   width: 32,
                   height: 32,
                 }}
-                //   src={accountStore.account?.avatar}
+                src={account?.avatar}
                 alt="avatar"
               />
             </IconButton>
+            <Typography className="user-name">{account?.userName}</Typography>
             <Menu
               id="account-menu"
               open={anchorEl}
@@ -88,9 +106,9 @@ const Header = () => {
             >
               <MenuItem onClick={handleClose}>
                 <ListItemIcon>
-                  <Avatar />
+                  <Avatar src={account?.avatar} alt="avatar" />
                 </ListItemIcon>
-                Trang cá nhân
+                Profile Infor
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleClose}>
@@ -99,7 +117,7 @@ const Header = () => {
                 </ListItemIcon>
                 Settings
               </MenuItem>
-              <MenuItem onClick={handleLogOut}>
+              <MenuItem onClick={() => setOpen(true)}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>
@@ -109,8 +127,9 @@ const Header = () => {
           </Box>
         </Grid>
       </Grid>
+      <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />
     </Box>
   );
-};
+});
 
 export default Header;

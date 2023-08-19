@@ -14,8 +14,18 @@ import { FcGoogle } from 'react-icons/fc';
 import './AuthPage.scss';
 import Carousels from './Carousels';
 import { logo } from 'src/utils/consts';
+import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
 
-const LoginPage = () => {
+const dataUser = {
+  userName: 'Robert William',
+  email: 'quangtanc12345@gmail.com',
+  password: 'dqweqiweuqiowebkajsd',
+  avatar: 'https://res.cloudinary.com/tantqdev/image/upload/v1689862756/SocialMedia/dimpnaooavhzypitz7yb.jpg',
+  topic: ['Math', 'Social', 'Gym'],
+};
+
+const LoginPage = observer(() => {
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState(true);
   const emailRegex = /^[^\s@]+@fpt\.edu\.vn$/;
@@ -28,8 +38,9 @@ const LoginPage = () => {
       email: formData.get('email'),
       password: formData.get('password'),
     };
+    accountStore?.setAccount(dataUser);
     navigate('/newfeed');
-    console.log('user', user);
+    // console.log('user', user);
   };
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,6 +64,7 @@ const LoginPage = () => {
         email: formData.get('email'),
         password: formData.get('password'),
       };
+
       console.log('user', user);
     }
   };
@@ -158,6 +170,6 @@ const LoginPage = () => {
       </Grid>
     </Grid>
   );
-};
+});
 
 export default LoginPage;
