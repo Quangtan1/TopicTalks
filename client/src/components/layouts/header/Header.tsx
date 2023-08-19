@@ -40,6 +40,7 @@ const Header = observer(() => {
   };
 
   const onConfirm = () => {
+    accountStore?.setAccount(null);
     accountStore?.clearStore();
     setAnchorEl(false);
     navigate('/login');
