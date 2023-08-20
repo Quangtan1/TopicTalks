@@ -3,4 +3,23 @@
   flex-direction: column;
   padding: 25px;
   gap: 30px;
+  // TODO: không quen dùng scss nên hình như hắn k ăn chỗ ni
+  .card-topic {
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    margin: 10px;
+  }
+  .card-topic:hover {
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
+  }
+  .close-icon{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: '#fff';
+    cursor: 'pointer';
+  }
 }

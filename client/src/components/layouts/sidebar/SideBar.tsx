@@ -47,11 +47,18 @@ const listSideBar = [
 
 const SideBar = () => {
   const [navigation, setNavigation] = useState<string>('/newfeed');
+  
+  const goToNewFeedPage = () => {
+    setNavigation('/newfeed');
+  };
+
   return (
     <Box className="side-bar-container">
-      <Box className="logo-sidebar">
-        <img src={logo} alt="logo" />
-        <Typography>TopicTalks</Typography>
+      <Box className="logo-sidebar-wrap" onClick={goToNewFeedPage}>
+        <Typography variant="h5">TopicTalks</Typography>
+        <Box className="logo-sidebar">
+          <img src={logo} alt="logo" />
+        </Box>
       </Box>
       <List className="list-item">
         {listSideBar.map((item, index) => (

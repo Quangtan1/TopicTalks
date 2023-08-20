@@ -1,0 +1,44 @@
+[
+  {
+    "id": 2,
+    "userName": "Dakanai",
+    "content": "Have a nice day",
+    "topic": ["Life", "Love", "Sport"],
+    "status": "Đang cảm thấy hứng thú",
+    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1689988785/SocialMedia/pxrgpphfim6pq1usglt1.jpg"],
+    "likes": 10,
+    "comments": [
+      { "id": 1, "user": "User1", "text": "Great post!" },
+      { "id": 2, "user": "User2", "text": "Keep it up!" }
+    ],
+    "shares": 5
+  },
+  {
+    "id": 3,
+    "userName": "Dakanai",
+    "content": "Have a nice day",
+    "topic": ["Sport", "News", "Politics"],
+    "status": "Đang cảm thấy hứng thú",
+    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1689988785/SocialMedia/pxrgpphfim6pq1usglt1.jpg"],
+    "likes": 10,
+    "comments": [
+      { "id": 1, "user": "User1", "text": "Great post!" },
+      { "id": 2, "user": "User2", "text": "Keep it up!" }
+    ],
+    "shares": 5
+  },
+  {
+    "id": 1,
+    "userName": "Dakanai",
+    "content": "Have a nice day",
+    "topic": ["Life", "Love", "Sport", "Music", "Sport", "News", "Politics", "Science", "Other"],
+    "status": "Đang cảm thấy hứng thú",
+    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1690612221/SocialMedia/amy81ve0jx2xaap79snj.jpg"],
+    "likes": 10,
+    "comments": [
+      { "id": 1, "user": "User1", "text": "Great post!" },
+      { "id": 2, "user": "User2", "text": "Keep it up!" }
+    ],
+    "shares": 5
+  }
+]
