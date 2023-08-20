@@ -17,14 +17,24 @@ export const persistStore = <T extends Record<string, any>, P extends keyof T>(
     properties: properties as string[],
     adapter: new StorageAdapter({
       read: async (name) => {
-        const data = window.localStorage.getItem(name);
+        const cookie = document.cookie.split('; ').find((row) => row.startsWith(name + '='));
 
-        return data ? JSON.parse(data) : undefined;
+        if (cookie) {
+          const value = cookie.split('=')[1];
+          return JSON.parse(decodeURIComponent(value));
+        }
+
+        return undefined;
       },
       write: async (name, content) => {
-        console.log(name, content);
-
-        window.localStorage.setItem(name, JSON.stringify(content));
+        const encodedContent = encodeURIComponent(JSON.stringify(content));
+        const cookieOptions = {
+          expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+          path: '/',
+        };
+        document.cookie = `${name}=${encodedContent}; ${Object.entries(cookieOptions)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('; ')}`;
       },
     }),
     reactionOptions: {

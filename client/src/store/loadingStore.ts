@@ -1,7 +1,7 @@
 import { observable, action, makeObservable } from 'mobx';
 
 class LoadingStore {
-  loading = true;
+  loading = false;
 
   constructor() {
     makeObservable(this, {
