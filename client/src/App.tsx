@@ -5,7 +5,6 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/layouts/home/HomePage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 // import { ReactQueryDevtools } from 'react-query/devtools';
-import NewPost from './components/layouts/home/newPost/NewPost';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -27,7 +26,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/newfeed" />} />
           <Route path="/login" element={<AuthPage />} />
-          <Route path="/newpost" element={<NewPost />} />
           <Route path="/newfeed" element={<HomePage />} />
         </Routes>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}

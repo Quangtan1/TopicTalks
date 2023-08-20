@@ -2,16 +2,17 @@ import { Box, List, ListItem, Typography, Divider } from '@mui/material';
 import React, { useState } from 'react';
 import { logo } from '../../../utils/consts';
 import './SideBar.scss';
+import NewPost from '../home/newPost/NewPost';
+
 //icon
 import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
 import { RiCompassDiscoverFill } from 'react-icons/ri';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { SiMessenger } from 'react-icons/si';
-import { IoAddCircleSharp } from 'react-icons/io5';
 import { MdOutlineGroup } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
-import NewPost from '../home/newPost/NewPost';
+import CreateIcon from '@mui/icons-material/Create';
 
 const listSideBar = [
   {
@@ -26,7 +27,7 @@ const listSideBar = [
   },
   {
     title: 'Create Post',
-    icon: <IoAddCircleSharp />,
+    icon: <CreateIcon />,
     path: '/newpost',
   },
   {
@@ -70,19 +71,21 @@ const SideBar = () => {
         </Box>
       </Box>
       <List className="list-item">
-        {listSideBar.map((item, index) => (
-          <ListItem
-            key={index}
-            className={navigation === item.path ? 'active-bar' : ''}
-            onClick={item.title === 'Create Post' ? openPostModal : undefined}
-          >
-            {item.icon}
-            <Typography>{item.title}</Typography>
-          </ListItem>
-        ))}
+        {listSideBar.map((item, index) => {
+          const isNewPostActive = item.title === 'Create Post';
+          return (
+            <ListItem
+              key={index}
+              className={navigation === item.path ? 'active-bar' : ''}
+              onClick={isNewPostActive ? openPostModal : undefined}
+            >
+              {item.icon}
+              <Typography>{item.title}</Typography>
+            </ListItem>
+          );
+        })}
+        <NewPost open={postModalOpen} closePostModal={closePostModal} />
       </List>
-
-      <NewPost open={postModalOpen} setOpen={setPostModalOpen} closePostModal={closePostModal} />
 
       <Divider />
       <List className="list-item">

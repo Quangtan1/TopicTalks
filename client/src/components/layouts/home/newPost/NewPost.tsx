@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Avatar,
+  //   Avatar,
   Box,
   Button,
   Dialog,
@@ -8,38 +8,35 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  IconButton,
   TextField,
   Typography,
 } from '@mui/material';
-import CreateIcon from '@mui/icons-material/Create';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { AiFillTag } from 'react-icons/ai';
 import './NewPost.scss';
 
 interface Props {
   open?: boolean;
-  setOpen?: (open: boolean) => void;
   closePostModal?: () => void;
 }
 
-const NewPost: React.FC<Props> = ({ open, setOpen, closePostModal }) => {
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   return (
     <>
-      <IconButton onClick={handleOpen}>
-        <CreateIcon />
-      </IconButton>
       <Dialog open={open} onClose={closePostModal} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title" className="dialog-title">
           Create a post
         </DialogTitle>
         <DialogContent className="dialog-content">
           <Box className="avatar-container">
-            <Avatar className="avatar" />
+            {/* <Avatar className="avatar" /> */}
+            <img
+              alt="avatar"
+              src="https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.6435-9/133705653_1640137159522663_508931059513204360_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=174925&_nc_ohc=OYdhvQnAJMEAX-B8rzC&_nc_ht=scontent.fsgn2-3.fna&oh=00_AfBAjH_WOu99Q59AEMsqblhOURvXohqlk4eoTUMaNZA6yQ&oe=6509781B"
+              width={50}
+              height={50}
+              className="avatar"
+            />
             <Box marginLeft={2}>
               <Typography variant="subtitle1" className="username">
                 Username
@@ -84,7 +81,9 @@ const NewPost: React.FC<Props> = ({ open, setOpen, closePostModal }) => {
               <Button variant="outlined" size="small" className="suggested-topic">
                 AI Suggested Topic 2
               </Button>
-              {/* Add more suggested topics as needed */}
+              <Button variant="outlined" size="small" className="suggested-topic">
+                AI Suggested Topic 3
+              </Button>
             </Box>
           </Box>
         </DialogContent>
