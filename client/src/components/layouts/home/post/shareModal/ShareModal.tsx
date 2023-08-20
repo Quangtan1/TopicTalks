@@ -1,8 +1,9 @@
 import { Modal, Box, IconButton, Typography, Button } from '@mui/material';
 import { IoCloseCircleOutline } from 'react-icons/io5';
+import './ShareModal.scss';
 
 function ShareModal({ open, onClose }) {
-  const handleShareButtonClick = (platform) => {
+  const handleShareButtonClick = (platform: string) => {
     //add switch case for each platform
     switch (platform) {
       case 'Facebook':
@@ -29,7 +30,7 @@ function ShareModal({ open, onClose }) {
           p: 4,
         }}
       >
-        <IconButton className="close-icon" style={{ position: 'absolute', top: '8px', right: '8px' }} onClick={onClose}>
+        <IconButton className="close-icon" onClick={onClose}>
           <IoCloseCircleOutline />
         </IconButton>
         <Typography variant="h6">Share your post:</Typography>

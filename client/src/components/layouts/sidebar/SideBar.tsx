@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { logo } from '../../../utils/consts';
 import './SideBar.scss';
 //icon
-import { AiOutlineHome, AiOutlineHeart, AiFillSetting } from 'react-icons/ai';
+import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
 import { RiCompassDiscoverFill } from 'react-icons/ri';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { SiMessenger } from 'react-icons/si';
@@ -11,6 +11,7 @@ import { IoAddCircleSharp } from 'react-icons/io5';
 import { MdOutlineGroup } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
+import NewPost from '../home/newPost/NewPost';
 
 const listSideBar = [
   {
@@ -26,7 +27,7 @@ const listSideBar = [
   {
     title: 'Create Post',
     icon: <IoAddCircleSharp />,
-    path: '/',
+    path: '/newpost',
   },
   {
     title: 'Friends',
@@ -47,11 +48,19 @@ const listSideBar = [
 
 const SideBar = () => {
   const [navigation, setNavigation] = useState<string>('/newfeed');
-  
+  const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
+
   const goToNewFeedPage = () => {
     setNavigation('/newfeed');
   };
 
+  const openPostModal = () => {
+    setPostModalOpen(true);
+  };
+
+  const closePostModal = () => {
+    setPostModalOpen(false);
+  };
   return (
     <Box className="side-bar-container">
       <Box className="logo-sidebar-wrap" onClick={goToNewFeedPage}>
@@ -62,12 +71,19 @@ const SideBar = () => {
       </Box>
       <List className="list-item">
         {listSideBar.map((item, index) => (
-          <ListItem key={index} className={navigation === item.path ? 'active-bar' : ''}>
+          <ListItem
+            key={index}
+            className={navigation === item.path ? 'active-bar' : ''}
+            onClick={item.title === 'Create Post' ? openPostModal : undefined}
+          >
             {item.icon}
             <Typography>{item.title}</Typography>
           </ListItem>
         ))}
       </List>
+
+      <NewPost open={postModalOpen} setOpen={setPostModalOpen} closePostModal={closePostModal} />
+
       <Divider />
       <List className="list-item">
         <ListItem>

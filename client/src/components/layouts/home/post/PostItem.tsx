@@ -15,10 +15,10 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import './PostItem.scss';
-import TopicItem from './TopicItem';
-import CommentsList from './CommentsListModal';
+import TopicItem from './topicItem/TopicItem';
+import CommentsList from './comments/CommentsListModal';
 import fakeDataPost from './fakeDataPost.json';
-import ShareModal from './ShareModal';
+import ShareModal from './shareModal/ShareModal';
 
 export interface IPost {
   id: number;
