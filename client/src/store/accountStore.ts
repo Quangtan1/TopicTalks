@@ -11,7 +11,7 @@ class AccountStore {
       account: observable,
       setAccount: action,
     });
-    persistStore(this, ['account'], 'UserStore');
+    persistStore(this, ['account'], 'topic-talks');
   }
 
   setAccount(account) {
