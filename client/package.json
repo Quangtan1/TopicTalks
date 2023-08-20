@@ -20,6 +20,7 @@
     "mobx-persist": "^0.4.1",
     "mobx-persist-store": "^0.5.29",
     "mobx-react": "^9.0.0",
+    "openai": "^4.0.1",
     "querystring-es3": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

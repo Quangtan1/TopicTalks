@@ -1,8 +1,8 @@
 import { Box, List, ListItem, Typography, Divider } from '@mui/material';
-import React, { useState } from 'react';
-import { logo } from '../../../utils/consts';
+import { useState } from 'react';
+import { logo } from 'src/utils/consts';
 import './SideBar.scss';
-import NewPost from '../home/newPost/NewPost';
+import NewPost from 'src/components/layouts/home/newPost/NewPost';
 
 //icon
 import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
@@ -14,7 +14,13 @@ import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
 import CreateIcon from '@mui/icons-material/Create';
 
-const listSideBar = [
+type SidebarItem = {
+  title: string;
+  icon: JSX.Element;
+  path: string;
+};
+
+const listSideBar: SidebarItem[] = [
   {
     title: 'NewsFeed',
     icon: <AiOutlineHome />,
@@ -33,26 +39,27 @@ const listSideBar = [
   {
     title: 'Friends',
     icon: <MdOutlineGroup />,
-    path: '/',
+    path: '/friends',
   },
   {
     title: 'Community',
     icon: <RiCompassDiscoverFill />,
-    path: '/',
+    path: '/community',
   },
   {
     title: 'Topics',
     icon: <MdOutlineAccountCircle />,
-    path: '/',
+    path: '/topics',
   },
 ];
 
 const SideBar = () => {
-  const [navigation, setNavigation] = useState<string>('/newfeed');
+  const [activeItem, setActiveItem] = useState<string>('/newfeed');
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
 
-  const goToNewFeedPage = () => {
-    setNavigation('/newfeed');
+  const handleItemClick = (path: string, isNewPostActive?: boolean) => {
+    setActiveItem(path);
+    isNewPostActive && openPostModal();
   };
 
   const openPostModal = () => {
@@ -61,29 +68,33 @@ const SideBar = () => {
 
   const closePostModal = () => {
     setPostModalOpen(false);
+    setActiveItem('/newfeed');
+  };
+
+  const renderSidebarItem = (item: SidebarItem) => {
+    const isNewPostActive = item.title === 'Create Post';
+    const isActive = activeItem === item.path;
+    return (
+      <ListItem
+        key={item.path}
+        className={isActive ? 'active-bar' : ''}
+        onClick={() => handleItemClick(item.path, isNewPostActive)}
+      >
+        {item.icon}
+        <Typography>{item.title}</Typography>
+      </ListItem>
+    );
   };
   return (
     <Box className="side-bar-container">
-      <Box className="logo-sidebar-wrap" onClick={goToNewFeedPage}>
+      <Box className="logo-sidebar-wrap" onClick={() => handleItemClick('/newfeed')}>
         <Typography variant="h5">TopicTalks</Typography>
         <Box className="logo-sidebar">
           <img src={logo} alt="logo" />
         </Box>
       </Box>
       <List className="list-item">
-        {listSideBar.map((item, index) => {
-          const isNewPostActive = item.title === 'Create Post';
-          return (
-            <ListItem
-              key={index}
-              className={navigation === item.path ? 'active-bar' : ''}
-              onClick={isNewPostActive ? openPostModal : undefined}
-            >
-              {item.icon}
-              <Typography>{item.title}</Typography>
-            </ListItem>
-          );
-        })}
+        {listSideBar.map(renderSidebarItem)}
         <NewPost open={postModalOpen} closePostModal={closePostModal} />
       </List>
 
