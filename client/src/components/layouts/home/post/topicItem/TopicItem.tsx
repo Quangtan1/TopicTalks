@@ -1,6 +1,6 @@
 import React from 'react';
 import { CardContent, Typography, Modal, Box, List, ListItem, ListItemButton } from '@mui/material';
-import './PostItem.scss';
+import './TopicItem.scss';
 
 interface Props {
   post: string[];
@@ -11,8 +11,7 @@ interface Props {
 
 const TopicItem: React.FC<Props> = ({ post, open, onOpenClose, handleTopicSelect }) => {
   return (
-    <>
-      {/* TODO: chỗ ni cũng không dùng được css để bỏ display flex @@ */}
+    <Box sx={{ display: 'flex' }}>
       {post?.map((topic: string) => {
         return (
           <CardContent className="card-topic" key={topic} onClick={onOpenClose}>
@@ -35,9 +34,14 @@ const TopicItem: React.FC<Props> = ({ post, open, onOpenClose, handleTopicSelect
           }}
         >
           <Typography variant="h6">Select a Topic</Typography>
-          <List>
+          <List className="list-topic">
             {post.map((topic) => (
-              <ListItem disablePadding key={topic} onClick={() => handleTopicSelect(topic)}>
+              <ListItem
+                disablePadding
+                key={topic}
+                className="item-of-list-topic"
+                onClick={() => handleTopicSelect(topic)}
+              >
                 <ListItemButton>
                   <Typography>{topic}</Typography>
                 </ListItemButton>
@@ -46,7 +50,7 @@ const TopicItem: React.FC<Props> = ({ post, open, onOpenClose, handleTopicSelect
           </List>
         </Box>
       </Modal>
-    </>
+    </Box>
   );
 };
 

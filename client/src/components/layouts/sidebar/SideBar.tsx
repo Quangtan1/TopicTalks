@@ -2,15 +2,17 @@ import { Box, List, ListItem, Typography, Divider } from '@mui/material';
 import React, { useState } from 'react';
 import { logo } from '../../../utils/consts';
 import './SideBar.scss';
+import NewPost from '../home/newPost/NewPost';
+
 //icon
-import { AiOutlineHome, AiOutlineHeart, AiFillSetting } from 'react-icons/ai';
+import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
 import { RiCompassDiscoverFill } from 'react-icons/ri';
 import { MdOutlineAccountCircle } from 'react-icons/md';
 import { SiMessenger } from 'react-icons/si';
-import { IoAddCircleSharp } from 'react-icons/io5';
 import { MdOutlineGroup } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
+import CreateIcon from '@mui/icons-material/Create';
 
 const listSideBar = [
   {
@@ -25,8 +27,8 @@ const listSideBar = [
   },
   {
     title: 'Create Post',
-    icon: <IoAddCircleSharp />,
-    path: '/',
+    icon: <CreateIcon />,
+    path: '/newpost',
   },
   {
     title: 'Friends',
@@ -47,9 +49,18 @@ const listSideBar = [
 
 const SideBar = () => {
   const [navigation, setNavigation] = useState<string>('/newfeed');
-  
+  const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
+
   const goToNewFeedPage = () => {
     setNavigation('/newfeed');
+  };
+
+  const openPostModal = () => {
+    setPostModalOpen(true);
+  };
+
+  const closePostModal = () => {
+    setPostModalOpen(false);
   };
 
   return (
@@ -61,13 +72,22 @@ const SideBar = () => {
         </Box>
       </Box>
       <List className="list-item">
-        {listSideBar.map((item, index) => (
-          <ListItem key={index} className={navigation === item.path ? 'active-bar' : ''}>
-            {item.icon}
-            <Typography>{item.title}</Typography>
-          </ListItem>
-        ))}
+        {listSideBar.map((item, index) => {
+          const isNewPostActive = item.title === 'Create Post';
+          return (
+            <ListItem
+              key={index}
+              className={navigation === item.path ? 'active-bar' : ''}
+              onClick={isNewPostActive ? openPostModal : undefined}
+            >
+              {item.icon}
+              <Typography>{item.title}</Typography>
+            </ListItem>
+          );
+        })}
+        <NewPost open={postModalOpen} closePostModal={closePostModal} />
       </List>
+
       <Divider />
       <List className="list-item">
         <ListItem>

@@ -1,0 +1,30 @@
+.card-topic {
+  width: fit-content;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  margin: 10px;
+}
+.list-topic {
+  .item-of-list-topic{
+    padding: 10px;
+  }
+  .item-of-list-topic:hover {
+    border: 1px solid rgb(135, 44, 228);
+  }
+}
+.card-topic:hover {
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgb(135, 44, 228);
+}
+.close-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: '#fff';
+  cursor: 'pointer';
+}

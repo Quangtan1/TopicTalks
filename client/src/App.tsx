@@ -4,7 +4,7 @@ import AuthPage from '../src/components/layouts/auth/AuthPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/layouts/home/HomePage';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 
 const ONE_HOUR = 60 * 60 * 1000;
 

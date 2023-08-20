@@ -15,10 +15,10 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
 import './PostItem.scss';
-import TopicItem from './TopicItem';
-import CommentsList from './CommentsListModal';
+import TopicItem from './topicItem/TopicItem';
+import CommentsList from './comments/CommentsListModal';
 import fakeDataPost from './fakeDataPost.json';
-import ShareModal from './ShareModal';
+import ShareModal from './shareModal/ShareModal';
 
 export interface IPost {
   id: number;
@@ -102,21 +102,23 @@ const PostItem = () => {
             onOpenClose={() => setIsTopicModalOpen(!isTopicModalOpen)}
             handleTopicSelect={handleTopicSelect}
           />
-          <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {likedPosts[index]} Likes
-            </Typography>
-          </CardContent>
-          <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {post.comments.length} Comments
-            </Typography>
-          </CardContent>
-          <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {post.shares} Shares
-            </Typography>
-          </CardContent>
+          <Box display="flex" flexWrap="wrap">
+            <CardContent>
+              <Typography variant="body2" color="textSecondary">
+                {likedPosts[index]} Likes
+              </Typography>
+            </CardContent>
+            <CardContent>
+              <Typography variant="body2" color="textSecondary">
+                {post.comments.length} Comments
+              </Typography>
+            </CardContent>
+            <CardContent>
+              <Typography variant="body2" color="textSecondary">
+                {post.shares} Shares
+              </Typography>
+            </CardContent>
+          </Box>
           <CardActions>
             <IconButton onClick={() => handleLikeClick(index)}>
               <ThumbUpAltIcon style={{ color: likedIndexes.includes(index) ? 'rgb(135,44,228)' : 'inherit' }} />

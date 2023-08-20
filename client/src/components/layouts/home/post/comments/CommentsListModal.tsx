@@ -9,10 +9,9 @@ import {
   ListItemAvatar,
   ListItemText,
 } from '@mui/material';
-
-import './PostItem.scss';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { IComment } from './PostItem';
+import { IComment } from '../PostItem';
+import './CommentsListModal.scss';
 
 interface Props {
   comments: IComment[];
