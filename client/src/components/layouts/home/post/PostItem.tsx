@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Avatar,
   Box,
-  Modal,
   Card,
   CardActions,
   CardContent,
@@ -18,7 +17,6 @@ import ShareIcon from '@mui/icons-material/Share';
 import './PostItem.scss';
 import TopicItem from './TopicItem';
 import CommentsList from './CommentsListModal';
-import { IoCloseCircleOutline } from 'react-icons/io5';
 import fakeDataPost from './fakeDataPost.json';
 import ShareModal from './ShareModal';
 
@@ -33,7 +31,6 @@ export interface IPost {
   comments: IComment[];
   shares: number;
 }
-
 export interface IComment {
   id: number;
   user: string;
@@ -52,19 +49,15 @@ const PostItem = () => {
     setSelectedTopic(topic);
     setIsTopicModalOpen(false);
   };
-
   const handleCommentClick = () => {
     setIsModalOpen(!isModalOpen);
   };
-
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
   const handleShareClick = () => {
     setIsShareModalOpen(true);
   };
-
   const handleCloseShareModal = () => {
     setIsShareModalOpen(false);
   };
@@ -103,14 +96,12 @@ const PostItem = () => {
             <Typography>{post.content}</Typography>
           </CardContent>
           <CardMedia component="img" image={post.image[0]} title={post.userName} />
-          {/* Post */}
           <TopicItem
             post={post.topic}
             open={isTopicModalOpen}
             onOpenClose={() => setIsTopicModalOpen(!isTopicModalOpen)}
             handleTopicSelect={handleTopicSelect}
           />
-
           <CardContent>
             <Typography variant="body2" color="textSecondary">
               {likedPosts[index]} Likes
@@ -128,35 +119,13 @@ const PostItem = () => {
           </CardContent>
           <CardActions>
             <IconButton onClick={() => handleLikeClick(index)}>
-              <ThumbUpAltIcon color={likedIndexes.includes(index) ? 'primary' : 'inherit'} />
+              <ThumbUpAltIcon style={{ color: likedIndexes.includes(index) ? 'rgb(135,44,228)' : 'inherit' }} />
               <Typography>{likedPosts[index]}</Typography>
             </IconButton>
             <IconButton onClick={handleCommentClick}>
               <ChatBubbleOutlineIcon />
               <Typography>{post.comments.length}</Typography>
-              <Modal open={isModalOpen} onClose={handleCloseModal}>
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
-                    boxShadow: 24,
-                    p: 4,
-                  }}
-                >
-                  <IconButton
-                    className="close-icon"
-                    style={{ position: 'absolute', top: '8px', right: '8px' }}
-                    //TODO: khong hieu sao khong dung duoc css, Tan help Son fix nha
-                    onClick={handleCloseModal}
-                  >
-                    <IoCloseCircleOutline />
-                  </IconButton>
-                  <CommentsList comments={post.comments} />
-                </Box>
-              </Modal>
+              <CommentsList comments={post.comments} isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} />
             </IconButton>
             <IconButton onClick={handleShareClick}>
               <ShareIcon />
