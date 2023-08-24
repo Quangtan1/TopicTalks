@@ -22,11 +22,11 @@ import './EmotionModal.scss';
 interface EmotionModalProps {
   open: boolean;
   onClose: () => void;
-  emotionList: string[];
-  setEmotionList: (emotionList: string[]) => void;
+  emotion: string;
+  setEmotion: (emotion: string) => void;
 }
 
-const EmotionModal: React.FC<EmotionModalProps> = ({ open, onClose, emotionList, setEmotionList }) => {
+const EmotionModal: React.FC<EmotionModalProps> = ({ open, onClose, emotion, setEmotion }) => {
   const emotionIcons = [
     emotion1,
     emotion2,
@@ -45,7 +45,8 @@ const EmotionModal: React.FC<EmotionModalProps> = ({ open, onClose, emotionList,
   ];
 
   const handleClickEmotion = (index: number) => {
-    setEmotionList([...emotionList, emotionIcons[index]]);
+    setEmotion(emotionIcons[index]);
+    onClose();
   };
   return (
     <Dialog open={open} onClose={onClose} aria-labelledby="emotion-dialog-title" className="dialog-title-wrap">

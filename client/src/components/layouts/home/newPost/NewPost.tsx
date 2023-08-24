@@ -24,7 +24,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   const [inputContent, setInputContent] = useState('');
   const [suggestedTopic, setSuggestedTopic] = useState([]);
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
-  const [emotionList, setEmotionList] = useState([]);
+  const [emotion, setEmotion] = useState('');
 
   const openEmotionModal = () => {
     setIsEmotionModalOpen(true);
@@ -35,10 +35,8 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
     setIsEmotionModalOpen(false);
   };
 
-  const handleClickRemoveEmotion = (index: number) => {
-    const newEmotionList = [...emotionList];
-    newEmotionList.splice(index, 1);
-    setEmotionList(newEmotionList);
+  const handleClickRemoveEmotion = () => {
+    setEmotion('');
   };
 
   return (
@@ -80,17 +78,19 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
             variant="outlined"
             className="post-content-input"
           />
-          <Box display={'flex'} className="wrap-emotion">
-            {emotionList.map((icon, index) => (
+          {!!emotion && (
+            <Box display={'flex'} alignItems={'center'} className="wrap-emotion">
+              <Typography variant="body2" className="emotion-text">
+                Feeling:
+              </Typography>
               <img
-                key={index}
-                src={icon}
-                alt={`Emotion ${index + 1}`}
+                src={emotion}
+                alt={`Emotion ${emotion.toString()}}`}
                 className="emotion-icon"
-                onClick={() => handleClickRemoveEmotion(index)}
+                onClick={() => handleClickRemoveEmotion()}
               />
-            ))}
-          </Box>
+            </Box>
+          )}
           <Box className="actions-container">
             <Button className="post-button">Post</Button>
             <Button startIcon={<EmojiEmotionsIcon />} className="emotion-button" onClick={openEmotionModal}>
@@ -99,8 +99,8 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
             <EmotionModal
               open={isEmotionModalOpen}
               onClose={closeEmotionModal}
-              emotionList={emotionList}
-              setEmotionList={setEmotionList}
+              emotion={emotion}
+              setEmotion={setEmotion}
             />
           </Box>
           <Box className="suggested-topics">
@@ -109,7 +109,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
               Hash tag suggestions by AI:
             </Typography>
 
-            {/* List of suggested topics */}
+            {/*  of suggested topics */}
             <Box display="flex" flexWrap="wrap" sx={{ border: '3px solid rgb(135, 44, 228)' }}>
               <Button variant="outlined" size="small" className="suggested-topic">
                 AI Suggested Topic 1
