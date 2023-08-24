@@ -13,6 +13,7 @@ import { MdOutlineGroup } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
 import CreateIcon from '@mui/icons-material/Create';
+import { useNavigate } from 'react-router-dom';
 
 type SidebarItem = {
   title: string;
@@ -56,10 +57,24 @@ const listSideBar: SidebarItem[] = [
 const SideBar = () => {
   const [activeItem, setActiveItem] = useState<string>('/newfeed');
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const handleItemClick = (path: string, isNewPostActive?: boolean) => {
-    setActiveItem(path);
-    isNewPostActive && openPostModal();
+  const handleNavigateMessagePage = () => {
+    navigate('/message');
+  };
+
+  const handleItemClick = (item: SidebarItem) => {
+    setActiveItem(item.path);
+    switch (item.title) {
+      case 'Create Post':
+        openPostModal();
+        break;
+      case 'Message':
+        handleNavigateMessagePage();
+        break;
+      default:
+        break;
+    }
   };
 
   const openPostModal = () => {
@@ -72,14 +87,9 @@ const SideBar = () => {
   };
 
   const renderSidebarItem = (item: SidebarItem) => {
-    const isNewPostActive = item.title === 'Create Post';
     const isActive = activeItem === item.path;
     return (
-      <ListItem
-        key={item.path}
-        className={isActive ? 'active-bar' : ''}
-        onClick={() => handleItemClick(item.path, isNewPostActive)}
-      >
+      <ListItem key={item.path} className={isActive ? 'active-bar' : ''} onClick={() => handleItemClick(item)}>
         {item.icon}
         <Typography>{item.title}</Typography>
       </ListItem>
@@ -87,7 +97,7 @@ const SideBar = () => {
   };
   return (
     <Box className="side-bar-container">
-      <Box className="logo-sidebar-wrap" onClick={() => handleItemClick('/newfeed')}>
+      <Box className="logo-sidebar-wrap" onClick={() => setActiveItem('/newfeed')}>
         <Typography variant="h5">TopicTalks</Typography>
         <Box className="logo-sidebar">
           <img src={logo} alt="logo" />
