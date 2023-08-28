@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AuthPage from '../src/components/layouts/auth/AuthPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/layouts/home/HomePage';
@@ -30,6 +32,7 @@ function App() {
         </Routes>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

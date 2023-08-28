@@ -16,6 +16,7 @@ import './NewPost.scss';
 import EmotionModal from './emotionModal/EmotionModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -43,9 +44,16 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
     }
   }, []);
 
+  const setDefaultValue = () => {
+    setEmotion('');
+    setSuggestedTopic([]);
+    resetForm();
+  };
+
   const handleCreatePost = (data: any) => {
-    alert('TODO: Create post content: ' + data.postContent + ' with emotion: ' + emotion);
+    ToastSuccess('Create post successfully!');
     closePostModal?.();
+    setDefaultValue();
   };
 
   const openEmotionModal = () => {
@@ -66,7 +74,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
     onSubmit: handleCreatePost,
   });
 
-  const { errors, touched, getFieldProps, submitForm } = formik;
+  const { errors, touched, getFieldProps, submitForm, resetForm } = formik;
 
   return (
     <Dialog open={open} onClose={closePostModal} aria-labelledby="form-dialog-title">
