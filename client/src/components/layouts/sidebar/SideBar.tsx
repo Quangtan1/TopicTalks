@@ -35,7 +35,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'Create Post',
     icon: <CreateIcon />,
-    path: '/newpost',
+    path: 'newpost',
   },
   {
     title: 'Friends',
@@ -59,21 +59,12 @@ const SideBar = () => {
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const handleNavigateMessagePage = () => {
-    navigate('/message');
-  };
-
   const handleItemClick = (item: SidebarItem) => {
-    setActiveItem(item.path);
-    switch (item.title) {
-      case 'Create Post':
-        openPostModal();
-        break;
-      case 'Message':
-        handleNavigateMessagePage();
-        break;
-      default:
-        break;
+    if (item.path === 'newpost') {
+      openPostModal();
+    } else {
+      setActiveItem(item.path);
+      navigate(item.path);
     }
   };
 
@@ -83,7 +74,6 @@ const SideBar = () => {
 
   const closePostModal = () => {
     setPostModalOpen(false);
-    setActiveItem('/newfeed');
   };
 
   const renderSidebarItem = (item: SidebarItem) => {
@@ -97,11 +87,9 @@ const SideBar = () => {
   };
   return (
     <Box className="side-bar-container">
-      <Box className="logo-sidebar-wrap" onClick={() => setActiveItem('/newfeed')}>
-        <Typography variant="h5">TopicTalks</Typography>
-        <Box className="logo-sidebar">
-          <img src={logo} alt="logo" />
-        </Box>
+      <Box className="logo-sidebar">
+        <img src={logo} alt="logo" />
+        <Typography>TopicTalks</Typography>
       </Box>
       <List className="list-item">
         {listSideBar.map(renderSidebarItem)}

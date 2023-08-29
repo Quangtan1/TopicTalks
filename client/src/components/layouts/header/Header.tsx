@@ -43,7 +43,7 @@ const Header = observer(() => {
     accountStore?.setAccount(null);
     accountStore?.clearStore();
     setAnchorEl(false);
-    navigate('/login');
+    navigate('/auth');
   };
 
   const onClose = () => {
@@ -51,7 +51,7 @@ const Header = observer(() => {
   };
 
   useEffect(() => {
-    account === null && navigate('/login');
+    account === null && navigate('/auth');
   }, []);
 
   return (

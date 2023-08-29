@@ -77,7 +77,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   const { errors, touched, getFieldProps, submitForm, resetForm } = formik;
 
   return (
-    <Dialog open={open} onClose={closePostModal} aria-labelledby="form-dialog-title">
+    <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
       <DialogTitle id="form-dialog-title" className="dialog-title">
         Create a post
       </DialogTitle>

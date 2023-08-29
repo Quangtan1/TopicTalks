@@ -36,25 +36,21 @@ const HomePage = observer(() => {
   }, []);
 
   return (
-    <Box className="home-page-container">
-      <Header />
-      <Box className="new-feed-container">
-        <SideBar />
-        <Grid container className="new-feed">
-          <Grid item md={7.5}>
-            <PostItem />
-          </Grid>
-          <Grid item md={4.5}>
-            <SuggestBox />
-          </Grid>
+    <>
+      <Grid container className="new-feed">
+        <Grid item md={7.5}>
+          <PostItem />
         </Grid>
-      </Box>
+        <Grid item md={4.5}>
+          <SuggestBox />
+        </Grid>
+      </Grid>
       {isVisible && (
         <Button className="scroll-to-top" onClick={scrollToTop}>
           <BiArrowToTop />
         </Button>
       )}
-    </Box>
+    </>
   );
 });
 
