@@ -12,8 +12,11 @@ import { SiMessenger } from 'react-icons/si';
 import { MdOutlineGroup } from 'react-icons/md';
 import { BiHelpCircle } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
+import { SlArrowRight } from 'react-icons/sl';
 import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
+import uiStore from 'src/store/uiStore';
+import { observer } from 'mobx-react';
 
 type SidebarItem = {
   title: string;
@@ -54,7 +57,7 @@ const listSideBar: SidebarItem[] = [
   },
 ];
 
-const SideBar = () => {
+const SideBar = observer(() => {
   const [activeItem, setActiveItem] = useState<string>('/newfeed');
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -85,19 +88,22 @@ const SideBar = () => {
       </ListItem>
     );
   };
+
+  const isResize = uiStore?.collapse;
+
   return (
-    <Box className="side-bar-container">
-      <Box className="logo-sidebar">
+    <Box className={`sidebar_container ${isResize ? 'expand_container' : 'collapse_container'}`}>
+      <Box className="logo_sidebar">
         <img src={logo} alt="logo" />
         <Typography>TopicTalks</Typography>
       </Box>
-      <List className="list-item">
+      <List className="list_item">
         {listSideBar.map(renderSidebarItem)}
         <NewPost open={postModalOpen} closePostModal={closePostModal} />
       </List>
 
       <Divider />
-      <List className="list-item">
+      <List className="list_item">
         <ListItem>
           <AiFillSetting />
           <Typography>Setting</Typography>
@@ -111,8 +117,14 @@ const SideBar = () => {
           <Typography>Logout</Typography>
         </ListItem>
       </List>
+      <button
+        className={`resize_sidebar ${isResize ? 'expand' : 'collapse'}`}
+        onClick={() => uiStore?.setCollapse(!isResize)}
+      >
+        <SlArrowRight />
+      </button>
     </Box>
   );
-};
+});
 
 export default SideBar;

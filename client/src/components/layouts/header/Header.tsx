@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
+import uiStore from 'src/store/uiStore';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -32,6 +33,7 @@ const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<boolean>(false);
   const navigate = useNavigate();
+  const isResize = uiStore?.collapse;
 
   const account = accountStore?.account;
 
@@ -55,7 +57,7 @@ const Header = observer(() => {
   }, []);
 
   return (
-    <Box className="header-container">
+    <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
       <Grid container>
         <Grid item md={7} className="header-bar">
           {headerRoute.map((route, index) => (
