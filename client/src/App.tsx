@@ -6,7 +6,7 @@ import AuthPage from '../src/components/layouts/auth/AuthPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from './components/layouts/home/HomePage';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import DefaultLayout from './components/layouts/defaultLayout/DefaultLayout';
+import DefaultLayout from './components/defaultLayout/DefaultLayout';
 import { publicRoutes } from './routes';
 // import { ReactQueryDevtools } from 'react-query/devtools';
 

@@ -34,6 +34,7 @@
   .info-bar {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
     .search {
       .MuiInputBase-root {
@@ -48,7 +49,7 @@
     .menu-bar {
       display: flex;
       gap: 10px;
-      padding: 0px 30px 0px 20px;
+      padding: 0px 20px;
       align-items: center;
       justify-content: flex-end;
       width: 100%;

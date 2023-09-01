@@ -31,10 +31,11 @@ const HomePage = observer(() => {
   };
 
   useEffect(() => {
-    uiStore?.setLoading(true);
-    setTimeout(() => {
-      uiStore?.setLoading(false);
-    }, 1000);
+    uiStore?.setLoading(false);
+    //sau nay isLoading cho post va topic chu ko phai setTimeout
+    // setTimeout(() => {
+    //   uiStore?.setLoading(false);
+    // }, 1000);
     window.addEventListener('scroll', toggleVisibility);
     return () => {
       window.removeEventListener('scroll', toggleVisibility);

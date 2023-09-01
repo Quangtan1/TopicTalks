@@ -14,7 +14,7 @@ class AccountStore {
     persistStore(this, ['account'], 'topic-talks');
   }
 
-  setAccount(account) {
+  setAccount(account: IUser | null) {
     this.account = account;
     console.log('account', account);
   }

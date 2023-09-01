@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Grid } from '@mui/material';
-import Header from '../header/Header';
-import SideBar from '../sidebar/SideBar';
 import './DefaultLayout.scss';
+import Header from '../layouts/header/Header';
+import SideBar from '../layouts/sidebar/SideBar';
 
 const DefaultLayout = ({ children }) => {
   return (

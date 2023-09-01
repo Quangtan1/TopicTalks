@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "nameChat": "Jenny Wilson",
+        "lastMessage": "what're u doing",
+        "time": "1m ago"
+    },
+    {
+        "id": 2,
+        "nameChat": "Gym Group",
+        "lastMessage": "We have schedule for tomorrow",
+        "time": "10m ago"
+    },
+    {
+        "id": 3,
+        "nameChat": "Aaron Jones",
+        "lastMessage": "bye,will see you",
+        "time": "3m ago"
+    },
+    {
+        "id": 4,
+        "nameChat": "Felix  Deo",
+        "lastMessage": "that's great,see you soon",
+        "time": "1m ago"
+    },
+    {
+        "id": 5,
+        "nameChat": "Jenny Wilson",
+        "lastMessage": "We should make use of this trip to learn the maximum possible about the places we are visiting",
+        "time": "1m ago"
+    },
+    {
+        "id": 6,
+        "nameChat": "Heal Group",
+        "lastMessage": "We have schedule for tomorrow",
+        "time": "10m ago"
+    }
+]

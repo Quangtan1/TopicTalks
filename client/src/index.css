@@ -59,4 +59,6 @@ code {
   --main-color: #8224e3;
   --blue-color: #2f65b9;
   --sidebar-color: #6f7f92;
+  --item-color: rgb(111, 127, 146);
+  --font-family-common: 'Plus Jakarta Sans';
 }

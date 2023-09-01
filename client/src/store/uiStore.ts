@@ -1,8 +1,8 @@
 import { observable, action, makeObservable } from 'mobx';
 
 class UiStore {
-  loading = true;
-  collapse = true;
+  loading: boolean = true;
+  collapse: boolean = true;
 
   constructor() {
     makeObservable(this, {
@@ -13,10 +13,10 @@ class UiStore {
     });
   }
 
-  setLoading(loading) {
+  setLoading(loading: boolean) {
     this.loading = loading;
   }
-  setCollapse(collapse) {
+  setCollapse(collapse: boolean) {
     this.collapse = collapse;
   }
 }
