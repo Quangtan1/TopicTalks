@@ -172,16 +172,94 @@
         font-family: var(--font-family-common);
       }
     }
+    //chatbox
     .chat_box {
       background: #fff;
       border-radius: 5px;
       height: calc(100vh - 270px);
       overflow: auto;
       width: 100%;
+      .list_message {
+        .message {
+          display: flex;
+          align-items: end;
+          gap: 8px;
+          padding: 5px 10px;
+          .message_box {
+            p {
+              font-family: var(--font-family-common);
+            }
+            .message_content {
+              padding: 12px 20px;
+              word-wrap: break-word;
+              max-width: 400px;
+              margin-bottom: 10px;
+            }
+            .messge_username {
+              font-size: 13px;
+              padding-bottom: 8px;
+            }
+          }
+        }
+        #you {
+          justify-content: flex-end;
+          .message_box {
+            .message_content {
+              background: var(--main-color);
+              border-radius: 8px 8px 0 8px;
+              color: #fff;
+              position: relative;
+            }
+            .message_content::before {
+              border-bottom: 5px solid transparent;
+              border-left: 5px solid transparent;
+              border-right: 5px solid var(--main-color);
+              border-right-color: var(--main-color);
+              border-top: 5px solid var(--main-color);
+              border-top-color: var(--main-color);
+              left: auto;
+              right: 0;
+              position: absolute;
+              content: '';
+              bottom: -9px;
+            }
+            .messge_username {
+              text-align: end;
+            }
+          }
+        }
+        #other {
+          justify-content: flex-start;
+          .message_box {
+            .message_content {
+              border-radius: 8px 8px 8px 0;
+              background: #eaeff8;
+              position: relative;
+            }
+            .message_content::before {
+              border-bottom: 5px solid transparent;
+              border-left: 5px solid #eaeff8;
+              border-left-color: #eaeff8;
+              border-right: 5px solid transparent;
+              border-top: 5px solid #eaeff8;
+              border-top-color: #eaeff8;
+              bottom: -9px;
+              content: '';
+              left: 0;
+              position: absolute;
+              right: auto;
+            }
+            .messge_username {
+              text-align: start;
+            }
+          }
+        }
+      }
     }
     em-emoji-picker {
       position: absolute;
       bottom: 75px;
+      z-index: 2;
     }
     .chatbox_footer {
       display: flex;
@@ -195,7 +273,7 @@
         width: 100%;
         .MuiInputBase-root {
           input {
-            padding: 6px 0px 4px 10px;
+            padding: 6px 0px 6px 10px;
           }
         }
         .Mui-focused .MuiOutlinedInput-notchedOutline {

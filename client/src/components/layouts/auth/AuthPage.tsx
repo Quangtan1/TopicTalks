@@ -18,6 +18,7 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 
 const dataUser = {
+  id: 123,
   userName: 'Robert William',
   email: 'quangtanc12345@gmail.com',
   password: 'dqweqiweuqiowebkajsd',

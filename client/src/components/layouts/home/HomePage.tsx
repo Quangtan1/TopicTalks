@@ -1,7 +1,5 @@
-import { Box, Grid, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 import './HomePage.scss';
-import Header from '../header/Header';
-import SideBar from '../sidebar/SideBar';
 import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
 import { useEffect, useState } from 'react';
