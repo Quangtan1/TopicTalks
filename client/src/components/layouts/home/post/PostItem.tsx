@@ -97,6 +97,7 @@ const PostItem = () => {
           </CardContent>
           <CardMedia component="img" image={post.image[0]} title={post.userName} />
           <TopicItem
+            key={index}
             post={post.topic}
             open={isTopicModalOpen}
             onOpenClose={() => setIsTopicModalOpen(!isTopicModalOpen)}

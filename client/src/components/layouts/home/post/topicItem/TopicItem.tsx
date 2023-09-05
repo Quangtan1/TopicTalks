@@ -3,18 +3,19 @@ import { CardContent, Typography, Modal, Box, List, ListItem, ListItemButton } f
 import './TopicItem.scss';
 
 interface Props {
+  key: number;
   post: string[];
   open: boolean;
   onOpenClose: () => void;
   handleTopicSelect: (topic: string) => void;
 }
 
-const TopicItem: React.FC<Props> = ({ post, open, onOpenClose, handleTopicSelect }) => {
+const TopicItem: React.FC<Props> = ({ key, post, open, onOpenClose, handleTopicSelect }) => {
   return (
     <Box sx={{ display: 'flex' }}>
       {post?.map((topic: string) => {
         return (
-          <CardContent className="card-topic" key={topic} onClick={onOpenClose}>
+          <CardContent className="card-topic" key={key} onClick={onOpenClose}>
             <Typography variant="body2" color="textSecondary">
               {topic}
             </Typography>

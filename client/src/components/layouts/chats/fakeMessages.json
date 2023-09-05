@@ -1,0 +1,62 @@
+[
+   {
+    "userId": 123,
+    "content": "what're u doing ?",
+    "time": "8:00 pm",
+     "userName": "Robert William"
+   },
+   {
+    "userId": 321,
+    "content": "I'm just relaxing at home. How about you?",
+    "time": "8:00 pm",
+    "userName": "Jenny Wilson"
+   },
+   {
+    "userId": 123,
+    "content": "I'm actually watching a movie. It's so entertaining!",
+    "time": "8:00 pm",
+    "userName": "Robert William"
+   },
+   {
+    "userId": 123,
+    "content": "That sounds fun! What movie are you watching?",
+    "time": "8:00 pm",
+    "userName": "Robert William"
+   },
+   {
+    "userId": 321,
+    "content": "I'm watching 'Inception.' It's mind-bending!",
+    "time": "8:00 pm",
+    "userName": "Jenny Wilson"
+   },
+   {
+    "userId": 123,
+    "content": "Oh, I've heard great things about that movie. Enjoy!",
+    "time": "8:00 pm",
+    "userName": "Robert William"
+   },
+   {
+    "userId": 321,
+    "content": "Thanks! It's definitely keeping me on the edge of my seat.",
+    "time": "8:00 pm",
+    "userName": "Jenny Wilson"
+   },
+   {
+    "userId": 123,
+    "content": "If you have any other recommendations, let me know. I'm always looking for good movies.",
+    "time": "8:00 pm",
+    "userName": "Jenny Wilson"
+   },
+   {
+    "userId": 321,
+    "content": "Will do! 'Interstellar' is another great one if you haven't seen it yet.",
+    "time": "8:00 pm",
+    "userName": "Jenny Wilson"
+   },
+   {
+    "userId": 123,
+    "content": "No problem! Enjoy your evening!",
+    "time": "8:00 pm",
+    "userName": "Robert William"
+   }
+]
