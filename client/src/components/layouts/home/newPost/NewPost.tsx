@@ -17,6 +17,7 @@ import EmotionModal from './emotionModal/EmotionModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import { getRecommendedTopic } from 'src/utils/openai';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -35,8 +36,15 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   useEffect(() => {
     try {
       const handleCallApi = async () => {
-        //TODO:
+        //TODO: call api to get suggested topic
         setSuggestedTopic(fakeDataTopic);
+        getRecommendedTopic('I am feeling happy')
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       };
       handleCallApi();
     } catch (error) {
@@ -50,7 +58,27 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
     resetForm();
   };
 
-  const handleCreatePost = (data: any) => {
+  const handleGetSuggestTopic = (content: string) => {
+    try {
+      const handleCallApi = async () => {
+        //TODO: call api to get suggested topic
+        getRecommendedTopic(content)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        setSuggestedTopic(fakeDataTopic);
+      };
+      handleCallApi();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCreatePost = (data) => {
+    handleGetSuggestTopic(data.postContent);
     ToastSuccess('Create post successfully!');
     closePostModal?.();
     setDefaultValue();
