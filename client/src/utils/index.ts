@@ -1,3 +1,3 @@
 export * from './consts';
 export * from './fetchData';
-export * from './http';
+export * from './createAxios';

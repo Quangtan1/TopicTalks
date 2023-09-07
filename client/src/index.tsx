@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { configure } from 'mobx';
+import ChatProvider from './context/ChatProvider';
 
 configure({
   enforceActions: 'always',
@@ -16,7 +17,9 @@ configure({
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <ChatProvider>
+      <App />
+    </ChatProvider>
   </React.StrictMode>,
 );
 
