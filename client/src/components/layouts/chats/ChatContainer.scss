@@ -32,6 +32,7 @@
       border-radius: 8px;
       gap: 8px;
       background: #fff;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .search {
         width: 100%;
         .MuiInputBase-root {
@@ -60,6 +61,7 @@
       padding: 10px 12px;
       border-radius: 8px;
       background: #fff;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .tab_item {
         display: flex;
         gap: 5px;
@@ -99,6 +101,7 @@
           gap: 8px;
           background: #fff;
           border-radius: 5px;
+          box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
           .chat_text_item {
             width: 60px;
             p {
@@ -127,6 +130,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 12px;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
 
       .infor_box {
         display: flex;
@@ -159,6 +163,7 @@
       border-radius: 5px;
       height: 55px;
       align-items: center;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .header_option {
         display: flex;
         gap: 10px;
@@ -179,6 +184,7 @@
       height: calc(100vh - 270px);
       overflow: auto;
       width: 100%;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .list_message {
         .message {
           display: flex;
@@ -258,7 +264,8 @@
     }
     em-emoji-picker {
       position: absolute;
-      bottom: 75px;
+      bottom: 5px;
+      left: 10px;
       z-index: 2;
     }
     .chatbox_footer {
@@ -268,6 +275,7 @@
       padding: 10px 12px;
       border-radius: 5px;
       gap: 8px;
+      box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
 
       .chatbox_input {
         width: 100%;

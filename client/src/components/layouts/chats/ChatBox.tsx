@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo, BsThreeDotsVertical } from 'react-icons/bs';
@@ -11,19 +11,28 @@ import fakeMessages from './fakeMessages.json';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import ChatContext from 'src/context/ChatContext';
 
 const ChatBox = observer(() => {
   const [currentContent, setCurrentContent] = useState<string>('');
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const account = accountStore?.account;
 
-  const addEmoji = (emoji) => {
+  const { setMessage } = useContext(ChatContext);
+
+  const addEmoji = (emoji: any) => {
     setCurrentContent(currentContent + emoji.native);
     setShowEmojiPicker(false);
   };
 
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const sendMessage = () => {
+    if (currentContent !== '') {
+      setMessage(currentContent);
+    }
   };
 
   return (
@@ -36,7 +45,7 @@ const ChatBox = observer(() => {
           <BsThreeDotsVertical />
         </Box>
       </Box>
-      <ScrollToBottom className="chat_box" >
+      <ScrollToBottom className="chat_box">
         {showEmojiPicker && (
           <span>
             <Picker data={data} onEmojiSelect={addEmoji} className="emoiji_box" />
@@ -45,13 +54,13 @@ const ChatBox = observer(() => {
         <Box className="list_message">
           {fakeMessages.map((item, index) => (
             <Box id={item.userId === account.id ? 'you' : 'other'} className="message" key={index}>
-              {item.userId !== account.id && <Avatar className="avatar" />}
+              {item.userId !== account.id && <Avatar src={item.avatar} alt="avatar" className="avatar" />}
               <Box className="message_box">
                 <Typography className="message_content">{item.content}</Typography>
                 <Typography className="messge_username">{item.userName}</Typography>
               </Box>
 
-              {item.userId === account.id && <Avatar />}
+              {item.userId === account.id && <Avatar src={item.avatar} alt="avatar" className="avatar" />}
             </Box>
           ))}
         </Box>
@@ -70,7 +79,7 @@ const ChatBox = observer(() => {
             setCurrentContent(e.target.value);
           }}
         />
-        <GrSend className="send_icon" />
+        <GrSend className="send_icon" onClick={sendMessage} />
       </Box>
     </Box>
   );

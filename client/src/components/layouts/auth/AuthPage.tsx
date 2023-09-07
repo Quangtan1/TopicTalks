@@ -72,8 +72,6 @@ const LoginPage = observer(() => {
   };
   return (
     <Grid className="auth-container" container>
-      <ToastContainer />
-
       <Grid item md={6} className="grid-carousel">
         <Carousels />
       </Grid>
