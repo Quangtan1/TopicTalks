@@ -61,17 +61,17 @@ const LoginPage = observer(() => {
         : ToastError('Password must contain capital letters,numbers and more than 8 characters');
     } else {
       const user = {
-        userName: anonymousName,
+        username: anonymousName,
         email: email,
         password: password,
       };
       axios
         .post('http://localhost:5000/api/v1/auth/register', user)
         .then(() => {
+          ToastSuccess('Register Successfully');
           setTimeout(() => {
-            ToastSuccess('Register Successfully');
+            setSignIn(!isSignIn);
           }, 3000);
-          setSignIn(!isSignIn);
         })
         .catch((err) => {
           ToastError(err.response.data.message);
