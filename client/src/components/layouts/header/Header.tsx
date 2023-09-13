@@ -89,11 +89,11 @@ const Header = observer(() => {
                   width: 32,
                   height: 32,
                 }}
-                src={account?.avatar}
+                src={account?.url_img}
                 alt="avatar"
               />
             </IconButton>
-            <Typography className="user-name">{account?.userName}</Typography>
+            <Typography className="user-name">{account?.username}</Typography>
             <Menu
               id="account-menu"
               open={anchorEl}
@@ -108,7 +108,7 @@ const Header = observer(() => {
             >
               <MenuItem onClick={handleClose}>
                 <ListItemIcon>
-                  <Avatar src={account?.avatar} alt="avatar" />
+                  <Avatar src={account?.url_img} alt="avatar" />
                 </ListItemIcon>
                 Profile Infor
               </MenuItem>
