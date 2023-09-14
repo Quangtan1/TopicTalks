@@ -56,6 +56,11 @@ const Header = observer(() => {
     account === null && navigate('/auth');
   }, []);
 
+  const handleGoToProfilePage = () => {
+    handleClose();
+    navigate('/profile');
+  };
+
   return (
     <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
       <Grid container>
@@ -106,7 +111,7 @@ const Header = observer(() => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleGoToProfilePage}>
                 <ListItemIcon>
                   <Avatar src={account?.avatar} alt="avatar" />
                 </ListItemIcon>
