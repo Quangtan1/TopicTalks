@@ -31,6 +31,13 @@
         .MuiInputBase-input {
           padding-left: 10px;
         }
+        .MuiInputAdornment-root {
+          svg {
+            path {
+              stroke: rgba(0, 0, 0, 0.54);
+            }
+          }
+        }
       }
       .MuiFormControl-root:nth-child(1) {
         .MuiInputBase-root {

@@ -6,68 +6,76 @@ import 'react-toastify/dist/ReactToastify.css';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { GrUserExpert } from 'react-icons/gr';
 import { MdOutlineMailOutline } from 'react-icons/md';
+import { HiOutlineKey } from 'react-icons/hi';
 import { FcGoogle } from 'react-icons/fc';
 import './AuthPage.scss';
 import Carousels from './Carousels';
 import { logo } from 'src/utils/consts';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-
-const dataUser = {
-  id: 123,
-  userName: 'Robert William',
-  email: 'quangtanc12345@gmail.com',
-  password: 'dqweqiweuqiowebkajsd',
-  avatar: 'https://res.cloudinary.com/tantqdev/image/upload/v1689862756/SocialMedia/dimpnaooavhzypitz7yb.jpg',
-  topic: ['Math', 'Social', 'Gym'],
-};
+import axios from 'axios';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState(true);
-  // const emailRegex = /^[^\s@]+@fpt\.edu\.vn$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
     const user = {
-      email: formData.get('email'),
+      username: formData.get('anonymousName'),
       password: formData.get('password'),
     };
-    accountStore?.setAccount(dataUser);
-    navigate('/newfeed');
-    // console.log('user', user);
+    axios
+      .post('http://localhost:5000/api/v1/auth/authenticate', user)
+      .then((res) => {
+        accountStore?.setAccount(res.data);
+        navigate('/newfeed');
+      })
+      .catch((err) => {
+        ToastError(err.response.data.message);
+      });
   };
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
-    if (
-      !formData.get('anonymousName') ||
-      !formData.get('fullName') ||
-      !formData.get('email') ||
-      !formData.get('password')
-    ) {
-      toast.error('Please not empty textbox');
-    } else if (!emailRegex.test(formData.get('email'))) {
-      toast.error('Please input correct email');
-    } else if (!passwordRegex.test(formData.get('password'))) {
-      toast.error('Password must contain capital letters,numbers and more than 8 characters ');
+    const anonymousName = formData.get('anonymousName');
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const cpassword = formData.get('cpassword');
+
+    if (!anonymousName || !email || !password || !cpassword) {
+      ToastError('Please not empty textbox');
+    } else if (!emailRegex.test(email)) {
+      ToastError('Please input correct email');
+    } else if (!passwordRegex.test(password) || password !== cpassword) {
+      password !== cpassword
+        ? ToastError('Confirm Password is incorrect ')
+        : ToastError('Password must contain capital letters,numbers and more than 8 characters');
     } else {
       const user = {
-        anonymousName: formData.get('anonymousName'),
-        fullName: formData.get('fullName'),
-        email: formData.get('email'),
-        password: formData.get('password'),
+        username: anonymousName,
+        email: email,
+        password: password,
       };
-
-      console.log('user', user);
+      axios
+        .post('http://localhost:5000/api/v1/auth/register', user)
+        .then(() => {
+          ToastSuccess('Register Successfully');
+          setTimeout(() => {
+            setSignIn(!isSignIn);
+          }, 3000);
+        })
+        .catch((err) => {
+          ToastError(err.response.data.message);
+        });
     }
   };
   return (
@@ -83,50 +91,36 @@ const LoginPage = observer(() => {
           </Typography>
           <Box component="form" noValidate onSubmit={isSignIn ? handleSignIn : handleSignUp} className="form">
             {!isSignIn && (
-              <>
-                <TextField
-                  name="anonymousName"
-                  required
-                  id="anonymousName"
-                  placeholder="Anonymous Name"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <AccountCircle />
-                      </InputAdornment>
-                    ),
-                  }}
-                  autoFocus
-                />
-                <TextField
-                  required
-                  id="fullName"
-                  placeholder="User Name"
-                  name="fullName"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <GrUserExpert />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </>
+              <TextField
+                required
+                id="email"
+                placeholder="Email Address"
+                name="email"
+                autoFocus
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MdOutlineMailOutline />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             )}
             <TextField
+              name="anonymousName"
               required
-              id="email"
-              placeholder="Email Address"
-              name="email"
-              autoFocus
+              id="anonymousName"
+              placeholder="Anonymous Name"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <MdOutlineMailOutline />
+                    <GrUserExpert />
                   </InputAdornment>
                 ),
               }}
+              autoFocus
             />
+
             <TextField
               required
               name="password"
@@ -141,6 +135,22 @@ const LoginPage = observer(() => {
                 ),
               }}
             />
+            {!isSignIn && (
+              <TextField
+                required
+                id="cpassword"
+                placeholder="Confirm Password"
+                name="cpassword"
+                type="password"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <HiOutlineKey />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
             {isSignIn && (
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" className="checkbox" />}
