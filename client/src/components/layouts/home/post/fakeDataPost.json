@@ -2,6 +2,22 @@
   {
     "id": 2,
     "userName": "Le V. Son",
+    "content": "Camping",
+    "topic": ["Life", "Love", "Sport"],
+    "status": "Đang cảm thấy hứng thú",
+    "image": [
+      "https://scontent.fhan14-3.fna.fbcdn.net/v/t39.30808-6/279960304_1995600470642995_358690004182455543_n.jpg?stp=dst-jpg_p960x960&_nc_cat=103&ccb=1-7&_nc_sid=52f669&_nc_ohc=lSU1l6Ac19UAX-G68Sw&_nc_ht=scontent.fhan14-3.fna&oh=00_AfCNGDdsbPEl6tv0fInGkEoHpVgUJC9LItZccDmzm4xupw&oe=6508D6EC"
+    ],
+    "likes": 10,
+    "comments": [
+      { "id": 1, "user": "User1", "text": "Great post!" },
+      { "id": 2, "user": "User2", "text": "Keep it up!" }
+    ],
+    "shares": 5
+  },
+  {
+    "id": 2,
+    "userName": "Le V. Son",
     "content": "Have a nice day",
     "topic": ["Life", "Love", "Sport"],
     "status": "Đang cảm thấy hứng thú",
