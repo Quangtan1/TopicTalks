@@ -50,7 +50,7 @@ code {
 :root {
   --font-base: 'Cormorant Upright', serif;
   --font-alt: 'Open Sans', sans-serif;
-  --color-menu-font: #7f858b;
+  --color-menu-font: rgb(111, 127, 146);
   --color-golden: #DCCA87;
   --color-black: #0C0C0C;
   --color-gray: #f7f7f7;

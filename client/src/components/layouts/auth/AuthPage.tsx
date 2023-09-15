@@ -36,14 +36,14 @@ const LoginPage = observer(() => {
       .post('http://localhost:5000/api/v1/auth/authenticate', user)
       .then((res) => {
         accountStore?.setAccount(res.data);
-        navigate('/newfeed');
+        res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/newfeed');
       })
       .catch((err) => {
         ToastError(err.response.data.message);
       });
   };
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
     const anonymousName = formData.get('anonymousName');
@@ -65,17 +65,15 @@ const LoginPage = observer(() => {
         email: email,
         password: password,
       };
-      axios
-        .post('http://localhost:5000/api/v1/auth/register', user)
-        .then(() => {
-          ToastSuccess('Register Successfully');
-          setTimeout(() => {
-            setSignIn(!isSignIn);
-          }, 3000);
-        })
-        .catch((err) => {
-          ToastError(err.response.data.message);
-        });
+      try {
+        await axios.post('http://localhost:5000/api/v1/auth/register', user);
+        ToastSuccess('Register Successfully');
+        setTimeout(() => {
+          setSignIn(!isSignIn);
+        }, 3000);
+      } catch (err) {
+        ToastError(err.response.data.message);
+      }
     }
   };
   return (

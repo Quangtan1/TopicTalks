@@ -8,6 +8,7 @@ import HomePage from './components/layouts/home/HomePage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import DefaultLayout from './components/defaultLayout/DefaultLayout';
 import { publicRoutes } from './routes';
+import AdminLayout from './components/admin/adminLayout/AdminLayout';
 // import { ReactQueryDevtools } from 'react-query/devtools';
 
 const ONE_HOUR = 60 * 60 * 1000;
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<Navigate to="/newfeed" />} />
           {publicRoutes.map((route, index) => {
             const Page = route.component;
+            let AdLayout = AdminLayout;
             let Layout = DefaultLayout;
             if (route.layout) {
               Layout = route.layout;
@@ -42,9 +44,15 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <Layout>
-                    <Page />
-                  </Layout>
+                  route.isAdmin ? (
+                    <AdLayout>
+                      <Page />
+                    </AdLayout>
+                  ) : (
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  )
                 }
               />
             );
