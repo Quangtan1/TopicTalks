@@ -20,3 +20,11 @@ export const formatDateTime = (value: string, format: string = DateFormatDisplay
   if (!value) return '';
   return dayjs(value).format(format);
 };
+
+export const capitalize = (str: string) => {
+  if (typeof str !== 'string' || str.length === 0) {
+    return str;
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

@@ -14,6 +14,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Divider,
+  capitalize,
 } from '@mui/material';
 import { Message } from '@mui/icons-material';
 import { observer } from 'mobx-react';
@@ -22,10 +23,14 @@ import './Profile.scss';
 import PostItem from '../home/post/PostItem';
 import About from './about/About';
 import uiStore from 'src/store/uiStore';
+import accountStore from 'src/store/accountStore';
+import { formatDate } from 'src/utils/helper';
 
 const Profile = observer(() => {
   const [activeTab, setActiveTab] = React.useState(0);
   const isResize = uiStore?.collapse;
+  const { email, country, gender, dob, first_name, last_name, phone_number, username, roles, url_img } =
+    accountStore?.account || {};
 
   return (
     <Box className={`profile__container ${isResize ? 'expand_profile' : 'collapse_profile'}`}>
@@ -34,18 +39,14 @@ const Profile = observer(() => {
         <Grid container alignItems="center" className="profile__banner">
           <Grid item xs={8} className="title_container">
             <Box className="banner_avatar_wrap">
-              <img
-                className="banner_avatar"
-                src="https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8"
-                alt="son"
-              />
+              <img className="banner_avatar" src={url_img} alt="son" />
             </Box>
             <Box className="title_wrap">
               <Typography className="title" variant="h4">
-                Le V Son
+                {username}
               </Typography>
               <Typography className="subtitle" variant="subtitle1">
-                Front-end developer
+                {capitalize(`${roles?.join('/')} ${first_name} ${last_name}`)}
               </Typography>
             </Box>
           </Grid>
@@ -69,11 +70,11 @@ const Profile = observer(() => {
         {/* Column 1 */}
         <Grid item xs={3} className="column__1_container">
           <About
-            gender="Male"
-            birthDate="Born July 15th, 2001"
-            address="01 Nguyen Van Linh - Da Nang"
-            email="Levson@gmail.com"
-            phone="0123456789"
+            gender={gender}
+            birthDate={`Born ${formatDate(dob)}`}
+            address={country}
+            email={email}
+            phone={phone_number}
           />
           <Paper className="column__1_paper" elevation={3}>
             <Typography variant="h6" className="title_paper_text">
