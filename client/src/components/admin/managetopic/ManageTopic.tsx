@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { GrAdd } from 'react-icons/gr';
+import CreateTopicDialog from '../admindialog/CreateTopicDialog';
 
 interface MockData {
   name: string;
@@ -44,6 +45,7 @@ const healthData = [
 
 const ManageTopic = () => {
   const [selectTopic, setSelectTopic] = useState<string>('Healthy');
+  const [open, setOpen] = useState<boolean>(false);
 
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
@@ -53,11 +55,16 @@ const ManageTopic = () => {
   const handleChangePage = (event, newPage) => {};
 
   const handleChangeRowsPerPage = (event) => {};
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Box className="manage_topic_container">
       <Box className="create_topic">
         <Typography className="titel_a1">List of Topics</Typography>
-        <GrAdd title="Create Topic" />
+        <GrAdd title="Create Topic" onClick={() => setOpen(true)} />
       </Box>
       <Typography className="title_a2">Manage the topics in sytem</Typography>
       <Box className="select_topic">
@@ -88,7 +95,7 @@ const ManageTopic = () => {
         <Table>
           <TableBody className="table_body">
             {healthData.map((item: MockData, index: number) => (
-              <TableRow>
+              <TableRow key={index}>
                 <TableCell className="cell_no">{index + 1}</TableCell>
                 <TableCell className="cell_tname">{item.name}</TableCell>
                 <TableCell className="cell_cby">{item.createBy}</TableCell>
@@ -111,6 +118,7 @@ const ManageTopic = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <CreateTopicDialog open={open} onClose={onClose} />
     </Box>
   );
 };

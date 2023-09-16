@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 html {
@@ -25,10 +26,6 @@ code {
     monospace;
 }
 
-* {
-  scroll-behavior: smooth;
-  box-sizing: border-box;
-}
 ::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
