@@ -32,45 +32,44 @@ const LoginPage = observer(() => {
       username: formData.get('anonymousName'),
       password: formData.get('password'),
     };
-    // navigate('/newfeed');
-    // const fakeAccount = {
-    //   id: 1,
-    //   username: 'Doremon 123',
-    //   url_img:
-    //     'https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8',
-    //   roles: ['user'],
-    //   access_token: 'your_access_token',
-    //   refresh_token: 'your_refresh_token',
-    //   token_type: 'Bearer',
-    //   phone_number: '+1234567890',
-    //   user_id: 1001,
-    //   created_at: '2023-09-15 12:00:00',
-    //   first_name: 'Son',
-    //   last_name: 'Le',
-    //   email: 'sonlvs1507@example.com',
-    //   password: 'hashed_password',
-    //   bio: 'A brief bio',
-    //   gender: 'Male',
-    //   country: '01 Nguyen Van Linh - Da Nang',
-    //   dob: '1997-07-15 00:00:00',
-    //   is_banned: false,
-    //   banned_date: null,
-    //   role: 'USER',
-    // };
-    // accountStore?.setAccount(fakeAccount);
-    axios
-      .post('http://localhost:5000/api/v1/auth/authenticate', user)
-      .then((res) => {
-        console.log('🚀 ~ file: AuthPage.tsx:64 ~ .then ~ res:', res);
-        accountStore?.setAccount(res?.data);
-        navigate('/newfeed');
-      })
-      .catch((err) => {
-        ToastError(err.response.data.message);
-      });
+    navigate('/newfeed');
+    const fakeAccount = {
+      id: 1,
+      username: 'Doremon 123',
+      url_img:
+        'https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8',
+      roles: ['user'],
+      access_token: 'your_access_token',
+      refresh_token: 'your_refresh_token',
+      token_type: 'Bearer',
+      phone_number: '+1234567890',
+      user_id: 1001,
+      created_at: '2023-09-15 12:00:00',
+      first_name: 'Son',
+      last_name: 'Le',
+      email: 'sonlvs1507@example.com',
+      password: 'hashed_password',
+      bio: 'A brief bio',
+      gender: 'Male',
+      country: '01 Nguyen Van Linh - Da Nang',
+      dob: '1997-07-15 00:00:00',
+      is_banned: false,
+      banned_date: null,
+      role: 'USER',
+    };
+    accountStore?.setAccount(fakeAccount);
+    // axios
+    //   .post('http://localhost:5000/api/v1/auth/authenticate', user)
+    //   .then((res) => {
+    //     accountStore?.setAccount(res.data);
+    //     res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/newfeed');
+    //   })
+    //   .catch((err) => {
+    //     ToastError(err.response.data.message);
+    //   });
   };
 
-  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
     const anonymousName = formData.get('anonymousName');
@@ -92,17 +91,15 @@ const LoginPage = observer(() => {
         email: email,
         password: password,
       };
-      axios
-        .post('http://localhost:5000/api/v1/auth/register', user)
-        .then(() => {
-          ToastSuccess('Register Successfully');
-          setTimeout(() => {
-            setSignIn(!isSignIn);
-          }, 3000);
-        })
-        .catch((err) => {
-          ToastError(err.response.data.message);
-        });
+      try {
+        await axios.post('http://localhost:5000/api/v1/auth/register', user);
+        ToastSuccess('Register Successfully');
+        setTimeout(() => {
+          setSignIn(!isSignIn);
+        }, 3000);
+      } catch (err) {
+        ToastError(err.response.data.message);
+      }
     }
   };
   return (

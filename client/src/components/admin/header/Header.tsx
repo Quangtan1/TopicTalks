@@ -33,7 +33,6 @@ const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<boolean>(false);
   const navigate = useNavigate();
-  const isResize = uiStore?.collapse;
 
   const account = accountStore?.account;
 
@@ -54,36 +53,13 @@ const Header = observer(() => {
 
   useEffect(() => {
     account === null && navigate('/auth');
-    account.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
   }, []);
 
-  const handleGoToProfilePage = () => {
-    handleClose();
-    navigate('/profile');
-  };
-
   return (
-    <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
-      <Grid container>
-        <Grid item md={7} className="header-bar">
-          {headerRoute.map((route, index) => (
-            <Typography key={index}>{route.title}</Typography>
-          ))}
-        </Grid>
+    <Box className="header_container_admin">
+      <Grid container className="grid_container">
+        <Grid item md={7} className="header-bar"></Grid>
         <Grid item md={5} className="info-bar">
-          <TextField
-            required
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <RiSearchLine />
-                </InputAdornment>
-              ),
-            }}
-            autoFocus
-            className="search"
-          />
           <Box className="menu-bar">
             <HiOutlineSun />
             <BiGroup />
@@ -99,7 +75,6 @@ const Header = observer(() => {
                 alt="avatar"
               />
             </IconButton>
-            <Typography className="user-name">{account?.username}</Typography>
             <Menu
               id="account-menu"
               open={anchorEl}
@@ -112,7 +87,7 @@ const Header = observer(() => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleGoToProfilePage}>
+              <MenuItem onClick={handleClose}>
                 <ListItemIcon>
                   <Avatar src={account?.url_img} alt="avatar" />
                 </ListItemIcon>
