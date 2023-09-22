@@ -35,7 +35,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'Manage User',
     icon: <MdOutlineGroup />,
-    path: '/user-manage',
+    path: '/manage-user',
   },
   {
     title: 'Manage Topic',

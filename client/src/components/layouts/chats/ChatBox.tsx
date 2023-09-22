@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo, BsThreeDotsVertical } from 'react-icons/bs';
@@ -12,6 +12,10 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import ChatContext from 'src/context/ChatContext';
+import { io } from 'socket.io-client';
+
+const ENDPOINT = 'http://localhost:8085?username=aaa&room=123';
+var socket, selectedChatCompare;
 
 const ChatBox = observer(() => {
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -20,6 +24,45 @@ const ChatBox = observer(() => {
 
   const { setMessage } = useContext(ChatContext);
 
+  useEffect(() => {
+    socket = io(`http://localhost:8085?username=${account.username}&room=123`);
+    socket.on('connect', () => {
+      console.log('Connect Socket.IO');
+    });
+    // socket.on('read_message', (message: string) => {
+    //   setMessage((prevMessages) => [...prevMessages, message]);
+    //   console.log('read_message', message);
+    // });
+    return () => {
+      socket.on('disconnect', () => {
+        console.log('Disconnect Socket.IO');
+      });
+      socket.disconnect();
+    };
+  }, []);
+
+  const sendMessage = (message: string) => {
+    if (currentContent !== '') {
+      const messageData = {
+        content: message,
+        senderId: account,
+        conversationId: {
+          id: 1,
+          chatName: 'Sender',
+          isGroupChat: false,
+          topicChildren: {
+            createdAt: '2023-09-11 14:51:41.033122',
+            updatedAt: '2023-09-11 14:51:41.033122',
+            id: 123,
+            topicChildrenName: 'Tap gym',
+          },
+        },
+      };
+      socket.emit('send_message', messageData);
+      setCurrentContent('');
+    }
+  };
+
   const addEmoji = (emoji: any) => {
     setCurrentContent(currentContent + emoji.native);
     setShowEmojiPicker(false);
@@ -27,12 +70,6 @@ const ChatBox = observer(() => {
 
   const toggleEmojiPicker = () => {
     setShowEmojiPicker(!showEmojiPicker);
-  };
-
-  const sendMessage = () => {
-    if (currentContent !== '') {
-      setMessage(currentContent);
-    }
   };
 
   return (
@@ -79,7 +116,7 @@ const ChatBox = observer(() => {
             setCurrentContent(e.target.value);
           }}
         />
-        <GrSend className="send_icon" onClick={sendMessage} />
+        <GrSend className="send_icon" onClick={() => sendMessage(currentContent)} />
       </Box>
     </Box>
   );

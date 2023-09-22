@@ -15,53 +15,61 @@
   z-index: 3;
   width: 100vw;
   transition: padding-left 0.5s ease;
-  .header-bar {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    padding-left: 20px;
-    p {
-      color: var(--color-menu-font);
-      font-size: 17px;
-      text-transform: uppercase;
-      font-family: 'Plus Jakarta Sans';
-    }
-    p:hover {
-      color: var(--main-color);
-      cursor: pointer;
-    }
-  }
-  .info-bar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-
-    .search {
-      .MuiInputBase-root {
-        input {
-          padding: 6px 0px 4px 5px;
-        }
-      }
-      .Mui-focused .MuiOutlinedInput-notchedOutline {
-        border: 2px solid var(--main-color);
-      }
-    }
-    .menu-bar {
+  .grid_container {
+    background: #4c3b7d;
+    border-radius: 10px;
+    .header-bar {
       display: flex;
-      gap: 10px;
-      padding: 0px 20px;
+      gap: 20px;
+      align-items: center;
+      padding-left: 20px;
+      p {
+        color: #fff;
+        font-size: 17px;
+        text-transform: uppercase;
+        font-family: 'Plus Jakarta Sans';
+      }
+      p:hover {
+        color: var(--main-color);
+        cursor: pointer;
+      }
+    }
+    .info-bar {
+      display: flex;
       align-items: center;
       justify-content: flex-end;
-      width: 100%;
-      max-width: 300px;
-      svg {
-        display: flex;
-        cursor: pointer;
-        font-size: 22px;
-        color: var(--color-menu-font);
+
+      .search {
+        svg {
+          color: #fff;
+        }
+        .MuiInputBase-root {
+          input {
+            color: #fff;
+            padding: 6px 0px 4px 5px;
+          }
+        }
+        .Mui-focused .MuiOutlinedInput-notchedOutline {
+          border: 2px solid #fff;
+        }
       }
-      .user-name {
-        font-size: 12px;
+      .menu-bar {
+        display: flex;
+        gap: 10px;
+        padding: 0px 20px;
+        align-items: center;
+        justify-content: flex-end;
+        width: 100%;
+        max-width: 300px;
+        svg {
+          display: flex;
+          cursor: pointer;
+          font-size: 22px;
+          color: #fff;
+        }
+        .user-name {
+          font-size: 12px;
+        }
       }
     }
   }

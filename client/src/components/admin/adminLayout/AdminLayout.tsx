@@ -11,7 +11,7 @@ const AdminLayout = observer(({ children }) => {
   return (
     <>
       {account.roles.includes('ROLE_ADMIN') && (
-        <Box className="common-page-container">
+        <Box className="common-page-container_admin">
           <Header />
           <Box className="route-container">
             <SideBar />

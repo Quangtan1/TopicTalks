@@ -1,0 +1,83 @@
+.topic_dialog_container {
+  .MuiPaper-root {
+    width: 450px;
+    gap: 10px;
+    p {
+      font-family: var(--font-family-common);
+    }
+    .dialog_title {
+      text-align: center;
+      position: relative;
+      width: 100%;
+      font-weight: 600;
+      border-bottom: 1px solid var(--item-color);
+      background: rgb(62, 67, 150);
+      color: #fff;
+      svg {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+      }
+    }
+
+    .dialog_content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px 20px;
+      .tab_option {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        p {
+          border-radius: 5px;
+          padding: 8px 32px;
+          background: rgba(131, 130, 148, 0.17);
+          cursor: pointer;
+          color: #fff;
+        }
+        .active {
+          color: rgb(62, 67, 150);
+          background: rgba(172, 167, 234, 0.17);
+          border: 1px solid rgb(62, 67, 150);
+        }
+      }
+      .primary_topic {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        .MuiInputBase-root {
+          .MuiSelect-select {
+            padding: 5px 80px 5px 14px;
+          }
+        }
+      }
+      .child_topic {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .warning {
+        display: flex;
+        gap: 10px;
+        border: red solid 1px;
+        align-items: center;
+        padding: 6px 20px;
+        border-radius: 5px;
+        color: #7f1d1d;
+        background: #fef2f2;
+        svg {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .dialog_action {
+    button {
+      background: rgb(62, 67, 150);
+      color: #fff;
+    }
+  }
+}
