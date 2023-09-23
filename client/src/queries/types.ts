@@ -24,6 +24,19 @@ export interface IUser {
   [User.Title]?: string;
 }
 
+export interface IPost {
+  id: number;
+  title: string;
+  content: string;
+  img_url: string;
+  tparent_id: number;
+  author_id: number;
+  created_at: string;
+  updated_at: string;
+  approved: boolean;
+}
+
+
 export type GetPropertiesParams = {
   [key: string]: string | number | string[];
 };

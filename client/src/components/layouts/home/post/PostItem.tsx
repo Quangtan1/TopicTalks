@@ -1,13 +1,16 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import { useState } from 'react';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   CardMedia,
   IconButton,
+  Input,
   Typography,
 } from '@mui/material';
 import { HiDotsHorizontal } from 'react-icons/hi';
@@ -19,6 +22,8 @@ import TopicItem from './topicItem/TopicItem';
 import CommentsList from './comments/CommentsListModal';
 import fakeDataPost from './fakeDataPost.json';
 import ShareModal from './shareModal/ShareModal';
+import { RemoveCircle as RemoveCircleIcon } from '@mui/icons-material';
+import { useUploadAndDisplayImage } from 'src/utils/useUploadImage';
 
 export interface IPost {
   id: number;
@@ -44,6 +49,7 @@ const PostItem = () => {
   const [likedIndexes, setLikedIndexes] = useState([]);
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState('');
+  const { selectedImage, handleImageChange, removeImage } = useUploadAndDisplayImage();
 
   const handleTopicSelect = (topic) => {
     setSelectedTopic(topic);

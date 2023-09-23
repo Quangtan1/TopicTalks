@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Input,
   TextField,
   Typography,
 } from '@mui/material';
@@ -18,6 +19,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { getRecommendedTopic } from 'src/utils/openai';
+import { RemoveCircle as RemoveCircleIcon } from '@mui/icons-material';
+import { useUploadAndDisplayImage } from 'src/utils/useUploadImage';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -32,6 +35,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   const [suggestedTopic, setSuggestedTopic] = useState([]);
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
   const [emotion, setEmotion] = useState('');
+  const { selectedImage, handleImageChange, removeImage } = useUploadAndDisplayImage();
 
   // useEffect(() => {
   //   try {
@@ -103,6 +107,26 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   });
 
   const { errors, touched, getFieldProps, submitForm, resetForm } = formik;
+
+  const handleDisplayUploadImage = () => {
+    return (
+      <div>
+        <Typography variant="h4">Upload Image</Typography>
+
+        {selectedImage && (
+          <div>
+            <img alt="Selected Image" width="250px" src={URL.createObjectURL(selectedImage)} />
+            <br />
+            <Button variant="contained" color="error" onClick={removeImage} startIcon={<RemoveCircleIcon />}>
+              Remove
+            </Button>
+          </div>
+        )}
+
+        <Input type="file" name="myImage" onChange={handleImageChange} />
+      </div>
+    );
+  };
 
   return (
     <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
