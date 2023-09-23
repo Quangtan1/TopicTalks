@@ -13,9 +13,9 @@ interface Props {
 const TopicItem: React.FC<Props> = ({ key, post, open, onOpenClose, handleTopicSelect }) => {
   return (
     <Box sx={{ display: 'flex' }}>
-      {post?.map((topic: string) => {
+      {post?.map((topic: string, index: number) => {
         return (
-          <CardContent className="card-topic" key={key} onClick={onOpenClose}>
+          <CardContent className="card-topic" key={index} onClick={onOpenClose}>
             <Typography variant="body2" color="textSecondary">
               {topic}
             </Typography>
@@ -36,10 +36,10 @@ const TopicItem: React.FC<Props> = ({ key, post, open, onOpenClose, handleTopicS
         >
           <Typography variant="h6">Select a Topic</Typography>
           <List className="list-topic">
-            {post.map((topic) => (
+            {post.map((topic, index) => (
               <ListItem
                 disablePadding
-                key={topic}
+                key={index}
                 className="item-of-list-topic"
                 onClick={() => handleTopicSelect(topic)}
               >

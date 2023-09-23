@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Typography, Divider } from '@mui/material';
+import { Box, List, ListItem, Typography, Divider, Avatar } from '@mui/material';
 import { useState } from 'react';
 import { logo } from 'src/utils/consts';
 import './SideBar.scss';
@@ -17,6 +17,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
 import uiStore from 'src/store/uiStore';
 import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
 
 type SidebarItem = {
   title: string;
@@ -61,6 +62,7 @@ const SideBar = observer(() => {
   const [activeItem, setActiveItem] = useState<string>('/newfeed');
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const account = accountStore?.account;
 
   const handleItemClick = (item: SidebarItem) => {
     if (item.path === 'newpost') {
@@ -94,28 +96,23 @@ const SideBar = observer(() => {
   return (
     <Box className={`sidebar_container ${isResize ? 'expand_container' : 'collapse_container'}`}>
       <Box className="logo_sidebar">
-        <img src={logo} alt="logo" />
         <Typography>TopicTalks</Typography>
+        <img src={logo} alt="logo" />
+      </Box>
+      <Box className="admin_infor">
+        <Avatar src={account?.url_img} alt="avt" />
+        <Typography>{account?.username}</Typography>
+        <Typography>Smart User</Typography>
       </Box>
       <List className="list_item">
         {listSideBar.map(renderSidebarItem)}
         <NewPost open={postModalOpen} closePostModal={closePostModal} />
       </List>
-
       <Divider />
-      <List className="list_item">
-        <ListItem>
-          <AiFillSetting />
-          <Typography>Setting</Typography>
-        </ListItem>
-        <ListItem>
-          <BiHelpCircle />
-          <Typography>Help</Typography>
-        </ListItem>
-        <ListItem>
-          <CiLogout />
-          <Typography>Logout</Typography>
-        </ListItem>
+      <List className="list_item_setting">
+        <AiFillSetting />
+        <BiHelpCircle />
+        <CiLogout />
       </List>
       <button
         className={`resize_sidebar ${isResize ? 'expand' : 'collapse'}`}

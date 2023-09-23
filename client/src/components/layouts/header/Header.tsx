@@ -54,7 +54,7 @@ const Header = observer(() => {
 
   useEffect(() => {
     account === null && navigate('/auth');
-    account.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
+    account?.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
   }, []);
 
   const handleGoToProfilePage = () => {
@@ -64,7 +64,7 @@ const Header = observer(() => {
 
   return (
     <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
-      <Grid container>
+      <Grid container className="grid_container">
         <Grid item md={7} className="header-bar">
           {headerRoute.map((route, index) => (
             <Typography key={index}>{route.title}</Typography>
@@ -99,7 +99,6 @@ const Header = observer(() => {
                 alt="avatar"
               />
             </IconButton>
-            <Typography className="user-name">{account?.username}</Typography>
             <Menu
               id="account-menu"
               open={anchorEl}

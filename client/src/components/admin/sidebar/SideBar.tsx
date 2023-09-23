@@ -35,7 +35,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'Manage User',
     icon: <MdOutlineGroup />,
-    path: '/user-manage',
+    path: '/manage-user',
   },
   {
     title: 'Manage Topic',
@@ -84,8 +84,8 @@ const SideBar = observer(() => {
         <img src={logo} alt="logo" />
       </Box>
       <Box className="admin_infor">
-        <Avatar src={account.url_img} alt="avt" />
-        <Typography>{account.username}</Typography>
+        <Avatar src={account?.url_img} alt="avt" />
+        <Typography>{account?.username}</Typography>
         <Typography>Smart Admin</Typography>
       </Box>
       <List className="list_item">{listSideBar.map(renderSidebarItem)}</List>

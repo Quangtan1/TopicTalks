@@ -41,8 +41,8 @@ const CommentsList: React.FC<Props> = ({ comments, isModalOpen, handleCloseModal
           <IoCloseCircleOutline />
         </IconButton>
         <List>
-          {comments.map((comment) => (
-            <ListItem key={comment.id}>
+          {comments.map((comment, index) => (
+            <ListItem key={index}>
               <ListItemAvatar>
                 <Avatar>{comment.user[0]}</Avatar>
               </ListItemAvatar>

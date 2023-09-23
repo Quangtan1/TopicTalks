@@ -18,12 +18,18 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import axios from 'axios';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
+import { IUser } from 'src/types/account.types';
+import { API_KEY } from 'src/utils';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
-  const [isSignIn, setSignIn] = useState(true);
+  const [isSignIn, setSignIn] = useState<boolean>(true);
+  const [openSelect, setOpenSelect] = useState<boolean>(false);
+  const [accountSignup, setAccountSignup] = useState<IUser>(null);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  let timeoutId;
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +39,7 @@ const LoginPage = observer(() => {
       password: formData.get('password'),
     };
     axios
-      .post('http://localhost:5000/api/v1/auth/authenticate', user)
+      .post(`${API_KEY}/auth/authenticate`, user)
       .then((res) => {
         accountStore?.setAccount(res.data);
         res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/newfeed');
@@ -43,7 +49,7 @@ const LoginPage = observer(() => {
       });
   };
 
-  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
     const anonymousName = formData.get('anonymousName');
@@ -65,17 +71,28 @@ const LoginPage = observer(() => {
         email: email,
         password: password,
       };
-      try {
-        await axios.post('http://localhost:5000/api/v1/auth/register', user);
-        ToastSuccess('Register Successfully');
-        setTimeout(() => {
-          setSignIn(!isSignIn);
-        }, 3000);
-      } catch (err) {
-        ToastError(err.response.data.message);
-      }
+
+      axios
+        .post(`${API_KEY}/auth/register`, user)
+        .then((res) => {
+          setAccountSignup(res.data);
+          ToastSuccess('Register Successfully');
+          timeoutId = setTimeout(() => {
+            clearTimeout(timeoutId);
+            setOpenSelect(true);
+          }, 3000);
+        })
+        .catch((err) => {
+          ToastError(err.response.data.message);
+        });
     }
   };
+
+  const onClose = () => {
+    setSignIn(!isSignIn);
+    setOpenSelect(false);
+  };
+
   return (
     <Grid className="auth-container" container>
       <Grid item md={6} className="grid-carousel">
@@ -176,6 +193,7 @@ const LoginPage = observer(() => {
           </Box>
         </Box>
       </Grid>
+      {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={accountSignup} onClose={onClose} />}
     </Grid>
   );
 });
