@@ -1,0 +1,43 @@
+.select_topic_dialog {
+  .MuiPaper-root {
+    width: 50vw;
+    height: 60vh;
+    max-height: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fff4ed 50%, #bf8fec 100%);
+    .dialog-title {
+      background: rgb(62, 67, 150);
+      p {
+        color: #fff;
+        font-size: 20px;
+        font-weight: 400;
+      }
+    }
+    .dialog-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      p {
+        padding: 8px 10px;
+        border: 1px solid var(--main-color);
+        border-radius: 10px;
+        background: rgba(172, 167, 234, 0.17);
+        cursor: pointer;
+      }
+      .selected,
+      p:hover {
+        background: rgb(62, 67, 150);
+        color: #fff;
+      }
+    }
+    .dialog-action {
+      button {
+        background: rgb(62, 67, 150);
+        color: #fff;
+      }
+    }
+  }
+}

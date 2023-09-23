@@ -33,24 +33,24 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
   const [emotion, setEmotion] = useState('');
 
-  useEffect(() => {
-    try {
-      const handleCallApi = async () => {
-        //TODO: call api to get suggested topic
-        setSuggestedTopic(fakeDataTopic);
-        getRecommendedTopic('I am feeling happy')
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      };
-      handleCallApi();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const handleCallApi = async () => {
+  //       //TODO: call api to get suggested topic
+  //       setSuggestedTopic(fakeDataTopic);
+  //       getRecommendedTopic('I am feeling happy')
+  //         .then((res) => {
+  //           console.log(res);
+  //         })
+  //         .catch((err) => {
+  //           console.log(err);
+  //         });
+  //     };
+  //     handleCallApi();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   const setDefaultValue = () => {
     setEmotion('');

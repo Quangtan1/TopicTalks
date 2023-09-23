@@ -25,14 +25,11 @@ const ChatBox = observer(() => {
   const { setMessage } = useContext(ChatContext);
 
   useEffect(() => {
-    socket = io(`http://localhost:8085?username=${account.username}&room=123`);
-    socket.on('connect', () => {
-      console.log('Connect Socket.IO');
+    socket = io(`http://localhost:8085?uid=${account.id}`);
+    socket.on('connect', (client) => {
+      console.log('Connect Socket.IO', client);
     });
-    // socket.on('read_message', (message: string) => {
-    //   setMessage((prevMessages) => [...prevMessages, message]);
-    //   console.log('read_message', message);
-    // });
+
     return () => {
       socket.on('disconnect', () => {
         console.log('Disconnect Socket.IO');
@@ -43,22 +40,14 @@ const ChatBox = observer(() => {
 
   const sendMessage = (message: string) => {
     if (currentContent !== '') {
-      const messageData = {
-        content: message,
-        senderId: account,
-        conversationId: {
-          id: 1,
-          chatName: 'Sender',
-          isGroupChat: false,
-          topicChildren: {
-            createdAt: '2023-09-11 14:51:41.033122',
-            updatedAt: '2023-09-11 14:51:41.033122',
-            id: 123,
-            topicChildrenName: 'Tap gym',
-          },
+      const receiveMessageDTO = {
+        data: {
+          message: message,
         },
+        userId: account.id,
+        conversationId: 1,
       };
-      socket.emit('send_message', messageData);
+      socket.emit('sendMessage', receiveMessageDTO);
       setCurrentContent('');
     }
   };
@@ -72,12 +61,31 @@ const ChatBox = observer(() => {
     setShowEmojiPicker(!showEmojiPicker);
   };
 
+  const initChat = () => {
+    const request = {
+      userInfoRequest: {
+        6: '2023-09-22T17:05:40.065964',
+        7: '2023-09-22T17:05:40.065964',
+      },
+      amount: 2,
+      topicChildId: 1,
+    };
+    socket.emit('initChatSingle', request);
+  };
+
+  // useEffect(() => {
+  //   socket.on('readMessage', (receiveMessageDTO) => {
+  //     // setMessage((prevMessages) => [...prevMessages, message]);
+  //     console.log('readMessage1', receiveMessageDTO);
+  //   });
+  // });
+
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
         <Typography>Jenny Wilson</Typography>
         <Box className="header_option">
-          <BiPhoneCall />
+          <BiPhoneCall onClick={initChat} />
           <BsCameraVideo />
           <BsThreeDotsVertical />
         </Box>

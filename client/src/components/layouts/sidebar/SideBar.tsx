@@ -100,8 +100,8 @@ const SideBar = observer(() => {
         <img src={logo} alt="logo" />
       </Box>
       <Box className="admin_infor">
-        <Avatar src={account.url_img} alt="avt" />
-        <Typography>{account.username}</Typography>
+        <Avatar src={account?.url_img} alt="avt" />
+        <Typography>{account?.username}</Typography>
         <Typography>Smart User</Typography>
       </Box>
       <List className="list_item">

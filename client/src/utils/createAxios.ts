@@ -1,12 +1,14 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
+export const API_KEY = 'http://localhost:5000/api/v1';
+
 const refreshToken = async (resToken) => {
   try {
     const resfreshtoke = {
       refreshToken: resToken,
     };
-    const res = await axios.post('http://localhost:5000/api/v1/auth/refresh-token', resfreshtoke);
+    const res = await axios.post(`${API_KEY}/auth/refresh-token`, resfreshtoke);
     return res.data;
   } catch (err) {
     console.log(err);
@@ -15,7 +17,7 @@ const refreshToken = async (resToken) => {
 
 export const createAxios = (user: any, setAccount: any) => {
   const newInstance = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: API_KEY,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',

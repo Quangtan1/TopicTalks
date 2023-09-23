@@ -1,6 +1,6 @@
 [
    {
-    "userId": 1,
+    "userId": 6,
     "content": "what're u doing ?",
     "time": "8:00 pm",
      "userName": "Robert William",
@@ -14,14 +14,14 @@
     "avatar": "https://res.cloudinary.com/tantqdev/image/upload/v1690210256/SocialMedia/avatar_hnbvwt.jpg"
    },
    {
-    "userId": 1,
+    "userId": 6,
     "content": "I'm actually watching a movie. It's so entertaining!",
     "time": "8:00 pm",
     "userName": "Robert William",
     "avatar": "https://res.cloudinary.com/tantqdev/image/upload/v1689862756/SocialMedia/dimpnaooavhzypitz7yb.jpg"
    },
    {
-    "userId": 1,
+    "userId": 6,
     "content": "That sounds fun! What movie are you watching?",
     "time": "8:00 pm",
     "userName": "Robert William",
@@ -35,7 +35,7 @@
     "avatar": "https://res.cloudinary.com/tantqdev/image/upload/v1690210256/SocialMedia/avatar_hnbvwt.jpg"
    },
    {
-    "userId": 1,
+    "userId": 6,
     "content": "Oh, I've heard great things about that movie. Enjoy!",
     "time": "8:00 pm",
     "userName": "Robert William",
@@ -49,7 +49,7 @@
     "avatar": "https://res.cloudinary.com/tantqdev/image/upload/v1690210256/SocialMedia/avatar_hnbvwt.jpg"
    },
    {
-    "userId": 1,
+    "userId": 6,
     "content": "If you have any other recommendations, let me know. I'm always looking for good movies.",
     "time": "8:00 pm",
     "userName": "Jenny Wilson",
@@ -63,7 +63,7 @@
     "avatar": "https://res.cloudinary.com/tantqdev/image/upload/v1690210256/SocialMedia/avatar_hnbvwt.jpg" 
    },
    {
-    "userId": 1,
+    "userId": 6,
     "content": "No problem! Enjoy your evening!",
     "time": "8:00 pm",
     "userName": "Robert William",

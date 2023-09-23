@@ -54,7 +54,7 @@ const Header = observer(() => {
 
   useEffect(() => {
     account === null && navigate('/auth');
-    account.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
+    account?.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
   }, []);
 
   const handleGoToProfilePage = () => {

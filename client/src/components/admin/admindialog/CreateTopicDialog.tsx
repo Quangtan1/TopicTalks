@@ -20,6 +20,7 @@ import { observer } from 'mobx-react';
 import { createAxios, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import axios from 'axios';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 interface DialogProps {
   open: boolean;
@@ -60,6 +61,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
         axiosJWT,
       )
         .then((res) => {
+          ToastSuccess('Create Topic Successfully');
           console.log('dataaa', res.data);
         })
         .catch((err) => {
