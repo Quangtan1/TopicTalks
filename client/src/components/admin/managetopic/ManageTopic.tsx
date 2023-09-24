@@ -118,7 +118,7 @@ const ManageTopic = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <CreateTopicDialog open={open} onClose={onClose} />
+      {open === true && <CreateTopicDialog open={open} onClose={onClose} />}
     </Box>
   );
 };

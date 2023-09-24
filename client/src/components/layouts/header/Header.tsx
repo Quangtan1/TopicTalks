@@ -55,6 +55,7 @@ const Header = observer(() => {
   useEffect(() => {
     account === null && navigate('/auth');
     account?.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleGoToProfilePage = () => {

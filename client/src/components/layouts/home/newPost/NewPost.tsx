@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -7,54 +7,58 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Input,
+  FormControl,
+  InputLabel,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
-import { AiFillTag } from 'react-icons/ai';
 import './NewPost.scss';
 import EmotionModal from './emotionModal/EmotionModal';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastSuccess } from 'src/utils/toastOptions';
-import { getRecommendedTopic } from 'src/utils/openai';
-import { RemoveCircle as RemoveCircleIcon } from '@mui/icons-material';
-import { useUploadAndDisplayImage } from 'src/utils/useUploadImage';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import accountStore from 'src/store/accountStore';
+import { createPost, useGetAllTopicParents } from 'src/queries/functionQuery';
+import { useMutation } from 'react-query';
+import AvatarComponent from './avatarComponent/AvatarComponent';
+import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
+import ImageUpload from './imageUpload/ImageUpload';
+import { observer } from 'mobx-react';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
+  selectedTopicParent: Yup.string().nullable().required('Topic is required'),
+  postTitle: Yup.string().nullable().required('Post title is required'),
+  imageUrl: Yup.string().url('Invalid URL format'), // Add validation for imageUrl
 });
 interface Props {
   open?: boolean;
   closePostModal?: () => void;
 }
-const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
-  const [suggestedTopic, setSuggestedTopic] = useState([]);
+
+const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
+  const account = accountStore?.account;
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const {
+    data: topicParentData,
+    isLoading: isLoadingTopicParent,
+    refetch,
+  } = useGetAllTopicParents(account, setAccount);
+  const mutation = useMutation((postData) => createPost(postData, account));
+
+  const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
   const [emotion, setEmotion] = useState('');
-  const { selectedImage, handleImageChange, removeImage } = useUploadAndDisplayImage();
-
-  // useEffect(() => {
-  //   try {
-  //     const handleCallApi = async () => {
-  //       //TODO: call api to get suggested topic
-  //       setSuggestedTopic(fakeDataTopic);
-  //       getRecommendedTopic('I am feeling happy')
-  //         .then((res) => {
-  //           console.log(res);
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //         });
-  //     };
-  //     handleCallApi();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
+  const { url_img } = accountStore.account;
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const setDefaultValue = () => {
     setEmotion('');
@@ -62,28 +66,26 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
     resetForm();
   };
 
-  const handleGetSuggestTopic = (content: string) => {
+  const handleMutationPost = async (postData) => {
     try {
-      const handleCallApi = async () => {
-        //TODO: call api to get suggested topic
-        getRecommendedTopic(content)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        setSuggestedTopic(fakeDataTopic);
-      };
-      handleCallApi();
+      const result = await mutation.mutateAsync(postData);
+      ToastSuccess('Create post successfully!');
+      console.log(`Post result: `, result);
     } catch (error) {
-      console.log(error);
+      ToastError(`Error creating post: ${error}`);
     }
   };
 
   const handleCreatePost = (data) => {
-    handleGetSuggestTopic(data.postContent);
-    ToastSuccess('Create post successfully!');
+    const postData = {
+      content: data?.postContent,
+      image: data?.imageUrl || selectedImage,
+      author_id: +accountStore.account.id,
+      title: data?.postTitle,
+      tparent_id: +data?.selectedTopicParent,
+    };
+
+    handleMutationPost(postData);
     closePostModal?.();
     setDefaultValue();
   };
@@ -101,32 +103,17 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
   };
 
   const formik = useFormik({
-    initialValues: { postContent: '' },
+    initialValues: {
+      postContent: '',
+      selectedTopicParent: '',
+      postTitle: '',
+      imageUrl: '',
+    },
     validationSchema,
     onSubmit: handleCreatePost,
   });
 
-  const { errors, touched, getFieldProps, submitForm, resetForm } = formik;
-
-  const handleDisplayUploadImage = () => {
-    return (
-      <div>
-        <Typography variant="h4">Upload Image</Typography>
-
-        {selectedImage && (
-          <div>
-            <img alt="Selected Image" width="250px" src={URL.createObjectURL(selectedImage)} />
-            <br />
-            <Button variant="contained" color="error" onClick={removeImage} startIcon={<RemoveCircleIcon />}>
-              Remove
-            </Button>
-          </div>
-        )}
-
-        <Input type="file" name="myImage" onChange={handleImageChange} />
-      </div>
-    );
-  };
+  const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
 
   return (
     <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
@@ -134,24 +121,30 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
         Create a post
       </DialogTitle>
       <DialogContent className="dialog-content">
-        <Box className="avatar-container">
-          <img
-            alt="avatar"
-            src="https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.6435-9/133705653_1640137159522663_508931059513204360_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=174925&_nc_ohc=OYdhvQnAJMEAX-B8rzC&_nc_ht=scontent.fsgn2-3.fna&oh=00_AfBAjH_WOu99Q59AEMsqblhOURvXohqlk4eoTUMaNZA6yQ&oe=6509781B"
-            width={50}
-            height={50}
-            className="avatar"
-          />
-          <Box marginLeft={2}>
-            <Typography variant="subtitle1" className="username">
-              Le V. Son
-            </Typography>
-            <Typography variant="body2" className="topic-tag">
-              Topic tag
-            </Typography>
-          </Box>
-        </Box>
-        <DialogContentText className="post-label">Post a topic you are interested:</DialogContentText>
+        <AvatarComponent url={url_img} username="Le V. Son" />
+        <DialogContentText className="post-label">Post a post you are interested:</DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="post-title"
+          {...getFieldProps('postTitle')}
+          label="Post Title"
+          type="text"
+          fullWidth
+          required
+          rows={1}
+          multiline
+          variant="outlined"
+          className="post-title-input"
+          error={touched.postTitle && Boolean(errors.postTitle)}
+          helperText={
+            touched.postTitle && errors.postTitle ? (
+              <Typography variant="caption" color="error">
+                {errors.postTitle as string}
+              </Typography>
+            ) : null
+          }
+        />
         <TextField
           autoFocus
           margin="dense"
@@ -174,6 +167,29 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
             ) : null
           }
         />
+        <Button variant="outlined" size="small" className="post-button" onClick={() => refetch()}>
+          Reload Topic Parent
+        </Button>
+
+        {!isLoadingTopicParent && (
+          <FormControl fullWidth variant="outlined" className="topic-parent-select">
+            <InputLabel htmlFor="topic-parent">Select a Topic Parent</InputLabel>
+
+            <Select label="Select a Topic Parent" id="topic-parent" native {...getFieldProps('selectedTopicParent')}>
+              <option aria-label="None" value="" />
+              {topicParentData?.data?.map((topicParent) => (
+                <option key={topicParent.id} value={topicParent.id}>
+                  {topicParent?.topicParentName}
+                </option>
+              ))}
+            </Select>
+
+            <Typography variant="caption" color="error">
+              {errors.selectedTopicParent as string}
+            </Typography>
+          </FormControl>
+        )}
+
         {!!emotion && (
           <Box display={'flex'} alignItems={'center'} className="wrap-emotion">
             {/* Emotion */}
@@ -188,6 +204,9 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
             />
           </Box>
         )}
+
+        <ImageUpload {...{ touched, getFieldProps, errors, selectedImage, values, setSelectedImage }} />
+
         <Box className="actions-container">
           <Button className="post-button" onClick={submitForm}>
             Post
@@ -202,19 +221,7 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
             setEmotion={setEmotion}
           />
         </Box>
-        <Box className="suggested-topics">
-          <Typography variant="subtitle2">
-            <AiFillTag />
-            Hash tag suggestions by AI:
-          </Typography>
-          <Box display="flex" flexWrap="wrap" sx={{ border: '3px solid rgb(135, 44, 228)' }}>
-            {suggestedTopic?.map((topic: string, index: number) => (
-              <Button key={index} variant="outlined" size="small" className="suggested-topic">
-                {topic}
-              </Button>
-            ))}
-          </Box>
-        </Box>
+        <SuggestedTopicsComponent suggestedTopic={suggestedTopic} />
       </DialogContent>
       <DialogActions className="dialog-actions">
         <Button onClick={closePostModal} color="primary">
@@ -223,6 +230,6 @@ const NewPost: React.FC<Props> = ({ open, closePostModal }) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default NewPost;

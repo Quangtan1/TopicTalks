@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import './AdminLayout.scss';
 import Header from '../header/Header';
 import SideBar from '../sidebar/SideBar';

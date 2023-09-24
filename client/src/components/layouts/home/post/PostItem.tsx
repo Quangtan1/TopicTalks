@@ -48,6 +48,7 @@ const PostItem = () => {
   const [likedPosts, setLikedPosts] = useState(fakeDataPost.map((post) => post.likes));
   const [likedIndexes, setLikedIndexes] = useState([]);
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedTopic, setSelectedTopic] = useState('');
   const { selectedImage, handleImageChange, removeImage } = useUploadAndDisplayImage();
 

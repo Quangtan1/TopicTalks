@@ -1,13 +1,12 @@
 import { Grid, Button } from '@mui/material';
 import './HomePage.scss';
-import PostItem from './post/PostItem';
 import SuggestBox from './suggestbox/SuggestBox';
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import accountStore from 'src/store/accountStore';
 import { BiArrowToTop } from 'react-icons/bi';
 import Loading from 'src/components/loading/Loading';
 import uiStore from 'src/store/uiStore';
+import TopicList from './topicList/TopicList';
 
 const HomePage = observer(() => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -47,7 +46,7 @@ const HomePage = observer(() => {
       ) : (
         <Grid container className={`new_feed ${isResize ? 'expand_home' : 'collapse_home'}`}>
           <Grid item md={7.5}>
-            <PostItem />
+            <TopicList />
           </Grid>
           <Grid item md={4.5}>
             <SuggestBox />
