@@ -44,6 +44,7 @@ const ChatBox = observer(() => {
         data: {
           message: message,
         },
+        TargetId: 7,
         userId: account.id,
         conversationId: 1,
       };

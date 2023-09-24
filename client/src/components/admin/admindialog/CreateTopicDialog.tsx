@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CreateTopicDialog.scss';
 import {
   Box,
@@ -17,7 +17,7 @@ import { CloseRounded } from '@mui/icons-material';
 import { AiOutlineCodepen } from 'react-icons/ai';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { observer } from 'mobx-react';
-import { createAxios, postDataAPI } from 'src/utils';
+import { API_KEY, createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import axios from 'axios';
 import { ToastSuccess } from 'src/utils/toastOptions';
@@ -26,7 +26,10 @@ interface DialogProps {
   open: boolean;
   onClose: () => void;
 }
-
+interface ListTopic {
+  id: number;
+  topicParentName: string;
+}
 const tabOptions = [
   { id: 1, label: 'New Primary Topic' },
   { id: 2, label: 'New Children Topic' },
@@ -35,15 +38,18 @@ const tabOptions = [
 const CreateTopicDialog = observer((props: DialogProps) => {
   const { open, onClose } = props;
   const [active, setActive] = useState(1);
-  const [selectTopic, setSelectTopic] = useState<string>('Healthy');
+  const [selectTopic, setSelectTopic] = useState<number>(1);
   const [topicPrimary, setTopicPrimary] = useState<string>('');
   const [topicChild, setTopicChild] = useState<string>('');
+  const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const account = accountStore?.account;
 
   const setAccount = () => {
     return accountStore?.setAccount;
   };
-  const axiosJWT = createAxios(account, setAccount);
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
 
   const createTopic = () => {
     const topic = {
@@ -69,6 +75,16 @@ const CreateTopicDialog = observer((props: DialogProps) => {
         });
     }
   };
+
+  useEffect(() => {
+    getDataAPI(`${API_KEY}/topic-parent/all`, account.access_token, axiosJWT)
+      .then((res) => {
+        setListTopic(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <Dialog open={open} onClose={onClose} className="topic_dialog_container">
@@ -99,10 +115,13 @@ const CreateTopicDialog = observer((props: DialogProps) => {
               }}
             />
           ) : (
-            <Select value={selectTopic} onChange={(e) => setSelectTopic(e.target.value)}>
-              <MenuItem value="Healthy">Healthy</MenuItem>
-              <MenuItem value="Food">Food</MenuItem>
-              <MenuItem value="Math">Math</MenuItem>
+            <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+              {listTopic.length > 0 &&
+                listTopic.map((item) => (
+                  <MenuItem value={item.id} key={item.id}>
+                    {item.topicParentName}
+                  </MenuItem>
+                ))}
             </Select>
           )}
         </Box>
