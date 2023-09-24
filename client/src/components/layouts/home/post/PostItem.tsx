@@ -1,145 +1,104 @@
-import { useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  IconButton,
-  Typography,
-} from '@mui/material';
-import { HiDotsHorizontal } from 'react-icons/hi';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
+import { FC, useState } from 'react';
+import { Box, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
-import TopicItem from './topicItem/TopicItem';
 import CommentsList from './comments/CommentsListModal';
 import fakeDataPost from './fakeDataPost.json';
 import ShareModal from './shareModal/ShareModal';
+import { useGetAllPosts } from 'src/queries/functionQuery';
+import Loading from 'src/components/loading/Loading';
+import PostHeader from './postHeader';
+import { CommentButton, LikeButton, ShareButton } from './buttonGroup';
+import { IPost } from 'src/queries/types';
+import { IUser } from 'src/types/account.types';
 
-export interface IPost {
-  id: number;
-  userName: string;
-  content: string;
-  topic: string[];
-  status: string;
-  image: string[];
-  likes: number;
-  comments: IComment[];
-  shares: number;
-}
-export interface IComment {
-  id: number;
-  user: string;
-  text: string;
+interface Props {
+  account: IUser;
+  setAccount: (a: IUser) => void;
 }
 
-const PostItem = () => {
+const PostItem: FC<Props> = ({ account, setAccount }) => {
+  // ============================== React Query Post ==============================
+  const { data: postData, isLoading, refetch: refetchPost } = useGetAllPosts(account, setAccount);
+
+  // ============================== State ==============================
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [likedPosts, setLikedPosts] = useState(fakeDataPost.map((post) => post.likes));
+  const [likedPosts, setLikedPosts] = useState(fakeDataPost.map((post) => 12));
   const [likedIndexes, setLikedIndexes] = useState([]);
-  const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedTopic, setSelectedTopic] = useState('');
 
-  const handleTopicSelect = (topic) => {
-    setSelectedTopic(topic);
-    setIsTopicModalOpen(false);
-  };
-  const handleCommentClick = () => {
-    setIsModalOpen(!isModalOpen);
-  };
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const handleShareClick = () => {
-    setIsShareModalOpen(true);
-  };
+
   const handleCloseShareModal = () => {
     setIsShareModalOpen(false);
   };
 
-  const handleLikeClick = (index: number) => {
-    if (likedIndexes.includes(index)) {
-      const newLikedIndexes = likedIndexes.filter((likedIndex) => likedIndex !== index);
-      setLikedIndexes(newLikedIndexes);
-      const newLikedPosts = [...likedPosts];
-      newLikedPosts[index] -= 1;
-      setLikedPosts(newLikedPosts);
-    } else {
-      const newLikedIndexes = [...likedIndexes, index];
-      setLikedIndexes(newLikedIndexes);
-      const newLikedPosts = [...likedPosts];
-      newLikedPosts[index] += 1;
-      setLikedPosts(newLikedPosts);
-    }
-  };
+  const userName = account?.username;
 
   return (
-    <Box className="post-item-container">
-      {fakeDataPost.map((post: IPost, index) => (
-        <Card key={post.id}>
-          <CardHeader
-            avatar={<Avatar />}
-            title={post.userName}
-            subheader={
-              <Typography variant="body2" color="textSecondary">
-                {post?.status}
-              </Typography>
-            }
-            action={<HiDotsHorizontal />}
-          />
-          <CardContent>
-            <Typography>{post.content}</Typography>
-          </CardContent>
-          <CardMedia component="img" image={post.image[0]} title={post.userName} />
-          <TopicItem
-            key={index}
-            post={post.topic}
-            open={isTopicModalOpen}
-            onOpenClose={() => setIsTopicModalOpen(!isTopicModalOpen)}
-            handleTopicSelect={handleTopicSelect}
-          />
-          <Box display="flex" flexWrap="wrap">
-            <CardContent>
-              <Typography variant="body2" color="textSecondary">
-                {likedPosts[index]} Likes
-              </Typography>
-            </CardContent>
-            <CardContent>
-              <Typography variant="body2" color="textSecondary">
-                {post.comments.length} Comments
-              </Typography>
-            </CardContent>
-            <CardContent>
-              <Typography variant="body2" color="textSecondary">
-                {post.shares} Shares
-              </Typography>
-            </CardContent>
-          </Box>
-          <CardActions>
-            <IconButton onClick={() => handleLikeClick(index)}>
-              <ThumbUpAltIcon style={{ color: likedIndexes.includes(index) ? 'rgb(135,44,228)' : 'inherit' }} />
-              <Typography>{likedPosts[index]}</Typography>
-            </IconButton>
-            <IconButton onClick={handleCommentClick}>
-              <ChatBubbleOutlineIcon />
-              <Typography>{post.comments.length}</Typography>
-              <CommentsList comments={post.comments} isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} />
-            </IconButton>
-            <IconButton onClick={handleShareClick}>
-              <ShareIcon />
-              <Typography>{post.shares}</Typography>
-            </IconButton>
-            <ShareModal open={isShareModalOpen} onClose={handleCloseShareModal} />
-          </CardActions>
-        </Card>
-      ))}
-    </Box>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Box className="post-item-container">
+          {postData?.data?.map((post: IPost, index) => {
+            return (
+              <Card key={post?.id}>
+                <PostHeader
+                  refetchPost={refetchPost}
+                  data={post}
+                  userName={userName}
+                  account={account}
+                />
+
+                <CardContent>
+                  <Typography>{post?.content}</Typography>
+                </CardContent>
+
+                <CardMedia component="img" image={post.img_url} title={userName} />
+
+                <Box display="flex" flexWrap="wrap">
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                      {likedPosts[index]} Likes
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                      {12} Comments
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                      {12} Shares
+                    </Typography>
+                  </CardContent>
+                </Box>
+
+                <CardActions>
+                  <LikeButton
+                    index={index}
+                    likedIndexes={likedIndexes}
+                    likedPosts={likedPosts}
+                    setLikedIndexes={setLikedIndexes}
+                    setLikedPosts={setLikedPosts}
+                  />
+                  <CommentButton isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} commentsCount={12} />
+                  <ShareButton
+                    isShareModalOpen={isShareModalOpen}
+                    setIsShareModalOpen={setIsShareModalOpen}
+                    sharesCount={12}
+                  />
+                  <CommentsList comments={['comments']} isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} />
+                  <ShareModal open={isShareModalOpen} onClose={handleCloseShareModal} />
+                </CardActions>
+              </Card>
+            );
+          })}
+        </Box>
+      )}
+    </>
   );
 };
 

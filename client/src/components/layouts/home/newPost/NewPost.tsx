@@ -20,12 +20,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import accountStore from 'src/store/accountStore';
-import { createPost, useGetAllTopicParents } from 'src/queries/functionQuery';
+import { createPost, editPost, useGetAllTopicParents } from 'src/queries/functionQuery';
 import { useMutation } from 'react-query';
 import AvatarComponent from './avatarComponent/AvatarComponent';
 import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
 import ImageUpload from './imageUpload/ImageUpload';
 import { observer } from 'mobx-react';
+import { IPost } from 'src/queries';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -37,10 +38,13 @@ const validationSchema = Yup.object({
 });
 interface Props {
   open?: boolean;
-  closePostModal?: () => void;
+  closePostModal?: (open) => void;
+  isEdit?: boolean;
+  dataEdit?: IPost;
+  onEditSuccess?: () => void;
 }
 
-const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
+const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal, isEdit, dataEdit }) => {
   const account = accountStore?.account;
 
   const setAccount = () => {
@@ -52,7 +56,9 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
     isLoading: isLoadingTopicParent,
     refetch,
   } = useGetAllTopicParents(account, setAccount);
-  const mutation = useMutation((postData) => createPost(postData, account));
+
+  const useCreatePost = useMutation((postData) => createPost(postData, account));
+  const useEditPost = useMutation((postData) => editPost(postData, account));
 
   const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
@@ -68,16 +74,32 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
 
   const handleMutationPost = async (postData) => {
     try {
-      const result = await mutation.mutateAsync(postData);
-      ToastSuccess('Create post successfully!');
+      const result = await useCreatePost.mutateAsync(postData);
+      if (result.status === 201) {
+        ToastSuccess('Create post successfully!');
+        refetch();
+      }
       console.log(`Post result: `, result);
     } catch (error) {
-      ToastError(`Error creating post: ${error}`);
+      ToastError(`Error creating post!`);
+    }
+  };
+
+  const handleEditPost = async (postData) => {
+    try {
+      const result = await useEditPost.mutateAsync(postData);
+      if (result.status === 200) {
+        ToastSuccess('Edit post successfully!');
+        onEditSuccess();
+      }
+    } catch (error) {
+      ToastError(`Error edit post!`);
     }
   };
 
   const handleCreatePost = (data) => {
     const postData = {
+      postId: dataEdit?.id,
       content: data?.postContent,
       image: data?.imageUrl || selectedImage,
       author_id: +accountStore.account.id,
@@ -85,8 +107,8 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
       tparent_id: +data?.selectedTopicParent,
     };
 
-    handleMutationPost(postData);
-    closePostModal?.();
+    isEdit ? handleEditPost(postData) : handleMutationPost(postData);
+    closePostModal?.(!open);
     setDefaultValue();
   };
 
@@ -104,10 +126,10 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
 
   const formik = useFormik({
     initialValues: {
-      postContent: '',
-      selectedTopicParent: '',
-      postTitle: '',
-      imageUrl: '',
+      postContent: dataEdit?.content,
+      selectedTopicParent: dataEdit?.tparent_id,
+      postTitle: dataEdit?.title,
+      imageUrl: dataEdit?.img_url,
     },
     validationSchema,
     onSubmit: handleCreatePost,
@@ -118,11 +140,11 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
   return (
     <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
       <DialogTitle id="form-dialog-title" className="dialog-title">
-        Create a post
+        {isEdit ? 'Edit a post' : 'Create a post'}
       </DialogTitle>
       <DialogContent className="dialog-content">
         <AvatarComponent url={url_img} username="Le V. Son" />
-        <DialogContentText className="post-label">Post a post you are interested:</DialogContentText>
+        {!isEdit && <DialogContentText className="post-label">Post a post you are interested:</DialogContentText>}
         <TextField
           autoFocus
           margin="dense"
@@ -209,7 +231,7 @@ const NewPost: React.FC<Props> = observer(({ open, closePostModal }) => {
 
         <Box className="actions-container">
           <Button className="post-button" onClick={submitForm}>
-            Post
+            {isEdit ? 'Edit' : 'Post'}
           </Button>
           <Button startIcon={<EmojiEmotionsIcon />} className="emotion-button" onClick={openEmotionModal}>
             Emotion

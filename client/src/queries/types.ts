@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export enum Example {
   Id = 'id',
   Name = 'name',
@@ -18,6 +20,12 @@ export interface ITopicChildren {
   urlImage?: string;
 }
 
+export type Action = {
+  title: string;
+  icon: ReactNode;
+  isHidden?: boolean;
+};
+
 export interface ITopicParent {
   id: number;
   topicParentName: string;
@@ -33,8 +41,20 @@ export interface IPostContent {
   tparent_id: number;
 }
 
+export interface IPost {
+  id: number;
+  content: string;
+  title: string;
+  img_url: string;
+  tparent_id: number;
+  author_id: number;
+  created_at: string;
+  updated_at: string;
+  approved: boolean;
+}
 
-
-export type GetPropertiesParams = {
-  [key: string]: string | number | string[];
-};
+export interface IComment {
+  id: number;
+  user: string;
+  text: string;
+}

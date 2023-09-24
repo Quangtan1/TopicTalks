@@ -1,1 +1,2 @@
-export * from './ExampleUseQuery';
+export * from './types';
+export * from './functionQuery';

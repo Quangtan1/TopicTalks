@@ -1,20 +1,11 @@
-import {
-  Avatar,
-  Box,
-  Modal,
-  List,
-  IconButton,
-  Typography,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from '@mui/material';
+import { Box, Modal, List, IconButton, Typography, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { IComment } from '../PostItem';
+// import { IComment } from '../PostItem';
 import './CommentsListModal.scss';
 
 interface Props {
-  comments: IComment[];
+  comments: any[];
+  // comments: IComment[];
   isModalOpen: boolean;
   handleCloseModal: () => void;
 }
@@ -41,15 +32,10 @@ const CommentsList: React.FC<Props> = ({ comments, isModalOpen, handleCloseModal
           <IoCloseCircleOutline />
         </IconButton>
         <List>
-          {comments.map((comment, index) => (
+          {comments?.map((comment, index) => (
             <ListItem key={index}>
-              <ListItemAvatar>
-                <Avatar>{comment.user[0]}</Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={comment.user}
-                secondary={<Typography variant="body2">{comment.text}</Typography>}
-              />
+              <ListItemAvatar>{/* <Avatar>{Comment}</Avatar> */}</ListItemAvatar>
+              <ListItemText primary={comment.user} secondary={<Typography variant="body2">{comment}</Typography>} />
             </ListItem>
           ))}
         </List>

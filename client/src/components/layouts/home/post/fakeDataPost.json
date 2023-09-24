@@ -1,60 +1,13 @@
 [
   {
-    "id": 2,
-    "userName": "Le V. Son",
-    "content": "Camping",
-    "topic": ["Life", "Love", "Sport"],
-    "status": "Đang cảm thấy hứng thú",
-    "image": [
-      "https://scontent.fhan14-3.fna.fbcdn.net/v/t39.30808-6/279960304_1995600470642995_358690004182455543_n.jpg?stp=dst-jpg_p960x960&_nc_cat=103&ccb=1-7&_nc_sid=52f669&_nc_ohc=lSU1l6Ac19UAX-G68Sw&_nc_ht=scontent.fhan14-3.fna&oh=00_AfCNGDdsbPEl6tv0fInGkEoHpVgUJC9LItZccDmzm4xupw&oe=6508D6EC"
-    ],
-    "likes": 10,
-    "comments": [
-      { "id": 1, "user": "User1", "text": "Great post!" },
-      { "id": 2, "user": "User2", "text": "Keep it up!" }
-    ],
-    "shares": 5
-  },
-  {
-    "id": 2,
-    "userName": "Le V. Son",
-    "content": "Have a nice day",
-    "topic": ["Life", "Love", "Sport"],
-    "status": "Đang cảm thấy hứng thú",
-    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1689988785/SocialMedia/amy81ve0jx2xaap79snj.jpg"],
-    "likes": 10,
-    "comments": [
-      { "id": 1, "user": "User1", "text": "Great post!" },
-      { "id": 2, "user": "User2", "text": "Keep it up!" }
-    ],
-    "shares": 5
-  },
-  {
-    "id": 3,
-    "userName": "Tan TQ",
-    "content": "Have a nice day",
-    "topic": ["Sport", "News", "Politics"],
-    "status": "Đang cảm thấy hứng thú",
-    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1689988785/SocialMedia/pxrgpphfim6pq1usglt1.jpg"],
-    "likes": 10,
-    "comments": [
-      { "id": 1, "user": "User1", "text": "Great post!" },
-      { "id": 2, "user": "User2", "text": "Keep it up!" }
-    ],
-    "shares": 5
-  },
-  {
     "id": 1,
-    "userName": "ABCXYZ",
-    "content": "Have a nice day",
-    "topic": ["Life", "Love", "Sport", "Music", "Sport", "News", "Politics", "Science", "Other"],
-    "status": "Đang cảm thấy hứng thú",
-    "image": ["https://res.cloudinary.com/tantqdev/image/upload/v1690612221/SocialMedia/amy81ve0jx2xaap79snj.jpg"],
-    "likes": 10,
-    "comments": [
-      { "id": 1, "user": "User1", "text": "Great post!" },
-      { "id": 2, "user": "User2", "text": "Keep it up!" }
-    ],
-    "shares": 5
+    "title": "str",
+    "content": "str",
+    "img_url": "https://scontent.fhan14-3.fna.fbcdn.net/v/t39.30808-6/279960304_1995600470642995_358690004182455543_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=52f669&_nc_ohc=yAH5CKsOSR0AX_YEe2v&_nc_ht=scontent.fhan14-3.fna&oh=00_AfD8eWKUHRIe_sLlhYkJaFxi_v_f9ZjZ0g8pvlRcP2KM8w&oe=6514B46C",
+    "tparent_id": 1,
+    "author_id": 1,
+    "created_at": "2023-09-24T19:13:49.541646",
+    "updated_at": "2023-09-24T19:13:49.541646",
+    "approved": false
   }
 ]
