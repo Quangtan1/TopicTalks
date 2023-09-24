@@ -4,7 +4,7 @@ import ChatContainer from 'src/components/layouts/chats/ChatContainer';
 import Profile from 'src/components/layouts/profile/Profile';
 import DashBoard from 'src/components/admin/dashboard/DashBoard';
 import ManageTopic from 'src/components/admin/managetopic/ManageTopic';
-import ManageUser from 'src/components/admin/manageuser/ManageUser';
+import ManageUsers from 'src/components/admin/manageusers/ManageUsers';
 
 const publicRoutes = [
   { path: '/newfeed', component: HomePage, isAdmin: false },
@@ -13,7 +13,7 @@ const publicRoutes = [
   { path: '/message', component: ChatContainer, isAdmin: false },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
   { path: '/manage-topic', component: ManageTopic, isAdmin: true },
-  { path: '/manage-user', component: ManageUser, isAdmin: true },
+  { path: '/manage-user', component: ManageUsers, isAdmin: true },
 ];
 
 export { publicRoutes };
