@@ -1,20 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Grid,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
-} from '@mui/material';
+import { Box, Grid, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import './Header.scss';
-import { headerRoute } from 'src/utils/consts';
-import { RiSearchLine } from 'react-icons/ri';
 import { HiOutlineSun } from 'react-icons/hi';
 import { BiGroup } from 'react-icons/bi';
 import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
@@ -24,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import uiStore from 'src/store/uiStore';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';

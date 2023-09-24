@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiPhoneCall } from 'react-icons/bi';

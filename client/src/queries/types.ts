@@ -4,25 +4,36 @@ export enum Example {
   Class = 'class',
 }
 
-export enum User {
-  UserId = 'userId',
-  Id = 'id',
-  Title = 'title',
-  Body = 'body',
-}
-
 export interface IExample {
   [Example.Id]?: string;
   [Example.Name]?: string;
   [Example.Class]?: string;
 }
 
-export interface IUser {
-  [User.Id]?: string;
-  [User.UserId]?: string;
-  [User.Body]?: string;
-  [User.Title]?: string;
+export interface ITopicChildren {
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  topicChildrenName: string;
+  urlImage?: string;
 }
+
+export interface ITopicParent {
+  id: number;
+  topicParentName: string;
+  createAt: string;
+  updateAt: string;
+}
+
+export interface IPostContent {
+  content: string;
+  image?: any;
+  author_id: number;
+  title: string;
+  tparent_id: number;
+}
+
+
 
 export type GetPropertiesParams = {
   [key: string]: string | number | string[];

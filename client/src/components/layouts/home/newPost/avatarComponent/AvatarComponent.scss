@@ -1,0 +1,21 @@
+.avatar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    .avatar {
+        margin-right: 10px;
+        border-radius: 12px;
+      }
+    
+      .username {
+        font-weight: bold;
+        color: rgb(135, 44, 228);
+      }
+    
+      .topic-tag {
+        font-size: 12px;
+        color: gray;
+      }
+  }
+
+ 

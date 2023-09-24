@@ -1,5 +1,4 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Typography } from '@mui/material';
-import { observer } from 'mobx-react';
 import React, { useEffect, useState, memo } from 'react';
 import './SelectTopicDialog.scss';
 import axios from 'axios';
