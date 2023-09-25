@@ -1,8 +1,9 @@
 import { observable, action, makeObservable } from 'mobx';
+import { ListMesage } from 'src/types/chat.type';
 
 class ChatStore {
   chats = null;
-  selectedChat = null;
+  selectedChat: ListMesage | null = null;
 
   constructor() {
     makeObservable(this, {

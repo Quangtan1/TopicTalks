@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import ChatContext from './ChatContext';
+import { IMessage } from 'src/types';
 
 interface ChatProviderProps {
   children: React.ReactNode;
 }
 
 const ChatProvider: React.FC<ChatProviderProps> = (props) => {
-  const [message, setMessage] = useState<any>([]);
+  const [message, setMessage] = useState<IMessage[]>([]);
 
   console.log(message, 'message');
   return (

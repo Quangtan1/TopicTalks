@@ -99,6 +99,7 @@
         .chat_item {
           display: flex;
           gap: 8px;
+          cursor: pointer;
           background: #fff;
           border-radius: 5px;
           box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
@@ -163,6 +164,7 @@
       border-radius: 5px;
       height: 55px;
       align-items: center;
+      min-height: 50px;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .header_option {
         display: flex;
@@ -192,6 +194,13 @@
           gap: 8px;
           padding: 5px 10px;
           .message_box {
+            .image-message {
+              padding: 10px;
+              border-radius: 6px;
+              width: 201px;
+              height: 300px;
+              object-fit: cover;
+            }
             p {
               font-family: var(--font-family-common);
             }
@@ -210,6 +219,9 @@
         #you {
           justify-content: flex-end;
           .message_box {
+            .image-message {
+              background: var(--main-color);
+            }
             .message_content {
               background: var(--main-color);
               border-radius: 8px 8px 0 8px;
@@ -237,6 +249,9 @@
         #other {
           justify-content: flex-start;
           .message_box {
+            .image-message {
+              background: #eaeff8;
+            }
             .message_content {
               border-radius: 8px 8px 8px 0;
               background: #eaeff8;
@@ -261,6 +276,70 @@
           }
         }
       }
+      .sologan_conversation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100%;
+        .icon-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 6px;
+        }
+        .icon:nth-child(1) {
+          animation-delay: 0s;
+        }
+
+        .icon:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        .icon:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+
+        .icon:nth-child(4) {
+          animation-delay: 0.6s;
+        }
+
+        .icon:nth-child(5) {
+          animation-delay: 0.8s;
+        }
+
+        @keyframes jump {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+
+        .icon {
+          font-size: 20px;
+          color: rgb(255, 178, 62);
+          animation: jump 1s infinite;
+        }
+        p {
+          color: var(--color-done-fg);
+          background-color: rgb(255, 178, 62);
+          background-image: linear-gradient(
+            268.67deg,
+            var(--main-color) 30.69%,
+            rgb(255, 163, 26) 55.54%,
+            rgb(255, 0, 115) 99%
+          );
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+          font-size: 20px;
+          font-style: italic;
+        }
+      }
     }
     em-emoji-picker {
       position: absolute;
@@ -276,7 +355,7 @@
       border-radius: 5px;
       gap: 8px;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
-
+      position: relative;
       .chatbox_input {
         width: 100%;
         .MuiInputBase-root {
@@ -292,11 +371,31 @@
         font-size: 22px;
         cursor: pointer;
       }
+      .image-name {
+        color: #fff;
+        display: flex;
+        background: #ced4da;
+        position: absolute;
+        left: 70px;
+        top: -20px;
+        border-radius: 5px;
+        align-items: center;
+        padding: 4px 8px;
+        p {
+          font-size: 14px;
+        }
+        svg {
+          display: flex;
+          align-items: center;
+          color: #fff;
+          font-size: 14px;
+        }
+      }
       .send_icon {
         background: var(--main-color);
         padding: 5px 9px;
         width: 35px;
-        height: 30px;
+        height: 32px;
         border-radius: 5px;
         cursor: pointer;
         path {

@@ -53,12 +53,12 @@ const CreateTopicDialog = observer((props: DialogProps) => {
       topicParentName: topicPrimary,
     };
     const topicChildParam = {
-      topicParentId: 1,
+      topicParentId: selectTopic,
       topicChildrenName: topicChild,
     };
     if (active === 1 ? topicPrimary !== '' : topicChild !== '') {
       postDataAPI(
-        `${active === 1 ? 'topic-parent/create' : 'topic-children/create'}`,
+        `${active === 1 ? '/topic-parent/create' : '/topic-children/create'}`,
         active === 1 ? topic : topicChildParam,
         account.access_token,
         axiosJWT,
@@ -74,7 +74,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   };
 
   useEffect(() => {
-    getDataAPI(`${API_KEY}/topic-parent/all`, account.access_token, axiosJWT)
+    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
       .then((res) => {
         setListTopic(res.data.data);
       })

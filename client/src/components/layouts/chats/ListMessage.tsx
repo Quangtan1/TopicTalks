@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
 import { IoCreateOutline } from 'react-icons/io5';
 import { BsChatDots } from 'react-icons/bs';
 import { AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
-import fakeChats from './fakeChats.json';
 import accountStore from 'src/store/accountStore';
 import { CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
+import { createAxios, getDataAPI } from 'src/utils';
+import chatStore from 'src/store/chatStore';
+import { ListMesage } from 'src/types/chat.type';
 
 const tabOption = [
   {
@@ -29,7 +31,30 @@ const tabOption = [
 
 const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [listMessage, setListMessage] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
+
+  useEffect(() => {
+    getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
+      .then((res) => {
+        setListMessage(res.data.data);
+        console.log('dataaaa11111', res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const setSelectedChat = (chat: ListMesage) => {
+    chatStore?.setSelectedChat(chat);
+  };
   return (
     <Box className="list_message_container">
       <Typography className="title_chat">Chats</Typography>
@@ -51,16 +76,21 @@ const ListMessage = observer(() => {
       </List>
       <Box className="list_chat_box">
         <List className="list_box">
-          {fakeChats.map((messItem) => (
-            <ListItem key={messItem.id} className="chat_item">
-              <Avatar />
-              <ListItemText className="chat_text_item">
-                <Typography>{messItem.nameChat}</Typography>
-                <Typography>{messItem.lastMessage}</Typography>
-              </ListItemText>
-              <Typography className="time_item">{messItem.time}</Typography>
-            </ListItem>
-          ))}
+          {listMessage?.length > 0 &&
+            listMessage?.map((item) => (
+              <ListItem key={item.conversationInfor.id} className="chat_item" onClick={() => setSelectedChat(item)}>
+                <Avatar />
+                <ListItemText className="chat_text_item">
+                  <Typography>
+                    {item.conversationInfor.isGroupChat === true
+                      ? item.conversationInfor.chatName
+                      : item.partnerDTO.username}
+                  </Typography>
+                  <Typography>aaaaa</Typography>
+                </ListItemText>
+                <Typography className="time_item">8:00</Typography>
+              </ListItem>
+            ))}
         </List>
       </Box>
       <Box className="chat_setting">
