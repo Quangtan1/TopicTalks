@@ -41,3 +41,14 @@ export interface ApiResponse {
   page: number;
   limit: number;
 }
+
+interface DataMessage {
+  message: string;
+}
+export interface IMessage {
+  conversationId: number;
+  data: DataMessage;
+  userId: number;
+  timeAt: string;
+  username: string;
+}

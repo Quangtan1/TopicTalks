@@ -192,6 +192,13 @@
           gap: 8px;
           padding: 5px 10px;
           .message_box {
+            .image-message {
+              padding: 10px;
+              border-radius: 6px;
+              width: 201px;
+              height: 300px;
+              object-fit: cover;
+            }
             p {
               font-family: var(--font-family-common);
             }
@@ -210,6 +217,9 @@
         #you {
           justify-content: flex-end;
           .message_box {
+            .image-message {
+              background: var(--main-color);
+            }
             .message_content {
               background: var(--main-color);
               border-radius: 8px 8px 0 8px;
@@ -237,6 +247,9 @@
         #other {
           justify-content: flex-start;
           .message_box {
+            .image-message {
+              background: #eaeff8;
+            }
             .message_content {
               border-radius: 8px 8px 8px 0;
               background: #eaeff8;
@@ -276,7 +289,7 @@
       border-radius: 5px;
       gap: 8px;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
-
+      position: relative;
       .chatbox_input {
         width: 100%;
         .MuiInputBase-root {
@@ -292,11 +305,31 @@
         font-size: 22px;
         cursor: pointer;
       }
+      .image-name {
+        color: #fff;
+        display: flex;
+        background: #ced4da;
+        position: absolute;
+        left: 70px;
+        top: -20px;
+        border-radius: 5px;
+        align-items: center;
+        padding: 4px 8px;
+        p {
+          font-size: 14px;
+        }
+        svg {
+          display: flex;
+          align-items: center;
+          color: #fff;
+          font-size: 14px;
+        }
+      }
       .send_icon {
         background: var(--main-color);
         padding: 5px 9px;
         width: 35px;
-        height: 30px;
+        height: 32px;
         border-radius: 5px;
         cursor: pointer;
         path {

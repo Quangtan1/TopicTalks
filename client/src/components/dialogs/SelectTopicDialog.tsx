@@ -71,7 +71,7 @@ const SelectTopicDialog = (props: DialogProps) => {
         <Typography>Please select the topic you are referring to.</Typography>{' '}
       </DialogTitle>
       <DialogContent className="dialog-content">
-        {listTopic.length > 0 &&
+        {listTopic?.length > 0 &&
           listTopic?.map((item) => (
             <Typography
               key={item.id}
