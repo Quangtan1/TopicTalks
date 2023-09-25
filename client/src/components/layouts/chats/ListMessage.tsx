@@ -8,6 +8,8 @@ import accountStore from 'src/store/accountStore';
 import { CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI } from 'src/utils';
+import chatStore from 'src/store/chatStore';
+import { ListMesage } from 'src/types/chat.type';
 
 const tabOption = [
   {
@@ -26,25 +28,6 @@ const tabOption = [
     content: 'Groups',
   },
 ];
-interface ITopicChild {
-  topicChildrenName: string;
-}
-interface IConversation {
-  id: number;
-  chatName: string | null;
-  isGroupChat: boolean;
-  topicChildren: ITopicChild;
-}
-interface IUserInfor {
-  id: number;
-  username: string;
-  isBanned: boolean;
-  imageUrl: string;
-}
-interface ListMesage {
-  conversationInfo: IConversation;
-  userInfo: IUserInfor;
-}
 
 const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
@@ -68,6 +51,10 @@ const ListMessage = observer(() => {
         console.log(err);
       });
   }, []);
+
+  const setSelectedChat = (chat: ListMesage) => {
+    chatStore?.setSelectedChat(chat);
+  };
   return (
     <Box className="list_message_container">
       <Typography className="title_chat">Chats</Typography>
@@ -91,10 +78,14 @@ const ListMessage = observer(() => {
         <List className="list_box">
           {listMessage?.length > 0 &&
             listMessage?.map((item) => (
-              <ListItem key={item.conversationInfo.id} className="chat_item">
+              <ListItem key={item.conversationInfor.id} className="chat_item" onClick={() => setSelectedChat(item)}>
                 <Avatar />
                 <ListItemText className="chat_text_item">
-                  <Typography>{item.userInfo.username}</Typography>
+                  <Typography>
+                    {item.conversationInfor.isGroupChat === true
+                      ? item.conversationInfor.chatName
+                      : item.partnerDTO.username}
+                  </Typography>
                   <Typography>aaaaa</Typography>
                 </ListItemText>
                 <Typography className="time_item">8:00</Typography>

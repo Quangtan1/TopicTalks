@@ -27,7 +27,7 @@ type SidebarItem = {
 
 const listSideBar: SidebarItem[] = [
   {
-    title: 'NewsFeed',
+    title: 'Home',
     icon: <AiOutlineHome />,
     path: '/newfeed',
   },
