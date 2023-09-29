@@ -29,7 +29,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'Home',
     icon: <AiOutlineHome />,
-    path: '/newfeed',
+    path: '/landing-view',
   },
   {
     title: 'Message',
@@ -59,7 +59,7 @@ const listSideBar: SidebarItem[] = [
 ];
 
 const SideBar = observer(() => {
-  const [activeItem, setActiveItem] = useState<string>('/newfeed');
+  const [activeItem, setActiveItem] = useState<string>('/landing-view');
   const [postModalOpen, setPostModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const account = accountStore?.account;
@@ -96,8 +96,11 @@ const SideBar = observer(() => {
   return (
     <Box className={`sidebar_container ${isResize ? 'expand_container' : 'collapse_container'}`}>
       <Box className="logo_sidebar">
-        <Typography>TopicTalks</Typography>
         <img src={logo} alt="logo" />
+        <Box className="title_logo">
+          <Typography>TopicTalks</Typography>
+          <Typography>Anonymously</Typography>
+        </Box>
       </Box>
       <Box className="admin_infor">
         <Avatar src={account?.url_img} alt="avt" />
@@ -106,7 +109,7 @@ const SideBar = observer(() => {
       </Box>
       <List className="list_item">
         {listSideBar.map(renderSidebarItem)}
-        <NewPost open={postModalOpen} closePostModal={closePostModal} />
+        {postModalOpen && <NewPost open={postModalOpen} closePostModal={closePostModal} />}
       </List>
       <Divider />
       <List className="list_item_setting">

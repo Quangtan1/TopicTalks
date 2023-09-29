@@ -10,14 +10,15 @@ import PostHeader from './postHeader';
 import { CommentButton, LikeButton, ShareButton } from './buttonGroup';
 import { IPost } from 'src/queries/types';
 import { IUser } from 'src/types/account.types';
+import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
 
-interface Props {
-  account: IUser;
-  setAccount: (a: IUser) => void;
-}
-
-const PostItem: FC<Props> = ({ account, setAccount }) => {
+const PostItem = observer(() => {
   // ============================== React Query Post ==============================
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
   const { data: postData, isLoading, refetch: refetchPost } = useGetAllPosts(account, setAccount);
 
   // ============================== State ==============================
@@ -45,12 +46,7 @@ const PostItem: FC<Props> = ({ account, setAccount }) => {
           {postData?.data?.map((post: IPost, index) => {
             return (
               <Card key={post?.id}>
-                <PostHeader
-                  refetchPost={refetchPost}
-                  data={post}
-                  userName={userName}
-                  account={account}
-                />
+                <PostHeader refetchPost={refetchPost} data={post} userName={userName} account={account} />
 
                 <CardContent>
                   <Typography>{post?.content}</Typography>
@@ -100,6 +96,6 @@ const PostItem: FC<Props> = ({ account, setAccount }) => {
       )}
     </>
   );
-};
+});
 
 export default PostItem;

@@ -6,13 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { configure } from 'mobx';
 import ChatProvider from './context/ChatProvider';
 
-configure({
-  enforceActions: 'always',
-  computedRequiresReaction: true,
-  reactionRequiresObservable: true,
-  observableRequiresReaction: true,
-  disableErrorBoundaries: false,
-});
+// configure({
+//   enforceActions: 'always',
+//   computedRequiresReaction: true,
+//   reactionRequiresObservable: true,
+//   observableRequiresReaction: true,
+//   disableErrorBoundaries: true,
+// });
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

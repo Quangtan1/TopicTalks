@@ -51,25 +51,18 @@ export const headerRoute = [
   },
   {
     title: 'Community',
-    path: '/home',
+    path: '/community',
   },
   {
-    title: 'Pages',
-    path: '/home',
+    title: 'Message',
+    path: '/message',
   },
   {
-    title: 'Blog',
-    path: '/home',
+    title: 'All Group',
+    path: '/all-group',
   },
   {
-    title: 'Group',
-    path: '/home',
-  },
-  {
-    title: 'Courses',
-    path: '/home',
+    title: 'Contact Us',
+    path: '/contact',
   },
 ];
-
-
-

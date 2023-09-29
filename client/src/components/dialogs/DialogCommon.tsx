@@ -12,6 +12,7 @@ import React from 'react';
 import './DialogCommon.scss';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { CiWarning } from 'react-icons/ci';
+import { observer } from 'mobx-react';
 
 interface DialogProps {
   open: boolean;
@@ -23,7 +24,7 @@ interface DialogProps {
 const Transition = React.forwardRef(function Transition(props: any, ref) {
   return <Slide direction="down" ref={ref} {...props} />;
 });
-const DialogCommon = (props: DialogProps) => {
+const DialogCommon = observer((props: DialogProps) => {
   const { open, content, onClose, onConfirm } = props;
   return (
     <Dialog open={open} onClose={onClose} TransitionComponent={Transition} className="dialog-common">
@@ -41,6 +42,6 @@ const DialogCommon = (props: DialogProps) => {
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default DialogCommon;

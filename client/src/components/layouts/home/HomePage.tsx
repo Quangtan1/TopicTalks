@@ -6,7 +6,7 @@ import { observer } from 'mobx-react';
 import { BiArrowToTop } from 'react-icons/bi';
 import Loading from 'src/components/loading/Loading';
 import uiStore from 'src/store/uiStore';
-import TopicList from './topicList/TopicList';
+import PostItem from './post/PostItem';
 
 const HomePage = observer(() => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -46,7 +46,7 @@ const HomePage = observer(() => {
       ) : (
         <Grid container className={`new_feed ${isResize ? 'expand_home' : 'collapse_home'}`}>
           <Grid item md={7.5}>
-            <TopicList />
+            <PostItem />
           </Grid>
           <Grid item md={4.5}>
             <SuggestBox />

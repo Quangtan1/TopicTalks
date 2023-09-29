@@ -63,7 +63,7 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
   const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
   const [emotion, setEmotion] = useState('');
-  const { url_img } = accountStore.account;
+  const url_img = accountStore?.account?.url_img;
   const [selectedImage, setSelectedImage] = useState(null);
 
   const setDefaultValue = () => {

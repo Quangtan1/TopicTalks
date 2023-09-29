@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
 import { IoCreateOutline } from 'react-icons/io5';
 import { BsChatDots } from 'react-icons/bs';
@@ -45,11 +45,13 @@ const ListMessage = observer(() => {
     getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
       .then((res) => {
         setListMessage(res.data.data);
-        console.log('dataaaa11111', res.data.data);
       })
       .catch((err) => {
         console.log(err);
       });
+    return () => {
+      chatStore?.setSelectedChat(null);
+    };
   }, []);
 
   const setSelectedChat = (chat: ListMesage) => {
@@ -84,7 +86,7 @@ const ListMessage = observer(() => {
                   <Typography>
                     {item.conversationInfor.isGroupChat === true
                       ? item.conversationInfor.chatName
-                      : item.partnerDTO.username}
+                      : item.partnerDTO[0].username}
                   </Typography>
                   <Typography>aaaaa</Typography>
                 </ListItemText>
@@ -104,4 +106,4 @@ const ListMessage = observer(() => {
   );
 });
 
-export default ListMessage;
+export default memo(ListMessage);

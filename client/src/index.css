@@ -43,6 +43,9 @@ code {
   background: transparent;
   border-radius: 20px;
 }
+p {
+  font-family: Poppins;
+}
 
 :root {
   --font-base: 'Cormorant Upright', serif;
@@ -57,5 +60,5 @@ code {
   --blue-color: #2f65b9;
   --sidebar-color: #6f7f92;
   --item-color: rgb(111, 127, 146);
-  --font-family-common: 'Plus Jakarta Sans';
+  --font-family-common: 'Poppins';
 }

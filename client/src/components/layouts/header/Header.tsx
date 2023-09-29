@@ -13,7 +13,6 @@ import {
   ListItemIcon,
 } from '@mui/material';
 import './Header.scss';
-import { headerRoute } from 'src/utils/consts';
 import { RiSearchLine } from 'react-icons/ri';
 import { HiOutlineSun } from 'react-icons/hi';
 import { BiGroup } from 'react-icons/bi';
@@ -31,14 +30,17 @@ const LOGOUT_CONTENT = 'Do you want to logout?';
 
 const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const isResize = uiStore?.collapse;
 
   const account = accountStore?.account;
+  const accountRole = accountStore?.account?.roles;
+
+  const openMenu = Boolean(anchorEl);
 
   const handleClose = () => {
-    setAnchorEl(false);
+    setAnchorEl(null);
   };
 
   const onConfirm = () => {
@@ -54,8 +56,9 @@ const Header = observer(() => {
 
   useEffect(() => {
     account === null && navigate('/auth');
-    account?.roles.includes('ROLE_ADMIN') && navigate('/dashboard');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (account) {
+      accountRole.includes('ROLE_ADMIN') && navigate('/dashboard');
+    }
   }, []);
 
   const handleGoToProfilePage = () => {
@@ -67,11 +70,6 @@ const Header = observer(() => {
     <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
       <Grid container className="grid_container">
         <Grid item md={7} className="header-bar">
-          {headerRoute.map((route, index) => (
-            <Typography key={index}>{route.title}</Typography>
-          ))}
-        </Grid>
-        <Grid item md={5} className="info-bar">
           <TextField
             required
             placeholder="Search..."
@@ -85,6 +83,8 @@ const Header = observer(() => {
             autoFocus
             className="search"
           />
+        </Grid>
+        <Grid item md={5} className="info-bar">
           <Box className="menu-bar">
             <HiOutlineSun />
             <BiGroup />
@@ -102,7 +102,7 @@ const Header = observer(() => {
             </IconButton>
             <Menu
               id="account-menu"
-              open={anchorEl}
+              open={openMenu}
               onClose={handleClose}
               onClick={handleClose}
               PaperProps={{
@@ -135,7 +135,7 @@ const Header = observer(() => {
           </Box>
         </Grid>
       </Grid>
-      <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />
+      {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}
     </Box>
   );
 });

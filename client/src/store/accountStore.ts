@@ -1,4 +1,4 @@
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, configure } from 'mobx';
 import { IUser } from 'src/types/account.types';
 import { persistStore } from './persistence/mobx.utils';
 import { clearPersist, stopPersist, startPersist } from 'mobx-persist-store';

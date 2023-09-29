@@ -9,7 +9,6 @@ interface ChatProviderProps {
 const ChatProvider: React.FC<ChatProviderProps> = (props) => {
   const [message, setMessage] = useState<IMessage[]>([]);
 
-  console.log(message, 'message');
   return (
     <div>
       <ChatContext.Provider

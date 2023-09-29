@@ -25,11 +25,6 @@ import uiStore from 'src/store/uiStore';
 import accountStore from 'src/store/accountStore';
 
 const Profile = observer(() => {
-  const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
-  };
-
   const [activeTab, setActiveTab] = React.useState(0);
   const isResize = uiStore?.collapse;
 
@@ -104,7 +99,7 @@ const Profile = observer(() => {
               <Tab label="Following Posts" />
             </Tabs>
             <Box>
-              <PostItem account={account} setAccount={setAccount} />
+              <PostItem />
             </Box>
           </Paper>
         </Grid>
