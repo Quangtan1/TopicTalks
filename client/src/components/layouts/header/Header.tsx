@@ -1,29 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Grid,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Divider,
-  ListItemIcon,
-} from '@mui/material';
+import { Box, Typography, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import './Header.scss';
-import { RiSearchLine } from 'react-icons/ri';
-import { HiOutlineSun } from 'react-icons/hi';
-import { BiGroup } from 'react-icons/bi';
 import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import uiStore from 'src/store/uiStore';
+import { headerRoute, logo } from 'src/utils';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -31,8 +16,10 @@ const LOGOUT_CONTENT = 'Do you want to logout?';
 const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [activeRoute, setActiveRoute] = useState<string>('/landing-view');
   const navigate = useNavigate();
-  const isResize = uiStore?.collapse;
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
@@ -59,6 +46,7 @@ const Header = observer(() => {
     if (account) {
       accountRole.includes('ROLE_ADMIN') && navigate('/dashboard');
     }
+    setActiveRoute(currentPath);
   }, []);
 
   const handleGoToProfilePage = () => {
@@ -66,75 +54,75 @@ const Header = observer(() => {
     navigate('/profile');
   };
 
+  const handleActive = (navigate: string) => {
+    setActiveRoute(navigate);
+  };
+
   return (
-    <Box className={`header_container ${isResize ? 'expand_header' : 'collapse_header'}`}>
-      <Grid container className="grid_container">
-        <Grid item md={7} className="header-bar">
-          <TextField
-            required
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <RiSearchLine />
-                </InputAdornment>
-              ),
+    <Box className="header">
+      <Box className="logo_sidebar">
+        <img src={logo} alt="logo" />
+        <Box className="title_logo">
+          <Typography>TopicTalks</Typography>
+          <Typography>Anonymously</Typography>
+        </Box>
+      </Box>
+      <Box className="header_option">
+        {headerRoute.map((item, index) => (
+          <Typography
+            key={index}
+            onClick={() => {
+              navigate(`${item.path}`);
+              handleActive(item.path);
             }}
-            autoFocus
-            className="search"
-          />
-        </Grid>
-        <Grid item md={5} className="info-bar">
-          <Box className="menu-bar">
-            <HiOutlineSun />
-            <BiGroup />
-            <IoMailUnreadOutline />
-            <IoNotificationsOutline />
-            <IconButton onClick={() => setAnchorEl(true)}>
-              <Avatar
-                sx={{
-                  width: 32,
-                  height: 32,
-                }}
-                src={account?.url_img}
-                alt="avatar"
-              />
-            </IconButton>
-            <Menu
-              id="account-menu"
-              open={openMenu}
-              onClose={handleClose}
-              onClick={handleClose}
-              PaperProps={{
-                elevation: 0,
-                className: 'custom-paper',
-              }}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-              <MenuItem onClick={handleGoToProfilePage}>
-                <ListItemIcon>
-                  <Avatar src={account?.url_img} alt="avatar" />
-                </ListItemIcon>
-                Profile Infor
-              </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleClose}>
-                <ListItemIcon>
-                  <Settings fontSize="small" />
-                </ListItemIcon>
-                Settings
-              </MenuItem>
-              <MenuItem onClick={() => setOpen(true)}>
-                <ListItemIcon>
-                  <Logout fontSize="small" />
-                </ListItemIcon>
-                Logout
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Grid>
-      </Grid>
+            className={`${activeRoute === item.path && 'selected_navigate'}`}
+          >
+            {item.title}
+          </Typography>
+        ))}
+      </Box>
+      <Box className="infor_header">
+        <IoMailUnreadOutline />
+        <IoNotificationsOutline />
+        <span className="notifi_icon">0</span>
+        <IconButton onClick={() => setAnchorEl(true)}>
+          <Avatar src={account?.url_img} alt="avatar" />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={openMenu}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            className: 'custom-paper',
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+        >
+          <MenuItem onClick={handleGoToProfilePage}>
+            <ListItemIcon>
+              <Avatar src={account?.url_img} alt="avatar" />
+            </ListItemIcon>
+            Profile Infor
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={() => setOpen(true)}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Menu>
+        <Typography className="name_account">{account?.username}</Typography>
+      </Box>
       {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}
     </Box>
   );

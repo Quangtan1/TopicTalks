@@ -1,15 +1,16 @@
-import { Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography } from '@mui/material';
 import React, { useEffect, useState, useMemo } from 'react';
 import memoizeOne from 'memoize-one';
 import './LandingView.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, headerRoute, logo } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 
 const responsive = {
   desktop: {
@@ -87,14 +88,14 @@ const LandingView = observer(() => {
   };
 
   return (
-    <Box className={`landing_container ${isResize ? 'expand_landing' : 'collapse_landing'}`}>
-      <Typography className="sologan_topic">
-        Easily connect and chat with strangers based on your interested topics.
-      </Typography>
+    <Box className="landing_container">
       {listTopic.length > 0 &&
         listTopic?.map((topicParent) => (
-          <Box key={topicParent?.id} className="list_topic_box">
-            <Typography className="title_parent_topic">{topicParent.topicParentName}</Typography>
+          <Box key={topicParent?.id} className="topic_box">
+            <Typography className="title_parent_topic">
+              <strong>Discovery</strong> {topicParent.topicParentName}
+            </Typography>
+            <Typography className="title_background">{topicParent.topicParentName}</Typography>
             <Carousel
               swipeable={false}
               draggable={false}

@@ -59,7 +59,7 @@ const ListMessage = observer(() => {
   };
   return (
     <Box className="list_message_container">
-      <Typography className="title_chat">Chats</Typography>
+      <Typography className="title_chat">Chat Rooms</Typography>
       <Box className="chat_option">
         <TextField required placeholder="Search..." autoFocus className="search" />
         <IoCreateOutline />
