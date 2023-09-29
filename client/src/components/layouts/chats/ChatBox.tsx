@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo, BsThreeDotsVertical } from 'react-icons/bs';
@@ -20,53 +20,67 @@ import { CiCircleRemove } from 'react-icons/ci';
 import VideoCall from './videocall/VideoCall';
 import chatStore from 'src/store/chatStore';
 import { IoLogoSnapchat } from 'react-icons/io5';
+import { ICallData, ListMesage } from 'src/types/chat.type';
+import Peer from 'simple-peer';
 
-var socket, selectedChatCompare;
-
-const ChatBox = observer(() => {
+var socket;
+interface ChatProps {
+  chat: ListMesage;
+}
+const ChatBox = observer((props: ChatProps) => {
   const [currentContent, setCurrentContent] = useState<string>('');
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const account = accountStore?.account;
   const isSelecedChat = chatStore?.selectedChat !== null;
   const [imageFile, setImageFile] = useState<string>('');
   const fileInputRef = useRef(null);
-  const chat = chatStore?.selectedChat;
+  const { chat } = props;
 
   //video call
   const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
-  const [stream, setStream] = useState<MediaStream>();
-  const myVideo = useRef(null);
-  const userVideo = useRef();
-  const connectionRef = useRef();
-
-  const isImage = ['.png', 'jpg', '.svg'];
+  const [callUser, setCallUser] = useState<ICallData>(null);
+  const [receiveCallUser, setReceiveCallUser] = useState<ICallData>(null);
+  const [isAccepted, setIsAccepted] = useState<boolean>(false);
+  const isImage = ['.png', 'jpg', '.svg', '.webp'];
 
   const { message, setMessage } = useContext(ChatContext);
 
   useEffect(() => {
-    // navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream: MediaStream) => {
-    //   setStream(stream);
-    //   myVideo.current.srcObject = stream;
-    // });
-
     socket = io(`http://localhost:8085?uid=${account.id}`);
     socket.on('connect', () => {
       console.log('Connect Socket.IO');
     });
-
-    const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
-      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
-      console.log('receiveMessage', receiveMessageDTO);
-    };
-
     socket.on('sendMessage', handleReceiveMessage);
+    socket.on('1V1CommunicateVideo', (data: ICallData) => {
+      if (data.data.message === 'reject') {
+        setCallUser(null);
+        setReceiveCallUser(null);
+        setIsAccepted(false);
+        setOpenVideoCall(false);
+      } else if (data.data.message === 'accept') {
+        setIsAccepted(true);
+        setReceiveCallUser(data);
+      } else {
+        setReceiveCallUser(data);
+        setOpenVideoCall(true);
+      }
+    });
     return () => {
       socket.on('disconnect', () => {
         console.log('Disconnect Socket.IO');
       });
       socket.disconnect();
     };
-  }, []);
+  }, [chat]);
+
+  const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
+    if (chat?.conversationInfor?.id === receiveMessageDTO.conversationId) {
+      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
+      console.log('receiveMessage', receiveMessageDTO);
+    } else {
+      console.log('notification');
+    }
+  };
 
   useEffect(() => {
     if (imageFile !== '') {
@@ -81,7 +95,7 @@ const ChatBox = observer(() => {
         data: {
           message: message,
         },
-        TargetId: chat.partnerDTO.id,
+        TargetId: chat.partnerDTO[0].id,
         userId: account.id,
         conversationId: chat.conversationInfor.id,
       };
@@ -98,6 +112,23 @@ const ChatBox = observer(() => {
       setCurrentContent('');
       setImageFile('');
     }
+  };
+
+  const handleCallVideo = () => {
+    const receiveMessageDTO = {
+      data: {
+        message: 'call',
+      },
+      targetName: chat.partnerDTO[0].username,
+      targetId: chat.partnerDTO[0].id,
+      timeAt: '2023-09-22T17:05:40.065964',
+      userId: account.id,
+      username: account.username,
+      conversationId: chat.conversationInfor.id,
+    };
+    socket.emit('1V1CommunicateVideo', receiveMessageDTO);
+    setCallUser(receiveMessageDTO);
+    setOpenVideoCall(true);
   };
 
   const addEmoji = (emoji: any) => {
@@ -125,8 +156,42 @@ const ChatBox = observer(() => {
     fileInputRef.current.click();
   };
 
+  const targetNameCustom =
+    account.username !== receiveCallUser?.username && receiveCallUser?.username !== undefined
+      ? receiveCallUser?.username
+      : callUser?.targetName;
+  const targetIdCustom =
+    account.id !== receiveCallUser?.userId && receiveCallUser?.userId !== undefined
+      ? receiveCallUser?.userId
+      : callUser?.targetId;
+  const receiveMessageDTO = {
+    data: {
+      message: 'reject',
+    },
+    targetName: targetNameCustom,
+    targetId: targetIdCustom,
+    timeAt: '2023-09-22T17:05:40.065964',
+    userId: account.id,
+    username: account.username,
+    conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
+  };
   const handleLeaveCall = () => {
+    setCallUser(null);
+    setReceiveCallUser(null);
+    socket.emit('1V1CommunicateVideo', receiveMessageDTO);
+    setIsAccepted(false);
     setOpenVideoCall(false);
+  };
+
+  const acceptCall = () => {
+    const acceptData = {
+      ...receiveMessageDTO,
+      data: {
+        message: 'accept',
+      },
+    };
+    setIsAccepted(true);
+    socket.emit('1V1CommunicateVideo', acceptData);
   };
 
   return (
@@ -135,11 +200,13 @@ const ChatBox = observer(() => {
         {isSelecedChat && (
           <>
             <Typography>
-              {chat.conversationInfor.isGroupChat === true ? chat.conversationInfor.chatName : chat.partnerDTO.username}
+              {chat.conversationInfor.isGroupChat === true
+                ? chat.conversationInfor.chatName
+                : chat.partnerDTO[0].username}
             </Typography>
             <Box className="header_option">
               <BiPhoneCall onClick={initChat} />
-              <BsCameraVideo />
+              <BsCameraVideo onClick={handleCallVideo} />
               <BsThreeDotsVertical />
             </Box>
           </>
@@ -201,7 +268,7 @@ const ChatBox = observer(() => {
               ref={fileInputRef}
               style={{ display: ' none' }}
               onChange={(e) => {
-                handleImageUpload(e.target.files, setImageFile);
+                handleImageUpload(e.target.files, setImageFile, false);
                 uiStore?.setLoading(true);
               }}
             />
@@ -234,9 +301,18 @@ const ChatBox = observer(() => {
           </>
         )}
       </Box>
-      <VideoCall open={openVideoCall} onLeaveCall={handleLeaveCall} />
+      {openVideoCall && (
+        <VideoCall
+          open={openVideoCall}
+          onLeaveCall={handleLeaveCall}
+          callUser={callUser}
+          receiveCallUser={receiveCallUser}
+          acceptCall={acceptCall}
+          isAccepted={isAccepted}
+        />
+      )}
     </Box>
   );
 });
 
-export default ChatBox;
+export default memo(ChatBox);

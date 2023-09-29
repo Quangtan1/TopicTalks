@@ -1,0 +1,91 @@
+.expand_landing,
+.collapse_landing {
+  padding: 90px 0px 0px 145px;
+  transition: padding 0.5s ease;
+}
+
+.expand_landing {
+  padding-left: 280px;
+}
+
+.landing_container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .sologan_topic {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .list_topic_box {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+    .title_parent_topic {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    .card_topic_child {
+      cursor: pointer;
+      border-radius: 10px;
+      max-width: 290px;
+      width: 100%;
+      height: 200px;
+      background: var(--item-color);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      object-fit: cover;
+      .topic_child_title {
+        font-size: 18px;
+        color: #fff;
+        position: relative;
+        z-index: 3;
+        font-weight: 600;
+      }
+      .image_topic {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        object-fit: cover;
+        max-width: 290px;
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+      }
+
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 10px;
+        height: 100%;
+        background-color: rgba(84, 73, 73, 0.7);
+        z-index: 2;
+      }
+    }
+    .card_topic_child:hover {
+      transform: scale(1.04);
+      .overlay {
+        background: transparent;
+      }
+    }
+    .react-multiple-carousel__arrow--left {
+      left: calc(1% + 1px);
+    }
+    .react-multiple-carousel__arrow--right {
+      right: calc(2% + 1px);
+    }
+    .react-multiple-carousel__arrow {
+      z-index: 4;
+    }
+    .react-multi-carousel-item:not(:has(.card_topic_child)) {
+      display: none;
+    }
+  }
+}

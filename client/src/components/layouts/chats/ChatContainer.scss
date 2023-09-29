@@ -326,7 +326,6 @@
           animation: jump 1s infinite;
         }
         p {
-          color: var(--color-done-fg);
           background-color: rgb(255, 178, 62);
           background-image: linear-gradient(
             268.67deg,
@@ -356,6 +355,7 @@
       gap: 8px;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       position: relative;
+      min-height: 50px;
       .chatbox_input {
         width: 100%;
         .MuiInputBase-root {

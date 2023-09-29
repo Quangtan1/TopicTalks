@@ -21,12 +21,12 @@ export const formatDateTime = (value: string, format: string = DateFormatDisplay
   return dayjs(value).format(format);
 };
 
-export const handleImageUpload = (image, setImageUrl) => {
+export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
   console.log('11111');
   const data = new FormData();
   for (let i = 0; i < image.length; i++) {
     data.append('file', image[i]);
-    data.append('upload_preset', 'topictalk_message_image');
+    data.append('upload_preset', `${isPost ? 'topicchildandpost' : 'topictalk_message_image'}`);
     data.append('cloud_name', 'tantqdev');
     fetch('https://api.cloudinary.com/v1_1/tantqdev/image/upload', {
       method: 'post',

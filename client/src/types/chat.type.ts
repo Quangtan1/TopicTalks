@@ -17,5 +17,17 @@ interface IPartnerDTO {
 }
 export interface ListMesage {
   conversationInfor: IConversation;
-  partnerDTO: IPartnerDTO;
+  partnerDTO: IPartnerDTO[];
+}
+
+export interface ICallData {
+  data: {
+    message: string;
+  };
+  targetName: string;
+  targetId: number;
+  timeAt: string;
+  userId: number;
+  username: string;
+  conversationId: number;
 }

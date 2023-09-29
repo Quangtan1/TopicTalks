@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { IUser } from 'src/types/account.types';
 
 export const API_KEY = 'http://localhost:5000/api/v1';
 
@@ -15,7 +16,7 @@ const refreshToken = async (resToken) => {
   }
 };
 
-export const createAxios = (user: any, setAccount: any) => {
+export const createAxios = (user: IUser, setAccount: any) => {
   const newInstance = axios.create({
     baseURL: API_KEY,
     headers: {

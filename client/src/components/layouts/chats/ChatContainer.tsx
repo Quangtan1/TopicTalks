@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, memo } from 'react';
 import './ChatContainer.scss';
 import ListMessage from './ListMessage';
 import ChatBox from './ChatBox';
@@ -35,9 +35,9 @@ const ChatContainer = observer(() => {
   return (
     <Box className={`chat_container ${isResize ? 'expand_chat' : 'collapse_chat'}`}>
       <ListMessage />
-      <ChatBox />
+      <ChatBox chat={chat} />
     </Box>
   );
 });
 
-export default ChatContainer;
+export default memo(ChatContainer);
