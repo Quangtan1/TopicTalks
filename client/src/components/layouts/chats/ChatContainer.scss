@@ -1,18 +1,11 @@
-.expand_chat,
-.collapse_chat {
-  padding: 80px 0px 0px 125px;
-  transition: padding 0.5s ease;
-}
-
-.expand_chat {
-  padding-left: 260px;
-}
 .chat_container {
   display: flex;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
+  max-height: 680px;
   gap: 15px;
+  padding: 20px 100px;
   .list_message_container {
     width: 20vw;
     min-width: 320px;
@@ -20,10 +13,13 @@
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
+    background: #303841;
+    padding: 10px 10px 0px;
     .title_chat {
-      font-weight: 500;
-      font-size: 18px;
+      font-weight: 600;
+      font-size: 20px;
       height: 17px;
+      color: #fff;
     }
     .chat_option {
       display: flex;
@@ -31,17 +27,15 @@
       padding: 10px 12px;
       border-radius: 8px;
       gap: 8px;
-      background: #fff;
+      background: #36404a;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .search {
         width: 100%;
         .MuiInputBase-root {
           input {
             padding: 6px 0px 4px 10px;
+            color: #fff;
           }
-        }
-        .Mui-focused .MuiOutlinedInput-notchedOutline {
-          border: 2px solid var(--main-color);
         }
       }
       svg {
@@ -49,7 +43,7 @@
         width: 35px;
         height: 35px;
         border-radius: 8px;
-        background: #eaeff8;
+        background: #36404a;
         font-family: var(--font-family-common);
         color: var(--item-color);
         cursor: pointer;
@@ -60,7 +54,7 @@
       align-items: center;
       padding: 10px 12px;
       border-radius: 8px;
-      background: #fff;
+      background: #36404a;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .tab_item {
         display: flex;
@@ -72,21 +66,14 @@
         p,
         svg {
           font-family: var(--font-family-common);
-          color: var(--item-color);
+          color: #fff;
           path {
-            stroke: var(--item-color);
+            stroke: #fff;
           }
         }
       }
       .tab_selected {
-        background: #eaeff8;
-        p,
-        svg {
-          color: var(--main-color);
-          path {
-            stroke: var(--main-color);
-          }
-        }
+        background: var(--main-color);
       }
     }
     .list_chat_box {
@@ -100,12 +87,13 @@
           display: flex;
           gap: 8px;
           cursor: pointer;
-          background: #fff;
+          background: #36404a;
           border-radius: 5px;
           box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
           .chat_text_item {
             width: 60px;
             p {
+              color: #fff;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -126,7 +114,7 @@
     }
     .chat_setting {
       display: flex;
-      background: #fff;
+      background: #36404a;
       border-radius: 5px;
       align-items: center;
       justify-content: space-between;
@@ -141,15 +129,16 @@
       svg {
         font-size: 22px;
         cursor: pointer;
+        color: #fff;
       }
       p {
+        color: #fff;
         font-family: var(--font-family-common);
       }
     }
   }
   .chatbox_container {
     width: 80vw;
-    padding-top: 33px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -160,7 +149,7 @@
       display: flex;
       justify-content: space-between;
       padding: 10px 12px;
-      background: #fff;
+      background: #303841;
       border-radius: 5px;
       height: 55px;
       align-items: center;
@@ -170,18 +159,20 @@
         display: flex;
         gap: 10px;
         svg {
+          color: #fff;
           font-size: 22px;
           cursor: pointer;
         }
       }
       svg,
       p {
+        color: #fff;
         font-family: var(--font-family-common);
       }
     }
     //chatbox
     .chat_box {
-      background: #fff;
+      background: #303841;
       border-radius: 5px;
       height: calc(100vh - 270px);
       overflow: auto;
@@ -250,20 +241,21 @@
           justify-content: flex-start;
           .message_box {
             .image-message {
-              background: #eaeff8;
+              background: #36404a;
             }
             .message_content {
               border-radius: 8px 8px 8px 0;
-              background: #eaeff8;
+              background: #4e565f;
               position: relative;
+              color: #fff;
             }
             .message_content::before {
               border-bottom: 5px solid transparent;
-              border-left: 5px solid #eaeff8;
-              border-left-color: #eaeff8;
+              border-left: 5px solid #36404a;
+              border-left-color: #36404a;
               border-right: 5px solid transparent;
-              border-top: 5px solid #eaeff8;
-              border-top-color: #eaeff8;
+              border-top: 5px solid #36404a;
+              border-top-color: #36404a;
               bottom: -9px;
               content: '';
               left: 0;
@@ -348,7 +340,7 @@
     }
     .chatbox_footer {
       display: flex;
-      background: #fff;
+      background: #303841;
       align-items: center;
       padding: 10px 12px;
       border-radius: 5px;
@@ -361,13 +353,15 @@
         .MuiInputBase-root {
           input {
             padding: 6px 0px 6px 10px;
+            color: #fff;
           }
         }
         .Mui-focused .MuiOutlinedInput-notchedOutline {
-          border: 2px solid var(--main-color);
+          border: 2px solid #ced4da;
         }
       }
       svg {
+        color: var(--main-color);
         font-size: 22px;
         cursor: pointer;
       }

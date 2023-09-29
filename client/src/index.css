@@ -32,11 +32,11 @@ code {
   border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #8224e3;
+  background: #606ae8;
   border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #8224e3;
+  background: #606ae8;
   border-radius: 20px;
 }
 ::-webkit-scrollbar-track {
@@ -44,7 +44,7 @@ code {
   border-radius: 20px;
 }
 p {
-  font-family: Poppins;
+  font-family: Source Sans Pro,sans-serif;
 }
 
 :root {
@@ -56,7 +56,7 @@ p {
   --color-gray: #f7f7f7;
   --color-crimson: #F5EFDB;
   --color-white: #ffff;
-  --main-color: #8224e3;
+  --main-color: #606ae8;
   --blue-color: #2f65b9;
   --sidebar-color: #6f7f92;
   --item-color: rgb(111, 127, 146);

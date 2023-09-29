@@ -1,30 +1,43 @@
-.expand_landing,
-.collapse_landing {
-  padding: 90px 0px 0px 145px;
-  transition: padding 0.5s ease;
-}
-
-.expand_landing {
-  padding-left: 280px;
-}
-
 .landing_container {
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  margin: 0 auto;
+  background: #0d1018;
+  overflow-x: hidden;
+  padding: 0px 100px;
+
   .sologan_topic {
     font-size: 20px;
     font-weight: 600;
   }
-  .list_topic_box {
+  .topic_box {
     display: flex;
     flex-direction: column;
-    padding-bottom: 20px;
+    background: #0d1018;
+    position: relative;
+    margin-bottom: 50px;
+    .title_background {
+      color: #212332;
+      text-align: center;
+      font-size: 100px;
+      text-transform: uppercase;
+      height: 280px;
+      padding: 60px;
+    }
     .title_parent_topic {
-      font-size: 24px;
+      position: absolute;
+      font-size: 25px;
       font-weight: 600;
+      color: #606ae8;
+      width: 87vw;
+      padding-top: 117px;
+      text-align: center;
+      margin: 0 auto;
+      strong {
+        color: #fafcfb;
+      }
     }
     .card_topic_child {
       cursor: pointer;

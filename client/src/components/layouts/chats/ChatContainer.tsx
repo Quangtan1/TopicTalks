@@ -4,7 +4,6 @@ import React, { useEffect, useContext, memo } from 'react';
 import './ChatContainer.scss';
 import ListMessage from './ListMessage';
 import ChatBox from './ChatBox';
-import uiStore from 'src/store/uiStore';
 import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import ChatContext from 'src/context/ChatContext';
@@ -31,9 +30,8 @@ const ChatContainer = observer(() => {
         });
   }, [chat]);
 
-  const isResize = uiStore?.collapse;
   return (
-    <Box className={`chat_container ${isResize ? 'expand_chat' : 'collapse_chat'}`}>
+    <Box className="chat_container">
       <ListMessage />
       <ChatBox chat={chat} />
     </Box>

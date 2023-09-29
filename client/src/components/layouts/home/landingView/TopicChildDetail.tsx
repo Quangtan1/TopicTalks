@@ -38,28 +38,11 @@ const TopicChildDetail = observer(() => {
   useEffect(() => {
     getDataAPI(`/topic-children/${id}`, account.access_token, axiosJWT).then((res) => {
       setTopicChild(res.data.data);
-      console.log('res', res.data.data);
     });
   }, [id]);
 
   return (
     <Box className="topic_child_container">
-      <Box className="header_child">
-        <Box className="logo_sidebar">
-          <img src={logo} alt="logo" />
-          <Box className="title_logo">
-            <Typography>TopicTalks</Typography>
-            <Typography>Anonymously</Typography>
-          </Box>
-        </Box>
-        <Box className="header_option">
-          {headerRoute.map((item, index) => (
-            <Typography key={index} onClick={() => navigate(`${item.path}`)}>
-              {item.title}
-            </Typography>
-          ))}
-        </Box>
-      </Box>
       <Box className="box_topic_child">
         <Typography className="title_topic">{topicChild?.topicChildrenName}</Typography>
         <Typography className="sologan_topic">

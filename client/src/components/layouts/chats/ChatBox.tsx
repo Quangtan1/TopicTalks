@@ -276,7 +276,12 @@ const ChatBox = observer((props: ChatProps) => {
               <span className="image-name">
                 <Typography>{imageFile.slice(0, 12)}...</Typography>
                 <span>
-                  <CiCircleRemove onClick={() => setImageFile('')} />
+                  <CiCircleRemove
+                    onClick={() => {
+                      setImageFile('');
+                      setCurrentContent('');
+                    }}
+                  />
                 </span>
               </span>
             )}

@@ -1,8 +1,23 @@
 .common-page-container {
-  background: var(--color-gray);
+  background: #0d1018;
   height: 100%;
+  overflow-y: hidden;
   .route-container {
     display: flex;
     overflow-x: hidden;
+
+    position: relative;
+    .scroll-to-top {
+      position: fixed;
+      bottom: 80px;
+      right: 60px;
+      svg {
+        border-radius: 50%;
+        padding: 5px;
+        font-size: 40px;
+        color: #fff;
+        background: #606ae8;
+      }
+    }
   }
 }
