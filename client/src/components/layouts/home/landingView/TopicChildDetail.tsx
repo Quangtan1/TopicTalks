@@ -54,7 +54,9 @@ const TopicChildDetail = observer(() => {
         </Box>
         <Box className="header_option">
           {headerRoute.map((item, index) => (
-            <Typography key={index}>{item.title}</Typography>
+            <Typography key={index} onClick={() => navigate(`${item.path}`)}>
+              {item.title}
+            </Typography>
           ))}
         </Box>
       </Box>

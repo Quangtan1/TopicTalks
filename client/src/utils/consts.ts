@@ -47,7 +47,7 @@ export {
 export const headerRoute = [
   {
     title: 'Home',
-    path: '/home',
+    path: '/landing-view',
   },
   {
     title: 'Community',
