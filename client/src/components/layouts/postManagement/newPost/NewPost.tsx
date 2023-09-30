@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -27,6 +27,7 @@ import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopics
 import ImageUpload from './imageUpload/ImageUpload';
 import { observer } from 'mobx-react';
 import { IPost } from 'src/queries';
+import uiStore from 'src/store/uiStore';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -66,13 +67,21 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
   const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
   const [emotion, setEmotion] = useState('');
   const url_img = accountStore?.account?.url_img;
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState('');
 
   const setDefaultValue = () => {
     setEmotion('');
     setSuggestedTopic([]);
     resetForm();
   };
+
+  useEffect(() => {
+    if (selectedImage !== '') {
+      uiStore?.setLoading(false);
+      refetchPost();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedImage]);
 
   const handleMutationPost = async (postData) => {
     try {
@@ -231,7 +240,7 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
           </Box>
         )}
 
-        <ImageUpload {...{ touched, getFieldProps, errors, selectedImage, values, setSelectedImage }} />
+        <ImageUpload {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }} />
 
         <Box className="actions-container">
           <Button className="post-button" onClick={submitForm}>

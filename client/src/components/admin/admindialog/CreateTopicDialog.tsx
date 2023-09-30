@@ -15,7 +15,7 @@ import {
 import { CloseRounded } from '@mui/icons-material';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { observer } from 'mobx-react';
-import { API_KEY, createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { IoDocumentAttachSharp } from 'react-icons/io5';
@@ -91,6 +91,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
       .catch((err) => {
         console.log(err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLinkClick = () => {

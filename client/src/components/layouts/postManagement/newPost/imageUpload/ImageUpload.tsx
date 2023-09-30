@@ -1,19 +1,32 @@
-import { FC } from 'react';
-import { Input, TextField, Typography } from '@mui/material';
+import { FC, useRef } from 'react';
+import { Box, TextField, Typography } from '@mui/material';
+import { handleImageUpload } from 'src/utils/helper';
+import { IoDocumentAttachSharp } from 'react-icons/io5';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 interface Props {
   touched: any;
   getFieldProps: any;
   errors: any;
   selectedImage: any;
+  uiStore: any;
   values: any;
   setSelectedImage: (any) => void;
 }
 
-const ImageUpload: FC<Props> = ({ touched, getFieldProps, errors, selectedImage, values, setSelectedImage }) => {
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    setSelectedImage(file);
+const ImageUpload: FC<Props> = ({
+  uiStore,
+  touched,
+  getFieldProps,
+  errors,
+  selectedImage,
+  values,
+  setSelectedImage,
+}) => {
+  const fileInputRef = useRef(null);
+
+  const handleLinkClick = () => {
+    fileInputRef.current.click();
   };
 
   return (
@@ -37,10 +50,25 @@ const ImageUpload: FC<Props> = ({ touched, getFieldProps, errors, selectedImage,
           ) : null
         }
       />
-      <Input id="image-upload" type="file" onChange={handleImageUpload} />
+      <Box className="add_image_child">
+        <Typography>Upload Image: </Typography>
+        <IoDocumentAttachSharp onClick={handleLinkClick} />
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: ' none' }}
+          onChange={(e) => {
+            handleImageUpload(e.target.files, setSelectedImage, true);
+            uiStore?.setLoading(true);
+          }}
+        />
+      </Box>
       {values?.imageUrl && <img src={values?.imageUrl} alt="Selected" className="selected-image-preview" />}
-      {selectedImage && (
-        <img src={URL.createObjectURL(selectedImage)} alt="Selected" className="selected-image-preview" />
+      {selectedImage !== '' && (
+        <Typography>
+          {selectedImage.slice(0, 20)}
+          <AiOutlineCloseCircle width={50} height={50} onClick={() => setSelectedImage('')} />
+        </Typography>
       )}
     </>
   );

@@ -17,6 +17,7 @@ import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import NewPost from '../newPost/NewPost';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { DELETE_POST } from '../post/postHeader';
+import Loading from 'src/components/loading/Loading';
 
 const comments = [
   {
@@ -60,7 +61,7 @@ const PostDetail = observer(() => {
 
   const axiosJWT = createAxios(account, setAccount);
 
-  const { data: postDetail, refetch: refetchPostDetail } = useGetPostById(+id, axiosJWT, account);
+  const { data: postDetail, refetch: refetchPostDetail, isLoading } = useGetPostById(+id, axiosJWT, account);
 
   useEffect(() => {
     refetchPostDetail();
@@ -105,7 +106,11 @@ const PostDetail = observer(() => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <>
+      <Loading />
+    </>
+  ) : (
     <Grid container spacing={2} height={700} className="post-dt-container">
       {/* Left Side */}
       <Grid item xs={7} className="left-side">
