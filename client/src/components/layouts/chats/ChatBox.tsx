@@ -22,6 +22,7 @@ import chatStore from 'src/store/chatStore';
 import { IoLogoSnapchat } from 'react-icons/io5';
 import { ICallData, ListMesage } from 'src/types/chat.type';
 import Peer from 'simple-peer';
+import { FcCallback } from 'react-icons/fc';
 
 var socket;
 interface ChatProps {
@@ -42,6 +43,7 @@ const ChatBox = observer((props: ChatProps) => {
   const [receiveCallUser, setReceiveCallUser] = useState<ICallData>(null);
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
+  const codeMode = 'CA01410';
 
   const { message, setMessage } = useContext(ChatContext);
 
@@ -121,7 +123,7 @@ const ChatBox = observer((props: ChatProps) => {
       },
       targetName: chat.partnerDTO[0].username,
       targetId: chat.partnerDTO[0].id,
-      timeAt: '2023-09-22T17:05:40.065964',
+      timeAt: new Date().toISOString(),
       userId: account.id,
       username: account.username,
       conversationId: chat.conversationInfor.id,
@@ -143,11 +145,11 @@ const ChatBox = observer((props: ChatProps) => {
   const initChat = () => {
     // const request = {
     //   userInfoRequest: {
-    //     5: '2023-09-22T17:05:40.065964',
+    //     6: '2023-09-22T17:05:40.065964',
     //     7: '2023-09-22T17:05:40.065964',
     //   },
     //   amount: 2,
-    //   topicChildId: 1,
+    //   topicChildId: 3,
     // };
     // socket.emit('initChatSingle', request);
   };
@@ -170,7 +172,7 @@ const ChatBox = observer((props: ChatProps) => {
     },
     targetName: targetNameCustom,
     targetId: targetIdCustom,
-    timeAt: '2023-09-22T17:05:40.065964',
+    timeAt: new Date().toISOString(),
     userId: account.id,
     username: account.username,
     conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
@@ -192,6 +194,34 @@ const ChatBox = observer((props: ChatProps) => {
     };
     setIsAccepted(true);
     socket.emit('1V1CommunicateVideo', acceptData);
+  };
+
+  const saveCall = () => {
+    const currentDateTime: Date = new Date();
+    const previousDateTime: Date = new Date(receiveMessageDTO.timeAt);
+    const timeDifference: number = currentDateTime.getTime() - previousDateTime.getTime();
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(timeDifference / 1000 / 60);
+    const receiveMessag = {
+      data: {
+        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
+      },
+      TargetId: targetIdCustom,
+      userId: account.id,
+      conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
+    };
+    const stateMessage = {
+      data: {
+        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
+      },
+      username: account.username,
+      userId: account.id,
+      conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
+    };
+    socket.emit('sendMessage', receiveMessag);
+    setMessage((prevMessages) => [...prevMessages, stateMessage]);
+    setCurrentContent('');
+    setImageFile('');
   };
 
   return (
@@ -246,7 +276,16 @@ const ChatBox = observer((props: ChatProps) => {
                         className="image-message"
                       />
                     ) : (
-                      <Typography className="message_content">{item.data.message}</Typography>
+                      <>
+                        {item.data.message.includes('isCallCA01410') ? (
+                          <Typography className="message_content">
+                            <FcCallback />
+                            in {item.data.message.split(',')[1].trim()}
+                          </Typography>
+                        ) : (
+                          <Typography className="message_content">{item.data.message}</Typography>
+                        )}
+                      </>
                     )}
 
                     <Typography className="messge_username">{item.username}</Typography>
@@ -314,6 +353,7 @@ const ChatBox = observer((props: ChatProps) => {
           receiveCallUser={receiveCallUser}
           acceptCall={acceptCall}
           isAccepted={isAccepted}
+          saveCall={saveCall}
         />
       )}
     </Box>

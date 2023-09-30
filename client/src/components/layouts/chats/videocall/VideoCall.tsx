@@ -14,10 +14,11 @@ interface DialogProps {
   onLeaveCall: () => void;
   acceptCall: () => void;
   isAccepted: boolean;
+  saveCall: () => void;
 }
 
 const VideoCall = observer((props: DialogProps) => {
-  const { open, callUser, receiveCallUser, onLeaveCall, acceptCall, isAccepted } = props;
+  const { open, callUser, receiveCallUser, onLeaveCall, acceptCall, isAccepted, saveCall } = props;
   const [stream, setStream] = useState<MediaStream>(null);
 
   const myVideo = useRef(null);
@@ -56,6 +57,10 @@ const VideoCall = observer((props: DialogProps) => {
   }, [callUser, receiveCallUser, isAccepted]);
 
   const distroyMediaStream = () => {
+    if (isAccepted) {
+      saveCall();
+      console.log('save');
+    }
     if (stream) {
       const tracks = stream?.getTracks();
       tracks?.forEach((track) => {
