@@ -1,0 +1,83 @@
+.post-dt-container{
+    padding: 10px;
+    .left-side{
+        .post-dt-header{
+            display: flex;
+            justify-content: space-between;
+            color:'white';
+            max-height: 100px;
+            .post-dt-cardHeader{
+                width: 100%;
+                justify-content: space-between;
+                display: flex;
+                .post-dt-cardHeader-title{
+                    font-size: 20px;
+                    font-weight: 600;
+                }
+                .item1{
+
+                }
+                .item2{
+                    display: flex;
+                    .item2-btn{
+                    margin-left: 8px;
+                    }
+                    padding: 10px;
+                }
+            }
+        }
+      
+    }
+    .right-side{
+        .title-comments{
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .itemComments{
+            padding-bottom: 10px;
+            .userGroup{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .userAvatarGroup{
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding: 10px;
+                    .userAvatar{
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        margin-right: 10px;
+                    }
+                    .userName{
+                        font-size: 15px;
+                        font-weight: 400;
+                        padding-left: 4px;
+                    }
+
+                }
+                .commentsDate{
+                    font-size: 12px;
+                    color: #8c8c8c;
+                }
+            }
+          .contentWrap{
+            display: flex;
+            justify-content: space-between;
+            .content{
+                padding: 10px;
+                font-size: 16px;
+                font-weight: 500;
+                color: black;
+            }
+           .btn-like{
+            width: 30px;
+            height: 30px;
+           }
+          }
+        }
+        
+    }
+   
+}

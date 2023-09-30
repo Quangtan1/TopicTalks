@@ -24,13 +24,17 @@ import uiStore from 'src/store/uiStore';
 import accountStore from 'src/store/accountStore';
 import NewPost from '../postManagement/newPost/NewPost';
 import PostItem from '../postManagement/post/PostItem';
-// import { useGetAllPosts } from 'src/queries';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = observer(() => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
   const [isEdit, setIsEdit] = React.useState(false);
   const isResize = uiStore?.collapse;
   const { roles, username, url_img } = accountStore.account;
+  const handleGoToMessagePage = () => {
+    navigate('/message');
+  };
 
   return (
     <Box className={`profile__container ${isResize ? 'expand_profile' : 'collapse_profile'}`}>
@@ -59,7 +63,12 @@ const Profile = observer(() => {
           </Grid>
 
           <Grid item xs={4} justifyContent="flex-end" className="button_container">
-            <IconButton color="primary" className="icon-message-wrap" aria-label="Nhắn tin">
+            <IconButton
+              color="primary"
+              className="icon-message-wrap"
+              aria-label="Nhắn tin"
+              onClick={handleGoToMessagePage}
+            >
               <Message className="icon-message" />
             </IconButton>
             <Button className="button__public" variant="contained">

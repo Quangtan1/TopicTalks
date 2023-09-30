@@ -9,7 +9,7 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useState } from 'react';
 import NewPost from '../../newPost/NewPost';
 
-const DELETE_POST = 'Do you want to DELETE post?';
+export const DELETE_POST = 'Do you want to DELETE post?';
 
 const PostHeader = ({ userName, account, refetchPost, data }) => {
   const useDeletePost = useMutation((id: number) => deletePost(id, account));
@@ -32,7 +32,6 @@ const PostHeader = ({ userName, account, refetchPost, data }) => {
   const handleActions = (action: Actions) => {
     switch (action) {
       case Actions.Edit:
-        // handleEditPost();
         setIsEdit(!isEdit);
         break;
       case Actions.Delete:

@@ -2,7 +2,8 @@ import { useQuery } from 'react-query';
 import { IUser } from 'src/types/account.types';
 import { createAxios } from 'src/utils';
 import { ToastError } from 'src/utils/toastOptions';
-import { IPost } from './types';
+
+export const TOPIC_TALKS_DOMAIN = 'http://localhost:5000/api/v1';
 
 // ============================== Topic Parent ==============================
 const fetchTopic = async (
@@ -16,9 +17,7 @@ const fetchTopic = async (
 
   try {
     const response = await axiosJWT.get(
-      `http://localhost:5000/api/v1/topic-${isChildren ? 'children' : 'parent'}/all${
-        isChildren ? `topic-parent=${id}` : ''
-      }`,
+      `${TOPIC_TALKS_DOMAIN}/topic-${isChildren ? 'children' : 'parent'}/all${isChildren ? `topic-parent=${id}` : ''}`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,
@@ -39,7 +38,7 @@ export const useGetAllTopicParents = (account: IUser, setAccount: (account: IUse
 // ============================== Topic Children ==============================
 export const fetchTopicChildren = async (topicParentId: number, axiosJWT, account: IUser) => {
   try {
-    const response = await axiosJWT.get(`http://localhost:5000/api/v1/topic-children/topic-parent=${topicParentId}`, {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/topic-children/topic-parent=${topicParentId}`, {
       headers: {
         Authorization: `Bearer ${account?.access_token}`,
       },
@@ -59,7 +58,7 @@ export const useGetAllTopicChildren = (account: IUser, setAccount: (account: IUs
 export const createPost = async (postData, account) => {
   const bearerToken = account?.access_token;
 
-  const response = await fetch('http://localhost:5000/api/v1/post/create', {
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/post/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +77,7 @@ export const createPost = async (postData, account) => {
 export const editPost = async (postData, account: IUser) => {
   const bearerToken = account?.access_token;
 
-  const response = await fetch(`http://localhost:5000/api/v1/post/update/${postData?.postId}`, {
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/post/update/${postData?.postId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -99,7 +98,7 @@ const fetchAllPost = async (account: IUser, setAccount: (account: IUser | null) 
   const bearerToken = account?.access_token;
 
   try {
-    const response = await axiosJWT.get(`http://localhost:5000/api/v1/post/all`, {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/all`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       },
@@ -118,7 +117,7 @@ export const useGetAllPosts = (account: IUser, setAccount: (account: IUser | nul
 export const deletePost = async (id: number, account: IUser) => {
   const bearerToken = account?.access_token;
 
-  const response = await fetch(`http://localhost:5000/api/v1/post/${id}`, {
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/post/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -131,4 +130,24 @@ export const deletePost = async (id: number, account: IUser) => {
   }
 
   return response.json();
+};
+// ============================== Get post by ID ==============================
+export const getPostById = async (postId: number, axiosJWT: any, account: IUser) => {
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${account?.access_token}`,
+      },
+    });
+    return response?.data?.data;
+  } catch (error) {
+    ToastError('Get Post Detail Failed');
+    return [];
+  }
+};
+
+export const useGetPostById = (postId: number, axiosJWT: any, account: IUser) => {
+  return useQuery('post-detail', () => getPostById(postId, axiosJWT, account), {
+    enabled: !!postId,
+  });
 };
