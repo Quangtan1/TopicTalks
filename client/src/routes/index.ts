@@ -7,9 +7,11 @@ import ManageTopic from 'src/components/admin/managetopic/ManageTopic';
 import ManageUsers from 'src/components/admin/manageusers/ManageUsers';
 import LandingView from 'src/components/layouts/home/landingView/LandingView';
 import TopicChildDetail from 'src/components/layouts/home/landingView/TopicChildDetail';
+import ContactUs from 'src/components/layouts/contactUs';
 
 const publicRoutes = [
   { path: '/community', component: Community, isAdmin: false },
+  { path: '/contact', component: ContactUs, isAdmin: false },
   { path: '/landing-view', component: LandingView, isAdmin: false },
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
