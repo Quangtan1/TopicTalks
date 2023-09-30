@@ -19,14 +19,18 @@ import { Message } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 
 import './Profile.scss';
-import PostItem from '../home/post/PostItem';
 import About from './about/About';
 import uiStore from 'src/store/uiStore';
 import accountStore from 'src/store/accountStore';
+import NewPost from '../postManagement/newPost/NewPost';
+import PostItem from '../postManagement/post/PostItem';
+// import { useGetAllPosts } from 'src/queries';
 
 const Profile = observer(() => {
   const [activeTab, setActiveTab] = React.useState(0);
+  const [isEdit, setIsEdit] = React.useState(false);
   const isResize = uiStore?.collapse;
+  const { roles, username, url_img } = accountStore.account;
 
   return (
     <Box className={`profile__container ${isResize ? 'expand_profile' : 'collapse_profile'}`}>
@@ -37,16 +41,19 @@ const Profile = observer(() => {
             <Box className="banner_avatar_wrap">
               <img
                 className="banner_avatar"
-                src="https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8"
+                src={
+                  url_img ||
+                  'https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8'
+                }
                 alt="son"
               />
             </Box>
             <Box className="title_wrap">
               <Typography className="title" variant="h4">
-                Le V Son
+                {username || 'Le V Son'}
               </Typography>
               <Typography className="subtitle" variant="subtitle1">
-                Front-end developer
+                This is the {roles?.includes('ROLE_USER') ? 'user' : 'admin' || 'Front-end developer'} account
               </Typography>
             </Box>
           </Grid>
@@ -58,8 +65,8 @@ const Profile = observer(() => {
             <Button className="button__public" variant="contained">
               Public
             </Button>
-            <Button className="button__group" variant="contained">
-              Create Group
+            <Button className="button__group" variant="contained" onClick={() => setIsEdit(true)}>
+              Create Post
             </Button>
           </Grid>
         </Grid>
@@ -145,6 +152,7 @@ const Profile = observer(() => {
           </Paper>
         </Grid>
       </Grid>
+      <NewPost open={isEdit} closePostModal={() => setIsEdit(!isEdit)} />
     </Box>
   );
 });

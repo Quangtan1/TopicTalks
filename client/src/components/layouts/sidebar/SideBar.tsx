@@ -2,7 +2,6 @@ import { Box, List, ListItem, Typography, Divider, Avatar } from '@mui/material'
 import { useState } from 'react';
 import { logo } from 'src/utils/consts';
 import './SideBar.scss';
-import NewPost from 'src/components/layouts/home/newPost/NewPost';
 
 //icon
 import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
@@ -18,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import uiStore from 'src/store/uiStore';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
+import NewPost from '../postManagement/newPost/NewPost';
 
 type SidebarItem = {
   title: string;

@@ -1,13 +1,14 @@
-.expand_profile,
-.collapse_profile {
-  padding: 80px 0px 0px 125px;
-  transition: padding 0.5s ease;
-}
+// .expand_profile,
+// .collapse_profile {
+//   padding: 80px 0px 0px 125px;
+//   transition: padding 0.5s ease;
+// }
 
-.expand_profile {
-  padding-left: 250px;
-}
+// .expand_profile {
+//   padding-left: 250px;
+// }
 .profile__container {
+  padding:50px;
   width: 100%;
   .title_paper_text {
     font-size: 20px;

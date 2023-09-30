@@ -1,12 +1,10 @@
-import { Grid, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 import './Community.scss';
 import SuggestBox from './suggestbox/SuggestBox';
-import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
-import { BiArrowToTop } from 'react-icons/bi';
 import Loading from 'src/components/loading/Loading';
 import uiStore from 'src/store/uiStore';
-import PostItem from './post/PostItem';
+import PostItem from '../postManagement/post/PostItem';
 
 const HomePage = observer(() => {
   const isResize = uiStore?.collapse;

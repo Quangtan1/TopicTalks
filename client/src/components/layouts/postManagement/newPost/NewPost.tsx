@@ -20,7 +20,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import accountStore from 'src/store/accountStore';
-import { createPost, editPost, useGetAllTopicParents } from 'src/queries/functionQuery';
+import { createPost, editPost, useGetAllPosts, useGetAllTopicParents } from 'src/queries/functionQuery';
 import { useMutation } from 'react-query';
 import AvatarComponent from './avatarComponent/AvatarComponent';
 import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
@@ -54,8 +54,10 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
   const {
     data: topicParentData,
     isLoading: isLoadingTopicParent,
-    refetch,
+    refetch: refetchTopic,
   } = useGetAllTopicParents(account, setAccount);
+
+  const { refetch: refetchPost } = useGetAllPosts(account, setAccount);
 
   const useCreatePost = useMutation((postData) => createPost(postData, account));
   const useEditPost = useMutation((postData) => editPost(postData, account));
@@ -77,7 +79,8 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
       const result = await useCreatePost.mutateAsync(postData);
       if (result.status === 201) {
         ToastSuccess('Create post successfully!');
-        refetch();
+        refetchTopic();
+        refetchPost();
       }
       console.log(`Post result: `, result);
     } catch (error) {
@@ -90,7 +93,8 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
       const result = await useEditPost.mutateAsync(postData);
       if (result.status === 200) {
         ToastSuccess('Edit post successfully!');
-        onEditSuccess();
+        onEditSuccess?.();
+        refetchPost();
       }
     } catch (error) {
       ToastError(`Error edit post!`);
@@ -189,7 +193,7 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
             ) : null
           }
         />
-        <Button variant="outlined" size="small" className="post-button" onClick={() => refetch()}>
+        <Button variant="outlined" size="small" className="post-button" onClick={() => refetchTopic()}>
           Reload Topic Parent
         </Button>
 

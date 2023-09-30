@@ -1,7 +1,6 @@
 import { MoreVert } from '@mui/icons-material';
 import { Button, createTheme, ListItemIcon, Menu, MenuItem, ThemeOptions, ThemeProvider } from '@mui/material';
 import { Box } from '@mui/system';
-import { observer } from 'mobx-react';
 import React from 'react';
 import { Action } from 'src/queries';
 

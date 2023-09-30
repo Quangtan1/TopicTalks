@@ -8,6 +8,7 @@ import ManageUsers from 'src/components/admin/manageusers/ManageUsers';
 import LandingView from 'src/components/layouts/home/landingView/LandingView';
 import TopicChildDetail from 'src/components/layouts/home/landingView/TopicChildDetail';
 import ContactUs from 'src/components/layouts/contactUs';
+import PostDetail from 'src/components/layouts/postManagement/postDetailPage';
 
 const publicRoutes = [
   { path: '/community', component: Community, isAdmin: false },
@@ -20,6 +21,7 @@ const publicRoutes = [
   { path: '/manage-topic', component: ManageTopic, isAdmin: true },
   { path: '/manage-user', component: ManageUsers, isAdmin: true },
   { path: '/topic-detail/:id', component: TopicChildDetail },
+  { path: '/post-detail/:id', component: PostDetail },
 ];
 
 export { publicRoutes };

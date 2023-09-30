@@ -1,19 +1,20 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { Box, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
 import CommentsList from './comments/CommentsListModal';
-import fakeDataPost from './fakeDataPost.json';
 import ShareModal from './shareModal/ShareModal';
 import { useGetAllPosts } from 'src/queries/functionQuery';
 import Loading from 'src/components/loading/Loading';
 import PostHeader from './postHeader';
 import { CommentButton, LikeButton, ShareButton } from './buttonGroup';
 import { IPost } from 'src/queries/types';
-import { IUser } from 'src/types/account.types';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
+import { useNavigate } from 'react-router-dom';
 
 const PostItem = observer(() => {
+  const navigate = useNavigate();
+
   // ============================== React Query Post ==============================
   const account = accountStore?.account;
   const setAccount = () => {
@@ -24,7 +25,7 @@ const PostItem = observer(() => {
   // ============================== State ==============================
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [likedPosts, setLikedPosts] = useState(fakeDataPost.map((post) => 12));
+  const [likedPosts, setLikedPosts] = useState([1, 2, 3, 4].map((post) => 12));
   const [likedIndexes, setLikedIndexes] = useState([]);
 
   const handleCloseModal = () => {
@@ -33,6 +34,10 @@ const PostItem = observer(() => {
 
   const handleCloseShareModal = () => {
     setIsShareModalOpen(false);
+  };
+
+  const handleClickPostItem = (postId: number) => {
+    navigate(`/post-detail/${postId}`);
   };
 
   const userName = account?.username;
@@ -45,7 +50,7 @@ const PostItem = observer(() => {
         <Box className="post-item-container">
           {postData?.data?.map((post: IPost, index) => {
             return (
-              <Card key={post?.id}>
+              <Card key={post?.id} onClick={() => handleClickPostItem(post?.id)} className="post-item">
                 <PostHeader refetchPost={refetchPost} data={post} userName={userName} account={account} />
 
                 <CardContent>
