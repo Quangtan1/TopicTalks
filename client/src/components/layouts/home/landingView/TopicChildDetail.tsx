@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import accountStore from 'src/store/accountStore';
 import uiStore from 'src/store/uiStore';
@@ -28,6 +28,7 @@ const TopicChildDetail = observer(() => {
   const [topicChild, setTopicChild] = useState<TopicChild>(null);
   const account = accountStore?.account;
   const navigate = useNavigate();
+  const groupChatRef = useRef(null);
 
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -41,6 +42,10 @@ const TopicChildDetail = observer(() => {
     });
   }, [id]);
 
+  const handleDiscoveryGroupClick = () => {
+    groupChatRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <Box className="topic_child_container">
       <Box className="box_topic_child">
@@ -48,11 +53,17 @@ const TopicChildDetail = observer(() => {
         <Typography className="sologan_topic">
           Engage in <strong className="highlight_text">Unrestricted conversations</strong>, exploring the world through
           <strong className="highlight_text"> various preferred topics </strong> while maintaining anonymous
-          connections."
+          connections.
         </Typography>
-        <img src={topicChild?.image} alt="img" className="image_topic" />
+        <Box className="box_image">
+          <Box className="button_option">
+            <Button onClick={handleDiscoveryGroupClick}>Discovery Group</Button>
+            <Button>More</Button>
+          </Box>
+          <img src={topicChild?.image} alt="img" className="image_topic" />
+        </Box>
       </Box>
-      <Box className="box_group_chat">
+      <Box className="box_group_chat" ref={groupChatRef}>
         <Typography>"Topic-based conversations without revealing your identity."</Typography>
         <Grid container className="group_container">
           {fakeGroupChat.map((item) => (

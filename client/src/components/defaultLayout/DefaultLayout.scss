@@ -5,7 +5,7 @@
   .route-container {
     display: flex;
     overflow-x: hidden;
-
+    flex-direction: column;
     position: relative;
     .scroll-to-top {
       position: fixed;

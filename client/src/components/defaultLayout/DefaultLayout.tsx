@@ -1,13 +1,13 @@
 import { Box, Button } from '@mui/material';
 import './DefaultLayout.scss';
 import Header from '../layouts/header/Header';
-import SideBar from '../layouts/sidebar/SideBar';
 import Loading from '../loading/Loading';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import { useState, useEffect } from 'react';
 import { BiArrowToTop } from 'react-icons/bi';
 import { HiArrowUp } from 'react-icons/hi';
+import Footer from '../layouts/footer/Footer';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -47,6 +47,7 @@ const DefaultLayout = observer(({ children }) => {
             <HiArrowUp />
           </Button>
         )}
+        <Footer />
       </Box>
     </Box>
   );
