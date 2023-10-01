@@ -87,7 +87,7 @@ export const editPost = async (postData, account: IUser) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create post');
+    throw new Error('Failed to edit post');
   }
 
   return response.json();
@@ -150,4 +150,46 @@ export const useGetPostById = (postId: number, axiosJWT: any, account: IUser) =>
   return useQuery('post-detail', () => getPostById(postId, axiosJWT, account), {
     enabled: !!postId,
   });
+};
+
+// ============================== Get USER by ID ==============================
+export const getUserById = async (userId: number, axiosJWT: any, account: IUser) => {
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${account?.access_token}`,
+      },
+    });
+    return response?.data?.data;
+  } catch (error) {
+    ToastError('Get User Detail Failed');
+    return [];
+  }
+};
+
+export const useGetUserById = (userId: number, axiosJWT: any, account: IUser) => {
+  return useQuery('user-detail', () => getUserById(userId, axiosJWT, account), {
+    enabled: !!userId,
+  });
+};
+
+export const editUser = async (userData, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/user/${userData?.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    body: JSON.stringify(userData),
+  });
+
+  console.log('response', response);
+
+  if (!response.ok) {
+    throw new Error('Failed to Edit User Profile');
+  }
+
+  return response.json();
 };

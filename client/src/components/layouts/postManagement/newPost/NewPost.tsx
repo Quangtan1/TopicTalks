@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import {
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import './NewPost.scss';
 import EmotionModal from './emotionModal/EmotionModal';
-import { useFormik } from 'formik';
+import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import accountStore from 'src/store/accountStore';
@@ -46,6 +46,8 @@ interface Props {
 }
 
 const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal, isEdit, dataEdit }) => {
+  const formRef = useRef<FormikProps<any>>(null);
+
   const account = accountStore?.account;
 
   const setAccount = () => {
@@ -145,6 +147,7 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
       imageUrl: dataEdit?.img_url,
     },
     validationSchema,
+    innerRef: formRef,
     onSubmit: handleCreatePost,
   });
 
@@ -240,7 +243,10 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
           </Box>
         )}
 
-        <ImageUpload {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }} />
+        <ImageUpload
+          isSelected={!!selectedImage}
+          {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }}
+        />
 
         <Box className="actions-container">
           <Button className="post-button" onClick={submitForm}>

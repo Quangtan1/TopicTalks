@@ -111,7 +111,7 @@ const PostDetail = observer(() => {
       <Loading />
     </>
   ) : (
-    <Grid container spacing={2} height={700} className="post-dt-container">
+    <Grid container spacing={2} className="post-dt-container">
       {/* Left Side */}
       <Grid item xs={7} className="left-side">
         <Card className="post-dt-header">

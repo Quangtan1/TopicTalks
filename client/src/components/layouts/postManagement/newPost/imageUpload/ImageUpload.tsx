@@ -10,12 +10,14 @@ interface Props {
   errors: any;
   selectedImage: any;
   uiStore: any;
+  isSelected?: boolean;
   values: any;
   setSelectedImage: (any) => void;
 }
 
 const ImageUpload: FC<Props> = ({
   uiStore,
+  isSelected,
   touched,
   getFieldProps,
   errors,
@@ -31,25 +33,27 @@ const ImageUpload: FC<Props> = ({
 
   return (
     <>
-      <TextField
-        autoFocus
-        margin="dense"
-        id="image-upload"
-        {...getFieldProps('imageUrl')}
-        label="Image URL or Upload Image"
-        type="text"
-        fullWidth
-        variant="outlined"
-        className="image-url-input"
-        error={touched.imageUrl && Boolean(errors.imageUrl)}
-        helperText={
-          touched.imageUrl && errors.imageUrl ? (
-            <Typography variant="caption" color="error">
-              {errors.imageUrl as string}
-            </Typography>
-          ) : null
-        }
-      />
+      {!isSelected && (
+        <TextField
+          autoFocus
+          margin="dense"
+          id="image-upload"
+          {...getFieldProps('imageUrl')}
+          label="Image URL or Upload Image"
+          type="text"
+          fullWidth
+          variant="outlined"
+          className="image-url-input"
+          error={touched.imageUrl && Boolean(errors.imageUrl)}
+          helperText={
+            touched.imageUrl && errors.imageUrl ? (
+              <Typography variant="caption" color="error">
+                {errors.imageUrl as string}
+              </Typography>
+            ) : null
+          }
+        />
+      )}
       <Box className="add_image_child">
         <Typography>Upload Image: </Typography>
         <IoDocumentAttachSharp onClick={handleLinkClick} />
@@ -59,11 +63,12 @@ const ImageUpload: FC<Props> = ({
           style={{ display: ' none' }}
           onChange={(e) => {
             handleImageUpload(e.target.files, setSelectedImage, true);
-            uiStore?.setLoading(true);
           }}
         />
       </Box>
-      {values?.imageUrl && <img src={values?.imageUrl} alt="Selected" className="selected-image-preview" />}
+      {!isSelected && values?.imageUrl && (
+        <img src={values?.imageUrl} alt="Selected" className="selected-image-preview" />
+      )}
       {selectedImage !== '' && (
         <Typography>
           {selectedImage.slice(0, 20)}

@@ -58,3 +58,21 @@ export interface IComment {
   user: string;
   text: string;
 }
+
+export interface IUserInformation {
+  id: number;
+  fullName: string;
+  username: string;
+  email: string;
+  phoneNumber?: string;
+  dob?: string;
+  bio?: string;
+  gender?: string;
+  country?: string;
+  imageUrl?: string;
+  bannedDate?: string;
+  role: string;
+  updatedAt: string;
+  createdAt: string;
+  banned: boolean;
+}

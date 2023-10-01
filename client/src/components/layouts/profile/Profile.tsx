@@ -25,18 +25,52 @@ import accountStore from 'src/store/accountStore';
 import NewPost from '../postManagement/newPost/NewPost';
 import PostItem from '../postManagement/post/PostItem';
 import { useNavigate } from 'react-router-dom';
+import { useGetUserById } from 'src/queries';
+import { createAxios } from 'src/utils';
+import Loading from 'src/components/loading/Loading';
+import EditProfileModal from './editProfileModal';
 
 const Profile = observer(() => {
+  // ==========================Config mobx==========================
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+  const axiosJWT = createAxios(account, setAccount);
+
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
   const [isEdit, setIsEdit] = React.useState(false);
+  const [isEditProfile, setIsEditProfile] = React.useState(false);
   const isResize = uiStore?.collapse;
-  const { roles, username, url_img } = accountStore.account;
+
+  const { roles, username, id } = accountStore.account;
+
+  React.useEffect(() => {
+    if (!id) {
+      navigate('/login');
+    }
+  }, [id, navigate]);
+
+  const {
+    data: userDetailData,
+    isLoading: isLoadingUserDetail,
+    refetch: refetchUserById,
+  } = useGetUserById(id, axiosJWT, account);
+
   const handleGoToMessagePage = () => {
     navigate('/message');
   };
 
-  return (
+  const handleEditProfile = () => {
+    setIsEditProfile(!isEditProfile);
+  };
+
+  return isLoadingUserDetail ? (
+    <>
+      <Loading />
+    </>
+  ) : (
     <Box className={`profile__container ${isResize ? 'expand_profile' : 'collapse_profile'}`}>
       <Paper elevation={3} className="profile__paper">
         {/* Banner */}
@@ -46,7 +80,7 @@ const Profile = observer(() => {
               <img
                 className="banner_avatar"
                 src={
-                  url_img ||
+                  userDetailData?.imageUrl ||
                   'https://media.licdn.com/dms/image/D5603AQEXwrJ2rM5eyg/profile-displayphoto-shrink_800_800/0/1670055489653?e=1700092800&v=beta&t=tRcVVR9okYVAQMhy5pbjU50MLVIS3wua04jaAOXLZX8'
                 }
                 alt="son"
@@ -71,8 +105,8 @@ const Profile = observer(() => {
             >
               <Message className="icon-message" />
             </IconButton>
-            <Button className="button__public" variant="contained">
-              Public
+            <Button className="button__public" variant="contained" onClick={handleEditProfile}>
+              Edit Profile
             </Button>
             <Button className="button__group" variant="contained" onClick={() => setIsEdit(true)}>
               Create Post
@@ -85,13 +119,7 @@ const Profile = observer(() => {
       <Grid container spacing={2} className="main__layout_container">
         {/* Column 1 */}
         <Grid item xs={3} className="column__1_container">
-          <About
-            gender="Male"
-            birthDate="Born July 15th, 2001"
-            address="01 Nguyen Van Linh - Da Nang"
-            email="Levson@gmail.com"
-            phone="0123456789"
-          />
+          <About data={userDetailData} />
           <Paper className="column__1_paper" elevation={3}>
             <Typography variant="h6" className="title_paper_text">
               Interesting Topics
@@ -122,6 +150,15 @@ const Profile = observer(() => {
 
         {/* Column 3 */}
         <Grid item xs={3} className="column__3_container">
+          <Paper elevation={3} className="column__3_paper">
+            <Typography className="title_paper_text" variant="h6">
+              Bio
+            </Typography>
+            <Typography variant="body2" className="bio">
+              {userDetailData?.bio || 'This is the bio'}
+            </Typography>
+            <Divider sx={{ margin: '20px 0' }} />
+          </Paper>
           <Paper elevation={3} className="column__3_paper">
             <Typography className="title_paper_text" variant="h6">
               You Might Know
@@ -162,6 +199,11 @@ const Profile = observer(() => {
         </Grid>
       </Grid>
       <NewPost open={isEdit} closePostModal={() => setIsEdit(!isEdit)} />
+      <EditProfileModal
+        isOpen={isEditProfile}
+        handleClose={() => setIsEditProfile(!isEditProfile)}
+        onEditSuccess={refetchUserById}
+      />
     </Box>
   );
 });
