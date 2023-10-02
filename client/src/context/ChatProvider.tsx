@@ -25,11 +25,11 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const codeMode = 'CA01410';
 
   const targetNameCustom =
-    account.username !== receiveCallUser?.username && receiveCallUser?.username !== undefined
+    account?.username !== receiveCallUser?.username && receiveCallUser?.username !== undefined
       ? receiveCallUser?.username
       : callUser?.targetName;
   const targetIdCustom =
-    account.id !== receiveCallUser?.userId && receiveCallUser?.userId !== undefined
+    account?.id !== receiveCallUser?.userId && receiveCallUser?.userId !== undefined
       ? receiveCallUser?.userId
       : callUser?.targetId;
 
@@ -40,8 +40,8 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
     targetName: targetNameCustom,
     targetId: targetIdCustom,
     timeAt: new Date().toISOString(),
-    userId: account.id,
-    username: account.username,
+    userId: account?.id,
+    username: account?.username,
     conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
   };
   useEffect(() => {
@@ -72,7 +72,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         socket.disconnect();
       };
     }
-  }, [chat]);
+  }, [chat, account]);
 
   const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
     if (chat?.conversationInfor.id === receiveMessageDTO.conversationId) {
