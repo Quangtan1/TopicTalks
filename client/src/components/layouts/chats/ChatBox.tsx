@@ -24,7 +24,6 @@ import { ICallData, ListMesage } from 'src/types/chat.type';
 import Peer from 'simple-peer';
 import { FcCallback } from 'react-icons/fc';
 
-var socket;
 interface ChatProps {
   chat: ListMesage;
 }
@@ -37,52 +36,16 @@ const ChatBox = observer((props: ChatProps) => {
   const fileInputRef = useRef(null);
   const { chat } = props;
 
-  //video call
-  const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
-  const [callUser, setCallUser] = useState<ICallData>(null);
-  const [receiveCallUser, setReceiveCallUser] = useState<ICallData>(null);
-  const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
-  const codeMode = 'CA01410';
+  // const codeMode = 'CA01410';
 
-  const { message, setMessage } = useContext(ChatContext);
+  const { message, setMessage, socket, setCallUser, setOpenVideoCall } = useContext(ChatContext);
 
   useEffect(() => {
-    socket = io(`http://localhost:8085?uid=${account.id}`);
-    socket.on('connect', () => {
-      console.log('Connect Socket.IO');
-    });
-    socket.on('sendMessage', handleReceiveMessage);
-    socket.on('1V1CommunicateVideo', (data: ICallData) => {
-      if (data.data.message === 'reject') {
-        setCallUser(null);
-        setReceiveCallUser(null);
-        setIsAccepted(false);
-        setOpenVideoCall(false);
-      } else if (data.data.message === 'accept') {
-        setIsAccepted(true);
-        setReceiveCallUser(data);
-      } else {
-        setReceiveCallUser(data);
-        setOpenVideoCall(true);
-      }
-    });
     return () => {
-      socket.on('disconnect', () => {
-        console.log('Disconnect Socket.IO');
-      });
-      socket.disconnect();
+      chatStore?.setSelectedChat(null);
     };
-  }, [chat]);
-
-  const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
-    if (chat?.conversationInfor?.id === receiveMessageDTO.conversationId) {
-      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
-      console.log('receiveMessage', receiveMessageDTO);
-    } else {
-      console.log('notification');
-    }
-  };
+  }, []);
 
   useEffect(() => {
     if (imageFile !== '') {
@@ -156,72 +119,6 @@ const ChatBox = observer((props: ChatProps) => {
 
   const handleLinkClick = () => {
     fileInputRef.current.click();
-  };
-
-  const targetNameCustom =
-    account.username !== receiveCallUser?.username && receiveCallUser?.username !== undefined
-      ? receiveCallUser?.username
-      : callUser?.targetName;
-  const targetIdCustom =
-    account.id !== receiveCallUser?.userId && receiveCallUser?.userId !== undefined
-      ? receiveCallUser?.userId
-      : callUser?.targetId;
-  const receiveMessageDTO = {
-    data: {
-      message: 'reject',
-    },
-    targetName: targetNameCustom,
-    targetId: targetIdCustom,
-    timeAt: new Date().toISOString(),
-    userId: account.id,
-    username: account.username,
-    conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
-  };
-  const handleLeaveCall = () => {
-    setCallUser(null);
-    setReceiveCallUser(null);
-    socket.emit('1V1CommunicateVideo', receiveMessageDTO);
-    setIsAccepted(false);
-    setOpenVideoCall(false);
-  };
-
-  const acceptCall = () => {
-    const acceptData = {
-      ...receiveMessageDTO,
-      data: {
-        message: 'accept',
-      },
-    };
-    setIsAccepted(true);
-    socket.emit('1V1CommunicateVideo', acceptData);
-  };
-
-  const saveCall = () => {
-    const currentDateTime: Date = new Date();
-    const previousDateTime: Date = new Date(receiveMessageDTO.timeAt);
-    const timeDifference: number = currentDateTime.getTime() - previousDateTime.getTime();
-    const seconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(timeDifference / 1000 / 60);
-    const receiveMessag = {
-      data: {
-        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
-      },
-      TargetId: targetIdCustom,
-      userId: account.id,
-      conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
-    };
-    const stateMessage = {
-      data: {
-        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
-      },
-      username: account.username,
-      userId: account.id,
-      conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
-    };
-    socket.emit('sendMessage', receiveMessag);
-    setMessage((prevMessages) => [...prevMessages, stateMessage]);
-    setCurrentContent('');
-    setImageFile('');
   };
 
   return (
@@ -345,7 +242,7 @@ const ChatBox = observer((props: ChatProps) => {
           </>
         )}
       </Box>
-      {openVideoCall && (
+      {/* {openVideoCall && (
         <VideoCall
           open={openVideoCall}
           onLeaveCall={handleLeaveCall}
@@ -355,7 +252,7 @@ const ChatBox = observer((props: ChatProps) => {
           isAccepted={isAccepted}
           saveCall={saveCall}
         />
-      )}
+      )} */}
     </Box>
   );
 });
