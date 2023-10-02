@@ -11,18 +11,16 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import ChatContext from 'src/context/ChatContext';
-import { io } from 'socket.io-client';
 import { IMessage } from 'src/types';
 import uiStore from 'src/store/uiStore';
 import { handleImageUpload } from 'src/utils/helper';
 import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
-import VideoCall from './videocall/VideoCall';
 import chatStore from 'src/store/chatStore';
 import { IoLogoSnapchat } from 'react-icons/io5';
-import { ICallData, ListMesage } from 'src/types/chat.type';
-import Peer from 'simple-peer';
+import { ListMesage } from 'src/types/chat.type';
 import { FcCallback } from 'react-icons/fc';
+import { HiPhoneMissedCall } from 'react-icons/hi';
 
 interface ChatProps {
   chat: ListMesage;
@@ -37,7 +35,6 @@ const ChatBox = observer((props: ChatProps) => {
   const { chat } = props;
 
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
-  // const codeMode = 'CA01410';
 
   const { message, setMessage, socket, setCallUser, setOpenVideoCall } = useContext(ChatContext);
 
@@ -176,8 +173,15 @@ const ChatBox = observer((props: ChatProps) => {
                       <>
                         {item.data.message.includes('isCallCA01410') ? (
                           <Typography className="message_content">
-                            <FcCallback />
-                            in {item.data.message.split(',')[1].trim()}
+                            {item.data.message.includes('MA01410') ? (
+                              <>
+                                <HiPhoneMissedCall className="missing_call" /> Missing Call
+                              </>
+                            ) : (
+                              <>
+                                <FcCallback /> in {item.data.message.split(',')[1].trim()}
+                              </>
+                            )}
                           </Typography>
                         ) : (
                           <Typography className="message_content">{item.data.message}</Typography>
@@ -242,17 +246,6 @@ const ChatBox = observer((props: ChatProps) => {
           </>
         )}
       </Box>
-      {/* {openVideoCall && (
-        <VideoCall
-          open={openVideoCall}
-          onLeaveCall={handleLeaveCall}
-          callUser={callUser}
-          receiveCallUser={receiveCallUser}
-          acceptCall={acceptCall}
-          isAccepted={isAccepted}
-          saveCall={saveCall}
-        />
-      )} */}
     </Box>
   );
 });

@@ -22,7 +22,8 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const [callUser, setCallUser] = useState<ICallData>(null);
   const [receiveCallUser, setReceiveCallUser] = useState<ICallData>(null);
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
-  const codeMode = 'CA01410';
+  const codeAccept = 'CA01410';
+  const codeMissing = 'MA01410';
 
   const targetNameCustom =
     account?.username !== receiveCallUser?.username && receiveCallUser?.username !== undefined
@@ -109,7 +110,9 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
     const minutes = Math.floor(timeDifference / 1000 / 60);
     const receiveMessag = {
       data: {
-        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
+        message: `isCall${codeAccept} ${!isAccepted && codeMissing},  ${
+          seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`
+        }`,
       },
       TargetId: targetIdCustom,
       userId: account.id,
@@ -117,7 +120,9 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
     };
     const stateMessage = {
       data: {
-        message: `isCall${codeMode}, ${seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`}`,
+        message: `isCall${codeAccept} ${!isAccepted && codeMissing}, ${
+          seconds > 60 ? `${minutes} minutes` : `${seconds} seconds`
+        }`,
       },
       username: account.username,
       userId: account.id,

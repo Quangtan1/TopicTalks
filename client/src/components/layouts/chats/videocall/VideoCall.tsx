@@ -57,10 +57,7 @@ const VideoCall = observer((props: DialogProps) => {
   }, [callUser, receiveCallUser, isAccepted]);
 
   const distroyMediaStream = () => {
-    if (isAccepted) {
-      saveCall();
-      console.log('save');
-    }
+    saveCall();
     if (stream) {
       const tracks = stream?.getTracks();
       tracks?.forEach((track) => {
