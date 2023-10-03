@@ -12,27 +12,49 @@
         display: flex;
         height: 400px;
         gap: 10px;
-        .video {
+        .video_view {
+          position: relative;
+          z-index: 1;
           width: 50%;
-          height: 100%;
+          .video {
+            width: 100%;
+            height: 100%;
+          }
+          .overlay {
+            left: 0;
+            top: 0;
+            position: absolute;
+            z-index: 2;
+            background: #0d1018;
+            width: 100%;
+            height: 100%;
+          }
         }
       }
-      .in_call {
+      .in_call,
+      .timer {
         color: #fff;
         font-size: 20px;
         text-align: center;
       }
+
       .action_box {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 100px 100px 0px;
+        padding: 75px 100px 0px;
         gap: 20px;
         button {
           display: flex;
           flex-direction: column;
           gap: 6px;
           color: #fff;
+        }
+        .muted-call {
+          border-radius: 50%;
+          svg {
+            font-size: 35px;
+          }
         }
         .reject_call {
           svg {
