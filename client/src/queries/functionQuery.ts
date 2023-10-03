@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { IUser } from 'src/types/account.types';
 import { createAxios } from 'src/utils';
 import { ToastError } from 'src/utils/toastOptions';
+import { ICommentBody } from './types';
 
 export const TOPIC_TALKS_DOMAIN = 'http://localhost:5000/api/v1';
 
@@ -131,6 +132,28 @@ export const deletePost = async (id: number, account: IUser) => {
 
   return response.json();
 };
+
+// ============================== Get post by Author Id ==============================
+export const getAllPostsByAuthorId = async (authorId: number, axiosJWT: any, account: IUser) => {
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/${authorId}/all-posts`, {
+      headers: {
+        Authorization: `Bearer ${account?.access_token}`,
+      },
+    });
+    return response?.data?.data;
+  } catch (error) {
+    ToastError('Get Post By Author Failed');
+    return [];
+  }
+};
+
+export const useGetAllPostsByAuthorId = (authorId: number, axiosJWT: any, account: IUser) => {
+  return useQuery('post-by-author', () => getAllPostsByAuthorId(authorId, axiosJWT, account), {
+    enabled: !!authorId,
+  });
+};
+
 // ============================== Get post by ID ==============================
 export const getPostById = async (postId: number, axiosJWT: any, account: IUser) => {
   try {
@@ -162,7 +185,7 @@ export const getUserById = async (userId: number, axiosJWT: any, account: IUser)
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get User Detail Failed');
+    console.log('Get User Detail Failed', error);
     return [];
   }
 };
@@ -189,6 +212,88 @@ export const editUser = async (userData, account: IUser) => {
 
   if (!response.ok) {
     throw new Error('Failed to Edit User Profile');
+  }
+
+  return response.json();
+};
+
+// ============================== Comment ==============================
+
+export const createComment = async (commentBody: ICommentBody, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/comment/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    body: JSON.stringify(commentBody),
+  });
+  console.log('🚀 ~ Comment ~ response:', response);
+
+  if (!response.ok) {
+    throw new Error('Failed to create comment');
+  }
+
+  return response.json();
+};
+
+// ============================== get Comment By Post Id ==============================
+
+export const getCommentByPostId = async (postId: number, axiosJWT: any, account: IUser) => {
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/comment/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${account?.access_token}`,
+      },
+    });
+    return response?.data?.data;
+  } catch (error) {
+    ToastError('Get Comments By Post Failed');
+    return [];
+  }
+};
+
+export const useGetCommentByPostId = (postId: number, axiosJWT: any, account: IUser) => {
+  return useQuery('comment-by-postId', () => getCommentByPostId(postId, axiosJWT, account), {
+    enabled: !!postId,
+  });
+};
+
+// ============================== get All Comment ==============================
+export const getAllComment = async (axiosJWT: any, account: IUser) => {
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/comment/all`, {
+      headers: {
+        Authorization: `Bearer ${account?.access_token}`,
+      },
+    });
+    return response?.data?.data;
+  } catch (error) {
+    ToastError('Get Comments By Post Failed');
+    return [];
+  }
+};
+
+export const useGetAllComment = (axiosJWT: any, account: IUser) => {
+  return useQuery('all-comments', () => getAllComment(axiosJWT, account));
+};
+
+// ============================== delete Comment ==============================
+export const deleteComment = async (commentId: number, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/comment/${account.id}/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete comment');
   }
 
   return response.json();

@@ -143,7 +143,7 @@ const Profile = observer(() => {
               <Tab label="Following Posts" />
             </Tabs>
             <Box>
-              <PostItem />
+              <PostItem isProfile={true} />
             </Box>
           </Paper>
         </Grid>

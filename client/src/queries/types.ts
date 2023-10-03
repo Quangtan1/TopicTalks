@@ -76,3 +76,20 @@ export interface IUserInformation {
   createdAt: string;
   banned: boolean;
 }
+
+
+export interface ICommentBody {
+  postId: number;
+  userId: number;
+  content: string;
+}
+
+export interface IComment {
+  id: number;
+  postId: number;
+  userId: number;
+  username: string;
+  content: string;
+  createAt: string;
+  updateAt: string;
+}

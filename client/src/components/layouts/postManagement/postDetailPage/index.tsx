@@ -1,6 +1,16 @@
 import { observer } from 'mobx-react';
-import { useParams } from 'react-router-dom';
-import { IPost, deletePost, useGetPostById } from 'src/queries';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  IComment,
+  IPost,
+  deleteComment,
+  deletePost,
+  useGetAllComment,
+  useGetAllPosts,
+  useGetCommentByPostId,
+  useGetPostById,
+  useGetUserById,
+} from 'src/queries';
 import accountStore from 'src/store/accountStore';
 import { createAxios } from 'src/utils';
 import { Box, Grid, Typography, Button, Card, CardContent, CardMedia, Avatar } from '@mui/material';
@@ -19,77 +29,112 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { DELETE_POST } from '../post/postHeader';
 import Loading from 'src/components/loading/Loading';
 
-const comments = [
-  {
-    id: 1,
-    username: 'User1',
-    avatarUrl:
-      'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
-    created_at: '2023-09-30T10:00:00Z',
-    content: 'This is the first comment. Great post!',
-    likeCount: 5,
-  },
-  {
-    id: 2,
-    username: 'User2',
-    avatarUrl:
-      'https://us.123rf.com/450wm/photochicken/photochicken2008/photochicken200800065/153425631-pritty-young-asian-photographer-girl-teen-travel-with-camera-trip-take-a-photo-tourist-lifestyle.jpg?ver=6',
-    created_at: '2023-09-30T11:15:00Z',
-    content: 'Nice work! I enjoyed reading this.',
-    likeCount: 8,
-  },
-  {
-    id: 3,
-    username: 'User3',
-    avatarUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png',
-    created_at: '2023-09-30T12:30:00Z',
-    content: `Thanks for sharing this. It's very informative!`,
-    likeCount: 12,
-  },
-];
+// const comments = [
+//   {
+//     id: 1,
+//     username: 'User1',
+//     avatarUrl:
+//       'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80',
+//     created_at: '2023-09-30T10:00:00Z',
+//     content: 'This is the first comment. Great post!',
+//     likeCount: 5,
+//   },
+//   {
+//     id: 2,
+//     username: 'User2',
+//     avatarUrl:
+//       'https://us.123rf.com/450wm/photochicken/photochicken2008/photochicken200800065/153425631-pritty-young-asian-photographer-girl-teen-travel-with-camera-trip-take-a-photo-tourist-lifestyle.jpg?ver=6',
+//     created_at: '2023-09-30T11:15:00Z',
+//     content: 'Nice work! I enjoyed reading this.',
+//     likeCount: 8,
+//   },
+//   {
+//     id: 3,
+//     username: 'User3',
+//     avatarUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png',
+//     created_at: '2023-09-30T12:30:00Z',
+//     content: `Thanks for sharing this. It's very informative!`,
+//     likeCount: 12,
+//   },
+// ];
 
 const PostDetail = observer(() => {
-  dayjs.extend(relativeTime);
-
-  const { id } = useParams<{ id: string }>();
-
-  const account = accountStore?.account;
-
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const navigate = useNavigate();
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const axiosJWT = createAxios(account, setAccount);
-
-  const { data: postDetail, refetch: refetchPostDetail, isLoading } = useGetPostById(+id, axiosJWT, account);
-
+  dayjs.extend(relativeTime);
+  const { id } = useParams<{ id: string }>();
   useEffect(() => {
     refetchPostDetail();
+    refetchUserById();
+    scrollToTop();
+    refetchCommentByPostId();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const commentCount = comments.length;
+  // ==========================Config mobx==========================
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+  const axiosJWT = createAxios(account, setAccount);
+
+  // ==========================State==========================
+  const [open, setOpen] = useState(false);
+  const [commentId, setCommentId] = useState(null);
+  const [isEdit, setIsEdit] = useState(false);
+
+  // ========================== Query==========================
+  const useDeletePost = useMutation((id: number) => deletePost(id, account));
+
+  const useDeleteComment = useMutation((commentId: number) => deleteComment(commentId, account));
+
+  const { refetch: refetchAllPost } = useGetAllPosts(account, setAccount);
+
+  const { data: postDetail, refetch: refetchPostDetail, isLoading } = useGetPostById(+id, axiosJWT, account);
 
   const { title, content, img_url, author_id, created_at } = (postDetail as IPost) || {};
 
-  const authorName = author_id === 1 ? account?.username : 'Other User';
+  const {
+    data: userDetailData,
+    isLoading: isLoadingUserDetail,
+    refetch: refetchUserById,
+  } = useGetUserById(author_id, axiosJWT, account);
 
+  // TODO: change to useGetCommentByPostId
+  // const { data: allCommentData, refetch: refetchCommentByPostId } = useGetCommentByPostId(+id, axiosJWT, account);
+  const {
+    data: allCommentData,
+    isLoading: isLoadingComments,
+    refetch: refetchCommentByPostId,
+  } = useGetAllComment(axiosJWT, account);
   const timeAgo = dayjs(created_at)?.fromNow();
-
-  const useDeletePost = useMutation((id: number) => deletePost(id, account));
-
-  const [open, setOpen] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
 
   const handleDeletePost = async (postId: number) => {
     try {
       const result = await useDeletePost.mutateAsync(postId);
-      ToastSuccess('Delete post successfully!');
       if (result.status === 200) {
-        refetchPostDetail();
+        ToastSuccess('Delete post successfully!');
+        refetchAllPost();
+        navigate('/community');
       }
     } catch (error) {
       ToastError('Error deleting post!');
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const result = await useDeleteComment.mutateAsync(commentId);
+      if (result.status === 200) {
+        ToastSuccess('Delete comment successfully!');
+        setOpen(!open);
+        refetchPostDetail();
+        refetchCommentByPostId();
+      }
+    } catch (error) {
+      ToastError('Error deleting comment!');
     }
   };
 
@@ -106,7 +151,20 @@ const PostDetail = observer(() => {
     }
   };
 
-  return isLoading ? (
+  const handleActionsComments = (action: Actions, commentId: number) => {
+    switch (action) {
+      case Actions.Edit:
+        break;
+      case Actions.Delete:
+        setCommentId(commentId);
+        setOpen(!open);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return isLoading || isLoadingUserDetail || isLoadingComments ? (
     <>
       <Loading />
     </>
@@ -118,7 +176,7 @@ const PostDetail = observer(() => {
           <CardContent className="post-dt-cardHeader">
             <Box className={'item1'}>
               <Typography variant="h6" className="post-dt-cardHeader-title" gutterBottom>
-                {authorName}
+                {userDetailData?.username}
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
                 {`Posted ${timeAgo}`}
@@ -158,37 +216,51 @@ const PostDetail = observer(() => {
         <Card>
           <CardContent>
             <Typography className="title-comments" variant="h6" gutterBottom>
-              Comments ({commentCount})
+              Comments ({allCommentData?.length})
             </Typography>
-            {comments.map((comment) => (
-              <Box key={comment?.id} className={'itemComments'}>
-                <Box className="userGroup">
-                  <Box className="userAvatarGroup">
-                    <Avatar src={comment?.avatarUrl} alt={comment?.username} />
-                    <Typography variant="subtitle1" className="userName">
-                      {comment?.username}
-                    </Typography>
+
+            {isLoadingComments ? (
+              <Loading />
+            ) : (
+              allCommentData.length !== 0 &&
+              allCommentData?.map((comment: IComment) => {
+                return (
+                  <Box key={comment?.id} className={'itemComments'}>
+                    <Box className="userGroup">
+                      <Box className="userAvatarGroup">
+                        <Avatar src={userDetailData?.imageUrl} alt={comment?.username} />
+                        <Typography variant="subtitle1" className="userName">
+                          {comment?.username}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <ActionModal
+                          actionsMenu={actionsMenu}
+                          onClick={(value: Actions) => handleActionsComments(value, comment?.id)}
+                        />
+                        <Typography className="commentsDate" variant="subtitle2" color="text.secondary" gutterBottom>
+                          {dayjs(comment?.createAt).fromNow()}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box className="contentWrap">
+                      <Typography className="content" variant="body2">
+                        {comment?.content}
+                      </Typography>
+                      <Button className="btn-like" variant="outlined" color="primary">
+                        <AiOutlineHeart className="btn-like-icon" />
+                      </Button>
+                    </Box>
                   </Box>
-                  <Typography className="commentsDate" variant="subtitle2" color="text.secondary" gutterBottom>
-                    {dayjs(comment?.created_at).fromNow()}
-                  </Typography>
-                </Box>
-                <Box className="contentWrap">
-                  <Typography className="content" variant="body2">
-                    {comment?.content}
-                  </Typography>
-                  <Button className="btn-like" variant="outlined" color="primary">
-                    <AiOutlineHeart className="btn-like-icon" />
-                  </Button>
-                </Box>
-              </Box>
-            ))}
+                );
+              })
+            )}
           </CardContent>
         </Card>
         <DialogCommon
           open={open}
           onClose={() => setOpen(false)}
-          onConfirm={() => handleDeletePost(postDetail?.id)}
+          onConfirm={!!commentId ? () => handleDeleteComment(commentId) : () => handleDeletePost(postDetail?.id)}
           content={DELETE_POST}
         />
         <NewPost

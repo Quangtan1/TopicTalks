@@ -47,29 +47,28 @@ interface Props {
 
 const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal, isEdit, dataEdit }) => {
   const formRef = useRef<FormikProps<any>>(null);
-
+  // ========================== get store Mobx ==========================
   const account = accountStore?.account;
-
   const setAccount = () => {
     return accountStore?.setAccount;
   };
+  const url_img = accountStore?.account?.url_img;
 
+  // ========================== State ==========================
+  const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
+  const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
+  const [emotion, setEmotion] = useState('');
+  const [selectedImage, setSelectedImage] = useState('');
+
+  // ========================== Query ==========================
   const {
     data: topicParentData,
     isLoading: isLoadingTopicParent,
     refetch: refetchTopic,
   } = useGetAllTopicParents(account, setAccount);
-
   const { refetch: refetchPost } = useGetAllPosts(account, setAccount);
-
   const useCreatePost = useMutation((postData) => createPost(postData, account));
   const useEditPost = useMutation((postData) => editPost(postData, account));
-
-  const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
-  const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
-  const [emotion, setEmotion] = useState('');
-  const url_img = accountStore?.account?.url_img;
-  const [selectedImage, setSelectedImage] = useState('');
 
   const setDefaultValue = () => {
     setEmotion('');
@@ -205,9 +204,11 @@ const NewPost: React.FC<Props> = observer(({ onEditSuccess, open, closePostModal
             ) : null
           }
         />
-        <Button variant="outlined" size="small" className="post-button" onClick={() => refetchTopic()}>
-          Reload Topic Parent
-        </Button>
+        {!values?.selectedTopicParent && (
+          <Button variant="outlined" size="small" className="post-button" onClick={() => refetchTopic()}>
+            Reload Topic Parent
+          </Button>
+        )}
 
         {!isLoadingTopicParent && (
           <FormControl fullWidth variant="outlined" className="topic-parent-select">
