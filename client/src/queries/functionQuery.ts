@@ -1,7 +1,6 @@
 import { useQuery } from 'react-query';
 import { IUser } from 'src/types/account.types';
 import { createAxios } from 'src/utils';
-import { ToastError } from 'src/utils/toastOptions';
 import { ICommentBody } from './types';
 
 export const TOPIC_TALKS_DOMAIN = 'http://localhost:5000/api/v1';
@@ -28,7 +27,7 @@ const fetchTopic = async (
 
     return response?.data;
   } catch (error) {
-    ToastError(`Error fetching data: ${error}`);
+    console.log('🚀 ~error:', error);
   }
 };
 
@@ -46,7 +45,7 @@ export const fetchTopicChildren = async (topicParentId: number, axiosJWT, accoun
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get Topic Children Failed');
+    console.log('🚀 ~error:', error);
     return [];
   }
 };
@@ -69,6 +68,7 @@ export const createPost = async (postData, account) => {
   });
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to create post');
   }
 
@@ -88,12 +88,14 @@ export const editPost = async (postData, account: IUser) => {
   });
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to edit post');
   }
 
   return response.json();
 };
 
+// ================================= Get All Post ==============================
 const fetchAllPost = async (account: IUser, setAccount: (account: IUser | null) => void, id?: number) => {
   const axiosJWT = createAxios(account, setAccount);
   const bearerToken = account?.access_token;
@@ -107,7 +109,7 @@ const fetchAllPost = async (account: IUser, setAccount: (account: IUser | null) 
 
     return response?.data;
   } catch (error) {
-    ToastError(`Error fetching data: ${error}`);
+    console.log('🚀 ~error:', error);
   }
 };
 
@@ -115,6 +117,36 @@ export const useGetAllPosts = (account: IUser, setAccount: (account: IUser | nul
   return useQuery('post', () => fetchAllPost(account, setAccount));
 };
 
+// ================================= Get All Post By is approved ==============================
+const fetchAllPostByIsApproved = async (
+  account: IUser,
+  setAccount: (account: IUser | null) => void,
+  isApproved = false,
+) => {
+  const axiosJWT = createAxios(account, setAccount);
+  const bearerToken = account?.access_token;
+
+  try {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/all-posts/is-approved=false`, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+
+    return response?.data?.data;
+  } catch (error) {
+    console.log('🚀 ~error:', error);
+  }
+};
+
+export const useGetAllPostsByIsApproved = (
+  account: IUser,
+  setAccount: (account: IUser | null) => void,
+  isApproved = false,
+) => {
+  return useQuery('post-by-is-approved', () => fetchAllPostByIsApproved(account, setAccount, isApproved));
+};
+// ================================= Delete post ==============================
 export const deletePost = async (id: number, account: IUser) => {
   const bearerToken = account?.access_token;
 
@@ -127,6 +159,7 @@ export const deletePost = async (id: number, account: IUser) => {
   });
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to delete post');
   }
 
@@ -143,7 +176,7 @@ export const getAllPostsByAuthorId = async (authorId: number, axiosJWT: any, acc
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get Post By Author Failed');
+    console.log('🚀 ~error:', error);
     return [];
   }
 };
@@ -164,7 +197,7 @@ export const getPostById = async (postId: number, axiosJWT: any, account: IUser)
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get Post Detail Failed');
+    console.log('🚀 ~error:', error);
     return [];
   }
 };
@@ -173,6 +206,26 @@ export const useGetPostById = (postId: number, axiosJWT: any, account: IUser) =>
   return useQuery('post-detail', () => getPostById(postId, axiosJWT, account), {
     enabled: !!postId,
   });
+};
+
+// ================================= Approved post ==============================
+export const approvedPost = async (id: number, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/post/approve/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    console.log('🚀 ~error:', response);
+    throw new Error('Failed to approve post');
+  }
+
+  return response.json();
 };
 
 // ============================== Get USER by ID ==============================
@@ -211,6 +264,7 @@ export const editUser = async (userData, account: IUser) => {
   console.log('response', response);
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to Edit User Profile');
   }
 
@@ -233,6 +287,7 @@ export const createComment = async (commentBody: ICommentBody, account: IUser) =
   console.log('🚀 ~ Comment ~ response:', response);
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to create comment');
   }
 
@@ -250,7 +305,7 @@ export const getCommentByPostId = async (postId: number, axiosJWT: any, account:
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get Comments By Post Failed');
+    console.log('🚀 ~error:', error);
     return [];
   }
 };
@@ -271,7 +326,7 @@ export const getAllComment = async (axiosJWT: any, account: IUser) => {
     });
     return response?.data?.data;
   } catch (error) {
-    ToastError('Get Comments By Post Failed');
+    console.log('🚀 ~error:', error);
     return [];
   }
 };
@@ -293,6 +348,7 @@ export const deleteComment = async (commentId: number, account: IUser) => {
   });
 
   if (!response.ok) {
+    console.log('🚀 ~error:', response);
     throw new Error('Failed to delete comment');
   }
 

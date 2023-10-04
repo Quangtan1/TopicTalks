@@ -30,7 +30,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'Manage Post',
     icon: <BsPostcard />,
-    path: '/post-manage',
+    path: '/manage-post',
   },
   {
     title: 'Manage User',
