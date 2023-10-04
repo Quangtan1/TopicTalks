@@ -18,10 +18,11 @@ import { useState } from 'react';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import Loading from 'src/components/loading/Loading';
-import { IPost, approvedPost, useGetAllPostsByIsApproved } from 'src/queries';
+import { IPost, approvedPost, deletePost, useGetAllPostsByIsApproved } from 'src/queries';
 import accountStore from 'src/store/accountStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useMutation } from 'react-query';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 
 // const mockData = [
 //   { id: 1, name: 'John Doe', age: 30, email: 'john.doe@example.com' },
@@ -38,10 +39,13 @@ import { useMutation } from 'react-query';
 
 export const APPROVE_POST = 'Do you want to APPROVE this post?';
 
+export const REJECT_POST = 'Do you want to REJECT AND DELETE FOREVER this post?';
+
 const ManagePost = observer(() => {
   dayjs.extend(relativeTime);
   const [isOpen, setIsOpen] = useState(false);
   const [postId, setPostId] = useState(null);
+  const [isRejectAction, setIsRejectAction] = useState(false);
 
   // ============================== Config mobx ==============================
   const account = accountStore?.account;
@@ -57,6 +61,7 @@ const ManagePost = observer(() => {
   } = useGetAllPostsByIsApproved(account, setAccount);
 
   const useApprovePost = useMutation((postId: number) => approvedPost(postId, account));
+  const useDeletePost = useMutation((postId: number) => deletePost(postId, account));
 
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
@@ -72,6 +77,7 @@ const ManagePost = observer(() => {
       const res = await useApprovePost.mutateAsync(postId);
       console.log(res);
       if (res?.status === 200) {
+        ToastSuccess('Approve post successfully!');
         setIsOpen(false);
         reLoadPost();
       }
@@ -80,9 +86,23 @@ const ManagePost = observer(() => {
     }
   };
 
-  const handleOpenModalApprove = (id: number) => {
+  const handleRejectPost = async (postId: number) => {
+    try {
+      const result = await useDeletePost.mutateAsync(postId);
+      if (result.status === 200) {
+        ToastSuccess('Reject post successfully!');
+        reLoadPost();
+        setIsOpen(false);
+      }
+    } catch (error) {
+      ToastError('Error Reject post!');
+    }
+  };
+
+  const handleOpenModalApproveReject = (id: number, isReject = false) => {
     setIsOpen(!isOpen);
     setPostId(id);
+    setIsRejectAction(isReject);
   };
 
   return isLoading ? (
@@ -116,7 +136,7 @@ const ManagePost = observer(() => {
         <Table>
           <TableBody className="table_body">
             {postsWaitingForApproval?.length !== 0 &&
-              postsWaitingForApproval.map((item: IPost, index: number) => {
+              postsWaitingForApproval?.map((item: IPost, index: number) => {
                 const timeAgo = dayjs(item?.created_at).fromNow();
                 return (
                   <TableRow key={item?.id}>
@@ -139,8 +159,8 @@ const ManagePost = observer(() => {
                     <TableCell className="cell_createdAt">{timeAgo}</TableCell>
                     <TableCell className="cell_img">{<img src={item?.img_url} alt="img" className="img" />}</TableCell>
                     <TableCell className="cell_action">
-                      <Button onClick={() => handleOpenModalApprove(item?.id)}>Approve</Button>
-                      <Button>Reject</Button>
+                      <Button onClick={() => handleOpenModalApproveReject(item?.id)}>Approve ✅</Button>
+                      <Button onClick={() => handleOpenModalApproveReject(item?.id, true)}>Reject ❌</Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -161,8 +181,8 @@ const ManagePost = observer(() => {
       <DialogCommon
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        onConfirm={() => handleApprovePost(postId)}
-        content={APPROVE_POST}
+        onConfirm={isRejectAction ? () => handleRejectPost(postId) : () => handleApprovePost(postId)}
+        content={isRejectAction ? REJECT_POST : APPROVE_POST}
       />
     </Box>
   );

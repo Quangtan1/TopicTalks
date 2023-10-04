@@ -101,13 +101,17 @@ const fetchAllPost = async (account: IUser, setAccount: (account: IUser | null) 
   const bearerToken = account?.access_token;
 
   try {
-    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/all`, {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/all-posts/is-approved=true`, {
       headers: {
         Authorization: `Bearer ${bearerToken}`,
       },
     });
 
-    return response?.data;
+    if (response?.data?.data) {
+      return response?.data?.data;
+    } else {
+      return [];
+    }
   } catch (error) {
     console.log('🚀 ~error:', error);
   }
@@ -174,7 +178,11 @@ export const getAllPostsByAuthorId = async (authorId: number, axiosJWT: any, acc
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    return response?.data?.data;
+    if (response?.data?.data) {
+      return response?.data?.data;
+    } else {
+      return [];
+    }
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
