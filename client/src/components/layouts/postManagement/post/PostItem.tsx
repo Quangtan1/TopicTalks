@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
 import CommentsList from './comments/CommentsListModal';
 import ShareModal from './shareModal/ShareModal';
@@ -12,6 +12,7 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from 'src/utils';
+import NewPost from '../newPost/NewPost';
 
 const PostItem = observer(({ isProfile = false }) => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const PostItem = observer(({ isProfile = false }) => {
 
   // ============================== State ==============================
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenPost, setIsOpenPost] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [likedPosts, setLikedPosts] = useState([1, 2, 3, 4].map((post) => 12));
   const [likedIndexes, setLikedIndexes] = useState([]);
@@ -103,20 +105,39 @@ const PostItem = observer(({ isProfile = false }) => {
     );
   };
 
+  const handleOpenPostModal = () => {
+    setIsOpenPost(!isOpenPost);
+  };
+
+  const renderNoPost = () => {
+    return (
+      <>
+        <Typography className="no-post">Currently, There are no posts. Create a post now!</Typography>
+        <Button onClick={handleOpenPostModal}>Create Post</Button>
+      </>
+    );
+  };
   return (
     <>
       {isLoading || isLoadingPostByAuthorId ? (
         <Loading />
       ) : (
-        <Box className="post-item-container">
-          {!isProfile
-            ? postData?.data?.map((post: IPost, index) => {
-                return renderPostItem(post, index);
-              })
-            : postByAuthorIdData?.data?.map((postByAuthorData: IPost, index) => {
-                return renderPostItem(postByAuthorData, index);
-              })}
-        </Box>
+        <>
+          <Box className="post-item-container">
+            {postData && postByAuthorIdData !== 0 && !isProfile
+              ? typeof postData === 'object'
+                ? postData?.map((postData: IPost, index) => {
+                    return renderPostItem(postData, index);
+                  })
+                : typeof postData === 'string' && renderNoPost()
+              : typeof postByAuthorIdData === 'object'
+              ? postByAuthorIdData?.map((postByAuthorData: IPost, index) => {
+                  return renderPostItem(postByAuthorData, index);
+                })
+              : typeof postByAuthorIdData === 'string' && renderNoPost()}
+          </Box>
+          <NewPost open={isOpenPost} onEditSuccess={refetchPost} closePostModal={() => setIsOpenPost(!isOpenPost)} />
+        </>
       )}
     </>
   );
