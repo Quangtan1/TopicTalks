@@ -24,6 +24,7 @@ import { HiPhoneMissedCall } from 'react-icons/hi';
 
 interface ChatProps {
   chat: ListMesage;
+  handleOpenSetting: () => void;
 }
 const ChatBox = observer((props: ChatProps) => {
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -32,7 +33,7 @@ const ChatBox = observer((props: ChatProps) => {
   const isSelecedChat = chatStore?.selectedChat !== null;
   const [imageFile, setImageFile] = useState<string>('');
   const fileInputRef = useRef(null);
-  const { chat } = props;
+  const { chat, handleOpenSetting } = props;
 
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
 
@@ -159,7 +160,7 @@ const ChatBox = observer((props: ChatProps) => {
             <Box className="header_option">
               <BiPhoneCall onClick={handleCall} />
               <BsCameraVideo onClick={handleCallVideo} />
-              <BsThreeDotsVertical />
+              <BsThreeDotsVertical onClick={handleOpenSetting} />
             </Box>
           </>
         )}

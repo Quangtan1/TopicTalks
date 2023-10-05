@@ -2,7 +2,7 @@ import { observable, action, makeObservable } from 'mobx';
 import { ListMesage } from 'src/types/chat.type';
 
 class ChatStore {
-  chats = null;
+  chats: ListMesage[] = [];
   selectedChat: ListMesage | null = null;
 
   constructor() {
