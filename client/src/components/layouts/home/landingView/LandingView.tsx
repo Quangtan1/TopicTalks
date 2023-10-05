@@ -1,16 +1,15 @@
-import { Avatar, Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState, useMemo } from 'react';
 import memoizeOne from 'memoize-one';
 import './LandingView.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { createAxios, getDataAPI, headerRoute, logo } from 'src/utils';
+import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
-import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 
 const responsive = {
   desktop: {
@@ -31,7 +30,6 @@ const responsive = {
 };
 
 const LandingView = observer(() => {
-  const isResize = uiStore?.collapse;
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);
   const [topicChildMap, setTopicChildMap] = useState<Map<number, TopicChild[]>>(new Map());
   const navigate = useNavigate();

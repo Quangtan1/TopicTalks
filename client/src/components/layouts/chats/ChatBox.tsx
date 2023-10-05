@@ -24,6 +24,7 @@ import { HiPhoneMissedCall } from 'react-icons/hi';
 
 interface ChatProps {
   chat: ListMesage;
+  handleOpenSetting: () => void;
 }
 const ChatBox = observer((props: ChatProps) => {
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -32,11 +33,12 @@ const ChatBox = observer((props: ChatProps) => {
   const isSelecedChat = chatStore?.selectedChat !== null;
   const [imageFile, setImageFile] = useState<string>('');
   const fileInputRef = useRef(null);
-  const { chat } = props;
+  const { chat, handleOpenSetting } = props;
 
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
 
-  const { message, setMessage, socket, setCallUser, setOpenVideoCall } = useContext(ChatContext);
+  const { message, setMessage, socket, setCallUser, setOpenVideoCall, setTurnMyVideo, setTurnUserVideo } =
+    useContext(ChatContext);
 
   useEffect(() => {
     return () => {
@@ -77,20 +79,43 @@ const ChatBox = observer((props: ChatProps) => {
   };
 
   const handleCallVideo = () => {
-    const receiveMessageDTO = {
-      data: {
-        message: 'call',
-      },
-      targetName: chat.partnerDTO[0].username,
-      targetId: chat.partnerDTO[0].id,
-      timeAt: new Date().toISOString(),
-      userId: account.id,
-      username: account.username,
-      conversationId: chat.conversationInfor.id,
-    };
-    socket.emit('1V1CommunicateVideo', receiveMessageDTO);
-    setCallUser(receiveMessageDTO);
-    setOpenVideoCall(true);
+    if (!chat.conversationInfor.isGroupChat) {
+      const receiveMessageDTO = {
+        data: {
+          message: 'video',
+        },
+        targetName: chat.partnerDTO[0].username,
+        targetId: chat.partnerDTO[0].id,
+        timeAt: new Date().toISOString(),
+        userId: account.id,
+        username: account.username,
+        conversationId: chat.conversationInfor.id,
+      };
+      socket.emit('1V1CommunicateVideo', receiveMessageDTO);
+      setCallUser(receiveMessageDTO);
+      setOpenVideoCall(true);
+    }
+  };
+
+  const handleCall = () => {
+    if (!chat.conversationInfor.isGroupChat) {
+      const receiveMessageDTO = {
+        data: {
+          message: 'call',
+        },
+        targetName: chat.partnerDTO[0].username,
+        targetId: chat.partnerDTO[0].id,
+        timeAt: new Date().toISOString(),
+        userId: account.id,
+        username: account.username,
+        conversationId: chat.conversationInfor.id,
+      };
+      socket.emit('1V1CommunicateVideo', receiveMessageDTO);
+      setCallUser(receiveMessageDTO);
+      setOpenVideoCall(true);
+      setTurnMyVideo(false);
+      setTurnUserVideo(false);
+    }
   };
 
   const addEmoji = (emoji: any) => {
@@ -123,15 +148,19 @@ const ChatBox = observer((props: ChatProps) => {
       <Box className="chatbox_header">
         {isSelecedChat && (
           <>
-            <Typography>
-              {chat.conversationInfor.isGroupChat === true
-                ? chat.conversationInfor.chatName
-                : chat.partnerDTO[0].username}
-            </Typography>
+            <Box className="title_name">
+              <Typography>
+                {chat.conversationInfor.isGroupChat === true
+                  ? chat.conversationInfor.chatName
+                  : chat.partnerDTO[0].username}
+              </Typography>
+              <Typography>({chat.conversationInfor.topicChildren.topicChildrenName})</Typography>
+            </Box>
+
             <Box className="header_option">
-              <BiPhoneCall onClick={initChat} />
+              <BiPhoneCall onClick={handleCall} />
               <BsCameraVideo onClick={handleCallVideo} />
-              <BsThreeDotsVertical />
+              <BsThreeDotsVertical onClick={handleOpenSetting} />
             </Box>
           </>
         )}

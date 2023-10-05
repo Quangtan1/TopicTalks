@@ -7,6 +7,7 @@ interface IConversation {
   chatName: string | null;
   isGroupChat: boolean;
   topicChildren: ITopicChild;
+  adminId: number;
 }
 interface IPartnerDTO {
   id: number;
@@ -14,6 +15,7 @@ interface IPartnerDTO {
   banned: boolean;
   image: string;
   bannedAt: string | null;
+  member: boolean;
 }
 export interface ListMesage {
   conversationInfor: IConversation;
