@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './VideoCall.scss';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { ICallData } from 'src/types/chat.type';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { TbPhoneCall } from 'react-icons/tb';
 import { MdCallEnd } from 'react-icons/md';
+import { BsFillCameraVideoFill, BsFillCameraVideoOffFill, BsMicFill, BsMicMuteFill } from 'react-icons/bs';
 
 interface DialogProps {
   open: boolean;
@@ -14,12 +15,28 @@ interface DialogProps {
   onLeaveCall: () => void;
   acceptCall: () => void;
   isAccepted: boolean;
-  saveCall: () => void;
+  saveCall: (seconds: number) => void;
+  handleTurnVideo: () => void;
+  turnMyVideo: boolean;
+  turnUserVideo: boolean;
 }
 
 const VideoCall = observer((props: DialogProps) => {
-  const { open, callUser, receiveCallUser, onLeaveCall, acceptCall, isAccepted, saveCall } = props;
+  const {
+    open,
+    callUser,
+    receiveCallUser,
+    onLeaveCall,
+    acceptCall,
+    isAccepted,
+    saveCall,
+    handleTurnVideo,
+    turnMyVideo,
+    turnUserVideo,
+  } = props;
   const [stream, setStream] = useState<MediaStream>(null);
+  const [muted, setMuted] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(0);
 
   const myVideo = useRef(null);
   const userVideo = useRef(null);
@@ -49,15 +66,26 @@ const VideoCall = observer((props: DialogProps) => {
         const tracks = userMediaStream.getTracks();
         tracks.forEach((track) => {
           track.stop();
-          console.log('disstroy2');
           userMediaStream.removeTrack(track);
         });
       }
     };
   }, [callUser, receiveCallUser, isAccepted]);
 
+  useEffect(() => {
+    if (isAccepted) {
+      const timer = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [isAccepted]);
+
   const distroyMediaStream = () => {
-    saveCall();
+    saveCall(seconds);
     if (stream) {
       const tracks = stream?.getTracks();
       tracks?.forEach((track) => {
@@ -68,14 +96,29 @@ const VideoCall = observer((props: DialogProps) => {
     }
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
+
   return (
     <Dialog open={open} className="video_call_container">
       <DialogTitle className="dialog-title"></DialogTitle>
       <DialogContent className="dialog-content">
         <Box className="video_box">
-          {stream && <video playsInline muted ref={myVideo} autoPlay className="video" />}
-
-          {isAccepted ? <video playsInline ref={userVideo} autoPlay className="video" /> : null}
+          <Box className="video_view">
+            {stream && <video playsInline muted={muted} ref={myVideo} autoPlay className="video" />}
+            {!turnMyVideo && <div className="overlay"></div>}
+          </Box>
+          <Box className="video_view">
+            {isAccepted ? <video playsInline muted={true} ref={userVideo} autoPlay className="video" /> : null}
+            {!turnUserVideo && <div className="overlay"></div>}
+          </Box>
         </Box>
         {account.id === callUser?.userId && isAccepted === false && (
           <Typography className="in_call">You are calling to {callUser?.targetName}...</Typography>
@@ -84,9 +127,18 @@ const VideoCall = observer((props: DialogProps) => {
           <Typography className="in_call">You have a call from {receiveCallUser?.username}...</Typography>
         )}
         {account.id === receiveCallUser?.targetId && isAccepted && (
-          <Typography className="in_call">In Calling...</Typography>
+          <>
+            <Typography className="in_call">In Calling...</Typography>
+            <Typography className="timer">{formatTime(seconds)}</Typography>
+          </>
         )}
+
         <Box className="action_box">
+          {isAccepted && (
+            <Button onClick={() => setMuted(!muted)} className="muted-call">
+              {!muted ? <BsMicFill /> : <BsMicMuteFill />}
+            </Button>
+          )}
           <Button onClick={distroyMediaStream} className="reject_call">
             <MdCallEnd />
             Cancel
@@ -95,6 +147,11 @@ const VideoCall = observer((props: DialogProps) => {
             <Button className="accept_call" onClick={acceptCall}>
               <TbPhoneCall />
               Answer
+            </Button>
+          )}
+          {isAccepted && (
+            <Button onClick={handleTurnVideo} className="muted-call">
+              {turnMyVideo ? <BsFillCameraVideoFill /> : <BsFillCameraVideoOffFill />}
             </Button>
           )}
         </Box>

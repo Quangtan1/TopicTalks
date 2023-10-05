@@ -5,7 +5,7 @@
   height: 100%;
   max-height: 680px;
   gap: 15px;
-  padding: 20px 100px;
+  padding: 20px 100px 0px;
   .list_message_container {
     width: 20vw;
     min-width: 320px;
@@ -153,6 +153,25 @@
       align-items: center;
       min-height: 50px;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
+      .title_name {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding-left: 10px;
+        p:nth-child(2) {
+          background-color: rgb(255, 178, 62);
+          background-image: linear-gradient(
+            268.67deg,
+            var(--main-color) 30.69%,
+            rgb(255, 163, 26) 55.54%,
+            rgb(255, 0, 115) 99%
+          );
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+          font-size: 20px;
+          font-style: italic;
+        }
+      }
       .header_option {
         display: flex;
         gap: 10px;
