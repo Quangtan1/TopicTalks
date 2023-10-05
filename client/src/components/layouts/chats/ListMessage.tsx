@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
+import { IoCreateOutline } from 'react-icons/io5';
 import { BsChatDots } from 'react-icons/bs';
-import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
+import { AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiSettings } from 'react-icons/ci';
@@ -9,7 +10,6 @@ import { observer } from 'mobx-react';
 import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { ListMesage } from 'src/types/chat.type';
-import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
 
 const tabOption = [
   {
@@ -31,11 +31,9 @@ const tabOption = [
 
 const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const [open, setOpen] = useState<boolean>(false);
+  const [listMessage, setListMessage] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
 
-  const chat = chatStore?.selectedChat;
-  const listChats = chatStore?.chats;
   const setAccount = () => {
     return accountStore?.setAccount;
   };
@@ -46,7 +44,7 @@ const ListMessage = observer(() => {
   useEffect(() => {
     getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
       .then((res) => {
-        chatStore?.setChats(res.data.data);
+        setListMessage(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -64,7 +62,7 @@ const ListMessage = observer(() => {
       <Typography className="title_chat">Chat Rooms</Typography>
       <Box className="chat_option">
         <TextField required placeholder="Search..." autoFocus className="search" />
-        <AiOutlineUsergroupAdd onClick={() => setOpen(true)} />
+        <IoCreateOutline />
       </Box>
       <List className="tab_option">
         {tabOption.map((item) => (
@@ -80,13 +78,9 @@ const ListMessage = observer(() => {
       </List>
       <Box className="list_chat_box">
         <List className="list_box">
-          {listChats?.length > 0 &&
-            listChats?.map((item) => (
-              <ListItem
-                key={item.conversationInfor.id}
-                className={`${chat?.conversationInfor.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
-                onClick={() => setSelectedChat(item)}
-              >
+          {listMessage?.length > 0 &&
+            listMessage?.map((item) => (
+              <ListItem key={item.conversationInfor.id} className="chat_item" onClick={() => setSelectedChat(item)}>
                 <Avatar />
                 <ListItemText className="chat_text_item">
                   <Typography>
@@ -108,7 +102,6 @@ const ListMessage = observer(() => {
         </Box>
         <CiSettings />
       </Box>
-      <CreateGroupDialog open={open} onClose={() => setOpen(false)} />
     </Box>
   );
 });

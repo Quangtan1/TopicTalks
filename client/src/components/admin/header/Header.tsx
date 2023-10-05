@@ -68,7 +68,7 @@ const Header = observer(() => {
               onClick={handleClose}
               PaperProps={{
                 elevation: 0,
-                className: 'custom-paper_admin',
+                className: 'custom-paper',
               }}
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
