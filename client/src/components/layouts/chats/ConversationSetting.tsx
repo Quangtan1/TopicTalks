@@ -43,7 +43,7 @@ const ConversationSetting = observer((props: ChatProps) => {
           </Box>
         )}
       </Box>
-      {isAdmin ? (
+      {isAdmin || !isGroup ? (
         <Button className="button_delete">Delete Conversation</Button>
       ) : (
         <Button className="button_delete">Leave Conversation</Button>

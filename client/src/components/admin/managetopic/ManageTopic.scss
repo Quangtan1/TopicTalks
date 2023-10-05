@@ -1,92 +1,69 @@
 .manage_topic_container {
-    padding: 80px 20px 20px 260px;
-    width: 100vw;
-    height: 100vh;
+  padding: 80px 20px 20px 260px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  .create_topic {
     display: flex;
-    flex-direction: column;
-    .create_topic {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      .titel_a1 {
-        font-size: 25px;
-        font-weight: 600;
-      }
-      svg {
-        font-size: 30px;
-        border-radius: 50%;
-        background: rgb(62, 67, 150);
-        color: #fff;
-        padding: 6px;
-        cursor: pointer;
-        path {
-          stroke: #fff;
-        }
+    align-items: center;
+    gap: 30px;
+    .titel_a1 {
+      font-size: 25px;
+      font-weight: 600;
+    }
+    svg {
+      font-size: 30px;
+      border-radius: 50%;
+      background: rgb(62, 67, 150);
+      color: #fff;
+      padding: 6px;
+      cursor: pointer;
+      path {
+        stroke: #fff;
       }
     }
-    .titel_a2 {
-      padding-top: 12px;
-    }
-    .select_topic {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0px;
-      .MuiInputBase-root {
-        .MuiSelect-select {
-          padding: 10px 80px 10px 14px;
-        }
+  }
+  .titel_a2 {
+    padding-top: 12px;
+  }
+  .select_topic {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0px;
+    .MuiInputBase-root {
+      .MuiSelect-select {
+        padding: 10px 80px 10px 14px;
       }
     }
-    .warning {
-      display: flex;
-      gap: 10px;
-      border: red solid 1px;
-      align-items: center;
-      padding: 6px 20px;
-      border-radius: 5px;
-      color: #7f1d1d;
-      background: #fef2f2;
-      margin-bottom: 12px;
-      svg {
-        font-size: 15px;
-      }
+  }
+  .warning {
+    display: flex;
+    gap: 10px;
+    border: red solid 1px;
+    align-items: center;
+    padding: 6px 20px;
+    border-radius: 5px;
+    color: #7f1d1d;
+    background: #fef2f2;
+    margin-bottom: 12px;
+    svg {
+      font-size: 15px;
     }
-    .table_container_head {
-      border-radius: 6px;
-      min-height: 60px;
-      .MuiTable-root {
-        max-height: 60px;
-        .table_head {
-          .MuiTableRow-root {
-            background: rgb(62, 67, 150);
-  
-            .MuiTableCell-root {
-              color: #fff;
-              max-height: 60px;
-            }
-            .cell_no {
-              width: 14%;
-            }
-            .cell_tname {
-              width: 33%;
-            }
-            .cell_cby {
-              width: 33%;
-            }
-            .cell_action {
-              width: 20%;
-            }
-          }
-        }
-      }
-    }
-    .table_container_body {
-      .table_body {
+  }
+  .table_container_head {
+    border-radius: 6px;
+    min-height: 60px;
+    .MuiTable-root {
+      max-height: 60px;
+      .table_head {
         .MuiTableRow-root {
-          background: rgb(31, 42, 64);
+          background: rgb(62, 67, 150);
+
           .MuiTableCell-root {
             color: #fff;
+            max-height: 60px;
           }
           .cell_no {
             width: 14%;
@@ -99,30 +76,53 @@
           }
           .cell_action {
             width: 20%;
-            button {
-              font-size: 12px;
-            }
-            button:nth-child(1) {
-              background: rgb(61, 165, 138);
-              border-radius: 5px;
-              color: #fff;
-            }
-            button:nth-child(2) {
-              border: red solid 1px;
-              border-radius: 5px;
-              color: #7f1d1d;
-              background: #fef2f2;
-              margin-left: 10px;
-            }
           }
         }
       }
     }
-    .table_pagination {
-      min-height: 55px;
-      background: rgb(62, 67, 150);
-      border-radius: 6px;
-      color: #fff;
+  }
+  .table_container_body {
+    height: 100%;
+    .table_body {
+      .MuiTableRow-root {
+        background: rgb(31, 42, 64);
+        .MuiTableCell-root {
+          color: #fff;
+        }
+        .cell_no {
+          width: 14%;
+        }
+        .cell_tname {
+          width: 33%;
+        }
+        .cell_cby {
+          width: 33%;
+        }
+        .cell_action {
+          width: 20%;
+          button {
+            font-size: 12px;
+          }
+          button:nth-child(1) {
+            background: rgb(61, 165, 138);
+            border-radius: 5px;
+            color: #fff;
+          }
+          button:nth-child(2) {
+            border: red solid 1px;
+            border-radius: 5px;
+            color: #7f1d1d;
+            background: #fef2f2;
+            margin-left: 10px;
+          }
+        }
+      }
     }
   }
-  
+  .table_pagination {
+    min-height: 55px;
+    background: rgb(62, 67, 150);
+    border-radius: 6px;
+    color: #fff;
+  }
+}

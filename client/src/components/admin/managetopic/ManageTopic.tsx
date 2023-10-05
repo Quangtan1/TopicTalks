@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ManageTopic.scss';
 import {
   Box,
@@ -17,35 +17,24 @@ import {
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import { GrAdd } from 'react-icons/gr';
 import CreateTopicDialog from '../admindialog/CreateTopicDialog';
-
-interface MockData {
-  name: string;
-  createBy: string;
-}
-
-function createData(name: string, createBy: string): MockData {
-  return {
-    name,
-    createBy,
-  };
-}
-
-const healthData = [
-  createData('Fitness Tips', 'John Doe'),
-  createData('Healthy Recipes', 'Jane Smith'),
-  createData('Mental Wellness', 'David Johnson'),
-  createData('Yoga and Meditation', 'Emily Williams'),
-  createData('Nutrition Guidelines', 'Michael Brown'),
-  createData('Yoga and Meditation', 'Emily Williams'),
-  createData('Yoga and Meditation', 'Emily Williams'),
-  createData('Nutrition Guidelines', 'Michael Brown'),
-  createData('Nutrition Guidelines', 'Michael Brown'),
-  createData('Yoga and Meditation', 'Emily Williams'),
-];
+import { ListTopic, TopicChild } from 'src/types/topic.type';
+import { createAxios, getDataAPI } from 'src/utils';
+import accountStore from 'src/store/accountStore';
 
 const ManageTopic = () => {
-  const [selectTopic, setSelectTopic] = useState<string>('Healthy');
+  const [selectTopic, setSelectTopic] = useState<number | ''>(1);
+  const [listTopic, setListTopic] = useState<ListTopic[]>([]);
+  const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+
+  const account = accountStore?.account;
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
 
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
@@ -60,6 +49,26 @@ const ManageTopic = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+      .then((res) => {
+        setListTopic(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+      .then((res) => {
+        setTopicChild(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [selectTopic]);
+
   return (
     <Box className="manage_topic_container">
       <Box className="create_topic">
@@ -69,10 +78,13 @@ const ManageTopic = () => {
       <Typography className="title_a2">Manage the topics in sytem</Typography>
       <Box className="select_topic">
         <Typography>The Primary Topic:</Typography>
-        <Select value={selectTopic} onChange={(e) => setSelectTopic(e.target.value)}>
-          <MenuItem value="Healthy">Healthy</MenuItem>
-          <MenuItem value="Food">Food</MenuItem>
-          <MenuItem value="Math">Math</MenuItem>
+        <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+          {listTopic.length > 0 &&
+            listTopic.map((item) => (
+              <MenuItem value={item.id} key={item.id}>
+                {item.topicParentName}
+              </MenuItem>
+            ))}
         </Select>
       </Box>
       <Box className="warning">
@@ -94,17 +106,18 @@ const ManageTopic = () => {
       <TableContainer className="table_container_body">
         <Table>
           <TableBody className="table_body">
-            {healthData.map((item: MockData, index: number) => (
-              <TableRow key={index}>
-                <TableCell className="cell_no">{index + 1}</TableCell>
-                <TableCell className="cell_tname">{item.name}</TableCell>
-                <TableCell className="cell_cby">{item.createBy}</TableCell>
-                <TableCell className="cell_action">
-                  <Button>Update</Button>
-                  <Button>Delete</Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {topicChild.length > 0 &&
+              topicChild?.map((item: TopicChild, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="cell_no">{index + 1}</TableCell>
+                  <TableCell className="cell_tname">{item.topicChildrenName}</TableCell>
+                  <TableCell className="cell_cby">Admin</TableCell>
+                  <TableCell className="cell_action">
+                    <Button>Update</Button>
+                    <Button>Delete</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
