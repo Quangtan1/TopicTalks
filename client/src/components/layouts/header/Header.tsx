@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
 import './Header.scss';
 import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
@@ -9,8 +9,6 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { headerRoute, logo } from 'src/utils';
-import NotificationDialog from 'src/components/dialogs/NotificationDialog';
-import ChatContext from 'src/context/ChatContext';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -19,12 +17,9 @@ const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeRoute, setActiveRoute] = useState<string>('/landing-view');
-  const [openNotifi, setOpenNotifi] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-
-  const { notification } = useContext(ChatContext);
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
@@ -88,8 +83,8 @@ const Header = observer(() => {
       </Box>
       <Box className="infor_header">
         <IoMailUnreadOutline />
-        <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
-        <span className="notifi_icon">{notification.length}</span>
+        <IoNotificationsOutline />
+        <span className="notifi_icon">0</span>
         <IconButton onClick={() => setAnchorEl(true)}>
           <Avatar src={account?.url_img} alt="avatar" />
         </IconButton>
@@ -128,7 +123,6 @@ const Header = observer(() => {
         </Menu>
         <Typography className="name_account">{account?.username}</Typography>
       </Box>
-      {openNotifi && <NotificationDialog open={openNotifi} onClose={() => setOpenNotifi(false)} />}
       {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}
     </Box>
   );

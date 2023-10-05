@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useContext, memo, useState } from 'react';
+import React, { useEffect, useContext, memo } from 'react';
 import './ChatContainer.scss';
 import ListMessage from './ListMessage';
 import ChatBox from './ChatBox';
@@ -8,11 +8,9 @@ import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import ChatContext from 'src/context/ChatContext';
 import chatStore from 'src/store/chatStore';
-import ConversationSetting from './ConversationSetting';
 
 const ChatContainer = observer(() => {
   const { setMessage } = useContext(ChatContext);
-  const [openSetting, setOpenSetting] = useState<boolean>(false);
   const account = accountStore?.account;
   const accountJwt = account;
   const chat = chatStore?.selectedChat;
@@ -32,15 +30,10 @@ const ChatContainer = observer(() => {
         });
   }, [chat]);
 
-  const handleOpenSetting = () => {
-    setOpenSetting(!openSetting);
-  };
-
   return (
     <Box className="chat_container">
       <ListMessage />
-      <ChatBox chat={chat} handleOpenSetting={handleOpenSetting} />
-      {openSetting && <ConversationSetting chat={chat} />}
+      <ChatBox chat={chat} />
     </Box>
   );
 });
