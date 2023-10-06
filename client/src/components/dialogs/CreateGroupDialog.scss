@@ -1,4 +1,7 @@
 .create_group_dialog {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
   .MuiPaper-root {
     width: 600px;
     height: 450px;

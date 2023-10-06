@@ -19,7 +19,7 @@ import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
 import { IoLogoSnapchat } from 'react-icons/io5';
 import { ListMesage } from 'src/types/chat.type';
-import { FcCallback } from 'react-icons/fc';
+import { FcCallback, FcSettings } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 
 interface ChatProps {
@@ -143,24 +143,26 @@ const ChatBox = observer((props: ChatProps) => {
     fileInputRef.current.click();
   };
 
+  const isGroup = chat?.conversationInfor.isGroupChat;
+
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
         {isSelecedChat && (
           <>
             <Box className="title_name">
-              <Typography>
-                {chat.conversationInfor.isGroupChat === true
-                  ? chat.conversationInfor.chatName
-                  : chat.partnerDTO[0].username}
-              </Typography>
+              <Typography>{isGroup ? chat.conversationInfor.chatName : chat.partnerDTO[0].username}</Typography>
               <Typography>({chat.conversationInfor.topicChildren.topicChildrenName})</Typography>
             </Box>
 
             <Box className="header_option">
-              <BiPhoneCall onClick={handleCall} />
-              <BsCameraVideo onClick={handleCallVideo} />
-              <BsThreeDotsVertical onClick={handleOpenSetting} />
+              {!isGroup && (
+                <>
+                  <BiPhoneCall onClick={handleCall} />
+                  <BsCameraVideo onClick={handleCallVideo} />
+                </>
+              )}
+              <FcSettings onClick={handleOpenSetting} />
             </Box>
           </>
         )}

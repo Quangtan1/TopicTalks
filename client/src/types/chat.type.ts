@@ -9,7 +9,7 @@ interface IConversation {
   topicChildren: ITopicChild;
   adminId: number;
 }
-interface IPartnerDTO {
+export interface IPartnerDTO {
   id: number;
   username: string;
   banned: boolean;

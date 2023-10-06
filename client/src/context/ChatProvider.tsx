@@ -155,7 +155,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
       conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
     };
     socket.emit('sendMessage', receiveMessag);
-    if (stateMessage.conversationId === chat.conversationInfor.id) {
+    if (stateMessage?.conversationId === chat?.conversationInfor?.id) {
       setMessage((prevMessages: IMessage[]) => [...prevMessages, stateMessage]);
     }
   };
