@@ -482,8 +482,24 @@
         flex-direction: column;
         gap: 8px;
         padding-top: 10px;
-        p {
-          color: #fff;
+        height: 43vh;
+        overflow-y: auto;
+        .title_member_setting {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          p {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            color: #fff;
+          }
+          span {
+            padding-right: 12px;
+            svg {
+              cursor: pointer;
+            }
+          }
         }
 
         .memeber_item {
@@ -501,11 +517,17 @@
               height: 35px;
             }
             p {
-              font-size: 15px;
+              font-size: 14px;
+              color: #fff;
               strong {
                 color: rgb(112, 216, 189);
               }
             }
+          }
+          .option_member {
+            display: flex;
+            align-items: center;
+            gap: 5px;
           }
           .svg_item {
             cursor: pointer;

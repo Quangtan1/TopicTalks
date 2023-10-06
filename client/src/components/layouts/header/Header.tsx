@@ -52,7 +52,7 @@ const Header = observer(() => {
       accountRole.includes('ROLE_ADMIN') && navigate('/dashboard');
     }
     setActiveRoute(currentPath);
-  }, []);
+  }, [location]);
 
   const handleGoToProfilePage = () => {
     handleClose();

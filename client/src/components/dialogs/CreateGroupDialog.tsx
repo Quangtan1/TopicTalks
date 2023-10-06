@@ -18,6 +18,8 @@ import { ListTopic, TopicChild } from 'src/types/topic.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import chatStore from 'src/store/chatStore';
+import { useLocation, useNavigate } from 'react-router-dom';
+import uiStore from 'src/store/uiStore';
 
 interface DialogProps {
   open: boolean;
@@ -32,6 +34,9 @@ const CreateGroupDialog = observer((props: DialogProps) => {
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [selected, setSelected] = useState<TopicChild>(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const account = accountStore?.account;
 
   const setAccount = () => {
@@ -55,6 +60,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
     getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
       .then((res) => {
         setTopicChild(res.data.data);
+        setSelected(null);
       })
       .catch((err) => {
         console.log(err);
@@ -71,6 +77,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
 
   const createGroupChat = () => {
     if (inputName !== '' && selected) {
+      uiStore?.setLoading(true);
       const groupData = {
         chatName: inputName,
         topicChildrenId: selected.id,
@@ -80,7 +87,14 @@ const CreateGroupDialog = observer((props: DialogProps) => {
         .then((res) => {
           ToastSuccess('Create Group Sucessfully');
           chatStore?.setChats([...chatStore?.chats, res.data.data]);
-          chatStore.setSelectedChat(res.data.data);
+          currentPath !== '/message' && navigate('/message');
+          currentPath !== '/message'
+            ? setTimeout(() => {
+                chatStore.setSelectedChat(res.data.data);
+                uiStore?.setLoading(false);
+              }, 500)
+            : chatStore.setSelectedChat(res.data.data);
+          currentPath === '/message' && uiStore?.setLoading(false);
           onClose();
         })
         .catch((err) => {
@@ -88,18 +102,6 @@ const CreateGroupDialog = observer((props: DialogProps) => {
         });
     }
   };
-  // const joinGroupChat = () => {
-  //   const groupData = {};
-  //   postDataAPI(`/participant/join-group-chat/uid=${account.id}&&cid=${1}`, groupData, account.access_token, axiosJWT)
-  //     .then((res) => {
-  //       ToastSuccess('Join Group Sucessfully');
-  //       console.log(res.data.data);
-  //       onClose();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
 
   return (
     <Dialog open={open} onClose={onClose} className="create_group_dialog">

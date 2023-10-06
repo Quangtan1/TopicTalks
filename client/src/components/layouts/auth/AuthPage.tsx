@@ -20,6 +20,8 @@ import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
 import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
+import uiStore from 'src/store/uiStore';
+import Loading from 'src/components/loading/Loading';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
@@ -74,12 +76,14 @@ const LoginPage = observer(() => {
       axios
         .post(`${API_KEY}/auth/register`, user)
         .then((res) => {
+          uiStore?.setLoading(true);
           setAccountSignup(res.data);
           ToastSuccess('Register Successfully');
           timeoutId = setTimeout(() => {
             clearTimeout(timeoutId);
+            uiStore?.setLoading(false);
             setOpenSelect(true);
-          }, 3000);
+          }, 2000);
         })
         .catch((err) => {
           ToastError(err.response.data.message);
@@ -94,6 +98,7 @@ const LoginPage = observer(() => {
 
   return (
     <Grid className="auth-container" container>
+      {uiStore?.loading && <Loading />}
       <Grid item md={6} className="grid-carousel">
         <Carousels />
       </Grid>

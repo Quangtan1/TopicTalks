@@ -78,16 +78,43 @@
   }
   .box_group_chat {
     padding: 60px;
-    p {
-      text-align: center;
-      color: #9773ff;
-      font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    .title_box {
+      position: relative;
+      .title_backgroup {
+        color: #212332;
+        text-align: center;
+        font-size: 100px;
+        text-transform: uppercase;
+        padding-bottom: 30px;
+      }
+      .title_group {
+        position: absolute;
+        color: var(--main-color);
+        font-size: 25px;
+        top: 32%;
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        strong {
+          color: #fafcfb;
+        }
+      }
+    }
+    .create_group {
+      text-transform: capitalize;
+      background: var(--main-color);
+      color: #fff;
     }
     .group_container {
       background: #0d1018;
       padding: 60px;
       justify-content: center;
       gap: 50px;
+
       .group_box {
         display: flex;
         justify-content: center;
@@ -95,20 +122,59 @@
         flex-direction: column;
         gap: 20px;
         width: 100%;
-        max-width: 300px;
+        max-width: 270px;
         height: 330px;
-        border-radius: 20px;
-        border: 2px solid #fff;
-        p {
-          font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-          font-weight: 600;
-          color: #fff;
-          font-size: 20px;
-          padding-bottom: 20px;
-        }
-        button {
-          background: #3863d8;
-          color: #fff;
+
+        .MuiCard-root {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          background: #2a2828;
+          border-radius: 10px;
+          .image_group {
+            min-height: 220px;
+            object-fit: cover;
+          }
+          .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 220px;
+            background-color: rgba(84, 73, 73, 0.7);
+            z-index: 2;
+          }
+          .card_content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 0px 0px;
+            p:nth-child(1) {
+              color: #fff;
+              font-size: 18px;
+            }
+            p:nth-child(2) {
+              display: flex;
+              justify-content: center;
+              font-size: 14px;
+              color: #fff;
+            }
+          }
+          .card_actions {
+            display: flex;
+            justify-content: center;
+            .join_group {
+              background: var(--main-color);
+              color: #fff;
+              text-transform: capitalize;
+            }
+            .joined_before {
+              text-transform: capitalize;
+              border: red solid 1px;
+              color: #7f1d1d;
+              background: #fef2f2;
+            }
+          }
         }
       }
     }

@@ -19,6 +19,7 @@ import emotion11 from 'src/assets/icons/emotions/11.svg';
 import emotion12 from 'src/assets/icons/emotions/12.svg';
 import emotion13 from 'src/assets/icons/emotions/13.svg';
 import emotion14 from 'src/assets/icons/emotions/14.svg';
+import imageGroup from 'src/assets/images/group_image.jpg';
 
 export {
   logo,
@@ -41,6 +42,7 @@ export {
   emotion12,
   emotion13,
   emotion14,
+  imageGroup,
 };
 
 // router data

@@ -38,7 +38,7 @@ const VideoCall = observer((props: DialogProps) => {
   const [muted, setMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
 
-  const myVideo = useRef(null);
+  const myVideoCall = useRef(null);
   const userVideo = useRef(null);
 
   const account = accountStore?.account;
@@ -49,8 +49,8 @@ const VideoCall = observer((props: DialogProps) => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         setStream(stream);
-        if (myVideo.current) {
-          myVideo.current.srcObject = stream;
+        if (myVideoCall.current) {
+          myVideoCall.current.srcObject = stream;
           userMediaStream = stream;
           if (isAccepted && userVideo.current) {
             userVideo.current.srcObject = stream;
@@ -112,7 +112,7 @@ const VideoCall = observer((props: DialogProps) => {
       <DialogContent className="dialog-content">
         <Box className="video_box">
           <Box className="video_view">
-            {stream && <video playsInline muted={muted} ref={myVideo} autoPlay className="video" />}
+            {stream && <video playsInline muted={muted} ref={myVideoCall} autoPlay className="video" />}
             {!turnMyVideo && <div className="overlay"></div>}
           </Box>
           <Box className="video_view">
