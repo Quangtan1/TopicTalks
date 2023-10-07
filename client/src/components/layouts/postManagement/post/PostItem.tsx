@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
 import CommentsList from './comments/CommentsListModal';
 import ShareModal from './shareModal/ShareModal';
-import { useGetAllPosts, useGetAllPostsByAuthorId } from 'src/queries/functionQuery';
+import { useGetAllPosts, useGetAllPostsByAuthorId, useGetAllPostsByIsApproved } from 'src/queries/functionQuery';
 import Loading from 'src/components/loading/Loading';
 import PostHeader from './postHeader';
 import { CommentButton, LikeButton, ShareButton } from './buttonGroup';
@@ -12,7 +12,8 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from 'src/utils';
-import NewPost from '../newPost/NewPost';
+import _ from 'lodash';
+// import NewPost from '../newPost/NewPost';
 
 const PostItem = observer(({ isProfile = false }) => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const PostItem = observer(({ isProfile = false }) => {
   // ============================== React Query Post ==============================
 
   const { data: postData, isLoading, refetch: refetchPost } = useGetAllPosts(account, setAccount);
+  const { data: postDataAdmin, refetch: refetchPostAdmin } = useGetAllPostsByIsApproved(account, setAccount);
   const {
     data: postByAuthorIdData,
     isLoading: isLoadingPostByAuthorId,
@@ -37,7 +39,6 @@ const PostItem = observer(({ isProfile = false }) => {
 
   // ============================== State ==============================
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isOpenPost, setIsOpenPost] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [likedPosts, setLikedPosts] = useState([1, 2, 3, 4].map((post) => 12));
   const [likedIndexes, setLikedIndexes] = useState([]);
@@ -56,10 +57,11 @@ const PostItem = observer(({ isProfile = false }) => {
 
   const renderPostItem = (post: IPost, index: number) => {
     return (
-      <Card key={post?.id} onClick={() => handleClickPostItem(post?.id)} className="post-item">
+      <Card key={post?.id} className="post-item">
         <PostHeader
           refetchPost={isProfile ? refetchPostByAuthorId : refetchPost}
           data={post}
+          refetchPostAdmin={refetchPostAdmin}
           userName={username}
           account={account}
         />
@@ -68,7 +70,12 @@ const PostItem = observer(({ isProfile = false }) => {
           <Typography>{post?.content}</Typography>
         </CardContent>
 
-        <CardMedia component="img" image={post.img_url} title={username} />
+        <CardMedia
+          component="img"
+          image={post.img_url}
+          title={username}
+          onClick={() => handleClickPostItem(post?.id)}
+        />
 
         <Box display="flex" flexWrap="wrap">
           <CardContent>
@@ -105,38 +112,43 @@ const PostItem = observer(({ isProfile = false }) => {
     );
   };
 
-  const handleOpenPostModal = () => {
-    setIsOpenPost(!isOpenPost);
-  };
+  // const handleOpenPostModal = () => {
+  //   setIsOpenPost(!isOpenPost);
+  // };
 
   const renderNoPost = () => {
     return (
       <>
         <Typography className="no-post">Currently, There are no posts. Create a post now!</Typography>
-        <Button onClick={handleOpenPostModal}>Create Post</Button>
+        {/* <Button onClick={handleOpenPostModal}>Create Post</Button> */}
       </>
     );
   };
+
+  const renderPostItems = () => {
+    const postItems = isProfile ? postByAuthorIdData : postData;
+
+    if (_.isEmpty(postItems) && _.isEmpty(postDataAdmin)) {
+      return renderNoPost();
+    }
+
+    if (!_.isEmpty(postDataAdmin) && _.isEmpty(postItems)) {
+      return <Typography className="no-post">Post is waiting for admin approval!</Typography>;
+    }
+
+    return postItems.map((postItem: IPost, index: number) => {
+      return renderPostItem(postItem, index);
+    });
+  };
+
   return (
     <>
       {isLoading || isLoadingPostByAuthorId ? (
         <Loading />
       ) : (
         <>
-          <Box className="post-item-container">
-            {postData && postByAuthorIdData !== 0 && !isProfile
-              ? typeof postData === 'object'
-                ? postData?.map((postData: IPost, index) => {
-                    return renderPostItem(postData, index);
-                  })
-                : typeof postData === 'string' && renderNoPost()
-              : typeof postByAuthorIdData === 'object'
-              ? postByAuthorIdData?.map((postByAuthorData: IPost, index) => {
-                  return renderPostItem(postByAuthorData, index);
-                })
-              : typeof postByAuthorIdData === 'string' && renderNoPost()}
-          </Box>
-          <NewPost open={isOpenPost} onEditSuccess={refetchPost} closePostModal={() => setIsOpenPost(!isOpenPost)} />
+          <Box className="post-item-container">{renderPostItems()}</Box>
+          {/* <NewPost open={isOpenPost} onEditSuccess={refetchPost} closePostModal={() => setIsOpenPost(!isOpenPost)} /> */}
         </>
       )}
     </>

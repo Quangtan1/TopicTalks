@@ -53,11 +53,6 @@ export interface IPost {
   approved: boolean;
 }
 
-export interface IComment {
-  id: number;
-  user: string;
-  text: string;
-}
 
 export interface IUserInformation {
   id: number;

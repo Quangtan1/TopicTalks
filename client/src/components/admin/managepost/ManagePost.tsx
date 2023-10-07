@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import Loading from 'src/components/loading/Loading';
-import { IPost, approvedPost, deletePost, useGetAllPostsByIsApproved } from 'src/queries';
+import { IPost, approvedPost, deletePost, useGetAllPosts, useGetAllPostsByIsApproved } from 'src/queries';
 import accountStore from 'src/store/accountStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useMutation } from 'react-query';
@@ -60,6 +60,8 @@ const ManagePost = observer(() => {
     refetch: reLoadPost,
   } = useGetAllPostsByIsApproved(account, setAccount);
 
+  const { refetch: reLoadPostUser } = useGetAllPosts(account, setAccount);
+
   const useApprovePost = useMutation((postId: number) => approvedPost(postId, account));
   const useDeletePost = useMutation((postId: number) => deletePost(postId, account));
 
@@ -79,6 +81,7 @@ const ManagePost = observer(() => {
       if (res?.status === 200) {
         ToastSuccess('Approve post successfully!');
         setIsOpen(false);
+        reLoadPostUser();
         reLoadPost();
       }
     } catch (error) {

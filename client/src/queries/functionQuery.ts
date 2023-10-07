@@ -54,7 +54,7 @@ export const useGetAllTopicChildren = (account: IUser, setAccount: (account: IUs
   return useQuery('topicChildren', () => fetchTopic(account, setAccount, true, id));
 };
 
-// ============================== Post ==============================
+// ============================== Create Post ==============================
 export const createPost = async (postData, account) => {
   const bearerToken = account?.access_token;
 
@@ -75,6 +75,7 @@ export const createPost = async (postData, account) => {
   return response.json();
 };
 
+// ============================== Edit Post ==============================
 export const editPost = async (postData, account: IUser) => {
   const bearerToken = account?.access_token;
 
@@ -260,7 +261,7 @@ export const useGetUserById = (userId: number, axiosJWT: any, account: IUser) =>
 export const editUser = async (userData, account: IUser) => {
   const bearerToken = account?.access_token;
 
-  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/user/${userData?.id}`, {
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/user/${account.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -268,8 +269,6 @@ export const editUser = async (userData, account: IUser) => {
     },
     body: JSON.stringify(userData),
   });
-
-  console.log('response', response);
 
   if (!response.ok) {
     console.log('🚀 ~error:', response);
@@ -279,8 +278,7 @@ export const editUser = async (userData, account: IUser) => {
   return response.json();
 };
 
-// ============================== Comment ==============================
-
+// ============================== Create comment ==============================
 export const createComment = async (commentBody: ICommentBody, account: IUser) => {
   const bearerToken = account?.access_token;
 
@@ -332,6 +330,8 @@ export const getAllComment = async (axiosJWT: any, account: IUser) => {
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
+        console.log('🚀 ~ file: functionQuery.ts:332 ~ getAllComment ~ response:', response);
+
     return response?.data?.data;
   } catch (error) {
     console.log('🚀 ~error:', error);
@@ -354,10 +354,32 @@ export const deleteComment = async (commentId: number, account: IUser) => {
       Authorization: `Bearer ${bearerToken}`,
     },
   });
+    console.log('🚀 ~ file: functionQuery.ts:352 ~ deleteComment ~ response:', response);
 
   if (!response.ok) {
     console.log('🚀 ~error:', response);
     throw new Error('Failed to delete comment');
+  }
+
+  return response.json();
+};
+
+// ===============================edit comment ==============================
+export const editComment = async (commentData, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/comment/update/${commentData.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    body: JSON.stringify(commentData),
+  });
+
+  if (!response.ok) {
+    console.log('🚀 ~error:', response);
+    throw new Error('Failed to Edit comment Profile');
   }
 
   return response.json();
