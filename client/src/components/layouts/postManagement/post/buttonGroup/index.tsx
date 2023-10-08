@@ -2,51 +2,70 @@ import { IconButton, Typography } from '@mui/material';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShareIcon from '@mui/icons-material/Share';
+import { FC } from 'react';
 
-export const LikeButton = ({ index, likedIndexes, likedPosts, setLikedIndexes, setLikedPosts }) => {
-  const handleLikeClick = (index: number) => {
-    if (likedIndexes.includes(index)) {
-      const newLikedIndexes = likedIndexes.filter((likedIndex) => likedIndex !== index);
-      setLikedIndexes(newLikedIndexes);
-      const newLikedPosts = [...likedPosts];
-      newLikedPosts[index] -= 1;
-      setLikedPosts(newLikedPosts);
-    } else {
-      const newLikedIndexes = [...likedIndexes, index];
-      setLikedIndexes(newLikedIndexes);
-      const newLikedPosts = [...likedPosts];
-      newLikedPosts[index] += 1;
-      setLikedPosts(newLikedPosts);
+interface Props {
+  isLiked: boolean;
+  postId: number;
+  likeCount: number;
+  useUnlike: any;
+  useLike: any;
+  onSuccess: Function;
+}
+
+export const LikeButton: FC<Props> = ({ postId, onSuccess, isLiked, likeCount, useUnlike, useLike }) => {
+  const { mutateAsync: unLikePost } = useUnlike;
+  const { mutateAsync: likePost } = useLike;
+
+  const handleLikeAction = async (postId: number) => {
+    try {
+      const result = await likePost(postId);
+      if (result.status === 201) {
+        onSuccess();
+        console.log('liked', result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
+  const handleRemoveLiked = async (postId: number) => {
+    try {
+      const result = await unLikePost(postId);
+      if (result.status === 200) {
+        onSuccess();
+        console.log('unLiked', result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <IconButton onClick={() => handleLikeClick(index)}>
-      <ThumbUpAltIcon style={{ color: likedIndexes.includes(index) ? 'rgb(135,44,228)' : 'inherit' }} />
-      <Typography>{likedPosts[index]}</Typography>
+    <IconButton onClick={isLiked ? () => handleRemoveLiked(postId) : () => handleLikeAction(postId)}>
+      <ThumbUpAltIcon style={{ color: isLiked ? 'rgb(135,44,228)' : 'inherit' }} />
+      <Typography>{likeCount}</Typography>
     </IconButton>
   );
 };
 
-export const CommentButton = ({ setIsModalOpen, commentsCount, isModalOpen }) => {
-  const handleCommentClick = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+export const CommentButton = ({ handleClickCommentItem, commentsCount }) => {
   return (
-    <IconButton onClick={handleCommentClick}>
+    <IconButton onClick={handleClickCommentItem}>
       <ChatBubbleOutlineIcon />
       <Typography>{commentsCount}</Typography>
     </IconButton>
   );
 };
 
-export const ShareButton = ({ setIsShareModalOpen, isShareModalOpen, sharesCount }) => {
-  const handleShareClick = () => {
-    setIsShareModalOpen(!isShareModalOpen);
-  };
+export const ShareButton = ({ handleShare, setIsShareModalOpen, isShareModalOpen }) => {
+  // const handleShareClick = () => {
+  //   setIsShareModalOpen(!isShareModalOpen);
+  // };
   return (
-    <IconButton onClick={handleShareClick}>
+    <IconButton onClick={handleShare}>
       <ShareIcon />
-      <Typography>{sharesCount}</Typography>
+      {/* <Typography>{sharesCount}</Typography> */}
     </IconButton>
   );
 };

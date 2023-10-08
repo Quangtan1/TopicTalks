@@ -132,7 +132,7 @@ const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEdi
         Edit a profile
       </DialogTitle>
       <DialogContent className="dialog-content">
-        <AvatarComponent url={url_img} username="Le V. Son" />
+        <AvatarComponent url={url_img} username={account.username} />
         {<DialogContentText className="post-label">Edit User Profile:</DialogContentText>}
         <TextField
           autoFocus
