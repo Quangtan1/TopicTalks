@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Grid, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,6 +20,7 @@ import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
 import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
@@ -29,6 +30,18 @@ const LoginPage = observer(() => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   let timeoutId;
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async ({ code }) => {
+      const tokens = await axios.post('http://localhost:5000/auth/google', {
+        // http://localhost:5000/auth/google backend that will exchange the code
+        code,
+      });
+
+      console.log(tokens);
+    },
+    flow: 'auth-code',
+  });
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -180,7 +193,7 @@ const LoginPage = observer(() => {
             <Button type="submit" fullWidth variant="contained" className="submit-button">
               {isSignIn ? 'Sign In' : 'Sign Up'}
             </Button>
-            <Button fullWidth variant="contained" className="button-gg">
+            <Button fullWidth variant="contained" className="button-gg" onClick={googleLogin}>
               <FcGoogle />
               <Typography>Continue with Google </Typography>
             </Button>

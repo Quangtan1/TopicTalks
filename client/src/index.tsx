@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 // import { configure } from 'mobx';
 import ChatProvider from './context/ChatProvider';
 import { FacebookProvider } from 'react-facebook';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // configure({
 //   enforceActions: 'always',
@@ -19,9 +20,11 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <ChatProvider>
-      <FacebookProvider appId="1759450831238442">
-        <App />
-      </FacebookProvider>
+      <GoogleOAuthProvider clientId="1076673518797-kaqm977mc6qeqpu7duqu115jqvt1n4ej.apps.googleusercontent.com">
+        <FacebookProvider appId="1759450831238442">
+          <App />
+        </FacebookProvider>
+      </GoogleOAuthProvider>
     </ChatProvider>
   </React.StrictMode>,
 );

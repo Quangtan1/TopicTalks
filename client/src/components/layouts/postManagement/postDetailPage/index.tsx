@@ -40,6 +40,8 @@ const validationSchema = Yup.object({
   comment: Yup.string().nullable().required('Comment content is required'),
 });
 
+const DELETE_COMMENT = 'Do you want to delete this comment?';
+
 const PostDetail = observer(() => {
   const formRef = useRef<FormikProps<any>>(null);
   const navigate = useNavigate();
@@ -69,7 +71,8 @@ const PostDetail = observer(() => {
   const axiosJWT = createAxios(account, setAccount);
 
   // ==========================State==========================
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenDeleteCommentModal, setIsOpenDeleteCommentModal] = useState(false);
   const [commentId, setCommentId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isShowRightSide, setIsShowRightSide] = useState(true);
@@ -119,6 +122,7 @@ const PostDetail = observer(() => {
         ToastSuccess('Delete post successfully!');
         refetchAllPost();
         setDefaultValue();
+        setIsOpen(false);
         navigate('/community');
       }
     } catch (error) {
@@ -131,7 +135,7 @@ const PostDetail = observer(() => {
       const result = await useDeleteComment.mutateAsync(commentId);
       if (result.status === 200) {
         ToastSuccess('Delete comment successfully!');
-        setOpen(!open);
+        setIsOpenDeleteCommentModal(false);
         setDefaultValue();
         refetchPostDetail();
         refetchCommentByPostId();
@@ -155,7 +159,7 @@ const PostDetail = observer(() => {
         setIsEdit(!isEdit);
         break;
       case Actions.Delete:
-        setOpen(!open);
+        setIsOpen(!isOpen);
         break;
       default:
         break;
@@ -170,7 +174,7 @@ const PostDetail = observer(() => {
         break;
       case Actions.Delete:
         setCommentId(commentId);
-        setOpen(!open);
+        setIsOpenDeleteCommentModal(!isOpenDeleteCommentModal);
         break;
       default:
         break;
@@ -249,7 +253,7 @@ const PostDetail = observer(() => {
           <CardContent className="post-dt-cardHeader">
             <Box className={'item1'}>
               <Typography variant="h6" className="post-dt-cardHeader-title" gutterBottom>
-                {userDetailData?.username}
+                {userDetailData?.username || account.username}
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
                 {`Posted ${timeAgo}`}
@@ -306,10 +310,16 @@ const PostDetail = observer(() => {
             formikProps={formikProps}
           />
           <DialogCommon
-            open={open}
-            onClose={() => setOpen(false)}
-            onConfirm={!!commentId ? () => handleDeleteComment(commentId) : () => handleDeletePost(postDetail?.id)}
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+            onConfirm={() => handleDeletePost(postDetail?.id)}
             content={DELETE_POST}
+          />
+          <DialogCommon
+            open={isOpenDeleteCommentModal}
+            onClose={() => setIsOpenDeleteCommentModal(false)}
+            onConfirm={!!commentId ? () => handleDeleteComment(commentId) : null}
+            content={DELETE_COMMENT}
           />
           <NewPost
             isEdit

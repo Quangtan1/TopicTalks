@@ -4,7 +4,8 @@
   flex-direction: row;
   .left-side {
     flex: 1;
-    max-height: 600px;
+      overflow-y: auto;
+    max-height: 720px;
     .post-dt-header {
       display: flex;
       justify-content: space-between;
@@ -56,7 +57,7 @@
           font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
           background-clip: text;
         }
-        height: 100px;
+        min-height: 100px;
       }
     }
   }
