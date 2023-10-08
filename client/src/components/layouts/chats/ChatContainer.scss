@@ -95,7 +95,7 @@
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-              font-family: var(--font-family-common);
+              font-size: 14px;
             }
             p:nth-child(2) {
               color: var(--item-color);
@@ -103,7 +103,6 @@
             }
           }
           .time_item {
-            font-family: var(--font-family-common);
             color: var(--item-color);
             font-size: 14px;
           }
@@ -308,6 +307,14 @@
           align-items: center;
           gap: 6px;
         }
+        .waiting_approve_text {
+          strong {
+            color: #fff;
+            background-image: #fff;
+            background-color: none;
+            -webkit-text-fill-color: #fff;
+          }
+        }
         .icon:nth-child(1) {
           animation-delay: 0s;
         }
@@ -432,7 +439,6 @@
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
     padding: 10px;
     justify-content: space-between;
     .container_setting {
@@ -528,6 +534,9 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            svg {
+              cursor: pointer;
+            }
           }
           .svg_item {
             cursor: pointer;

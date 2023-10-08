@@ -92,7 +92,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
             ? setTimeout(() => {
                 chatStore.setSelectedChat(res.data.data);
                 uiStore?.setLoading(false);
-              }, 500)
+              }, 600)
             : chatStore.setSelectedChat(res.data.data);
           currentPath === '/message' && uiStore?.setLoading(false);
           onClose();

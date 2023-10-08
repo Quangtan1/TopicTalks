@@ -1,0 +1,109 @@
+.random_dialog {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
+  .MuiPaper-root {
+    width: 600px;
+    height: 450px;
+    background: rgb(20, 27, 45);
+    padding-bottom: 10px;
+    .dialog_title {
+      p:nth-child(1) {
+        font-weight: 600;
+        color: #fff;
+        font-size: 20px;
+      }
+      p:nth-child(2) {
+        color: rgb(112, 216, 189);
+      }
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 5px;
+      .animate_icon {
+        display: flex;
+        color: #fff;
+        gap: 5px;
+        align-items: end;
+        animation: slide 2s infinite linear;
+        svg {
+          font-size: 50px;
+        }
+      }
+      div {
+        width: 200px;
+        border-bottom: 1px solid #fff;
+      }
+      p {
+        font-size: 25px;
+        color: #fff;
+      }
+    }
+    @keyframes slide {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+    .dialog_content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .chat_name_box {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        p {
+          font-size: 20px;
+          font-weight: 600;
+          color: #fff;
+        }
+      }
+      .topic_box {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        height: 300px;
+        .MuiInputBase-root {
+          max-height: 50px;
+          min-width: 120px;
+          color: #000;
+          background: #fff;
+        }
+        .topic_child {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          width: 80%;
+          .topic_item {
+            display: flex;
+            justify-content: center;
+            padding: 8px 10px;
+            flex-basis: calc(50% - 10px);
+            max-width: 50%;
+            flex-grow: 1;
+            color: #fff;
+            background: #798899;
+            border-radius: 10px;
+            cursor: pointer;
+          }
+          .selected_topic,
+          .topic_item:hover {
+            background: var(--main-color);
+          }
+        }
+      }
+    }
+  }
+  .dialog_action {
+    button {
+      background: rgb(112, 216, 189);
+      color: #fff;
+    }
+  }
+}

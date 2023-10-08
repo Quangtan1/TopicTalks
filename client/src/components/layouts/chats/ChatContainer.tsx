@@ -36,11 +36,14 @@ const ChatContainer = observer(() => {
     setOpenSetting(!openSetting);
   };
 
+  const isGroup = chat?.conversationInfor.isGroupChat;
+  const isMember = isGroup ? chat?.isMember : 'true';
+
   return (
     <Box className="chat_container">
       <ListMessage />
       <ChatBox chat={chat} handleOpenSetting={handleOpenSetting} />
-      {openSetting && <ConversationSetting chat={chat} />}
+      {openSetting && isMember === 'true' && <ConversationSetting chat={chat} />}
     </Box>
   );
 });

@@ -5,7 +5,10 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { FcCollapse, FcExpand, FcOk, FcTimeline } from 'react-icons/fc';
 import { TiDeleteOutline } from 'react-icons/ti';
 import accountStore from 'src/store/accountStore';
-import { ListMesage } from 'src/types/chat.type';
+import chatStore from 'src/store/chatStore';
+import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
+import { createAxios, putDataAPI } from 'src/utils';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 interface ChatProps {
   chat: ListMesage;
@@ -15,6 +18,13 @@ const ConversationSetting = observer((props: ChatProps) => {
   const { chat } = props;
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isAdmin = chat?.conversationInfor.adminId === accountStore?.account.id;
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
 
   const handleCollapse = (id: number) => {
     if (collapse.includes(id)) {
@@ -32,12 +42,28 @@ const ConversationSetting = observer((props: ChatProps) => {
   const memberDTO = chat?.partnerDTO.filter((item) => item.member);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
+  const handleAprrove = (member: IPartnerDTO) => {
+    const approveData = {
+      userInSessionId: account.id,
+      conversationId: chat?.conversationInfor.id,
+      memberId: member.id,
+    };
+    putDataAPI(`/participant/approve-member`, approveData, account.access_token, axiosJWT)
+      .then((res) => {
+        ToastSuccess(`You have just approved ${member.username}`);
+        chatStore?.setSelectedChat(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
           <Avatar src={isGroup ? '' : chat?.partnerDTO[0].image} alt="avt" className="avatar" />
-          <Typography>{isGroup ? chat?.conversationInfor.chatName : chat.partnerDTO[0].username}</Typography>
+          <Typography>{isGroup ? chat?.conversationInfor.chatName : chat?.partnerDTO[0].username}</Typography>
         </Box>
         <Box className="topic_setting">
           <Typography>Topic:</Typography>
@@ -92,8 +118,8 @@ const ConversationSetting = observer((props: ChatProps) => {
 
                   {isAdmin && (
                     <Box className="option_member">
-                      <FcOk />
-                      <TiDeleteOutline className="svg_item" />{' '}
+                      <FcOk onClick={() => handleAprrove(item)} />
+                      <TiDeleteOutline className="svg_item" />
                     </Box>
                   )}
                 </Box>
