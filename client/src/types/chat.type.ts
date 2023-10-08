@@ -19,6 +19,7 @@ export interface IPartnerDTO {
 }
 export interface ListMesage {
   conversationInfor: IConversation;
+  isMember: string;
   partnerDTO: IPartnerDTO[];
 }
 

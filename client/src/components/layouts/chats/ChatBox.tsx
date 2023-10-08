@@ -143,16 +143,19 @@ const ChatBox = observer((props: ChatProps) => {
     fileInputRef.current.click();
   };
 
+  const partnerName = chat?.partnerDTO.filter((item) => item.id !== account.id);
+
   const isGroup = chat?.conversationInfor.isGroupChat;
+  const isMember = isGroup ? chat?.isMember : 'true';
 
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
-        {isSelecedChat && (
+        {isSelecedChat && isMember === 'true' && (
           <>
             <Box className="title_name">
-              <Typography>{isGroup ? chat.conversationInfor.chatName : chat.partnerDTO[0].username}</Typography>
-              <Typography>({chat.conversationInfor.topicChildren.topicChildrenName})</Typography>
+              <Typography>{isGroup ? chat.conversationInfor.chatName : partnerName[0].username}</Typography>
+              <Typography>({chat?.conversationInfor?.topicChildren.topicChildrenName})</Typography>
             </Box>
 
             <Box className="header_option">
@@ -173,19 +176,7 @@ const ChatBox = observer((props: ChatProps) => {
             <Picker data={data} onEmojiSelect={addEmoji} className="emoiji_box" />
           </span>
         )}
-        {!isSelecedChat ? (
-          <Box className="sologan_conversation">
-            <Box className="icon-container">
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-            </Box>
-            <Typography>Let Started Anonymous Chat </Typography>
-            <Typography>A place where you can express yourself without fear of judgment.</Typography>
-          </Box>
-        ) : (
+        {isSelecedChat && isMember === 'true' ? (
           <Box className="list_message">
             {message.length > 0 &&
               message.map((item: IMessage, index) => (
@@ -227,11 +218,31 @@ const ChatBox = observer((props: ChatProps) => {
                 </Box>
               ))}
           </Box>
+        ) : (
+          <Box className="sologan_conversation">
+            <Box className="icon-container">
+              <IoLogoSnapchat className="icon" />
+              <IoLogoSnapchat className="icon" />
+              <IoLogoSnapchat className="icon" />
+              <IoLogoSnapchat className="icon" />
+              <IoLogoSnapchat className="icon" />
+            </Box>
+            {(isSelecedChat && isMember === 'false') || chat?.isMember === undefined ? (
+              <Typography className="waiting_approve_text">
+                Wating Approve from Admin <strong> {chat?.conversationInfor.chatName}</strong>
+              </Typography>
+            ) : (
+              <>
+                <Typography>Let Started Anonymous Chat </Typography>
+                <Typography>A place where you can express yourself without fear of judgment.</Typography>
+              </>
+            )}
+          </Box>
         )}
       </ScrollToBottom>
 
       <Box className="chatbox_footer">
-        {isSelecedChat && (
+        {isSelecedChat && isMember === 'true' && (
           <>
             <ImAttachment onClick={handleLinkClick} />
             <input

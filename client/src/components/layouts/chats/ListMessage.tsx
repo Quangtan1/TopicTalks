@@ -10,6 +10,8 @@ import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
+import RandomDialog from 'src/components/dialogs/RandomDialog';
 
 const tabOption = [
   {
@@ -32,6 +34,7 @@ const tabOption = [
 const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [openRandom, setOpenRandom] = useState<boolean>(false);
   const account = accountStore?.account;
 
   const chat = chatStore?.selectedChat;
@@ -59,11 +62,31 @@ const ListMessage = observer(() => {
   const setSelectedChat = (chat: ListMesage) => {
     chatStore?.setSelectedChat(chat);
   };
+
+  // const sendEmail = () => {
+  //   const email = 'quangtanc12345@gmail.com';
+
+  //   putDataAPI(`/user/regenerate-otp?email=${email}`, {}, account.access_token, axiosJWT)
+  //     .then((res) => {
+  //       console.log('email', res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  const partnerName = (partner) => {
+    const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
+
+    return usernames;
+  };
+
   return (
     <Box className="list_message_container">
       <Typography className="title_chat">Chat Rooms</Typography>
       <Box className="chat_option">
         <TextField required placeholder="Search..." autoFocus className="search" />
+        <GiPerspectiveDiceSixFacesRandom onClick={() => setOpenRandom(true)} />
         <AiOutlineUsergroupAdd onClick={() => setOpen(true)} />
       </Box>
       <List className="tab_option">
@@ -92,7 +115,7 @@ const ListMessage = observer(() => {
                   <Typography>
                     {item.conversationInfor.isGroupChat === true
                       ? item.conversationInfor.chatName
-                      : item.partnerDTO[0].username}
+                      : partnerName(item.partnerDTO)}
                   </Typography>
                   <Typography>aaaaa</Typography>
                 </ListItemText>
@@ -108,7 +131,8 @@ const ListMessage = observer(() => {
         </Box>
         <CiSettings />
       </Box>
-      <CreateGroupDialog open={open} onClose={() => setOpen(false)} />
+      {openRandom && <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />}
+      {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
     </Box>
   );
 });
