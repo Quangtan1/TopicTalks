@@ -113,7 +113,7 @@ const ManagePost = observer(() => {
   ) : (
     <Box className="manage_post_container">
       <Box className="post_title">
-        <Typography className="title_a1">List of posts</Typography>
+        <Typography className="title_a1">List of posts waiting to be approve</Typography>
       </Box>
       <Typography className="title_a2">Manage user's post in system</Typography>
       <Box className="warning">

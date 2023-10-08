@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
-import { Box, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
-import CommentsList from './comments/CommentsListModal';
-import ShareModal from './shareModal/ShareModal';
-import { useGetAllPosts, useGetAllPostsByAuthorId, useGetAllPostsByIsApproved } from 'src/queries/functionQuery';
+import {
+  createLike,
+  removeLike,
+  useGetAllPosts,
+  useGetAllPostsByAuthorId,
+  useGetAllPostsByIsApproved,
+} from 'src/queries/functionQuery';
 import Loading from 'src/components/loading/Loading';
 import PostHeader from './postHeader';
 import { CommentButton, LikeButton, ShareButton } from './buttonGroup';
@@ -13,7 +18,10 @@ import accountStore from 'src/store/accountStore';
 import { useNavigate } from 'react-router-dom';
 import { createAxios } from 'src/utils';
 import _ from 'lodash';
+import { useMutation } from 'react-query';
+import { ToastSuccess } from 'src/utils/toastOptions';
 // import NewPost from '../newPost/NewPost';
+import { useShare } from 'react-facebook';
 
 const PostItem = observer(({ isProfile = false }) => {
   const navigate = useNavigate();
@@ -28,7 +36,6 @@ const PostItem = observer(({ isProfile = false }) => {
   const { username, id } = account || {};
 
   // ============================== React Query Post ==============================
-
   const { data: postData, isLoading, refetch: refetchPost } = useGetAllPosts(account, setAccount);
   const { data: postDataAdmin, refetch: refetchPostAdmin } = useGetAllPostsByIsApproved(account, setAccount);
   const {
@@ -37,18 +44,20 @@ const PostItem = observer(({ isProfile = false }) => {
     refetch: refetchPostByAuthorId,
   } = useGetAllPostsByAuthorId(id, axiosJWT, account);
 
+  //================================= React Query Like ====================================
+  const useUnlike = useMutation((postId: number) => removeLike(postId, account));
+  const useLike = useMutation((postId: number) => createLike(postId, account));
   // ============================== State ==============================
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [likedPosts, setLikedPosts] = useState([1, 2, 3, 4].map((post) => 12));
-  const [likedIndexes, setLikedIndexes] = useState([]);
 
-  const handleCloseModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const handleClickCommentItem = (postId: number) => {
+    navigate(`/post-detail/${postId}`);
   };
 
-  const handleCloseShareModal = () => {
-    setIsShareModalOpen(false);
+  const handleLikeActionSuccess = () => {
+    refetchPost();
+    refetchPostAdmin();
+    refetchPostByAuthorId();
   };
 
   const handleClickPostItem = (postId: number) => {
@@ -56,6 +65,7 @@ const PostItem = observer(({ isProfile = false }) => {
   };
 
   const renderPostItem = (post: IPost, index: number) => {
+    const isLiked = post?.like?.username?.some((user) => user === username);
     return (
       <Card key={post?.id} className="post-item">
         <PostHeader
@@ -77,36 +87,43 @@ const PostItem = observer(({ isProfile = false }) => {
           onClick={() => handleClickPostItem(post?.id)}
         />
 
-        <Box display="flex" flexWrap="wrap">
+        <Box display="flex" flexWrap="wrap" className="count-group">
           <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {likedPosts[index]} Likes
-            </Typography>
+            <Button className="like-count" variant="outlined">
+              {post?.like?.totalLike} Likes
+            </Button>
           </CardContent>
           <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {12} Comments
-            </Typography>
+            <Button className="comment-count" variant="outlined">
+              {post?.totalComment} Comments
+            </Button>
           </CardContent>
-          <CardContent>
+          {/* <CardContent>
             <Typography variant="body2" color="textSecondary">
               {12} Shares
             </Typography>
-          </CardContent>
+          </CardContent> */}
         </Box>
 
         <CardActions>
           <LikeButton
-            index={index}
-            likedIndexes={likedIndexes}
-            likedPosts={likedPosts}
-            setLikedIndexes={setLikedIndexes}
-            setLikedPosts={setLikedPosts}
+            useLike={useLike}
+            isLiked={isLiked}
+            postId={post?.id}
+            likeCount={post?.like?.totalLike}
+            onSuccess={handleLikeActionSuccess}
+            useUnlike={useUnlike}
           />
-          <CommentButton isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} commentsCount={12} />
-          <ShareButton isShareModalOpen={isShareModalOpen} setIsShareModalOpen={setIsShareModalOpen} sharesCount={12} />
-          <CommentsList comments={['comments']} isModalOpen={isModalOpen} handleCloseModal={handleCloseModal} />
-          <ShareModal open={isShareModalOpen} onClose={handleCloseShareModal} />
+          <CommentButton
+            handleClickCommentItem={() => handleClickCommentItem(post?.id)}
+            commentsCount={post?.totalComment}
+          />
+          <ShareButton
+            handleShare={handleShare}
+            isShareModalOpen={isShareModalOpen}
+            setIsShareModalOpen={setIsShareModalOpen}
+            // sharesCount={12}
+          />
         </CardActions>
       </Card>
     );
@@ -115,6 +132,22 @@ const PostItem = observer(({ isProfile = false }) => {
   // const handleOpenPostModal = () => {
   //   setIsOpenPost(!isOpenPost);
   // };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { share } = useShare();
+
+  const handleShare = async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const result = await share({
+        href: 'https://www.facebook.com/sharer',
+        display: 'popup',
+        hashtag: 'Share post from topicTalks app',
+      });
+    } catch (error) {
+      console.log('🚀 handleShare ~ error:', error);
+    }
+  };
 
   const renderNoPost = () => {
     return (

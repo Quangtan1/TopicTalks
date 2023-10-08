@@ -24,6 +24,7 @@ import {
   createPost,
   editPost,
   useGetAllPosts,
+  useGetAllPostsByAuthorId,
   useGetAllPostsByIsApproved,
   useGetAllTopicParents,
 } from 'src/queries/functionQuery';
@@ -34,6 +35,7 @@ import ImageUpload from './imageUpload/ImageUpload';
 import { observer } from 'mobx-react';
 import { IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
+import { createAxios } from 'src/utils';
 
 const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -60,6 +62,7 @@ const NewPost: React.FC<Props> = observer(
     const setAccount = () => {
       return accountStore?.setAccount;
     };
+    const axiosJWT = createAxios(account, setAccount);
     const url_img = accountStore?.account?.url_img;
 
     // ========================== State ==========================
@@ -76,6 +79,7 @@ const NewPost: React.FC<Props> = observer(
     } = useGetAllTopicParents(account, setAccount);
     const { refetch: refetchPost } = useGetAllPosts(account, setAccount);
     const { refetch: refetchPostByIsApproved } = useGetAllPostsByIsApproved(account, setAccount);
+    const { refetch: refetchPostByAuthorId } = useGetAllPostsByAuthorId(account.id, axiosJWT, account);
     const useCreatePost = useMutation((postData) => createPost(postData, account));
     const useEditPost = useMutation((postData) => editPost(postData, account));
 
@@ -102,6 +106,7 @@ const NewPost: React.FC<Props> = observer(
           onCreateSuccess?.();
           refetchTopic();
           refetchPost();
+          refetchPostByAuthorId();
           refetchPostByIsApproved();
         }
         console.log(`Post result: `, result);
@@ -117,6 +122,7 @@ const NewPost: React.FC<Props> = observer(
           ToastSuccess('Edit post successfully!');
           onEditSuccess?.();
           refetchPost();
+          refetchPostByAuthorId();
           refetchPostByIsApproved();
         }
       } catch (error) {

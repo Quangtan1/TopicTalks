@@ -25,7 +25,7 @@ const fetchTopic = async (
       },
     );
 
-    return response?.data;
+    return response?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
   }
@@ -43,7 +43,7 @@ export const fetchTopicChildren = async (topicParentId: number, axiosJWT, accoun
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
@@ -108,11 +108,7 @@ const fetchAllPost = async (account: IUser, setAccount: (account: IUser | null) 
       },
     });
 
-    if (response?.data?.data) {
-      return response?.data?.data;
-    } else {
-      return [];
-    }
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
   }
@@ -138,7 +134,7 @@ const fetchAllPostByIsApproved = async (
       },
     });
 
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
   }
@@ -179,11 +175,7 @@ export const getAllPostsByAuthorId = async (authorId: number, axiosJWT: any, acc
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    if (response?.data?.data) {
-      return response?.data?.data;
-    } else {
-      return [];
-    }
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
@@ -204,7 +196,7 @@ export const getPostById = async (postId: number, axiosJWT: any, account: IUser)
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
@@ -245,7 +237,7 @@ export const getUserById = async (userId: number, axiosJWT: any, account: IUser)
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('Get User Detail Failed', error);
     return [];
@@ -309,7 +301,7 @@ export const getCommentByPostId = async (postId: number, axiosJWT: any, account:
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
@@ -330,9 +322,8 @@ export const getAllComment = async (axiosJWT: any, account: IUser) => {
         Authorization: `Bearer ${account?.access_token}`,
       },
     });
-        console.log('🚀 ~ file: functionQuery.ts:332 ~ getAllComment ~ response:', response);
 
-    return response?.data?.data;
+    return response?.data?.data ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
     return [];
@@ -354,7 +345,6 @@ export const deleteComment = async (commentId: number, account: IUser) => {
       Authorization: `Bearer ${bearerToken}`,
     },
   });
-    console.log('🚀 ~ file: functionQuery.ts:352 ~ deleteComment ~ response:', response);
 
   if (!response.ok) {
     console.log('🚀 ~error:', response);
@@ -380,6 +370,51 @@ export const editComment = async (commentData, account: IUser) => {
   if (!response.ok) {
     console.log('🚀 ~error:', response);
     throw new Error('Failed to Edit comment Profile');
+  }
+
+  return response.json();
+};
+
+// ===============================create like ==============================
+export const createLike = async (postId: number, account: IUser) => {
+  const bearerToken = account?.access_token;
+  const likeBody = {
+    postId,
+    userId: account.id,
+  };
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/like/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+    body: JSON.stringify(likeBody),
+  });
+
+  if (!response.ok) {
+    console.log('🚀 ~error:', response);
+    throw new Error('Failed to like post');
+  }
+
+  return response.json();
+};
+
+// ===============================remove like ==============================
+export const removeLike = async (postId: number, account: IUser) => {
+  const bearerToken = account?.access_token;
+
+  const response = await fetch(`${TOPIC_TALKS_DOMAIN}/like/remove/uid=${account.id}&&pid=${postId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    console.log('🚀 ~error:', response);
+    throw new Error('Failed to unlike post');
   }
 
   return response.json();

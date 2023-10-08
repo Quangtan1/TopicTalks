@@ -4,8 +4,10 @@ import {
   ICommentBody,
   IPost,
   createComment,
+  createLike,
   deleteComment,
   deletePost,
+  removeLike,
   useGetAllPosts,
   useGetCommentByPostId,
   useGetPostById,
@@ -32,6 +34,7 @@ import Comments from './comments';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
 import EditCommentModal from './editCommentModal';
+import { useShare } from 'react-facebook';
 
 const validationSchema = Yup.object({
   comment: Yup.string().nullable().required('Comment content is required'),
@@ -46,6 +49,7 @@ const PostDetail = observer(() => {
   dayjs.extend(relativeTime);
   const { id } = useParams<{ id: string }>();
   const setDefaultValue = () => {
+    refetchAllPost();
     refetchPostDetail();
     refetchUserById();
     scrollToTop();
@@ -68,13 +72,21 @@ const PostDetail = observer(() => {
   const [open, setOpen] = useState(false);
   const [commentId, setCommentId] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
-  const [isShowRightSide, setIsShowRightSide] = useState(false);
+  const [isShowRightSide, setIsShowRightSide] = useState(true);
   const [isOpenEditCommentModal, setIsOpenEditCommentModal] = useState(false);
 
   // ========================== Query==========================
   const useDeletePost = useMutation((id: number) => deletePost(id, account));
 
   const useDeleteComment = useMutation((commentId: number) => deleteComment(commentId, account));
+
+  const useUnlike = useMutation((postId: number) => removeLike(postId, account));
+
+  const useLike = useMutation((postId: number) => createLike(postId, account));
+
+  const { mutateAsync: unLikePost } = useUnlike;
+
+  const { mutateAsync: likePost } = useLike;
 
   const { refetch: refetchAllPost } = useGetAllPosts(account, setAccount);
 
@@ -106,6 +118,7 @@ const PostDetail = observer(() => {
       if (result.status === 200) {
         ToastSuccess('Delete post successfully!');
         refetchAllPost();
+        setDefaultValue();
         navigate('/community');
       }
     } catch (error) {
@@ -119,12 +132,21 @@ const PostDetail = observer(() => {
       if (result.status === 200) {
         ToastSuccess('Delete comment successfully!');
         setOpen(!open);
+        setDefaultValue();
         refetchPostDetail();
         refetchCommentByPostId();
       }
     } catch (error) {
       ToastError('Error deleting comment!');
     }
+  };
+  const isLiked = postDetail?.like?.username?.some((user) => user === account.username);
+
+  const handleClickLike = () => {
+    if (isLiked) {
+      unLikePost(postDetail?.id);
+    }
+    likePost(postDetail?.id);
   };
 
   const handleActions = (action: Actions) => {
@@ -200,6 +222,21 @@ const PostDetail = observer(() => {
     setIsShowRightSide(!isShowRightSide);
   };
 
+  const { share } = useShare();
+
+  const handleShare = async () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const result = await share({
+        href: 'https://www.facebook.com/sharer',
+        display: 'popup',
+        hashtag: 'Share post from topicTalks app',
+      });
+    } catch (error) {
+      console.log('🚀 handleShare ~ error:', error);
+    }
+  };
+
   return isLoading || isLoadingUserDetail || isLoadingComments ? (
     <>
       <Loading />
@@ -219,13 +256,24 @@ const PostDetail = observer(() => {
               </Typography>
             </Box>
             <Box className={'item2'}>
-              <Button className="item2-btn" variant="outlined" color="primary">
-                <AiOutlineHeart />
+              <Button
+                className={`item2-btn ${isLiked ? 'liked' : ''}`}
+                variant="outlined"
+                color="primary"
+                onClick={handleClickLike}
+              >
+                <AiOutlineHeart />{' '}
+                {postDetail?.like?.totalLike !== 0 && (
+                  <Typography className="like-btn-detail">{postDetail?.like?.totalLike}</Typography>
+                )}
               </Button>
               <Button className="item2-btn" variant="outlined" color="primary" onClick={toggleCommentBox}>
                 <AiOutlineComment />
+                {postDetail?.totalComment !== 0 && (
+                  <Typography className="like-btn-detail">{postDetail?.totalComment}</Typography>
+                )}
               </Button>
-              <Button className="item2-btn" variant="outlined" color="primary">
+              <Button className="item2-btn" variant="outlined" color="primary" onClick={handleShare}>
                 <BsShare />
               </Button>
               <Box sx={{ cursor: 'pointer' }}>
@@ -237,10 +285,10 @@ const PostDetail = observer(() => {
         <Card className="postImgAndContent">
           <CardMedia component="img" className="img" image={img_url} alt={title} />
           <CardContent className="content">
-            <Typography variant="h5" component="div">
+            <Typography className="post-title" variant="h5" component="div">
               {title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography className="post-content" variant="h6" color="text.secondary">
               {content}
             </Typography>
           </CardContent>

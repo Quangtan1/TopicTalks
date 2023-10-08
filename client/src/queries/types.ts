@@ -41,12 +41,18 @@ export interface IPostContent {
   tparent_id: number;
 }
 
+export interface ILike {
+  totalLike: number;
+  username: string[];
+}
 export interface IPost {
   id: number;
   content: string;
   title: string;
   img_url: string;
+  totalComment: number;
   tparent_id: number;
+  like: ILike;
   author_id: number;
   created_at: string;
   updated_at: string;

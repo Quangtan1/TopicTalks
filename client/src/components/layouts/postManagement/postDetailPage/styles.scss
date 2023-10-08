@@ -20,6 +20,16 @@
         }
         .item2 {
           display: flex;
+          .like-btn-detail {
+            padding-left: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+          }
+          .liked {
+            color: darkviolet;
+          }
           .item2-btn {
             margin-left: 8px;
           }
@@ -27,14 +37,27 @@
         }
       }
     }
-    .postImgAndContent{
-        .img{
-            max-height: 500px;
-            object-fit: contain;
+    .postImgAndContent {
+      .img {
+        max-height: 500px;
+        object-fit: contain;
+      }
+      .content {
+        .post-content {
+          background-color: rgb(255, 178, 62);
+          background-image: linear-gradient(
+            268.67deg,
+            var(--main-color) 30.69%,
+            rgb(255, 163, 26) 55.54%,
+            rgb(255, 0, 115) 99%
+          );
+          -webkit-text-fill-color: transparent;
+          -webkit-background-clip: text;
+          font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          background-clip: text;
         }
-        .content{
-            height: 100px;
-        }
+        height: 100px;
+      }
     }
   }
   .right-side {
@@ -98,4 +121,3 @@
     }
   }
 }
-
