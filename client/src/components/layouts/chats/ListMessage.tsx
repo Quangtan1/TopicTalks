@@ -121,7 +121,7 @@ const ListMessage = observer(() => {
                 className={`${chat?.conversationInfor.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
                 onClick={() => setSelectedChat(item)}
               >
-                <Avatar />
+                <Avatar src={`${item.conversationInfor.isGroupChat ? '' : item.partnerDTO[0].image}`} alt="avt" />
                 <ListItemText className="chat_text_item">
                   <Typography>
                     {item.conversationInfor.isGroupChat === true

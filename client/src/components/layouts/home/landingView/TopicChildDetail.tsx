@@ -11,12 +11,17 @@ import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import chatStore from 'src/store/chatStore';
 import uiStore from 'src/store/uiStore';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+
+const content = 'Are you sure you want to join this group?';
 
 const TopicChildDetail = observer(() => {
   const { id } = useParams();
   const [topicChild, setTopicChild] = useState<TopicChild>(null);
   const [listTopicChild, setListTopicChild] = useState<ListMesage[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [openWarning, setOpenWarning] = useState<boolean>(false);
+  const [groupId, setGroupId] = useState<number>(null);
   const account = accountStore?.account;
   const navigate = useNavigate();
 
@@ -76,6 +81,11 @@ const TopicChildDetail = observer(() => {
       });
   };
 
+  const handleConfirm = (groudId: number) => {
+    setGroupId(groudId);
+    setOpenWarning(true);
+  };
+
   return (
     <Box className="topic_child_container">
       <Box className="box_topic_child">
@@ -118,7 +128,7 @@ const TopicChildDetail = observer(() => {
                     {isJoinGroup(item.partnerDTO) ? (
                       <Button className="joined_before">Joined Before</Button>
                     ) : (
-                      <Button className="join_group" onClick={() => joinGroupChat(item.conversationInfor.id)}>
+                      <Button className="join_group" onClick={() => handleConfirm(item.conversationInfor.id)}>
                         Join Group
                       </Button>
                     )}
@@ -128,6 +138,14 @@ const TopicChildDetail = observer(() => {
             ))}
         </Grid>
       </Box>
+      {openWarning && (
+        <DialogCommon
+          open={openWarning}
+          content={content}
+          onClose={() => setOpenWarning(false)}
+          onConfirm={() => joinGroupChat(groupId)}
+        />
+      )}
       {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
     </Box>
   );

@@ -132,6 +132,10 @@ const ChatBox = observer((props: ChatProps) => {
   };
 
   const partnerName = chat?.partnerDTO.filter((item) => item.id !== account.id);
+  const imageUser = (message: IMessage) => {
+    const image = chat?.partnerDTO.filter((item) => item.id === message.userId).map((item) => item.image);
+    return image.toString();
+  };
 
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isMember = isGroup ? chat?.isMember : 'true';
@@ -169,7 +173,7 @@ const ChatBox = observer((props: ChatProps) => {
             {message.length > 0 &&
               message.map((item: IMessage, index) => (
                 <Box id={item.userId === account.id ? 'you' : 'other'} className="message" key={index}>
-                  {item.userId !== account.id && <Avatar alt="avatar" className="avatar" />}
+                  {item.userId !== account.id && <Avatar src={imageUser(item)} alt="avatar" className="avatar" />}
                   <Box className="message_box">
                     {isImage.some((ext) => item.data.message.endsWith(ext)) ? (
                       <ReactImageFallback
@@ -202,7 +206,7 @@ const ChatBox = observer((props: ChatProps) => {
                     <Typography className="messge_username">{item.username}</Typography>
                   </Box>
 
-                  {item.userId === account.id && <Avatar alt="avatar" className="avatar" />}
+                  {item.userId === account.id && <Avatar src={account.url_img} alt="avatar" className="avatar" />}
                 </Box>
               ))}
           </Box>
