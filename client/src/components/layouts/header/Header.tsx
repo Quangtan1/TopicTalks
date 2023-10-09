@@ -126,7 +126,7 @@ const Header = observer(() => {
             Logout
           </MenuItem>
         </Menu>
-        <Typography className="name_account">{account?.username}</Typography>
+        <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
       </Box>
       {openNotifi && <NotificationDialog open={openNotifi} onClose={() => setOpenNotifi(false)} />}
       {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}

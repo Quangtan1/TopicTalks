@@ -34,6 +34,7 @@ import { formatDate } from 'src/utils/helper';
 const validationSchema = Yup.object({
   username: Yup.string().nullable().required('User Name is required'),
   email: Yup.string().nullable().required('Email is required'),
+  fullName: Yup.string().nullable().required('Full Name is required'),
 });
 
 interface Props {

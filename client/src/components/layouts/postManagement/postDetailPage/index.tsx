@@ -252,7 +252,7 @@ const PostDetail = observer(() => {
           <CardContent className="post-dt-cardHeader">
             <Box className={'item1'}>
               <Typography variant="h6" className="post-dt-cardHeader-title" gutterBottom>
-                {userDetailData?.username || account.username}
+                {userDetailData?.username?.slice(0, 11) || account.username?.slice(0, 11)}
               </Typography>
               <Typography variant="subtitle2" gutterBottom>
                 {`Posted ${timeAgo}`}

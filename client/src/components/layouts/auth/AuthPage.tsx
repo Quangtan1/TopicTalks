@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Grid, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,7 +26,6 @@ import jwtDecode from 'jwt-decode';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
-  const id = useId();
   const [isSignIn, setSignIn] = useState<boolean>(true);
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
@@ -35,25 +34,35 @@ const LoginPage = observer(() => {
   let timeoutId;
 
   const handleLoginGGSuccess = async (credentialResponse) => {
-    console.log(credentialResponse);
-    // const decode = await jwtDecode(credentialResponse?.credential);
-    const decode: { name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
+    try {
+      console.log(credentialResponse);
 
-    console.log(decode, 'decode');
-    const userData = {
-      id: +id,
-      username: decode?.name,
-      url_img: null,
-      email: decode.email,
-      roles: ['ROLE_USER'],
-      access_token: credentialResponse.credential,
-    };
-    navigate('/landing-view');
-    accountStore?.setAccount(userData);
+      const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
+
+      console.log(decode, 'decode');
+
+      const user = {
+        fullName: decode.name,
+        email: decode.email,
+        urlImage: decode.picture,
+      };
+
+      axios
+        .post(`${API_KEY}/auth/authenticate/google`, user)
+        .then((res) => {
+          accountStore?.setAccount(res.data);
+          res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/landing-view');
+        })
+        .catch((err) => {
+          ToastError(err.response.data.message);
+        });
+    } catch (err) {
+      console.log(err);
+      ToastError('Login Failed');
+    }
   };
 
   const handleLoginFailed = () => {
-    console.log('Login Failed');
     ToastError('Login Failed');
   };
 

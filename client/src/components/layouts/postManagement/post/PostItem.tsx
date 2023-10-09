@@ -98,11 +98,6 @@ const PostItem = observer(({ isProfile = false }) => {
               {post?.totalComment} Comments
             </Button>
           </CardContent>
-          {/* <CardContent>
-            <Typography variant="body2" color="textSecondary">
-              {12} Shares
-            </Typography>
-          </CardContent> */}
         </Box>
 
         <CardActions>
@@ -129,16 +124,10 @@ const PostItem = observer(({ isProfile = false }) => {
     );
   };
 
-  // const handleOpenPostModal = () => {
-  //   setIsOpenPost(!isOpenPost);
-  // };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { share } = useShare();
 
   const handleShare = async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = await share({
         href: 'https://www.facebook.com/sharer',
         display: 'popup',
