@@ -136,7 +136,6 @@ const PostDetail = observer(() => {
       if (result.status === 200) {
         ToastSuccess('Delete comment successfully!');
         setIsOpenDeleteCommentModal(false);
-        setDefaultValue();
         refetchPostDetail();
         refetchCommentByPostId();
       }
@@ -190,10 +189,10 @@ const PostDetail = observer(() => {
     try {
       const result = await useCreateComment.mutateAsync(commentBody);
       if (result.status === 201) {
-        setDefaultValue();
+        refetchCommentByPostId();
+        refetchPostDetail();
         console.log('Comment successfully!');
         resetForm();
-        refetchCommentByPostId();
       }
       console.log(`Comment result: `, result);
     } catch (error) {

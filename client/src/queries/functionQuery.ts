@@ -282,7 +282,6 @@ export const createComment = async (commentBody: ICommentBody, account: IUser) =
     },
     body: JSON.stringify(commentBody),
   });
-  console.log('🚀 ~ Comment ~ response:', response);
 
   if (!response.ok) {
     console.log('🚀 ~error:', response);

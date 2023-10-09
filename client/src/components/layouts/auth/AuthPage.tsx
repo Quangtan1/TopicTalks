@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Grid, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +9,6 @@ import { RiLockPasswordLine } from 'react-icons/ri';
 import { GrUserExpert } from 'react-icons/gr';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { HiOutlineKey } from 'react-icons/hi';
-import { FcGoogle } from 'react-icons/fc';
 import './AuthPage.scss';
 import Carousels from './Carousels';
 import { logo } from 'src/utils/consts';
@@ -22,10 +21,12 @@ import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
 import uiStore from 'src/store/uiStore';
 import Loading from 'src/components/loading/Loading';
-import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
+import jwtDecode from 'jwt-decode';
 
 const LoginPage = observer(() => {
   const navigate = useNavigate();
+  const id = useId();
   const [isSignIn, setSignIn] = useState<boolean>(true);
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
@@ -33,17 +34,28 @@ const LoginPage = observer(() => {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   let timeoutId;
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async ({ code }) => {
-      const tokens = await axios.post('http://localhost:5000/auth/google', {
-        // http://localhost:5000/auth/google backend that will exchange the code
-        code,
-      });
+  const handleLoginGGSuccess = async (credentialResponse) => {
+    console.log(credentialResponse);
+    // const decode = await jwtDecode(credentialResponse?.credential);
+    const decode: { name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
 
-      console.log(tokens);
-    },
-    flow: 'auth-code',
-  });
+    console.log(decode, 'decode');
+    const userData = {
+      id: +id,
+      username: decode?.name,
+      url_img: null,
+      email: decode.email,
+      roles: ['ROLE_USER'],
+      access_token: credentialResponse.credential,
+    };
+    navigate('/landing-view');
+    accountStore?.setAccount(userData);
+  };
+
+  const handleLoginFailed = () => {
+    console.log('Login Failed');
+    ToastError('Login Failed');
+  };
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -198,10 +210,19 @@ const LoginPage = observer(() => {
             <Button type="submit" fullWidth variant="contained" className="submit-button">
               {isSignIn ? 'Sign In' : 'Sign Up'}
             </Button>
-            <Button fullWidth variant="contained" className="button-gg" onClick={googleLogin}>
+            {/* <Button fullWidth variant="contained" className="button-gg" onClick={googleLogin}>
               <FcGoogle />
               <Typography>Continue with Google </Typography>
-            </Button>
+            </Button> */}
+            <GoogleLogin
+              size="large"
+              shape="circle"
+              text="signin_with"
+              theme="outline"
+              width={380}
+              onSuccess={handleLoginGGSuccess}
+              onError={handleLoginFailed}
+            />
             <Box className="box-social">
               <FacebookIcon />
               <InstagramIcon />
