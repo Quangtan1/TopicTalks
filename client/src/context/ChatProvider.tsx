@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatContext from './ChatContext';
 import { IMessage } from 'src/types';
 import { observer } from 'mobx-react';
@@ -54,9 +54,6 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   useEffect(() => {
     if (account !== null) {
       socket = io(`http://localhost:8085?uid=${account.id}`);
-      socket.on('connect', () => {
-        console.log('Connect Socket.IO');
-      });
       socket.on('sendMessage', handleReceiveMessage);
       socket.on('1V1CommunicateVideo', (data: ICallData) => {
         const statusCall = data.data.message;
@@ -83,9 +80,6 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         }
       });
       return () => {
-        socket.on('disconnect', () => {
-          console.log('Disconnect Socket.IO');
-        });
         socket.disconnect();
       };
     }
