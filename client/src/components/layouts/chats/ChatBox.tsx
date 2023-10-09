@@ -1,7 +1,7 @@
 import React, { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiPhoneCall } from 'react-icons/bi';
-import { BsCameraVideo, BsThreeDotsVertical } from 'react-icons/bs';
+import { BsCameraVideo } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
 import { ImAttachment } from 'react-icons/im';
 import { RiEmotionLaughLine } from 'react-icons/ri';
@@ -127,18 +127,6 @@ const ChatBox = observer((props: ChatProps) => {
     setShowEmojiPicker(!showEmojiPicker);
   };
 
-  const initChat = () => {
-    // const request = {
-    //   userInfoRequest: {
-    //     6: '2023-09-22T17:05:40.065964',
-    //     7: '2023-09-22T17:05:40.065964',
-    //   },
-    //   amount: 2,
-    //   topicChildId: 3,
-    // };
-    // socket.emit('initChatSingle', request);
-  };
-
   const handleLinkClick = () => {
     fileInputRef.current.click();
   };
@@ -227,7 +215,7 @@ const ChatBox = observer((props: ChatProps) => {
               <IoLogoSnapchat className="icon" />
               <IoLogoSnapchat className="icon" />
             </Box>
-            {(isSelecedChat && isMember === 'false') || chat?.isMember === undefined ? (
+            {(isSelecedChat && isMember === 'false') || (isGroup && chat?.isMember === undefined) ? (
               <Typography className="waiting_approve_text">
                 Wating Approve from Admin <strong> {chat?.conversationInfor.chatName}</strong>
               </Typography>

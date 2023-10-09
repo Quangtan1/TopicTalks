@@ -35,6 +35,7 @@ const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [openRandom, setOpenRandom] = useState<boolean>(false);
+  const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
 
   const chat = chatStore?.selectedChat;
@@ -50,6 +51,7 @@ const ListMessage = observer(() => {
     getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
       .then((res) => {
         chatStore?.setChats(res.data.data);
+        setSortChat(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -77,8 +79,17 @@ const ListMessage = observer(() => {
 
   const partnerName = (partner) => {
     const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
-
     return usernames;
+  };
+
+  const handleSelectTab = (tab: number) => {
+    setSelectedTab(tab);
+    if (tab === 0) {
+      chatStore?.setChats(sortChats);
+    } else if (tab === 2) {
+      const groupChat = chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
+      chatStore?.setChats(groupChat);
+    }
   };
 
   return (
@@ -94,7 +105,7 @@ const ListMessage = observer(() => {
           <ListItem
             key={item.id}
             className={`tab_item ${selectedTab === item.id && 'tab_selected'}`}
-            onClick={() => setSelectedTab(item.id)}
+            onClick={() => handleSelectTab(item.id)}
           >
             {item.icon}
             <Typography>{item.content}</Typography>
@@ -131,7 +142,7 @@ const ListMessage = observer(() => {
         </Box>
         <CiSettings />
       </Box>
-      {openRandom && <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />}
+      <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />
       {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
     </Box>
   );

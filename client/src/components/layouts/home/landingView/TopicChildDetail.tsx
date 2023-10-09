@@ -39,7 +39,6 @@ const TopicChildDetail = observer(() => {
     getDataAPI(`/participant/group-chat/${id}`, account.access_token, axiosJWT)
       .then((res) => {
         setListTopicChild(res.data.data);
-        console.log(res.data.data);
       })
       .catch((err) => {
         console.log(err);

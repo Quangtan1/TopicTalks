@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import './RandomDialog.scss';
 import {
   Box,
@@ -17,15 +17,15 @@ import { ListTopic, TopicChild } from 'src/types/topic.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import chatStore from 'src/store/chatStore';
-import ChatContext from 'src/context/ChatContext';
 import { FaCarSide } from 'react-icons/fa';
 import { ListMesage } from 'src/types/chat.type';
+import { io } from 'socket.io-client';
 
 interface DialogProps {
   open: boolean;
   onClose: () => void;
 }
-
+var socket;
 const RandomDialog = observer((props: DialogProps) => {
   const { open, onClose } = props;
   const [selectTopic, setSelectTopic] = useState<number | ''>(1);
@@ -33,9 +33,6 @@ const RandomDialog = observer((props: DialogProps) => {
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [selected, setSelected] = useState<TopicChild>(null);
   const [isRandoming, setIsRandoming] = useState<boolean>(false);
-
-  const chat = chatStore?.selectedChat;
-  const { socket } = useContext(ChatContext);
 
   const account = accountStore?.account;
 
@@ -58,30 +55,28 @@ const RandomDialog = observer((props: DialogProps) => {
 
   useEffect(() => {
     let isMounted = true;
-    if (socket) {
-      socket.on('partiAccess', (data: ListMesage) => {
-        if (isMounted && data !== null) {
-          setTimeout(() => {
-            const isMatch = chatStore?.chats.some((item) => item.conversationInfor.id !== data.conversationInfor.id);
-            const isNewConversation = chatStore?.chats.length === 0 || isMatch;
-            if (isNewConversation) {
-              setIsRandoming(false);
-              chatStore?.setSelectedChat(data);
-              ToastSuccess('You access random chat succesfully');
-              chatStore?.setChats([...chatStore?.chats, data]);
-              onClose();
-            }
-          }, 2000);
-        }
-      });
-    }
+    socket = io(`http://localhost:8085?uid=${account.id}`);
+    socket.on('partiAccess', (data: ListMesage) => {
+      if (isMounted && data !== null) {
+        setTimeout(() => {
+          const isMatch = chatStore?.chats.some((item) => item.conversationInfor.id !== data.conversationInfor.id);
+          const isNewConversation = chatStore?.chats.length === 0 || isMatch;
+          if (isNewConversation) {
+            setIsRandoming(false);
+            chatStore?.setSelectedChat(data);
+            ToastSuccess('You access random chat succesfully');
+            chatStore?.setChats([...chatStore?.chats, data]);
+            onClose();
+          }
+        }, 2000);
+      }
+    });
+
     return () => {
       isMounted = false;
-      if (socket) {
-        socket.emit('onLeaveChatRandom');
-      }
+      socket.emit('onLeaveChatRandom');
     };
-  }, [chat]);
+  }, []);
 
   useEffect(() => {
     getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
@@ -118,6 +113,12 @@ const RandomDialog = observer((props: DialogProps) => {
       };
       socket.emit('onAccessChatRandom', topicChildren);
     }
+  };
+
+  const handleCancel = () => {
+    setIsRandoming(false);
+    socket.emit('onLeaveChatRandom');
+    onClose();
   };
 
   return (
@@ -166,8 +167,10 @@ const RandomDialog = observer((props: DialogProps) => {
       )}
 
       <DialogActions className="dialog_action">
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleRandom}>Random</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
+        <Button disabled={isRandoming} onClick={handleRandom} className={`${isRandoming && 'disable_button'}`}>
+          Random
+        </Button>
       </DialogActions>
     </Dialog>
   );
