@@ -54,15 +54,13 @@ const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEdi
 
   const axiosJWT = createAxios(account, setAccount);
 
-  const { id, url_img } = accountStore?.account;
-
   const [selectedImage, setSelectedImage] = useState('');
 
   const {
     data: userDetailData,
     isLoading: isLoadingUserDetail,
     refetch: refetchUserById,
-  } = useGetUserById(id, axiosJWT, account);
+  } = useGetUserById(account?.id, axiosJWT, account);
 
   const useEditUser = useMutation((userData) => editUser(userData, account));
 
@@ -133,7 +131,7 @@ const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEdi
         Edit a profile
       </DialogTitle>
       <DialogContent className="dialog-content">
-        <AvatarComponent url={url_img} username={account.username} />
+        <AvatarComponent url={account?.url_img} username={account?.username} />
         {<DialogContentText className="post-label">Edit User Profile:</DialogContentText>}
         <TextField
           autoFocus

@@ -36,7 +36,7 @@ const ChatContainer = observer(() => {
     setOpenSetting(!openSetting);
   };
 
-  const isGroup = chat?.conversationInfor.isGroupChat;
+  const isGroup = chat?.conversationInfor?.isGroupChat;
   const isMember = isGroup ? chat?.isMember : 'true';
 
   return (
