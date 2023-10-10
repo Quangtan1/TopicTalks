@@ -21,6 +21,7 @@ import { IoLogoSnapchat } from 'react-icons/io5';
 import { ListMesage } from 'src/types/chat.type';
 import { FcCallback, FcSettings } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
+import AccessTooltip from 'src/components/dialogs/AccessTooltip';
 
 interface ChatProps {
   chat: ListMesage;
@@ -32,6 +33,9 @@ const ChatBox = observer((props: ChatProps) => {
   const account = accountStore?.account;
   const isSelecedChat = chatStore?.selectedChat !== null;
   const [imageFile, setImageFile] = useState<string>('');
+  const [openAccessTooltip, setOpenAccessTooltip] = useState<boolean>(false);
+  const [dataTooltip, setDataTooltip] = useState<IMessage>(null);
+  const [topicId, setTopicId] = useState<number>(null);
   const fileInputRef = useRef(null);
   const { chat, handleOpenSetting } = props;
 
@@ -131,6 +135,14 @@ const ChatBox = observer((props: ChatProps) => {
     fileInputRef.current.click();
   };
 
+  const handleOpenTooltip = (data: IMessage) => {
+    if (isGroup) {
+      setTopicId(chat?.conversationInfor?.topicChildren.id);
+      setDataTooltip(data);
+      setOpenAccessTooltip(true);
+    }
+  };
+
   const partnerName = chat?.partnerDTO.filter((item) => item.id !== account.id);
   const imageUser = (message: IMessage) => {
     const image = chat?.partnerDTO.filter((item) => item.id === message.userId).map((item) => item.image);
@@ -173,7 +185,14 @@ const ChatBox = observer((props: ChatProps) => {
             {message.length > 0 &&
               message.map((item: IMessage, index) => (
                 <Box id={item.userId === account.id ? 'you' : 'other'} className="message" key={index}>
-                  {item.userId !== account.id && <Avatar src={imageUser(item)} alt="avatar" className="avatar" />}
+                  {item.userId !== account.id && (
+                    <Avatar
+                      src={imageUser(item)}
+                      alt="avatar"
+                      className={isGroup && 'avatar'}
+                      onClick={() => handleOpenTooltip(item)}
+                    />
+                  )}
                   <Box className="message_box">
                     {isImage.some((ext) => item.data.message.endsWith(ext)) ? (
                       <ReactImageFallback
@@ -206,7 +225,7 @@ const ChatBox = observer((props: ChatProps) => {
                     <Typography className="messge_username">{item.username}</Typography>
                   </Box>
 
-                  {item.userId === account.id && <Avatar src={account.url_img} alt="avatar" className="avatar" />}
+                  {item.userId === account.id && <Avatar src={account.url_img} alt="avatar" />}
                 </Box>
               ))}
           </Box>
@@ -280,6 +299,14 @@ const ChatBox = observer((props: ChatProps) => {
           </>
         )}
       </Box>
+      {openAccessTooltip && (
+        <AccessTooltip
+          open={openAccessTooltip}
+          onClose={() => setOpenAccessTooltip(false)}
+          dataTooltip={dataTooltip}
+          topicId={topicId}
+        />
+      )}
     </Box>
   );
 });

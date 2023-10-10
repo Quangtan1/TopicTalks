@@ -97,7 +97,7 @@ const TopicChildDetail = observer(() => {
         </Typography>
         <Box className="box_image">
           <Box className="button_option">
-            <Button onClick={handleDiscoveryGroupClick}>Discovery Group</Button>
+            <Button onClick={handleDiscoveryGroupClick}>Move to Group</Button>
             <Button>More</Button>
           </Box>
           <img src={topicChild?.image} alt="img" className="image_topic" />

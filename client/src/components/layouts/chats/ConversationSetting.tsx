@@ -58,11 +58,16 @@ const ConversationSetting = observer((props: ChatProps) => {
       });
   };
 
+  const imageUser = (partnerDTO: IPartnerDTO[]) => {
+    const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
+    return image.toString();
+  };
+
   return (
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
-          <Avatar src={isGroup ? '' : chat?.partnerDTO[0].image} alt="avt" className="avatar" />
+          <Avatar src={isGroup ? '' : imageUser(chat?.partnerDTO)} alt="avt" className="avatar" />
           <Typography>{isGroup ? chat?.conversationInfor.chatName : chat?.partnerDTO[0].username}</Typography>
         </Box>
         <Box className="topic_setting">

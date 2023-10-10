@@ -1,0 +1,50 @@
+.access_tooltip {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
+  .MuiPaper-root {
+    background: transparent;
+    box-shadow: none;
+
+    position: relative;
+    .backgroud_access {
+      font-size: 300px;
+    }
+    .box_option {
+      position: absolute;
+      left: 25%;
+      top: 29%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      width: 150px;
+      gap: 5px;
+      p {
+        padding: 5px;
+        color: #fff;
+        width: 100%;
+        text-align: center;
+        border-radius: 10px;
+      }
+      p:not(p:nth-child(1)) {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      p:not(p:nth-child(1), p:nth-child(4)):hover {
+        background: #98abce;
+      }
+      p:nth-child(1) {
+        font-weight: 600;
+      }
+      p:nth-child(4) {
+        color: #fff;
+        background: rgb(83, 89, 175);
+        border: 1px solid blue;
+      }
+    }
+  }
+}

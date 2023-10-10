@@ -15,7 +15,13 @@ class ChatStore {
   }
 
   setChats(chat) {
-    this.chats = chat;
+    const chatsort = chat?.sort((a, b) => {
+      const dateA = new Date(a.conversationInfor.updatedAt).getTime();
+      const dateB = new Date(b.conversationInfor.updatedAt).getTime();
+      return dateB - dateA;
+    });
+    this.chats = chatsort;
+    console.log('chats', chat);
   }
   setSelectedChat(chatSelected) {
     this.selectedChat = chatSelected;
