@@ -5,8 +5,9 @@ import { observer } from 'mobx-react';
 import { io } from 'socket.io-client';
 import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
-import { ICallData } from 'src/types/chat.type';
+import { ICallData, ListMesage } from 'src/types/chat.type';
 import VideoCall from 'src/components/layouts/chats/videocall/VideoCall';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 interface ChatProviderProps {
   children: React.ReactNode;
@@ -28,6 +29,8 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const [turnMyVideo, setTurnMyVideo] = useState<boolean>(true);
   const [turnUserVideo, setTurnUserVideo] = useState<boolean>(true);
+  const [isRandoming, setIsRandoming] = useState<boolean>(false);
+  const [openRandom, setOpenRandom] = useState<boolean>(false);
   const codeAccept = 'CA01410';
   const codeMissing = 'MA01410';
 
@@ -53,6 +56,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   };
   useEffect(() => {
     if (account !== null) {
+      let isMounted = true;
       socket = io(`http://localhost:8085?uid=${account.id}`);
       socket.on('sendMessage', handleReceiveMessage);
       socket.on('1V1CommunicateVideo', (data: ICallData) => {
@@ -79,7 +83,23 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
           setOpenVideoCall(true);
         }
       });
+      socket.on('partiAccess', (data: ListMesage) => {
+        if (isMounted && data !== null) {
+          setTimeout(() => {
+            const isMatch = chatStore?.chats.some((item) => item.conversationInfor.id !== data.conversationInfor.id);
+            const isNewConversation = chatStore?.chats.length === 0 || isMatch;
+            if (isNewConversation) {
+              setIsRandoming(false);
+              chatStore?.setSelectedChat(data);
+              ToastSuccess('You access random chat succesfully');
+              chatStore?.setChats([data, ...chatStore?.chats]);
+              setOpenRandom(false);
+            }
+          }, 2000);
+        }
+      });
       return () => {
+        isMounted = false;
         socket.disconnect();
       };
     }
@@ -167,6 +187,10 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
           setNotification,
           setTurnMyVideo,
           setTurnUserVideo,
+          isRandoming,
+          setIsRandoming,
+          openRandom,
+          setOpenRandom,
         }}
       >
         {props.children}

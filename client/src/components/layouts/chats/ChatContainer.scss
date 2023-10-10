@@ -202,6 +202,9 @@
           align-items: end;
           gap: 8px;
           padding: 5px 10px;
+          .avatar {
+            cursor: pointer;
+          }
           .message_box {
             .image-message {
               padding: 10px;

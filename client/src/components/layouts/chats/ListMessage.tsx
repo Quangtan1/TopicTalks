@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
 import { BsChatDots } from 'react-icons/bs';
 import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
@@ -8,10 +8,12 @@ import { CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
-import { ListMesage } from 'src/types/chat.type';
+import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
 import RandomDialog from 'src/components/dialogs/RandomDialog';
+import ChatContext from 'src/context/ChatContext';
+import uiStore from 'src/store/uiStore';
 
 const tabOption = [
   {
@@ -34,9 +36,10 @@ const tabOption = [
 const ListMessage = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
-  const [openRandom, setOpenRandom] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
+
+  const { openRandom, setOpenRandom } = useContext(ChatContext);
 
   const chat = chatStore?.selectedChat;
   const listChats = chatStore?.chats;
@@ -48,10 +51,12 @@ const ListMessage = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
+    uiStore?.setLoading(true);
     getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
       .then((res) => {
         chatStore?.setChats(res.data.data);
         setSortChat(res.data.data);
+        uiStore?.setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -92,6 +97,11 @@ const ListMessage = observer(() => {
     }
   };
 
+  const imageUser = (partnerDTO: IPartnerDTO[]) => {
+    const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
+    return image.toString();
+  };
+
   return (
     <Box className="list_message_container">
       <Typography className="title_chat">Chat Rooms</Typography>
@@ -121,7 +131,7 @@ const ListMessage = observer(() => {
                 className={`${chat?.conversationInfor.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
                 onClick={() => setSelectedChat(item)}
               >
-                <Avatar src={`${item.conversationInfor.isGroupChat ? '' : item.partnerDTO[0].image}`} alt="avt" />
+                <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
                 <ListItemText className="chat_text_item">
                   <Typography>
                     {item.conversationInfor.isGroupChat === true
@@ -142,7 +152,7 @@ const ListMessage = observer(() => {
         </Box>
         <CiSettings />
       </Box>
-      <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />
+      {openRandom && <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />}
       {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
     </Box>
   );
