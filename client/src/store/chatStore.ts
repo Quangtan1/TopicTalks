@@ -15,12 +15,14 @@ class ChatStore {
   }
 
   setChats(chat) {
-    const chatsort = chat?.sort((a, b) => {
-      const dateA = new Date(a.conversationInfor.updatedAt).getTime();
-      const dateB = new Date(b.conversationInfor.updatedAt).getTime();
-      return dateB - dateA;
-    });
-    this.chats = chatsort;
+    if (Array.isArray(chat)) {
+      const chatsort = chat.sort((a, b) => {
+        const dateA = new Date(a.conversationInfor.updatedAt).getTime();
+        const dateB = new Date(b.conversationInfor.updatedAt).getTime();
+        return dateB - dateA;
+      });
+      this.chats = chatsort;
+    }
   }
   setSelectedChat(chatSelected) {
     this.selectedChat = chatSelected;
