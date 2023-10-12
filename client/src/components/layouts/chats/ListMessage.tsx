@@ -6,7 +6,7 @@ import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
@@ -71,7 +71,7 @@ const ListMessage = observer(() => {
   };
 
   // const sendEmail = () => {
-  //   const email = 'quangtanc12345@gmail.com';
+  //   const email = 'tantqde150382@fpt.edu.vn';
 
   //   putDataAPI(`/user/regenerate-otp?email=${email}`, {}, account.access_token, axiosJWT)
   //     .then((res) => {
@@ -81,6 +81,18 @@ const ListMessage = observer(() => {
   //       console.log(err);
   //     });
   // };
+
+  const forgetPassword = () => {
+    const email = 'tantqde150382@fpt.edu.vn';
+
+    postDataAPI(`/user/forgot-password?email=${email}`, {}, account.access_token, axiosJWT)
+      .then((res) => {
+        console.log('email', res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const partnerName = (partner) => {
     const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
@@ -127,8 +139,8 @@ const ListMessage = observer(() => {
           {listChats?.length > 0 &&
             listChats?.map((item) => (
               <ListItem
-                key={item.conversationInfor.id}
-                className={`${chat?.conversationInfor.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
+                key={item?.conversationInfor.id}
+                className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
                 onClick={() => setSelectedChat(item)}
               >
                 <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
@@ -150,7 +162,7 @@ const ListMessage = observer(() => {
           <Avatar src={account.url_img} alt="avt" />
           <Typography>{account.username}</Typography>
         </Box>
-        <CiSettings />
+        <CiSettings onClick={forgetPassword} />
       </Box>
       {openRandom && <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />}
       {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}

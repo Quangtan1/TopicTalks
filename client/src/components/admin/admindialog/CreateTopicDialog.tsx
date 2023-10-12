@@ -78,7 +78,10 @@ const CreateTopicDialog = observer((props: DialogProps) => {
     }
   };
   useEffect(() => {
-    if (imageFile !== '') {
+    if (imageFile === 'err') {
+      uiStore?.setLoading(false);
+      setImageFile('');
+    } else {
       uiStore?.setLoading(false);
     }
   }, [imageFile]);

@@ -11,6 +11,7 @@ import accountStore from 'src/store/accountStore';
 import { headerRoute, logo } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
+import { worker_script } from '../../../utils/woker';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -23,6 +24,7 @@ const Header = observer(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  let worker;
 
   const { notification } = useContext(ChatContext);
 
@@ -45,6 +47,15 @@ const Header = observer(() => {
   const onClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    worker = new Worker(worker_script);
+    worker.onmessage = (ev) => {
+      // console.log('got data back from worker');
+      // console.log(ev.data);
+    };
+    worker.postMessage('Button clicked');
+  }, []);
 
   useEffect(() => {
     account === null && navigate('/auth');

@@ -51,19 +51,22 @@ const ChatBox = observer((props: ChatProps) => {
   }, []);
 
   useEffect(() => {
-    if (imageFile !== '') {
+    if (imageFile === 'err') {
+      uiStore?.setLoading(false);
+      setImageFile('');
+    } else if (imageFile !== '') {
       uiStore?.setLoading(false);
       setCurrentContent(imageFile);
     }
   }, [imageFile]);
 
   const sendMessage = (message: string) => {
-    if (currentContent !== '') {
+    if (currentContent.trim() !== '') {
       const receiveMessageDTO = {
         data: {
           message: message,
         },
-        TargetId: chat.partnerDTO[0].id,
+        TargetId: chat?.partnerDTO[0]?.id,
         userId: account.id,
         conversationId: chat.conversationInfor.id,
       };
@@ -89,7 +92,7 @@ const ChatBox = observer((props: ChatProps) => {
           message: 'video',
         },
         targetName: chat.partnerDTO[0].username,
-        targetId: chat.partnerDTO[0].id,
+        targetId: chat?.partnerDTO[0]?.id,
         timeAt: new Date().toISOString(),
         userId: account.id,
         username: account.username,
@@ -108,7 +111,7 @@ const ChatBox = observer((props: ChatProps) => {
           message: 'call',
         },
         targetName: chat.partnerDTO[0].username,
-        targetId: chat.partnerDTO[0].id,
+        targetId: chat?.partnerDTO[0]?.id,
         timeAt: new Date().toISOString(),
         userId: account.id,
         username: account.username,
