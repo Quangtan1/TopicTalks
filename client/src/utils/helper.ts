@@ -22,7 +22,7 @@ export const formatDateTime = (value: string, format: string = DateFormatDisplay
   return dayjs(value).format(format);
 };
 
-const isImage = ['.png', 'jpg', '.svg', '.webp'];
+const isImage = ['png', 'jpg', 'svg', 'webp'];
 
 export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
   console.log('11111');
