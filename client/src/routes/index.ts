@@ -10,6 +10,7 @@ import TopicChildDetail from 'src/components/layouts/home/landingView/TopicChild
 import ContactUs from 'src/components/layouts/contactUs';
 import PostDetail from 'src/components/layouts/postManagement/postDetailPage';
 import ManagePost from 'src/components/admin/managepost/ManagePost';
+import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
 
 const publicRoutes = [
   { path: '/community', component: Community, isAdmin: false },
@@ -17,6 +18,7 @@ const publicRoutes = [
   { path: '/landing-view', component: LandingView, isAdmin: false },
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
+  { path: '/partner-profile/:id', component: PartnerProfile, isAdmin: false },
   { path: '/message', component: ChatContainer, isAdmin: false },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
   { path: '/manage-topic', component: ManageTopic, isAdmin: true },

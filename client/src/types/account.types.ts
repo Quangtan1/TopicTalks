@@ -8,3 +8,19 @@ export interface IUser {
   refresh_token?: string;
   token_type?: string;
 }
+
+export interface IUserProfile {
+  banned: boolean;
+  bannedDate: string | null;
+  bio: string;
+  country: string;
+  dob: string | null;
+  email: string;
+  fullName: string;
+  gender: string;
+  id: number;
+  imageUrl: string;
+  phoneNumber: string;
+  role: string;
+  username: string;
+}

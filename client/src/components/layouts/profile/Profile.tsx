@@ -29,19 +29,11 @@ const Profile = observer(() => {
   const [isEditProfile, setIsEditProfile] = React.useState(false);
   const isResize = uiStore?.collapse;
 
-  const { roles, username, id } = accountStore.account;
-
-  React.useEffect(() => {
-    if (!id) {
-      navigate('/login');
-    }
-  }, [id, navigate]);
-
   const {
     data: userDetailData,
     isLoading: isLoadingUserDetail,
     refetch: refetchUserById,
-  } = useGetUserById(id, axiosJWT, account);
+  } = useGetUserById(account?.id, axiosJWT, account);
 
   const handleGoToMessagePage = () => {
     navigate('/message');
@@ -69,10 +61,10 @@ const Profile = observer(() => {
             </Box>
             <Box className="title_wrap">
               <Typography className="title" variant="h4">
-                {username?.slice(0, 11)}
+                {account?.username?.slice(0, 11)}
               </Typography>
               <Typography className="subtitle" variant="subtitle1">
-                This is the {roles?.includes('ROLE_USER') ? 'user' : 'admin' || 'Front-end developer'} account
+                This is the {account?.roles?.includes('ROLE_USER') ? 'user' : 'admin' || 'Front-end developer'} account
               </Typography>
             </Box>
           </Grid>

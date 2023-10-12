@@ -3,7 +3,9 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FcCollapse, FcExpand, FcOk, FcTimeline } from 'react-icons/fc';
+import { MdOutlineAccountCircle } from 'react-icons/md';
 import { TiDeleteOutline } from 'react-icons/ti';
+import { useNavigate } from 'react-router-dom';
 import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
@@ -16,6 +18,8 @@ interface ChatProps {
 const ConversationSetting = observer((props: ChatProps) => {
   const [collapse, setCollapse] = useState<number[]>([1]);
   const { chat } = props;
+
+  const navigate = useNavigate();
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isAdmin = chat?.conversationInfor.adminId === accountStore?.account.id;
   const account = accountStore?.account;
@@ -58,12 +62,27 @@ const ConversationSetting = observer((props: ChatProps) => {
       });
   };
 
+  const imageUser = (partnerDTO: IPartnerDTO[]) => {
+    const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
+    return image.toString();
+  };
+
+  const handleNavigate = () => {
+    const id = chat?.partnerDTO.filter((item) => item.id !== account.id).map((item) => item.id);
+    navigate(`/partner-profile/${id}`);
+  };
+
   return (
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
-          <Avatar src={isGroup ? '' : chat?.partnerDTO[0].image} alt="avt" className="avatar" />
+          <Avatar src={isGroup ? '' : imageUser(chat?.partnerDTO)} alt="avt" className="avatar" />
           <Typography>{isGroup ? chat?.conversationInfor.chatName : chat?.partnerDTO[0].username}</Typography>
+          {!isGroup && (
+            <Typography className="personal_profile" onClick={handleNavigate}>
+              <MdOutlineAccountCircle /> Personal Profile
+            </Typography>
+          )}
         </Box>
         <Box className="topic_setting">
           <Typography>Topic:</Typography>

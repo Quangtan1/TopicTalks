@@ -79,7 +79,7 @@ const NewPost: React.FC<Props> = observer(
     } = useGetAllTopicParents(account, setAccount);
     const { refetch: refetchPost } = useGetAllPosts(account, setAccount);
     const { refetch: refetchPostByIsApproved } = useGetAllPostsByIsApproved(account, setAccount);
-    const { refetch: refetchPostByAuthorId } = useGetAllPostsByAuthorId(account.id, axiosJWT, account);
+    const { refetch: refetchPostByAuthorId } = useGetAllPostsByAuthorId(account?.id, axiosJWT, account);
     const useCreatePost = useMutation((postData) => createPost(postData, account));
     const useEditPost = useMutation((postData) => editPost(postData, account));
 
@@ -177,7 +177,7 @@ const NewPost: React.FC<Props> = observer(
           {isEdit ? 'Edit a post' : 'Create a post'}
         </DialogTitle>
         <DialogContent className="dialog-content">
-          <AvatarComponent url={url_img} username={account.username} />
+          <AvatarComponent url={url_img} username={account?.username} />
           {!isEdit && <DialogContentText className="post-label">Post a post you are interested:</DialogContentText>}
           <TextField
             autoFocus

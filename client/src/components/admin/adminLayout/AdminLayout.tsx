@@ -18,7 +18,7 @@ const AdminLayout = observer(({ children }) => {
           <Header />
           <Box className="route-container">
             <SideBar />
-            {children}
+            {account !== null && children}
           </Box>
         </Box>
       )}

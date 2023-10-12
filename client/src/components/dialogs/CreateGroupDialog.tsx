@@ -86,7 +86,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
       postDataAPI('/participant/create-group-chat', groupData, account.access_token, axiosJWT)
         .then((res) => {
           ToastSuccess('Create Group Sucessfully');
-          chatStore?.setChats([...chatStore?.chats, res.data.data]);
+          chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           currentPath !== '/message' && navigate('/message');
           currentPath !== '/message'
             ? setTimeout(() => {

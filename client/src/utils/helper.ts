@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { ToastError } from './toastOptions';
 
 export const APIKeyGPT = `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`;
 
@@ -21,24 +22,32 @@ export const formatDateTime = (value: string, format: string = DateFormatDisplay
   return dayjs(value).format(format);
 };
 
+const isImage = ['png', 'jpg', 'svg', 'webp'];
+
 export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
   console.log('11111');
   const data = new FormData();
   for (let i = 0; i < image.length; i++) {
-    data.append('file', image[i]);
-    data.append('upload_preset', `${isPost ? 'topicchildandpost' : 'topictalk_message_image'}`);
-    data.append('cloud_name', 'tantqdev');
-    fetch('https://api.cloudinary.com/v1_1/tantqdev/image/upload', {
-      method: 'post',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setImageUrl(data?.url);
-        console.log('data', data?.url);
+    const fileExtension = image[i].name.split('.').pop().toLowerCase();
+    if (isImage.includes(`${fileExtension}`)) {
+      data.append('file', image[i]);
+      data.append('upload_preset', `${isPost ? 'topicchildandpost' : 'topictalk_message_image'}`);
+      data.append('cloud_name', 'tantqdev');
+      fetch('https://api.cloudinary.com/v1_1/tantqdev/image/upload', {
+        method: 'post',
+        body: data,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          setImageUrl(data?.url);
+          console.log('data', data?.url);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      setImageUrl('err');
+      ToastError(`Invalid file extension: ${fileExtension}`);
+    }
   }
 };

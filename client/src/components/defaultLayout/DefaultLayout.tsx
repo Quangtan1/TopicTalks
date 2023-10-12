@@ -8,10 +8,13 @@ import { useState, useEffect } from 'react';
 import { BiArrowToTop } from 'react-icons/bi';
 import { HiArrowUp } from 'react-icons/hi';
 import Footer from '../layouts/footer/Footer';
+import accountStore from 'src/store/accountStore';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
   const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const account = accountStore?.account;
 
   const toggleVisibility = () => {
     if (window.pageYOffset > 250) {
@@ -41,7 +44,7 @@ const DefaultLayout = observer(({ children }) => {
       {isLoading && <Loading />}
       <Header />
       <Box className="route-container">
-        {children}
+        {account !== null && children}
         {isVisible && (
           <Button className="scroll-to-top" onClick={scrollToTop}>
             <HiArrowUp />

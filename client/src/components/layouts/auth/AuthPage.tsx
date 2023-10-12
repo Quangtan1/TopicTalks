@@ -35,11 +35,7 @@ const LoginPage = observer(() => {
 
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
-      console.log(credentialResponse);
-
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
-
-      console.log(decode, 'decode');
 
       const user = {
         fullName: decode.name,

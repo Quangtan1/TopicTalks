@@ -34,16 +34,17 @@ const TopicChildDetail = observer(() => {
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
   useEffect(() => {
-    getDataAPI(`/topic-children/${id}`, account.access_token, axiosJWT)
+    getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
         setTopicChild(res.data.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    getDataAPI(`/participant/group-chat/${id}`, account.access_token, axiosJWT)
+    getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
         setListTopicChild(res.data.data);
+        console.log('aaaa', res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -65,13 +66,14 @@ const TopicChildDetail = observer(() => {
     postDataAPI(
       `/participant/join-group-chat/uid=${account.id}&&cid=${groudId}`,
       groupData,
-      account.access_token,
+      account?.access_token,
       axiosJWT,
     )
       .then((res) => {
         ToastSuccess('Join Group Sucessfully');
         navigate('/message');
         setTimeout(() => {
+          chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           chatStore?.setSelectedChat(res.data.data);
           uiStore?.setLoading(false);
         }, 500);
@@ -79,6 +81,16 @@ const TopicChildDetail = observer(() => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleJoinBefore = (selectedChat: ListMesage) => {
+    uiStore?.setLoading(true);
+    navigate('/message');
+    setTimeout(() => {
+      const isMember = selectedChat.partnerDTO.filter((item) => item.id === account?.id).some((item) => item.member);
+      chatStore?.setSelectedChat({ ...selectedChat, isMember: isMember.toString() });
+      uiStore?.setLoading(false);
+    }, 400);
   };
 
   const handleConfirm = (groudId: number) => {
@@ -97,7 +109,7 @@ const TopicChildDetail = observer(() => {
         </Typography>
         <Box className="box_image">
           <Box className="button_option">
-            <Button onClick={handleDiscoveryGroupClick}>Discovery Group</Button>
+            <Button onClick={handleDiscoveryGroupClick}>Move to Group</Button>
             <Button>More</Button>
           </Box>
           <img src={topicChild?.image} alt="img" className="image_topic" />
@@ -126,7 +138,9 @@ const TopicChildDetail = observer(() => {
                   </CardContent>
                   <CardActions className="card_actions">
                     {isJoinGroup(item.partnerDTO) ? (
-                      <Button className="joined_before">Joined Before</Button>
+                      <Button className="joined_before" onClick={() => handleJoinBefore(item)}>
+                        Joined Before
+                      </Button>
                     ) : (
                       <Button className="join_group" onClick={() => handleConfirm(item.conversationInfor.id)}>
                         Join Group

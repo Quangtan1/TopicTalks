@@ -1,0 +1,148 @@
+.partner-profile-container {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 0px 100px;
+  .title_box {
+    margin: 50px 0px 0px;
+    position: relative;
+    .title_backgroud {
+      color: #212332;
+      text-align: center;
+      font-size: 100px;
+      text-transform: uppercase;
+      padding-bottom: 30px;
+    }
+    .title_group {
+      position: absolute;
+      color: var(--main-color);
+      font-size: 25px;
+      top: 32%;
+      text-align: center;
+      margin: 0 auto;
+      width: 100%;
+      strong {
+        color: #fafcfb;
+      }
+    }
+  }
+  .partner_profile {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 50px;
+    .avt_image {
+      position: relative;
+      margin-top: 20px;
+      .backgroud_image {
+        position: absolute;
+        width: 250px;
+        height: 300px;
+        left: -30px;
+        bottom: 20px;
+        border-radius: 15px;
+        z-index: 0;
+        border: 2px var(--main-color) dashed;
+      }
+      img {
+        width: 250px;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 10px;
+        position: relative;
+        z-index: 1;
+        background: #fafcfb;
+      }
+    }
+    .info_user {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 550px;
+      .title {
+        color: var(--main-color);
+        font-size: 16px;
+      }
+      .bio_box {
+        .title {
+          padding: 5px 8px;
+          display: flex;
+          justify-content: center;
+          background: #171b3d;
+          width: 50px;
+          border-radius: 5px;
+        }
+        p:nth-child(2) {
+          color: #fafcfb;
+          line-height: 30px;
+        }
+      }
+      .grid_container {
+        .MuiGrid-item {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          p:nth-child(2) {
+            color: #fafcfb;
+            font-size: 14px;
+          }
+        }
+      }
+      .action_box {
+        display: flex;
+        gap: 30px;
+        button {
+          padding: 10px;
+          width: 120px;
+          border-radius: 10px;
+          text-transform: capitalize;
+        }
+        button:nth-child(1) {
+          border: 1px solid var(--main-color);
+          color: #fafcfb;
+        }
+        button:nth-child(2) {
+          background: var(--main-color);
+          color: #fafcfb;
+        }
+      }
+    }
+  }
+  .post_container {
+    padding: 0px 150px;
+    justify-content: center;
+    .card_post {
+      border-radius: 10px;
+      background: #1e293b;
+      color: #fafcfb;
+      .image {
+        height: 300px;
+        width: auto;
+        object-fit: cover;
+      }
+      .card_content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        p:nth-child(1) {
+          font-weight: 600;
+        }
+      }
+      .card_action {
+        display: flex;
+        justify-content: center;
+        button {
+          padding: 8px;
+          width: 100px;
+          border-radius: 10px;
+          text-transform: capitalize;
+          background: var(--main-color);
+          color: #fafcfb;
+        }
+      }
+    }
+  }
+}

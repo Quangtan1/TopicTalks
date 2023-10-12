@@ -8,6 +8,7 @@ interface IConversation {
   isGroupChat: boolean;
   topicChildren: ITopicChild;
   adminId: number;
+  updatedAt?: string;
 }
 export interface IPartnerDTO {
   id: number;
