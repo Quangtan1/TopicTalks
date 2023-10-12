@@ -251,12 +251,17 @@ const PostDetail = observer(() => {
         <Card className="post-dt-header">
           <CardContent className="post-dt-cardHeader">
             <Box className={'item1'}>
-              <Typography variant="h6" className="post-dt-cardHeader-title" gutterBottom>
-                {userDetailData?.username?.slice(0, 11) || account.username?.slice(0, 11)}
-              </Typography>
-              <Typography variant="subtitle2" gutterBottom>
-                {`Posted ${timeAgo}`}
-              </Typography>
+              <CardMedia component="img" className="img" image={postDetail?.avatar_url} alt={postDetail?.username} />
+
+              <Box className="nameTime">
+                <Typography variant="h6" className="post-dt-cardHeader-title" gutterBottom>
+                  {postDetail?.username?.slice(0, 11) || userDetailData.username?.slice(0, 11)}
+                </Typography>
+
+                <Typography variant="subtitle2" gutterBottom>
+                  {`Posted ${timeAgo}`}
+                </Typography>
+              </Box>
             </Box>
             <Box className={'item2'}>
               <Button
@@ -265,7 +270,7 @@ const PostDetail = observer(() => {
                 color="primary"
                 onClick={handleClickLike}
               >
-                <AiOutlineHeart />{' '}
+                <AiOutlineHeart />
                 {postDetail?.like?.totalLike !== 0 && (
                   <Typography className="like-btn-detail">{postDetail?.like?.totalLike}</Typography>
                 )}

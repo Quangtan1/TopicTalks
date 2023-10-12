@@ -169,7 +169,7 @@ const NewPost: React.FC<Props> = observer(
       onSubmit: handleCreatePost,
     });
 
-    const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
+    const { errors, touched, getFieldProps, submitForm, resetForm, values, dirty } = formik;
 
     return (
       <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
@@ -194,7 +194,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-title-input"
             error={touched.postTitle && Boolean(errors.postTitle)}
             helperText={
-              touched.postTitle && errors.postTitle ? (
+              dirty && touched.postTitle && errors.postTitle ? (
                 <Typography variant="caption" color="error">
                   {errors.postTitle as string}
                 </Typography>
@@ -216,7 +216,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-content-input"
             error={touched.postContent && Boolean(errors.postContent)}
             helperText={
-              touched.postContent && errors.postContent ? (
+              dirty && touched.postContent && errors.postContent ? (
                 <Typography variant="caption" color="error">
                   {errors.postContent as string}
                 </Typography>

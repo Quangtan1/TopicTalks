@@ -10,4 +10,15 @@
 .new_feed {
   padding: 0 100px;
   position: relative;
+  .containerCommunity {
+    .headerWrap {
+      display: flex;
+      justify-content: center;
+      margin: 0 22px;
+      border-radius: 12px;
+    }
+    .tabContainer {
+      padding: 8px;
+    }
+  }
 }

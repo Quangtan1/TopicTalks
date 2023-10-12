@@ -19,6 +19,22 @@
           font-size: 20px;
           font-weight: 600;
         }
+        .item1{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .nameTime{
+            display: flex;
+            flex-direction: column;
+            padding-left: 12px;
+          }
+          .img{
+        object-fit: cover;
+        width: 50px;
+        border-radius: 50%;
+        height: 50px;
+          }
+        }
         .item2 {
           display: flex;
           .like-btn-detail {
