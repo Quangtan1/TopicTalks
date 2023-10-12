@@ -219,6 +219,7 @@
             .message_content {
               padding: 12px 20px;
               word-wrap: break-word;
+              word-break: break-all;
               max-width: 400px;
               margin-bottom: 10px;
               display: flex;
@@ -459,12 +460,22 @@
           height: 70px;
           cursor: pointer;
         }
-        p {
+        p:nth-child(2) {
           text-align: center;
-          padding: 8px 10px;
+          padding: 5px 10px;
           min-width: 100px;
           color: var(--main-color);
           font-weight: 600;
+        }
+        .personal_profile {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #fff;
+          background: #98abce;
+          padding: 5px;
+          border-radius: 8px;
+          cursor: pointer;
         }
       }
       .topic_setting {

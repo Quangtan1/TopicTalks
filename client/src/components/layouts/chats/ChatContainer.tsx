@@ -9,6 +9,7 @@ import accountStore from 'src/store/accountStore';
 import ChatContext from 'src/context/ChatContext';
 import chatStore from 'src/store/chatStore';
 import ConversationSetting from './ConversationSetting';
+import uiStore from 'src/store/uiStore';
 
 const ChatContainer = observer(() => {
   const { setMessage } = useContext(ChatContext);
@@ -22,14 +23,17 @@ const ChatContainer = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
-    if (chat !== null)
+    if (chat !== null) {
+      uiStore?.setLoading(true);
       getDataAPI(`/message/${chat.conversationInfor.id}`, account.access_token, axiosJWT)
         .then((res) => {
           setMessage(res.data);
+          uiStore?.setLoading(false);
         })
         .catch((err) => {
           console.log(err);
         });
+    }
   }, [chat]);
 
   const handleOpenSetting = () => {

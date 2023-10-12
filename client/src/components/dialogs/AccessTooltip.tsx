@@ -10,6 +10,7 @@ import accountStore from 'src/store/accountStore';
 import { createAxios, postDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import uiStore from 'src/store/uiStore';
+import { useNavigate } from 'react-router-dom';
 
 interface DialogProps {
   open: boolean;
@@ -20,6 +21,7 @@ interface DialogProps {
 const AccessTooltip = observer((props: DialogProps) => {
   const { open, onClose, dataTooltip, topicId } = props;
   const account = accountStore?.account;
+  const navigate = useNavigate();
 
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -53,12 +55,16 @@ const AccessTooltip = observer((props: DialogProps) => {
       });
   };
 
+  const navigateProfile = (id: number) => {
+    navigate(`/partner-profile/${id}`);
+  };
+
   return (
     <Dialog open={open} onClose={onClose} className="access_tooltip">
       <FaCloud className="backgroud_access" />
       <Box className="box_option">
         <Typography>{dataTooltip.username}</Typography>
-        <Typography>
+        <Typography onClick={() => navigateProfile(dataTooltip.userId)}>
           <BsPersonCircle /> Personal Profile
         </Typography>
         <Typography onClick={accessChat}>
