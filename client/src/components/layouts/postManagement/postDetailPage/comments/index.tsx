@@ -41,7 +41,7 @@ const Comments: FC<Props> = (props) => {
                       <Box className="userAvatarGroup">
                         <Avatar src={userDetailData?.imageUrl} alt={comment?.username} />
                         <Typography variant="subtitle1" className="userName">
-                          {comment?.username}
+                          {comment?.username?.slice(0, 11)}
                         </Typography>
                       </Box>
                       <Box className="buttonAndTime">

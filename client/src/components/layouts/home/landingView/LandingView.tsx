@@ -11,7 +11,7 @@ import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
 
-const responsive = {
+export const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
     items: 4,

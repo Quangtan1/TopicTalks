@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material';
 import './PostItem.scss';
@@ -19,9 +18,10 @@ import { useNavigate } from 'react-router-dom';
 import { createAxios } from 'src/utils';
 import _ from 'lodash';
 import { useMutation } from 'react-query';
-import { ToastSuccess } from 'src/utils/toastOptions';
-// import NewPost from '../newPost/NewPost';
 import { useShare } from 'react-facebook';
+import 'react-multi-carousel/lib/styles.css';
+import 'react-multi-carousel/lib/styles.css';
+import SimplePost from './postInCommunity';
 
 const PostItem = observer(({ isProfile = false }) => {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ const PostItem = observer(({ isProfile = false }) => {
     navigate(`/post-detail/${postId}`);
   };
 
-  const renderPostItem = (post: IPost, index: number) => {
+  const renderPostItemInProfile = (post: IPost, index: number) => {
     const isLiked = post?.like?.username?.some((user) => user === username);
     return (
       <Card key={post?.id} className="post-item">
@@ -117,7 +117,6 @@ const PostItem = observer(({ isProfile = false }) => {
             handleShare={handleShare}
             isShareModalOpen={isShareModalOpen}
             setIsShareModalOpen={setIsShareModalOpen}
-            // sharesCount={12}
           />
         </CardActions>
       </Card>
@@ -128,6 +127,7 @@ const PostItem = observer(({ isProfile = false }) => {
 
   const handleShare = async () => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = await share({
         href: 'https://www.facebook.com/sharer',
         display: 'popup',
@@ -142,14 +142,19 @@ const PostItem = observer(({ isProfile = false }) => {
     return (
       <>
         <Typography className="no-post">Currently, There are no posts. Create a post now!</Typography>
-        {/* <Button onClick={handleOpenPostModal}>Create Post</Button> */}
       </>
     );
   };
+  const renderPostItemInCommunity = (posts: IPost[]) => {
+    return (
+      <>
+        <SimplePost posts={posts} handleClickPostItem={handleClickPostItem} />
+      </>
+    );
+  };
+  const postItems = isProfile ? postByAuthorIdData : postData;
 
   const renderPostItems = () => {
-    const postItems = isProfile ? postByAuthorIdData : postData;
-
     if (_.isEmpty(postItems) && _.isEmpty(postDataAdmin)) {
       return renderNoPost();
     }
@@ -159,7 +164,7 @@ const PostItem = observer(({ isProfile = false }) => {
     }
 
     return postItems.map((postItem: IPost, index: number) => {
-      return renderPostItem(postItem, index);
+      return renderPostItemInProfile(postItem, index);
     });
   };
 
@@ -169,8 +174,9 @@ const PostItem = observer(({ isProfile = false }) => {
         <Loading />
       ) : (
         <>
-          <Box className="post-item-container">{renderPostItems()}</Box>
-          {/* <NewPost open={isOpenPost} onEditSuccess={refetchPost} closePostModal={() => setIsOpenPost(!isOpenPost)} /> */}
+          <Box className="post-item-container">
+            {isProfile ? renderPostItems() : renderPostItemInCommunity(postItems)}
+          </Box>
         </>
       )}
     </>

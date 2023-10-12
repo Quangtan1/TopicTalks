@@ -1,4 +1,4 @@
-import Community from 'src/components/layouts/home/Community';
+import Community from 'src/components/layouts/home/community/Community';
 import AuthPage from 'src/components/layouts/auth/AuthPage';
 import ChatContainer from 'src/components/layouts/chats/ChatContainer';
 import Profile from 'src/components/layouts/profile/Profile';

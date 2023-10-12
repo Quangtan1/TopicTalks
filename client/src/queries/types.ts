@@ -53,13 +53,14 @@ export interface IPost {
   totalComment: number;
   tparent_id: number;
   like: ILike;
+  avatar_url: string;
+  username: string;
   author_id: number;
   created_at: string;
   updated_at: string;
   approved: boolean;
 }
-
-
+   
 export interface IUserInformation {
   id: number;
   fullName: string;

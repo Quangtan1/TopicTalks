@@ -30,14 +30,14 @@ import {
 } from 'src/queries/functionQuery';
 import { useMutation } from 'react-query';
 import AvatarComponent from './avatarComponent/AvatarComponent';
-import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
+// import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
 import ImageUpload from './imageUpload/ImageUpload';
 import { observer } from 'mobx-react';
 import { IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
 import { createAxios } from 'src/utils';
 
-const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
+// const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -66,7 +66,7 @@ const NewPost: React.FC<Props> = observer(
     const url_img = accountStore?.account?.url_img;
 
     // ========================== State ==========================
-    const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
+    // const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
     const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
     const [emotion, setEmotion] = useState('');
     const [selectedImage, setSelectedImage] = useState('');
@@ -85,7 +85,7 @@ const NewPost: React.FC<Props> = observer(
 
     const setDefaultValue = () => {
       setEmotion('');
-      setSuggestedTopic([]);
+      // setSuggestedTopic([]);
       resetForm();
     };
 
@@ -169,7 +169,7 @@ const NewPost: React.FC<Props> = observer(
       onSubmit: handleCreatePost,
     });
 
-    const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
+    const { errors, touched, getFieldProps, submitForm, resetForm, values, dirty } = formik;
 
     return (
       <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
@@ -194,7 +194,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-title-input"
             error={touched.postTitle && Boolean(errors.postTitle)}
             helperText={
-              touched.postTitle && errors.postTitle ? (
+              dirty && touched.postTitle && errors.postTitle ? (
                 <Typography variant="caption" color="error">
                   {errors.postTitle as string}
                 </Typography>
@@ -216,7 +216,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-content-input"
             error={touched.postContent && Boolean(errors.postContent)}
             helperText={
-              touched.postContent && errors.postContent ? (
+              dirty && touched.postContent && errors.postContent ? (
                 <Typography variant="caption" color="error">
                   {errors.postContent as string}
                 </Typography>
@@ -282,7 +282,7 @@ const NewPost: React.FC<Props> = observer(
               setEmotion={setEmotion}
             />
           </Box>
-          <SuggestedTopicsComponent suggestedTopic={suggestedTopic} />
+          {/* <SuggestedTopicsComponent suggestedTopic={suggestedTopic} /> */}
         </DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={closePostModal} color="primary">

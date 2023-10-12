@@ -56,7 +56,7 @@ const Profile = observer(() => {
               {!userDetailData ? (
                 <Avatar className="banner_avatar" />
               ) : (
-                <img className="banner_avatar" src={userDetailData?.imageUrl} alt="son" />
+                <img className="banner_avatar" src={account?.url_img || userDetailData?.imageUrl} alt="son" />
               )}
             </Box>
             <Box className="title_wrap">
