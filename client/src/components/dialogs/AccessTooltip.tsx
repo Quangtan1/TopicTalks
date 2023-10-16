@@ -56,7 +56,7 @@ const AccessTooltip = observer((props: DialogProps) => {
   };
 
   const navigateProfile = (id: number) => {
-    navigate(`/partner-profile/${id}`);
+    navigate(`/personal-profile/${id}`);
   };
 
   return (

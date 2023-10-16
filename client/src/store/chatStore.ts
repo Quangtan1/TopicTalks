@@ -22,7 +22,6 @@ class ChatStore {
         return dateB - dateA;
       });
       this.chats = chatsort;
-      console.log('chats', chat);
     }
   }
   setSelectedChat(chatSelected) {

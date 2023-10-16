@@ -65,7 +65,7 @@ const PostItem = observer(({ isProfile = false }) => {
   };
 
   const renderPostItemInProfile = (post: IPost, index: number) => {
-    const isLiked = post?.like?.username?.some((user) => user === username);
+    const isLiked = post?.like?.userLike?.some((item) => item.id === account.id);
     return (
       <Card key={post?.id} className="post-item">
         <PostHeader

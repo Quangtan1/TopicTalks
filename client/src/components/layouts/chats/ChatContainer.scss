@@ -181,6 +181,10 @@
           font-size: 22px;
           cursor: pointer;
         }
+        .disable_call {
+          opacity: 0.6;
+          cursor: default;
+        }
       }
       svg,
       p {
@@ -197,6 +201,7 @@
       width: 100%;
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .list_message {
+        padding: 10px 4px;
         .message {
           display: flex;
           align-items: end;
@@ -224,6 +229,7 @@
               margin-bottom: 10px;
               display: flex;
               align-items: center;
+              white-space: pre-line;
               gap: 5px;
               svg {
                 font-size: 20px;
@@ -390,13 +396,16 @@
       .chatbox_input {
         width: 100%;
         .MuiInputBase-root {
+          padding: 6px 0px 6px 10px;
+          color: #fff;
+          max-height: 50px;
           input {
             padding: 6px 0px 6px 10px;
             color: #fff;
           }
         }
         .Mui-focused .MuiOutlinedInput-notchedOutline {
-          border: 2px solid #ced4da;
+          border: none;
         }
       }
       svg {

@@ -2,6 +2,9 @@
   &.MuiDialog-root {
     z-index: 3;
   }
+  .MuiBackdrop-root {
+    background: rgb(51 47 47 / 65%);
+  }
   .MuiPaper-root {
     width: 600px;
     height: 450px;
@@ -14,7 +17,7 @@
         font-size: 20px;
       }
       p:nth-child(2) {
-        color: rgb(112, 216, 189);
+        color: var(--main-color);
       }
     }
     .loading {
@@ -102,7 +105,7 @@
   }
   .dialog_action {
     button {
-      background: rgb(112, 216, 189);
+      background: var(--main-color);
       color: #fff;
     }
     .disable_button {

@@ -1,17 +1,33 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './PartnerProfile.scss';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { createAxios, getDataAPI, logo, postDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
 import { IUserProfile } from 'src/types/account.types';
 import { IPost } from 'src/queries';
+import PostDetailDialog from '../home/community/posts/PostDetailDialog';
+import { HiCamera } from 'react-icons/hi';
+import uiStore from 'src/store/uiStore';
+import chatStore from 'src/store/chatStore';
+import friendStore from 'src/store/friendStore';
+import { AiFillDelete, AiOutlineUserAdd } from 'react-icons/ai';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import ListFriendDialog from './listfriend/ListFriendDialog';
+import SelectTopicMessage from 'src/components/dialogs/SelectTopicMessage';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
   const [user, setUser] = useState<IUserProfile>(null);
   const [posts, setPosts] = useState<IPost[]>([]);
+  const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
+  const [postId, setPostId] = useState<number>();
+  const [openConfirm, setOpenConFirm] = useState<boolean>(false);
+  const [openListFriend, setOpenListFriend] = useState<boolean>(false);
+  const [openSelectTopic, setOpenSelectTopic] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const content = `Cancel Friend with ${user?.username} ?`;
 
   const account = accountStore?.account;
   const setAccount = () => {
@@ -22,6 +38,7 @@ const PartnerProfile = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
+    uiStore?.setLoading(true);
     getDataAPI(`/user/${id}`, account.access_token, axiosJWT)
       .then((res) => {
         setUser(res.data.data);
@@ -29,16 +46,60 @@ const PartnerProfile = observer(() => {
       .catch((err) => {
         console.log(err);
       });
-    getDataAPI(`/post/${id}/all-posts`, account.access_token, axiosJWT)
+    getDataAPI(`/post/all-posts/aid=${id}`, account.access_token, axiosJWT)
       .then((res) => {
         setPosts(res.data.data);
+        uiStore?.setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [id]);
+
+  const accessChat = (topicId: number) => {
+    const dataRequest = {
+      userIdInSession: account.id,
+      topicChildrenId: topicId,
+    };
+    uiStore?.setLoading(true);
+    postDataAPI(`/participant/${user?.id}`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {
+        navigate('/message');
+        setTimeout(() => {
+          const result = chatStore?.chats.some(
+            (item) => item.conversationInfor.id === res.data.data.conversationInfor.id,
+          );
+          if (result) {
+            chatStore?.setSelectedChat(res.data.data);
+          } else {
+            chatStore?.setChats([res.data.data, ...chatStore?.chats]);
+            chatStore?.setSelectedChat(res.data.data);
+          }
+          uiStore?.setLoading(false);
+        }, 200);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const acceptFriend = () => {
+    const dataRequest = {
+      userId: user?.id,
+      friendId: account.id,
+    };
+    postDataAPI(`/friends/acceptFriendsApply`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {
+        const newListFriends = friendStore?.friends.filter((item) => item.friendListId !== res.data.data.friendListId);
+        friendStore?.setFriends([...newListFriends, res.data.data]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const postApproves = posts?.filter((item) => item.approved);
+  const postWaitingApproves = posts?.filter((item) => !item.approved);
 
   const addFriend = () => {
     const friendData = {
@@ -47,25 +108,62 @@ const PartnerProfile = observer(() => {
     };
     postDataAPI(`/friends/applyAddFriends`, friendData, account.access_token, axiosJWT)
       .then((res) => {
-        console.log(res.data.data);
+        friendStore?.setFriends([...friendStore?.friends, res.data.data]);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  const handleDetailPost = (id: number) => {
+    setOpenPostDetail(true);
+    setPostId(id);
+  };
+
+  const friendListIdCustom = friendStore?.friends.find(
+    (item) =>
+      (item.friendId === account.id || item.userid === account.id) &&
+      (item.friendId === user?.id || item.userid === user?.id),
+  )?.friendListId;
+
+  const deleteFriend = () => {
+    const isUser = friendStore?.friends.some((item) => item.userid === account.id);
+
+    const userId = isUser ? account.id : user?.id;
+    const friendId = !isUser ? account.id : user?.id;
+
+    deleteDataAPI(`/friends/rejectFriendsApply?uid=${userId}&fid=${friendId}`, account.access_token, axiosJWT)
+      .then((res) => {
+        const newListFriends = friendStore?.friends.filter((item) => item?.friendListId !== friendListIdCustom);
+        friendStore?.setFriends(newListFriends);
+        setOpenConFirm(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const isProfile = account.id === user?.id;
+  const isAccept =
+    friendStore?.friends.length > 0 && friendStore?.friends.some((item) => item.userid === user?.id && !item.accept);
+  const isRequest = friendStore?.friends.some((item) => item.friendId === user?.id || item.userid === user?.id);
+  const isFriend = friendStore?.friends.some(
+    (item) => (item.friendId === user?.id || item.userid === user?.id) && item.accept,
+  );
+
   return (
     <Box className="partner-profile-container">
       <Box className="title_box">
         <Typography className="title_backgroud">Profile</Typography>
         <Typography className="title_group">
-          <strong>Personal</strong> Profile
+          <strong>{isProfile ? 'My' : user?.username}</strong> Profile
         </Typography>
       </Box>
       <Box className="partner_profile">
         <Box className="avt_image">
           <div className="backgroud_image" />
           <img src={user?.imageUrl || logo} alt="avt" />
+          {isProfile && <HiCamera className="update_image" />}
         </Box>
         <Box className="info_user">
           <Box className="bio_box">
@@ -99,11 +197,65 @@ const PartnerProfile = observer(() => {
             </Grid>
           </Grid>
           <Box className="action_box">
-            <Button>Message</Button>
-            <Button onClick={addFriend}>Add Friend</Button>
+            {isProfile ? (
+              <Button>Update Profile</Button>
+            ) : (
+              <Button onClick={() => setOpenSelectTopic(true)}>Message</Button>
+            )}
+            {isProfile ? (
+              <Button className="add_request" onClick={() => setOpenListFriend(true)}>
+                List Friend
+              </Button>
+            ) : isFriend ? (
+              <Button className="friend_request" onClick={() => setOpenConFirm(true)}>
+                Your Friend
+              </Button>
+            ) : isRequest ? (
+              isAccept ? (
+                <Button className="accept_request" onClick={acceptFriend}>
+                  <AiOutlineUserAdd />
+                  Accept Friend
+                </Button>
+              ) : (
+                <Button className="cancel_request" onClick={deleteFriend}>
+                  <AiFillDelete /> Cancel Request
+                </Button>
+              )
+            ) : (
+              <Button onClick={addFriend} className="add_request">
+                <AiOutlineUserAdd />
+                Add Friend
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>
+      {isProfile && (
+        <>
+          <Box className="title_box">
+            <Typography className="title_backgroud">Post</Typography>
+            <Typography className="title_group">
+              <strong>Wating </strong>Approve
+            </Typography>
+          </Box>
+          <Grid className="post_container" container spacing={4}>
+            {postWaitingApproves?.map((item) => (
+              <Grid md={4} item key={item.id}>
+                <Card className="card_post">
+                  <CardMedia image={item.img_url} className="image" />
+                  <CardContent className="card_content">
+                    <Typography>{item.title}</Typography>
+                    <Typography>{item.content}</Typography>
+                  </CardContent>
+                  <CardActions className="card_action">
+                    <Button onClick={() => handleDetailPost(item.id)}>More</Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
       <Box className="title_box">
         <Typography className="title_backgroud">Post</Typography>
         <Typography className="title_group">
@@ -120,12 +272,27 @@ const PartnerProfile = observer(() => {
                 <Typography>{item.content}</Typography>
               </CardContent>
               <CardActions className="card_action">
-                <Button>More</Button>
+                <Button onClick={() => handleDetailPost(item.id)}>More</Button>
               </CardActions>
             </Card>
           </Grid>
         ))}
       </Grid>
+      {openPostDetail && (
+        <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
+      )}
+      {openConfirm && (
+        <DialogCommon
+          open={openConfirm}
+          onClose={() => setOpenConFirm(false)}
+          onConfirm={deleteFriend}
+          content={content}
+        />
+      )}
+      {openListFriend && <ListFriendDialog open={openListFriend} onClose={() => setOpenListFriend(false)} />}
+      {openSelectTopic && (
+        <SelectTopicMessage open={openSelectTopic} onClose={() => setOpenSelectTopic(false)} onConfirm={accessChat} />
+      )}
     </Box>
   );
 });

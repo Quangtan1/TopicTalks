@@ -8,9 +8,10 @@ import ManageUsers from 'src/components/admin/manageusers/ManageUsers';
 import LandingView from 'src/components/layouts/home/landingView/LandingView';
 import TopicChildDetail from 'src/components/layouts/home/landingView/TopicChildDetail';
 import ContactUs from 'src/components/layouts/contactUs';
-import PostDetail from 'src/components/layouts/postManagement/postDetailPage';
+// import PostDetail from 'src/components/layouts/postManagement/postDetailPage';
 import ManagePost from 'src/components/admin/managepost/ManagePost';
 import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
+// import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
   { path: '/community', component: Community, isAdmin: false },
@@ -18,14 +19,14 @@ const publicRoutes = [
   { path: '/landing-view', component: LandingView, isAdmin: false },
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
-  { path: '/partner-profile/:id', component: PartnerProfile, isAdmin: false },
+  { path: '/personal-profile/:id', component: PartnerProfile, isAdmin: false },
   { path: '/message', component: ChatContainer, isAdmin: false },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
   { path: '/manage-topic', component: ManageTopic, isAdmin: true },
   { path: '/manage-user', component: ManageUsers, isAdmin: true },
   { path: '/manage-post', component: ManagePost, isAdmin: true },
   { path: '/topic-detail/:id', component: TopicChildDetail },
-  { path: '/post-detail/:id', component: PostDetail },
+  // { path: '/post-detail/:id', component: PostDetailDialog },
 ];
 
 export { publicRoutes };

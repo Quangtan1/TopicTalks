@@ -83,15 +83,14 @@ const ListMessage = observer(() => {
   // };
 
   const forgetPassword = () => {
-    const email = 'tantqde150382@fpt.edu.vn';
-
-    postDataAPI(`/user/forgot-password?email=${email}`, {}, account.access_token, axiosJWT)
-      .then((res) => {
-        console.log('email', res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // const email = 'tantqde150382@fpt.edu.vn';
+    // postDataAPI(`/user/forgot-password?email=${email}`, {}, account.access_token, axiosJWT)
+    //   .then((res) => {
+    //     console.log('email', res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   const partnerName = (partner) => {

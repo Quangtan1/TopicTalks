@@ -11,26 +11,38 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import React, { useEffect, memo, useState } from 'react';
 import { MdOutlineErrorOutline } from 'react-icons/md';
-
-const mockData = [
-  { id: 1, name: 'John Doe', age: 30, email: 'john.doe@example.com' },
-  { id: 2, name: 'Jane Smith', age: 25, email: 'jane.smith@example.com' },
-  { id: 3, name: 'David Johnson', age: 35, email: 'david.johnson@example.com' },
-  { id: 4, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-  { id: 5, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-  { id: 6, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-  { id: 7, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-  { id: 8, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-  { id: 9, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-  { id: 10, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-];
+import accountStore from 'src/store/accountStore';
+import uiStore from 'src/store/uiStore';
+import { createAxios, getDataAPI } from 'src/utils';
 
 const ManageUser = () => {
+  const [users, setUsers] = useState([]);
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
+
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
   const page = 0;
   const rowsPerPage = 10;
+
+  useEffect(() => {
+    uiStore?.setLoading(true);
+    getDataAPI(`/user`, account.access_token, axiosJWT)
+      .then((res) => {
+        setUsers(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const handleChangePage = (event, newPage) => {};
 
@@ -62,18 +74,19 @@ const ManageUser = () => {
       <TableContainer className="table_container_body">
         <Table>
           <TableBody className="table_body">
-            {mockData.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="cell_no">{item.id}</TableCell>
-                <TableCell className="cell_name">{item.name}</TableCell>
-                <TableCell className="cell_age">{item.age}</TableCell>
-                <TableCell className="cell_email">{item.email}</TableCell>
-                <TableCell className="cell_action">
-                  <Button>Ban</Button>
-                  <Button>Delete</Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {users.length > 0 &&
+              users.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="cell_no">{item.id}</TableCell>
+                  <TableCell className="cell_name">{item.username}</TableCell>
+                  <TableCell className="cell_age">{item.role}</TableCell>
+                  <TableCell className="cell_email">{item.email}</TableCell>
+                  <TableCell className="cell_action">
+                    <Button>Ban</Button>
+                    <Button>Delete</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -91,4 +104,4 @@ const ManageUser = () => {
   );
 };
 
-export default ManageUser;
+export default memo(ManageUser);

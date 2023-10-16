@@ -44,7 +44,6 @@ const TopicChildDetail = observer(() => {
     getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
         setListTopicChild(res.data.data);
-        console.log('aaaa', res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -76,7 +75,7 @@ const TopicChildDetail = observer(() => {
           chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           chatStore?.setSelectedChat(res.data.data);
           uiStore?.setLoading(false);
-        }, 500);
+        }, 200);
       })
       .catch((err) => {
         console.log(err);
@@ -90,7 +89,7 @@ const TopicChildDetail = observer(() => {
       const isMember = selectedChat.partnerDTO.filter((item) => item.id === account?.id).some((item) => item.member);
       chatStore?.setSelectedChat({ ...selectedChat, isMember: isMember.toString() });
       uiStore?.setLoading(false);
-    }, 400);
+    }, 200);
   };
 
   const handleConfirm = (groudId: number) => {

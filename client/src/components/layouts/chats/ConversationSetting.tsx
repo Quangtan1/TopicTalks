@@ -69,7 +69,7 @@ const ConversationSetting = observer((props: ChatProps) => {
 
   const handleNavigate = () => {
     const id = chat?.partnerDTO.filter((item) => item.id !== account.id).map((item) => item.id);
-    navigate(`/partner-profile/${id}`);
+    navigate(`/personal-profile/${id}`);
   };
 
   return (

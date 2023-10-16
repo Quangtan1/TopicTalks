@@ -12,6 +12,7 @@ import { headerRoute, logo } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
 import { worker_script } from '../../../utils/woker';
+import friendStore from 'src/store/friendStore';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -49,13 +50,23 @@ const Header = observer(() => {
   };
 
   useEffect(() => {
-    worker = new Worker(worker_script);
-    worker.onmessage = (ev) => {
-      // console.log('got data back from worker');
-      // console.log(ev.data);
+    if (account !== null) {
+      worker = new Worker(worker_script);
+      worker.onmessage = (ev) => {
+        if (ev.data !== 'Empty') {
+          friendStore?.setFriends(ev.data);
+        }
+      };
+      const params = {
+        id: account?.id,
+        access_token: account?.access_token,
+      };
+      worker.postMessage(params);
+    }
+    return () => {
+      friendStore?.setFriends([]);
     };
-    worker.postMessage('Button clicked');
-  }, []);
+  }, [account, location]);
 
   useEffect(() => {
     account === null && navigate('/auth');
@@ -67,7 +78,7 @@ const Header = observer(() => {
 
   const handleGoToProfilePage = () => {
     handleClose();
-    navigate('/profile');
+    navigate(`/personal-profile/${account.id}`);
   };
 
   const handleActive = (navigate: string) => {
