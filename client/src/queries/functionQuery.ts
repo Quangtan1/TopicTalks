@@ -170,7 +170,7 @@ export const deletePost = async (id: number, account: IUser) => {
 // ============================== Get post by Author Id ==============================
 export const getAllPostsByAuthorId = async (authorId: number, axiosJWT: any, account: IUser) => {
   try {
-    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/${authorId}/all-posts`, {
+    const response = await axiosJWT.get(`${TOPIC_TALKS_DOMAIN}/post/all-posts/aid=${authorId}`, {
       headers: {
         Authorization: `Bearer ${account?.access_token}`,
       },
