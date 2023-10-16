@@ -2,6 +2,9 @@
   &.MuiDialog-root {
     z-index: 3;
   }
+  .MuiBackdrop-root {
+    background: rgb(51 47 47 / 65%);
+  }
   .MuiPaper-root {
     background: transparent;
     box-shadow: none;

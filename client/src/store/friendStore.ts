@@ -1,7 +1,8 @@
 import { observable, action, makeObservable } from 'mobx';
+import { IFriends } from 'src/types/account.types';
 
 class FriendStore {
-  friends = null;
+  friends: IFriends[] = [];
 
   constructor() {
     makeObservable(this, {

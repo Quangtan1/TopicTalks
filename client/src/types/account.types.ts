@@ -24,3 +24,17 @@ export interface IUserProfile {
   role: string;
   username: string;
 }
+
+export interface IFriends {
+  friendListId: number;
+  userid: number;
+  friendId: number;
+  friendName: string;
+  friendUrl: string;
+  updatedAt: string;
+  createdAt: string;
+  public: false;
+  accept: false;
+  userName: string;
+  userUrl: string;
+}

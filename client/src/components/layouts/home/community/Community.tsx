@@ -1,47 +1,56 @@
-import { Box, Button, Grid, Tab, Tabs } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import './Community.scss';
 import { observer } from 'mobx-react';
-import Loading from 'src/components/loading/Loading';
+import React, { useEffect, useState } from 'react';
+import { createAxios, getDataAPI } from 'src/utils';
+import accountStore from 'src/store/accountStore';
+import { IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
-import PostItem from 'src/components/layouts/postManagement/post/PostItem';
-import React from 'react';
-import NewPost from '../../postManagement/newPost/NewPost';
+import PostItem from './posts/PostItem';
+import PostDetailDialog from './posts/PostDetailDialog';
 
 const HomePage = observer(() => {
-  const isResize = uiStore?.collapse;
-  const [activeTab, setActiveTab] = React.useState(0);
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
+  const [postId, setPostId] = useState<number>();
 
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
+
+  useEffect(() => {
+    uiStore?.setLoading(true);
+    getDataAPI(`post/all-posts/is-approved=${true}`, account.access_token, axiosJWT)
+      .then((res) => {
+        setPosts(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const handleDetailPost = (id: number) => {
+    setOpenPostDetail(true);
+    setPostId(id);
+  };
   return (
-    <>
-      {uiStore?.loading ? (
-        <Loading />
-      ) : (
-        <Grid container className={`new_feed ${isResize ? 'expand_home' : 'collapse_home'}`}>
-          <Grid item md={12} className="containerCommunity">
-            <Box className="headerWrap">
-              <Tabs
-                value={activeTab}
-                className="tabContainer"
-                onChange={(event, newValue) => setActiveTab(newValue)}
-                indicatorColor="secondary"
-                textColor="secondary"
-              >
-                <Tab label="Post" />
-                <Tab label="Friend Posts" />
-              </Tabs>
-              <Button variant="outlined" onClick={() => setIsOpen(true)}>
-                Create a post
-              </Button>
-            </Box>
-            <NewPost open={isOpen} closePostModal={() => setIsOpen(!isOpen)} />
-          </Grid>
-          <Grid md={12} item>
-            <PostItem />
-          </Grid>
-        </Grid>
+    <Box className="community_container">
+      <Box className="title_box">
+        <Typography className="title_backgroud">Post</Typography>
+        <Typography className="title_group">
+          <strong>All</strong> Posts
+        </Typography>
+      </Box>
+      <PostItem posts={posts} handleDetailPost={handleDetailPost} />
+      {openPostDetail && (
+        <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
       )}
-    </>
+    </Box>
   );
 });
 

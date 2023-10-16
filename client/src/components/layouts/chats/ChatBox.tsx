@@ -22,6 +22,8 @@ import { ListMesage } from 'src/types/chat.type';
 import { FcCallback, FcSettings } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
+import friendStore from 'src/store/friendStore';
+import { ToastError } from 'src/utils/toastOptions';
 
 interface ChatProps {
   chat: ListMesage;
@@ -37,6 +39,7 @@ const ChatBox = observer((props: ChatProps) => {
   const [dataTooltip, setDataTooltip] = useState<IMessage>(null);
   const [topicId, setTopicId] = useState<number>(null);
   const fileInputRef = useRef(null);
+  const emoijiRef = useRef(null);
   const { chat, handleOpenSetting } = props;
 
   const isImage = ['.png', 'jpg', '.svg', '.webp'];
@@ -44,8 +47,22 @@ const ChatBox = observer((props: ChatProps) => {
   const { message, setMessage, socket, setCallUser, setOpenVideoCall, setTurnMyVideo, setTurnUserVideo } =
     useContext(ChatContext);
 
+  const handleClickOutside = (event) => {
+    const idSvg = document.querySelector('#svg_emoiji');
+    const idText = document.querySelector('#text_input');
+    if (
+      emoijiRef?.current &&
+      !emoijiRef?.current.contains(event.target) &&
+      !idSvg.contains(event.target) &&
+      !idText.contains(event.target)
+    ) {
+      setShowEmojiPicker(false);
+    }
+  };
   useEffect(() => {
+    window.addEventListener('click', handleClickOutside);
     return () => {
+      window.removeEventListener('click', handleClickOutside);
       chatStore?.setSelectedChat(null);
     };
   }, []);
@@ -80,13 +97,16 @@ const ChatBox = observer((props: ChatProps) => {
       };
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, stateMessage]);
+      const inputElement = document.getElementById('text_input');
+      inputElement.blur();
+      setShowEmojiPicker(false);
       setCurrentContent('');
       setImageFile('');
     }
   };
 
   const handleCallVideo = () => {
-    if (!chat.conversationInfor.isGroupChat) {
+    if (isFriend) {
       const receiveMessageDTO = {
         data: {
           message: 'video',
@@ -101,11 +121,13 @@ const ChatBox = observer((props: ChatProps) => {
       socket.emit('1V1CommunicateVideo', receiveMessageDTO);
       setCallUser(receiveMessageDTO);
       setOpenVideoCall(true);
+    } else {
+      ToastError('Become Friend to Call');
     }
   };
 
   const handleCall = () => {
-    if (!chat.conversationInfor.isGroupChat) {
+    if (isFriend) {
       const receiveMessageDTO = {
         data: {
           message: 'call',
@@ -122,12 +144,13 @@ const ChatBox = observer((props: ChatProps) => {
       setOpenVideoCall(true);
       setTurnMyVideo(false);
       setTurnUserVideo(false);
+    } else {
+      ToastError('Be Friend to Call');
     }
   };
 
   const addEmoji = (emoji: any) => {
     setCurrentContent(currentContent + emoji.native);
-    setShowEmojiPicker(false);
   };
 
   const toggleEmojiPicker = () => {
@@ -155,6 +178,12 @@ const ChatBox = observer((props: ChatProps) => {
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isMember = isGroup ? chat?.isMember : 'true';
 
+  const isFriend =
+    chat?.partnerDTO.length > 0 &&
+    friendStore?.friends.some(
+      (item) => (item.friendId === partnerName[0]?.id || item.userid === partnerName[0]?.id) && item.accept,
+    );
+
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
@@ -168,8 +197,8 @@ const ChatBox = observer((props: ChatProps) => {
             <Box className="header_option">
               {!isGroup && (
                 <>
-                  <BiPhoneCall onClick={handleCall} />
-                  <BsCameraVideo onClick={handleCallVideo} />
+                  <BiPhoneCall onClick={handleCall} className={!isFriend && 'disable_call'} />
+                  <BsCameraVideo onClick={handleCallVideo} className={!isFriend && 'disable_call'} />
                 </>
               )}
               <FcSettings onClick={handleOpenSetting} />
@@ -179,7 +208,7 @@ const ChatBox = observer((props: ChatProps) => {
       </Box>
       <ScrollToBottom className="chat_box">
         {showEmojiPicker && (
-          <span>
+          <span ref={emoijiRef}>
             <Picker data={data} onEmojiSelect={addEmoji} className="emoiji_box" />
           </span>
         )}
@@ -220,7 +249,7 @@ const ChatBox = observer((props: ChatProps) => {
                             )}
                           </Typography>
                         ) : (
-                          <Typography className="message_content">{item.data.message}</Typography>
+                          <Typography className="message_content">{item.data.message.trim()}</Typography>
                         )}
                       </>
                     )}
@@ -281,13 +310,15 @@ const ChatBox = observer((props: ChatProps) => {
                 </span>
               </span>
             )}
-            <RiEmotionLaughLine onClick={toggleEmojiPicker} />
+            <RiEmotionLaughLine onClick={toggleEmojiPicker} id="svg_emoiji" />
             <TextField
+              id="text_input"
               required
+              multiline
+              rows={1}
               disabled={imageFile !== ''}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
               placeholder="Type your message"
-              autoFocus
               className="chatbox_input"
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                 setCurrentContent(e.target.value);

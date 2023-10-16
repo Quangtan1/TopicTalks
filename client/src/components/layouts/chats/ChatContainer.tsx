@@ -24,11 +24,11 @@ const ChatContainer = observer(() => {
 
   useEffect(() => {
     if (chat !== null) {
-      uiStore?.setLoading(true);
+      // uiStore?.setLoading(true);
       getDataAPI(`/message/${chat.conversationInfor.id}`, account.access_token, axiosJWT)
         .then((res) => {
           setMessage(res.data);
-          uiStore?.setLoading(false);
+          // uiStore?.setLoading(false);
         })
         .catch((err) => {
           console.log(err);

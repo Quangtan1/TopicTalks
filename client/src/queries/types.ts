@@ -43,7 +43,11 @@ export interface IPostContent {
 
 export interface ILike {
   totalLike: number;
-  username: string[];
+  userLike: IUserLike[];
+}
+export interface IUserLike {
+  id: number;
+  username: string;
 }
 export interface IPost {
   id: number;
@@ -60,7 +64,7 @@ export interface IPost {
   updated_at: string;
   approved: boolean;
 }
-   
+
 export interface IUserInformation {
   id: number;
   fullName: string;
@@ -79,7 +83,6 @@ export interface IUserInformation {
   banned: boolean;
 }
 
-
 export interface ICommentBody {
   postId: number;
   userId: number;
@@ -91,6 +94,7 @@ export interface IComment {
   postId: number;
   userId: number;
   username: string;
+  userImage: string;
   content: string;
   createAt: string;
   updateAt: string;
