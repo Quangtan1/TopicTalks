@@ -1,8 +1,29 @@
+import { useState } from 'react';
 import { Card, CardContent, Container, Typography, TextField, Button, Grid } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import './styles.scss';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { RE_CAPTCHA_SITE_KEY } from 'src/utils/helper';
+import { ToastSuccess } from 'src/utils/toastOptions';
 
 const ContactUs = () => {
+  const [isShowBtnSend, setIsShowBtnSend] = useState(false);
+
+  const onToggleBtnSend = () => {
+    setIsShowBtnSend((prev) => !prev);
+  };
+
+  const handleSubmit = (data, { resetForm }) => {
+    console.log(data);
+    ToastSuccess('Send Question Successfully!!!');
+    // Gửi dữ liệu form tới server ở đây
+    resetForm();
+  };
+
+  const onSuccessReCaptcha = () => {
+    onToggleBtnSend();
+  };
+
   return (
     <Container className="container-contact-us">
       <Grid className="grid-contact-us">
@@ -16,52 +37,39 @@ const ContactUs = () => {
         </Card>
         <Formik
           initialValues={{
-            firstName: '',
-            lastName: '',
-            phone: '',
-            email: '',
             subject: '',
             message: '',
           }}
-          onSubmit={(values) => {
-            // Handle form submission here
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
         >
           <Form>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Field as={TextField} name="firstName" label="First Name" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <Field as={TextField} name="lastName" label="Last Name" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <Field as={TextField} name="phone" label="Phone" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={6}>
-                <Field as={TextField} name="email" label="Email" variant="outlined" fullWidth />
-              </Grid>
               <Grid item xs={12}>
-                <Field as={TextField} name="subject" label="Subject" variant="outlined" fullWidth />
+                <Field as={TextField} required name="subject" label="Subject" variant="outlined" fullWidth />
               </Grid>
               <Grid item xs={12}>
                 <Field
                   as={TextField}
+                  required
                   name="message"
                   label="Message"
                   placeholder="Write your message..."
                   variant="outlined"
                   fullWidth
                   multiline
-                  rows={4}
+                  rows={8}
                 />
               </Grid>
-              <Grid item xs={12} className="btn-wrap">
-                <Button className="button-Send" variant="contained" color="primary" type="submit">
-                  Send Message
-                </Button>
+              <Grid item xs={12}>
+                <ReCAPTCHA sitekey={RE_CAPTCHA_SITE_KEY} onChange={onSuccessReCaptcha} />,
               </Grid>
+              {isShowBtnSend && (
+                <Grid item xs={12} className="btn-wrap">
+                  <Button className="button-Send" variant="contained" color="primary" type="submit">
+                    Send Message
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           </Form>
         </Formik>

@@ -11,6 +11,7 @@ const HomePage = observer(() => {
   const isResize = uiStore?.collapse;
   const [activeTab, setActiveTab] = React.useState(0);
   const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <>
       {uiStore?.loading ? (
@@ -27,7 +28,7 @@ const HomePage = observer(() => {
                 textColor="secondary"
               >
                 <Tab label="Post" />
-                <Tab label="Fiend Posts" />
+                <Tab label="Friend Posts" />
               </Tabs>
               <Button variant="outlined" onClick={() => setIsOpen(true)}>
                 Create a post

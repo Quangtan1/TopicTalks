@@ -5,6 +5,8 @@ export const APIKeyGPT = `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`;
 
 export const DateFormatDisplayMinute = 'MM/DD/YYYY hh:mm A';
 
+export const RE_CAPTCHA_SITE_KEY = '6LfQ3KUoAAAAAKy7R5K2DCfMEwYQy8_Qso9c5q37';
+
 export const formatDate = (value: string, format: string = 'MM/DD/YYYY') => {
   if (!value) return '';
 
