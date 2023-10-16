@@ -229,6 +229,8 @@ const PostDetail = observer(() => {
       comment: '',
     },
     validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
     innerRef: formRef,
     onSubmit: handleCreateComment,
   });

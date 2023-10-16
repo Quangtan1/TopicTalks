@@ -153,6 +153,7 @@ const PostItem = observer(({ isProfile = false }) => {
     );
   };
   const postItems = isProfile ? postByAuthorIdData : postData;
+  console.log('🚀 ~ file: PostItem.tsx:156 ~ PostItem ~ postByAuthorIdData:', postByAuthorIdData);
 
   const renderPostItems = () => {
     if (_.isEmpty(postItems) && _.isEmpty(postDataAdmin)) {

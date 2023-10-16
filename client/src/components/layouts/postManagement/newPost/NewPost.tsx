@@ -165,11 +165,13 @@ const NewPost: React.FC<Props> = observer(
         imageUrl: dataEdit?.img_url,
       },
       validationSchema,
+      validateOnChange: false,
+      validateOnBlur: false,
       innerRef: formRef,
       onSubmit: handleCreatePost,
     });
 
-    const { errors, touched, getFieldProps, submitForm, resetForm, values, dirty } = formik;
+    const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
 
     return (
       <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
@@ -194,7 +196,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-title-input"
             error={touched.postTitle && Boolean(errors.postTitle)}
             helperText={
-              dirty && touched.postTitle && errors.postTitle ? (
+              errors.postTitle ? (
                 <Typography variant="caption" color="error">
                   {errors.postTitle as string}
                 </Typography>
@@ -216,7 +218,7 @@ const NewPost: React.FC<Props> = observer(
             className="post-content-input"
             error={touched.postContent && Boolean(errors.postContent)}
             helperText={
-              dirty && touched.postContent && errors.postContent ? (
+              errors.postContent ? (
                 <Typography variant="caption" color="error">
                   {errors.postContent as string}
                 </Typography>

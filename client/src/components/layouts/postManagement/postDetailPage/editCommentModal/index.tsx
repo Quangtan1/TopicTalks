@@ -72,6 +72,8 @@ const EditCommentModal: React.FC<Props> = observer(({ content, commentId, isOpen
       content: content,
     },
     validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
     innerRef: formRef,
     onSubmit: handleEditProfile,
   });
@@ -104,7 +106,7 @@ const EditCommentModal: React.FC<Props> = observer(({ content, commentId, isOpen
           variant="outlined"
           error={touched.content && Boolean(errors.content)}
           helperText={
-            touched.content && errors.content ? (
+            errors.content ? (
               <Typography variant="caption" color="error">
                 {errors.content as string}
               </Typography>
