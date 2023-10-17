@@ -1,0 +1,19 @@
+{
+   "extends": "expo/tsconfig.base",
+   "compilerOptions": {}
+   // "compilerOptions": {
+   //    "skipLibCheck": true,
+   //    "forceConsistentCasingInFileNames": true,
+   //    "resolveJsonModule": true,
+   //    "isolatedModules": true,
+   //    "noEmit": true,
+   //    "strict": false,
+   //    "baseUrl": ".",
+   //    "noFallthroughCasesInSwitch": true,
+   //    "typeRoots": ["./node_modules/@types/"],
+   //    "jsx": "react-native",
+   //    "module": "esnext"
+   // },
+   // "include": ["src"],
+   // "exclude": ["node_modules", "**/*.spec.ts"]
+}
