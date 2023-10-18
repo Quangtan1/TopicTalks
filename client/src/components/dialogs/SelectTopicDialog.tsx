@@ -30,7 +30,9 @@ const SelectTopicDialog = (props: DialogProps) => {
         headers: { Authorization: `Bearer ${accountSignup?.access_token}` },
       })
       .then((res) => {
-        setListTopic(res.data.data);
+        if (res.data.data !== 'Not exist any children topic.') {
+          setListTopic(res.data.data);
+        }
       })
       .catch((err) => {
         console.log(err);

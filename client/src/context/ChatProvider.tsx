@@ -56,7 +56,6 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   };
   useEffect(() => {
     if (account !== null) {
-      let isMounted = true;
       socket = io(`http://localhost:8085?uid=${account.id}`);
       socket.on('sendMessage', handleReceiveMessage);
       socket.on('1V1CommunicateVideo', (data: ICallData) => {
@@ -84,22 +83,19 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         }
       });
       socket.on('partiAccess', (data: ListMesage) => {
-        if (isMounted && data !== null) {
-          setTimeout(() => {
-            const isMatch = chatStore?.chats.some((item) => item.conversationInfor.id !== data.conversationInfor.id);
-            const isNewConversation = chatStore?.chats.length === 0 || isMatch;
-            if (isNewConversation) {
-              setIsRandoming(false);
-              chatStore?.setSelectedChat(data);
-              ToastSuccess('You access random chat succesfully');
-              chatStore?.setChats([data, ...chatStore?.chats]);
-              setOpenRandom(false);
-            }
-          }, 2000);
-        }
+        setTimeout(() => {
+          setIsRandoming(false);
+          chatStore?.setSelectedChat(data);
+          ToastSuccess('You access random chat succesfully');
+          if (chatStore?.chats?.length > 0) {
+            chatStore?.setChats([data, ...chatStore?.chats]);
+          } else {
+            chatStore?.setChats([data]);
+          }
+          setOpenRandom(false);
+        }, 2000);
       });
       return () => {
-        isMounted = false;
         socket.disconnect();
       };
     }

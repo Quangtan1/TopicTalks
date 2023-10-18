@@ -22,7 +22,7 @@ import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 
 const ManageTopic = () => {
-  const [selectTopic, setSelectTopic] = useState<number | ''>(1);
+  const [selectTopic, setSelectTopic] = useState<number>(null);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [open, setOpen] = useState<boolean>(false);
@@ -52,7 +52,10 @@ const ManageTopic = () => {
   useEffect(() => {
     getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
       .then((res) => {
-        setListTopic(res.data.data);
+        if (res.data.data !== 'Not exist any children topic.') {
+          setListTopic(res.data.data);
+          setSelectTopic(1);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -78,6 +81,7 @@ const ManageTopic = () => {
       <Typography className="title_a2">Manage the topics in sytem</Typography>
       <Box className="select_topic">
         <Typography>The Primary Topic:</Typography>
+
         <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
           {listTopic.length > 0 &&
             listTopic.map((item) => (
@@ -131,7 +135,9 @@ const ManageTopic = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {open === true && <CreateTopicDialog open={open} onClose={onClose} />}
+      {open === true && (
+        <CreateTopicDialog open={open} onClose={onClose} listTopic={listTopic} setListTopic={setListTopic} />
+      )}
     </Box>
   );
 };

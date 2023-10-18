@@ -22,6 +22,14 @@ class ChatStore {
         return dateB - dateA;
       });
       this.chats = chatsort;
+    } else {
+      this.chats = null;
+    }
+  }
+  updateChat(conversationId, updatedConversation) {
+    const index = this.chats.findIndex((chat) => chat.conversationInfor.id === conversationId);
+    if (index !== -1) {
+      this.chats[index] = updatedConversation;
     }
   }
   setSelectedChat(chatSelected) {

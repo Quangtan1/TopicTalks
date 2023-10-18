@@ -42,7 +42,7 @@ const ChatBox = observer((props: ChatProps) => {
   const emoijiRef = useRef(null);
   const { chat, handleOpenSetting } = props;
 
-  const isImage = ['.png', 'jpg', '.svg', '.webp'];
+  const isImage = ['.png', 'jpg', '.svg', '.webp', '.jpeg'];
 
   const { message, setMessage, socket, setCallUser, setOpenVideoCall, setTurnMyVideo, setTurnUserVideo } =
     useContext(ChatContext);

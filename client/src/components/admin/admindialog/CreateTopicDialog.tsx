@@ -27,6 +27,8 @@ import { ListTopic } from 'src/types/topic.type';
 interface DialogProps {
   open: boolean;
   onClose: () => void;
+  listTopic: ListTopic[];
+  setListTopic: React.Dispatch<React.SetStateAction<ListTopic[]>>;
 }
 
 const tabOptions = [
@@ -35,12 +37,11 @@ const tabOptions = [
 ];
 
 const CreateTopicDialog = observer((props: DialogProps) => {
-  const { open, onClose } = props;
+  const { open, onClose, listTopic, setListTopic } = props;
   const [active, setActive] = useState(1);
   const [selectTopic, setSelectTopic] = useState<number>(1);
   const [topicPrimary, setTopicPrimary] = useState<string>('');
   const [topicChild, setTopicChild] = useState<string>('');
-  const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [imageFile, setImageFile] = useState<string>('');
   const fileInputRef = useRef(null);
   const account = accountStore?.account;
@@ -70,7 +71,10 @@ const CreateTopicDialog = observer((props: DialogProps) => {
       )
         .then((res) => {
           ToastSuccess('Create Topic Successfully');
-          console.log('dataaa', res.data);
+          active === 1 && setListTopic([...listTopic, res.data.data]);
+          setTopicPrimary('');
+          setTopicChild('');
+          setImageFile('');
         })
         .catch((err) => {
           console.log(err);
@@ -87,14 +91,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   }, [imageFile]);
 
   useEffect(() => {
-    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
-      .then((res) => {
-        setListTopic(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setSelectTopic(1);
   }, []);
 
   const handleLinkClick = () => {

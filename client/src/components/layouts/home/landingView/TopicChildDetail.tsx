@@ -72,10 +72,10 @@ const TopicChildDetail = observer(() => {
         ToastSuccess('Join Group Sucessfully');
         navigate('/message');
         setTimeout(() => {
-          chatStore?.setChats([res.data.data, ...chatStore?.chats]);
+          // chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           chatStore?.setSelectedChat(res.data.data);
           uiStore?.setLoading(false);
-        }, 200);
+        }, 400);
       })
       .catch((err) => {
         console.log(err);
