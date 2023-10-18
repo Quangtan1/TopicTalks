@@ -47,7 +47,7 @@ const ChatContainer = observer(() => {
     <Box className="chat_container">
       <ListMessage />
       <ChatBox chat={chat} handleOpenSetting={handleOpenSetting} />
-      {openSetting && isMember === 'true' && <ConversationSetting chat={chat} />}
+      {openSetting && isMember === 'true' && <ConversationSetting chat={chat} setOpenSetting={setOpenSetting} />}
     </Box>
   );
 });

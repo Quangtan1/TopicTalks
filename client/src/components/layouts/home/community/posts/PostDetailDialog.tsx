@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { IComment, IPost } from 'src/queries';
 import accountStore from 'src/store/accountStore';
-import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, postDataAPI } from 'src/utils';
 import './PostDetailDialog.scss';
 import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
@@ -106,7 +106,19 @@ const PostDetailDialog = observer((props: DialogProps) => {
     };
     postDataAPI(`/like/create`, likeData, account.access_token, axiosJWT)
       .then((res) => {
-        console.log('like', res.data.data);
+        setPost({
+          ...post,
+          like: {
+            totalLike: post.like.totalLike + 1,
+            userLike: [
+              ...post.like?.userLike,
+              {
+                id: account.id,
+                username: account.username,
+              },
+            ],
+          },
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -114,7 +126,13 @@ const PostDetailDialog = observer((props: DialogProps) => {
   };
 
   const handleUnlike = () => {
-    ToastError('Wating handle');
+    deleteDataAPI(`/like/remove/uid=${account?.id}&&pid=${post?.id}`, account.access_token, axiosJWT)
+      .then((res) => {
+        console.log(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const disableInput = inputComment.trim() === '';

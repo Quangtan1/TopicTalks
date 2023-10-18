@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useEffect, memo, useState } from 'react';
+import { GrView } from 'react-icons/gr';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import accountStore from 'src/store/accountStore';
 import uiStore from 'src/store/uiStore';
@@ -83,7 +84,10 @@ const ManageUser = () => {
                   <TableCell className="cell_email">{item.email}</TableCell>
                   <TableCell className="cell_action">
                     <Button>Ban</Button>
-                    <Button>Delete</Button>
+                    <Button>
+                      <GrView />
+                      View
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -120,21 +120,26 @@ const PartnerProfile = observer(() => {
     setPostId(id);
   };
 
-  const friendListIdCustom = friendStore?.friends.find(
+  const friendListCustom = friendStore?.friends.find(
     (item) =>
       (item.friendId === account.id || item.userid === account.id) &&
       (item.friendId === user?.id || item.userid === user?.id),
-  )?.friendListId;
+  );
 
   const deleteFriend = () => {
-    const isUser = friendStore?.friends.some((item) => item.userid === account.id);
-
-    const userId = isUser ? account.id : user?.id;
-    const friendId = !isUser ? account.id : user?.id;
+    // const inforRerquest = friendStore?.friends.filter(
+    //   (item) =>
+    //     (item.friendId === account.id || item.userid === account.id) &&
+    //     (item.friendId === user?.id || item.userid === user?.id),
+    // );
+    const userId = friendListCustom.userid;
+    const friendId = friendListCustom.friendId;
 
     deleteDataAPI(`/friends/rejectFriendsApply?uid=${userId}&fid=${friendId}`, account.access_token, axiosJWT)
       .then((res) => {
-        const newListFriends = friendStore?.friends.filter((item) => item?.friendListId !== friendListIdCustom);
+        const newListFriends = friendStore?.friends.filter(
+          (item) => item?.friendListId !== friendListCustom.friendListId,
+        );
         friendStore?.setFriends(newListFriends);
         setOpenConFirm(false);
       })

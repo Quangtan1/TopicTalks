@@ -14,6 +14,8 @@ import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
 import RandomDialog from 'src/components/dialogs/RandomDialog';
 import ChatContext from 'src/context/ChatContext';
 import uiStore from 'src/store/uiStore';
+import friendStore from 'src/store/friendStore';
+import { IFriends } from 'src/types/account.types';
 
 const tabOption = [
   {
@@ -103,7 +105,8 @@ const ListMessage = observer(() => {
     if (tab === 0) {
       chatStore?.setChats(sortChats);
     } else if (tab === 2) {
-      const groupChat = chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
+      const groupChat =
+        chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
       chatStore?.setChats(groupChat);
     }
   };
@@ -112,6 +115,8 @@ const ListMessage = observer(() => {
     const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
     return image.toString();
   };
+
+  const listFriend = friendStore?.friends.filter((item) => item.accept);
 
   return (
     <Box className="list_message_container">
@@ -136,6 +141,7 @@ const ListMessage = observer(() => {
       <Box className="list_chat_box">
         <List className="list_box">
           {listChats?.length > 0 &&
+            selectedTab !== 1 &&
             listChats?.map((item) => (
               <ListItem
                 key={item?.conversationInfor.id}
@@ -154,6 +160,18 @@ const ListMessage = observer(() => {
                 <Typography className="time_item">8:00</Typography>
               </ListItem>
             ))}
+          {selectedTab === 1 &&
+            listFriend?.map((item) => (
+              <ListItem key={item?.friendListId} className={`chat_item`}>
+                <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
+                <ListItemText className="chat_text_item">
+                  <Typography>{item.userid === account.id ? item.friendName : item.userName}</Typography>
+                </ListItemText>
+              </ListItem>
+            ))}
+          {((listFriend?.length === 0 && selectedTab === 1) || listChats === null) && (
+            <Typography className="no_data">There is no data</Typography>
+          )}
         </List>
       </Box>
       <Box className="chat_setting">

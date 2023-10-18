@@ -13,7 +13,6 @@ class FriendStore {
 
   setFriends(friends) {
     this.friends = friends;
-    console.log('friends', friends);
   }
 }
 
