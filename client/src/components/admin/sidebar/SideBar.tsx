@@ -50,7 +50,7 @@ const listSideBar: SidebarItem[] = [
   {
     title: 'FAQ Page',
     icon: <IoIosHelpCircleOutline />,
-    path: '/setting',
+    path: '/manage-qa',
   },
 ];
 

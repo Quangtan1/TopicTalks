@@ -128,7 +128,19 @@ const PostDetailDialog = observer((props: DialogProps) => {
   const handleUnlike = () => {
     deleteDataAPI(`/like/remove/uid=${account?.id}&&pid=${post?.id}`, account.access_token, axiosJWT)
       .then((res) => {
-        console.log(res.data.data);
+        setPost((prevPost) => {
+          const updatedUserLike = prevPost.like?.userLike.filter((user) => {
+            return user.id !== account.id && user.username !== account.username;
+          });
+
+          return {
+            ...prevPost,
+            like: {
+              totalLike: prevPost.like.totalLike - 1,
+              userLike: updatedUserLike,
+            },
+          };
+        });
       })
       .catch((err) => {
         console.log(err);

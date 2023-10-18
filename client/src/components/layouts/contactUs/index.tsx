@@ -5,19 +5,43 @@ import './styles.scss';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { RE_CAPTCHA_SITE_KEY } from 'src/utils/helper';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import { observer } from 'mobx-react';
+import { createAxios, postDataAPI } from 'src/utils';
+import accountStore from 'src/store/accountStore';
 
-const ContactUs = () => {
+const ContactUs = observer(() => {
   const [isShowBtnSend, setIsShowBtnSend] = useState(false);
 
   const onToggleBtnSend = () => {
     setIsShowBtnSend((prev) => !prev);
   };
 
+  const account = accountStore?.account;
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const axiosJWT = createAxios(account, setAccount);
+
   const handleSubmit = (data, { resetForm }) => {
     console.log(data);
-    ToastSuccess('Send Question Successfully!!!');
-    // Gửi dữ liệu form tới server ở đây
-    resetForm();
+    const sendQA = () => {
+      const qaData = {
+        senderId: account?.id,
+        subject: data?.subject,
+        content: data?.message,
+      };
+      postDataAPI('/qa/create', qaData, account.access_token, axiosJWT)
+        .then((res) => {
+          ToastSuccess('Send Question Successfully!!!');
+          resetForm();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    sendQA();
   };
 
   const onSuccessReCaptcha = () => {
@@ -76,6 +100,6 @@ const ContactUs = () => {
       </Grid>
     </Container>
   );
-};
+});
 
 export default ContactUs;
