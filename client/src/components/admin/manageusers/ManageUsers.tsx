@@ -11,7 +11,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useState } from 'react';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import BanModal from './banModal';
 
 const mockData = [
   { id: 1, name: 'John Doe', age: 30, email: 'john.doe@example.com' },
@@ -27,6 +29,9 @@ const mockData = [
 ];
 
 const ManageUser = () => {
+  const [isOpenBanModal, setIsOpenBanModal] = useState<boolean>(false);
+  // const [banTime, setBanTime] = useState<number | string>(null);
+
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
   const page = 0;
@@ -35,6 +40,29 @@ const ManageUser = () => {
   const handleChangePage = (event, newPage) => {};
 
   const handleChangeRowsPerPage = (event) => {};
+
+  const onClose = () => {
+    setIsOpenBanModal((prev) => !prev);
+  };
+
+  const onConfirm = async () => {};
+
+  const selectBanTimeModal = () => {
+    return <></>;
+  };
+
+  const handleBanUser = () => {
+    const BAN_CONTENT = 'Do you want to BAN this user?';
+    return (
+      <BanModal
+        otherComponents={selectBanTimeModal()}
+        open={isOpenBanModal}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        content={BAN_CONTENT}
+      />
+    );
+  };
 
   return (
     <Box className="manage_user_container">
@@ -69,7 +97,7 @@ const ManageUser = () => {
                 <TableCell className="cell_age">{item.age}</TableCell>
                 <TableCell className="cell_email">{item.email}</TableCell>
                 <TableCell className="cell_action">
-                  <Button>Ban</Button>
+                  <Button onClick={handleBanUser}>Ban</Button>
                   <Button>Delete</Button>
                 </TableCell>
               </TableRow>
