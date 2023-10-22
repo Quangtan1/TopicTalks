@@ -1,0 +1,31 @@
+.container-answer-qa {
+    color: #ffffff;
+    position: absolute;
+    right: 5;
+    top: 10;
+    .grid-answer-qa {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 4px;
+  
+      .card-answer-qa {
+        background-color: #000000;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .btn-wrap {
+        display: flex;
+        justify-content: flex-end;
+        .button-Send {
+          background-color: #000000;
+          color: #ffffff;
+          padding: 10px 20px;
+          margin-bottom: 10px;
+        }
+        :hover {
+          background-color: #ffffff;
+          color: #000000;
+        }
+      }
+    }
+  }
