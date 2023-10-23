@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
-import { BsChatDots } from 'react-icons/bs';
+import { BsChatDots, BsDot } from 'react-icons/bs';
 import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
@@ -16,6 +16,7 @@ import ChatContext from 'src/context/ChatContext';
 import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
+import { TbCircleDotFilled } from 'react-icons/tb';
 
 const tabOption = [
   {
@@ -41,7 +42,7 @@ const ListMessage = observer(() => {
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
 
-  const { openRandom, setOpenRandom } = useContext(ChatContext);
+  const { openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
 
   const chat = chatStore?.selectedChat;
   const listChats = chatStore?.chats;
@@ -69,7 +70,15 @@ const ListMessage = observer(() => {
   }, []);
 
   const setSelectedChat = (chat: ListMesage) => {
-    chatStore?.setSelectedChat(chat);
+    const newNotifi = notification.filter((item) => item.conversationId !== chat.conversationInfor.id);
+    setNotification(newNotifi);
+    getDataAPI(`/participant/uid=${account.id}&&cid=${chat.conversationInfor.id}`, account.access_token, axiosJWT)
+      .then((res) => {
+        chatStore?.setSelectedChat(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // const sendEmail = () => {
@@ -118,6 +127,10 @@ const ListMessage = observer(() => {
 
   const listFriend = friendStore?.friends.filter((item) => item.accept);
 
+  const isCheckNotifi = (id: number) => {
+    return notification?.some((item) => item.conversationId === id);
+  };
+
   return (
     <Box className="list_message_container">
       <Typography className="title_chat">Chat Rooms</Typography>
@@ -150,14 +163,14 @@ const ListMessage = observer(() => {
               >
                 <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
                 <ListItemText className="chat_text_item">
-                  <Typography>
+                  <Typography className={isCheckNotifi(item.conversationInfor.id) && 'notifi'}>
                     {item.conversationInfor.isGroupChat === true
                       ? item.conversationInfor.chatName
                       : partnerName(item.partnerDTO)}
                   </Typography>
-                  <Typography>aaaaa</Typography>
                 </ListItemText>
                 <Typography className="time_item">8:00</Typography>
+                <TbCircleDotFilled className={`dot ${!isCheckNotifi(item.conversationInfor.id) && 'not_notifi'}`} />
               </ListItem>
             ))}
           {selectedTab === 1 &&
