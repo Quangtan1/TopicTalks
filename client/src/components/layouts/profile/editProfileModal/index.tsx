@@ -1,6 +1,6 @@
 import './styles.scss';
 import accountStore from 'src/store/accountStore';
-import { createAxios } from 'src/utils';
+import { createAxios, putDataAPI } from 'src/utils';
 import React, { useRef, useState } from 'react';
 import {
   Box,
@@ -20,16 +20,14 @@ import {
 } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import { ToastSuccess } from 'src/utils/toastOptions';
 import { useMutation } from 'react-query';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import AvatarComponent from '../../postManagement/newPost/avatarComponent/AvatarComponent';
-import { IUserInformation, editUser, useGetUserById } from 'src/queries';
-import Loading from 'src/components/loading/Loading';
 import './styles.scss';
-import ImageUpload from '../../postManagement/newPost/imageUpload/ImageUpload';
 import { formatDate } from 'src/utils/helper';
+import { IUserProfile } from 'src/types/account.types';
 
 const validationSchema = Yup.object({
   username: Yup.string().nullable().required('User Name is required'),
@@ -41,9 +39,12 @@ interface Props {
   isOpen?: boolean;
   onEditSuccess?: () => void;
   handleClose?: () => void;
+  userInfor: IUserProfile;
+  setUserInfor: React.Dispatch<React.SetStateAction<IUserProfile>>;
 }
 
-const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEditSuccess }) => {
+const EditProfileModal = observer((props: Props) => {
+  const { isOpen, handleClose, userInfor, setUserInfor } = props;
   const formRef = useRef<FormikProps<any>>(null);
 
   const account = accountStore?.account;
@@ -54,78 +55,40 @@ const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEdi
 
   const axiosJWT = createAxios(account, setAccount);
 
-  const [selectedImage, setSelectedImage] = useState('');
-
-  const {
-    data: userDetailData,
-    isLoading: isLoadingUserDetail,
-    refetch: refetchUserById,
-  } = useGetUserById(account?.id, axiosJWT, account);
-
-  const useEditUser = useMutation((userData) => editUser(userData, account));
-
-  const handleEditUserProfile = async (userData) => {
-    try {
-      const result = await useEditUser.mutateAsync(userData);
-      if (result.status === 200) {
-        ToastSuccess('Edit user profile successfully!');
-        onEditSuccess?.();
-        handleClose?.();
-        handleResetForm();
-      }
-    } catch (error) {
-      ToastError(`Error edit User!`);
-    }
-  };
-
-  const handleEditProfile = (data: IUserInformation) => {
-    const userData = {
-      id: data?.id,
-      fullName: data?.fullName,
-      username: data?.username,
-      email: data?.email,
-      phoneNumber: data?.phoneNumber,
-      dob: !!data?.dob ? new Date(data?.dob).toISOString() : null,
-      bio: data?.bio,
-      gender: data?.gender,
-      country: data?.country,
-      avatar: selectedImage || data?.imageUrl,
-      imageUrl: data?.imageUrl,
-    };
-
-    handleEditUserProfile(userData);
+  const handleUpdateProfile = () => {
+    const updateData = formik?.values;
+    putDataAPI(`/user/${account.id}`, updateData, account.access_token, axiosJWT)
+      .then((res) => {
+        ToastSuccess('Update Profile Successfully');
+        handleClose();
+        setUserInfor(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const formik = useFormik({
     initialValues: {
-      //==========InitialValues===========
-      id: userDetailData?.id,
-      fullName: userDetailData?.fullName,
-      username: userDetailData?.username,
-      email: userDetailData?.email,
-      phoneNumber: userDetailData?.phoneNumber,
-      dob: formatDate(userDetailData?.dob) || new Date().toISOString(),
-      bio: userDetailData?.bio,
-      gender: userDetailData?.gender,
-      country: userDetailData?.country,
-      imageUrl: userDetailData?.imageUrl,
+      id: userInfor?.id,
+      fullName: userInfor?.fullName,
+      username: userInfor?.username,
+      email: userInfor?.email,
+      phoneNumber: userInfor?.phoneNumber,
+      dob: formatDate(userInfor?.dob) || new Date().toISOString(),
+      bio: userInfor?.bio,
+      gender: userInfor?.gender,
+      country: userInfor?.country,
+      imageUrl: userInfor?.imageUrl,
     },
     validationSchema,
     innerRef: formRef,
-    onSubmit: handleEditProfile,
+    onSubmit: handleUpdateProfile,
   });
 
-  const handleResetForm = () => {
-    setSelectedImage('');
-    refetchUserById();
-    resetForm();
-  };
+  const { errors, touched, getFieldProps, submitForm, values, dirty } = formik;
 
-  const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
-
-  return isLoadingUserDetail ? (
-    <Loading />
-  ) : (
+  return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth className="form-dialog-title">
       <DialogTitle id="form-dialog-title" className="dialog-title">
         Edit a profile
@@ -287,21 +250,11 @@ const EditProfileModal: React.FC<Props> = observer(({ isOpen, handleClose, onEdi
             ) : null
           }
         />
-
-        <ImageUpload
-          isSelected={!!selectedImage}
-          {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }}
-        />
-
-        <Box className="actions-container">
-          <Button className="post-button" onClick={submitForm}>
-            Edit
-          </Button>
-        </Box>
       </DialogContent>
       <DialogActions className="dialog-actions">
-        <Button onClick={handleClose} color="primary">
-          Cancel
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={submitForm} disabled={!dirty}>
+          Update
         </Button>
       </DialogActions>
     </Dialog>
