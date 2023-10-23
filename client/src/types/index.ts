@@ -51,4 +51,6 @@ export interface IMessage {
   userId: number;
   timeAt: string;
   username: string;
+  groupChatName: string;
+  groupChat: boolean;
 }

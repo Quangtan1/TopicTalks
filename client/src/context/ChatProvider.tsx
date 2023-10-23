@@ -101,11 +101,31 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
     }
   }, [chat, account]);
 
+  useEffect(() => {
+    return () => {
+      setNotification([]);
+    };
+  }, [account]);
+
   const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
     if (chat?.conversationInfor.id === receiveMessageDTO.conversationId) {
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     } else {
-      setNotification((prevNotification) => [...prevNotification, receiveMessageDTO]);
+      setNotification((prevNotification) => {
+        const isOption = receiveMessageDTO.data.message.includes('option_1410#$#');
+        const index = prevNotification.findIndex((item) => item.conversationId === receiveMessageDTO.conversationId);
+        const indexOption = prevNotification.findIndex((item) => item.data.message.includes('option_1410#$#'));
+
+        const updatedNotification = [...prevNotification];
+        if (index !== -1 && !isOption && index !== indexOption) {
+          updatedNotification[index] = receiveMessageDTO;
+        } else if (isOption) {
+          updatedNotification.unshift(receiveMessageDTO);
+        } else {
+          updatedNotification.unshift(receiveMessageDTO);
+        }
+        return updatedNotification;
+      });
     }
   };
 
@@ -163,6 +183,8 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
       userId: account.id,
       timeAt: new Date().toISOString(),
       conversationId: receiveCallUser?.conversationId || callUser?.conversationId,
+      groupChatName: null,
+      groupChat: true,
     };
     socket.emit('sendMessage', receiveMessag);
     if (stateMessage?.conversationId === chat?.conversationInfor?.id) {

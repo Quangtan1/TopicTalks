@@ -4,7 +4,7 @@ import { BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
 import { ImAttachment } from 'react-icons/im';
-import { RiEmotionLaughLine } from 'react-icons/ri';
+import { RiDeleteBack2Line, RiEmotionLaughLine } from 'react-icons/ri';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react';
@@ -17,13 +17,14 @@ import { handleImageUpload } from 'src/utils/helper';
 import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
-import { IoLogoSnapchat } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoLogoSnapchat } from 'react-icons/io5';
 import { ListMesage } from 'src/types/chat.type';
 import { FcCallback, FcSettings } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
 import friendStore from 'src/store/friendStore';
 import { ToastError } from 'src/utils/toastOptions';
+import { AiOutlineUserAdd } from 'react-icons/ai';
 
 interface ChatProps {
   chat: ListMesage;
@@ -43,6 +44,9 @@ const ChatBox = observer((props: ChatProps) => {
   const { chat, handleOpenSetting } = props;
 
   const isImage = ['.png', 'jpg', '.svg', '.webp', '.jpeg'];
+
+  const isGroup = chat?.conversationInfor.isGroupChat;
+  const isMember = isGroup ? chat?.isMember : 'true';
 
   const { message, setMessage, socket, setCallUser, setOpenVideoCall, setTurnMyVideo, setTurnUserVideo } =
     useContext(ChatContext);
@@ -86,6 +90,8 @@ const ChatBox = observer((props: ChatProps) => {
         TargetId: chat?.partnerDTO[0]?.id,
         userId: account.id,
         conversationId: chat.conversationInfor.id,
+        groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+        groupChat: chat.conversationInfor.isGroupChat,
       };
       const stateMessage = {
         data: {
@@ -175,22 +181,51 @@ const ChatBox = observer((props: ChatProps) => {
     return image.toString();
   };
 
-  const isGroup = chat?.conversationInfor.isGroupChat;
-  const isMember = isGroup ? chat?.isMember : 'true';
-
   const isFriend =
     chat?.partnerDTO.length > 0 &&
     friendStore?.friends.some(
       (item) => (item.friendId === partnerName[0]?.id || item.userid === partnerName[0]?.id) && item.accept,
     );
 
+  const notifiGroup = (message: string) => {
+    const result = message.split(',')[2].trim() === account.username ? 'You' : message.split(',')[2].trim();
+    if (message.includes('Approve')) {
+      return (
+        <>
+          <strong>{result}</strong> has just approved to the group <AiOutlineUserAdd className="add_icon" />
+        </>
+      );
+    } else if (message.includes('Reject')) {
+      return (
+        <>
+          Refused<strong>{result}</strong> to join the group <IoCloseCircleOutline className="reject_icon" />
+        </>
+      );
+    } else if (message.includes('Delete')) {
+      return (
+        <>
+          <strong> {result}</strong> has just deleted from the Group <RiDeleteBack2Line className="reject_icon" />
+        </>
+      );
+    } else if (message.includes('Leave')) {
+      return (
+        <>
+          <strong> {result}</strong> just leaved the Group
+        </>
+      );
+    }
+  };
+
+  const isRemove = message[message?.length - 1]?.data.message.includes(`option_1410#$#,Delete, ${account.username}`);
+
+  const isDisable = isRemove || currentContent === '';
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
         {isSelecedChat && isMember === 'true' && (
           <>
             <Box className="title_name">
-              <Typography>{isGroup ? chat.conversationInfor.chatName : partnerName[0].username}</Typography>
+              <Typography>{isGroup ? chat.conversationInfor.chatName : partnerName[0]?.username}</Typography>
               <Typography>({chat?.conversationInfor?.topicChildren.topicChildrenName})</Typography>
             </Box>
 
@@ -216,8 +251,12 @@ const ChatBox = observer((props: ChatProps) => {
           <Box className="list_message">
             {message.length > 0 &&
               message.map((item: IMessage, index) => (
-                <Box id={item.userId === account.id ? 'you' : 'other'} className="message" key={index}>
-                  {item.userId !== account.id && (
+                <Box
+                  id={item.userId === account.id ? 'you' : 'other'}
+                  className={`${item.data.message.includes('option_1410#$#') ? 'message_notifi' : 'message'}`}
+                  key={index}
+                >
+                  {item.userId !== account.id && !item.data.message.includes('option_1410#$#') && (
                     <Avatar
                       src={imageUser(item)}
                       alt="avatar"
@@ -248,16 +287,22 @@ const ChatBox = observer((props: ChatProps) => {
                               </>
                             )}
                           </Typography>
+                        ) : item.data.message.includes('option_1410#$#') ? (
+                          <Typography>{notifiGroup(item.data.message)}</Typography>
                         ) : (
                           <Typography className="message_content">{item.data.message.trim()}</Typography>
                         )}
                       </>
                     )}
 
-                    <Typography className="messge_username">{item.username}</Typography>
+                    <Typography className="messge_username">
+                      {!item.data.message.includes('option_1410#$#') && item.username}
+                    </Typography>
                   </Box>
 
-                  {item.userId === account.id && <Avatar src={account.url_img} alt="avatar" />}
+                  {item.userId === account.id && !item.data.message.includes('option_1410#$#') && (
+                    <Avatar src={account.url_img} alt="avatar" />
+                  )}
                 </Box>
               ))}
           </Box>
@@ -316,7 +361,7 @@ const ChatBox = observer((props: ChatProps) => {
               required
               multiline
               rows={1}
-              disabled={imageFile !== ''}
+              disabled={imageFile !== '' || isRemove}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
               placeholder="Type your message"
               className="chatbox_input"
@@ -329,7 +374,10 @@ const ChatBox = observer((props: ChatProps) => {
                 }
               }}
             />
-            <GrSend className="send_icon" onClick={() => sendMessage(currentContent)} />
+            <GrSend
+              className={`send_icon ${isDisable && 'disable_chat'}`}
+              onClick={() => sendMessage(currentContent)}
+            />
           </>
         )}
       </Box>

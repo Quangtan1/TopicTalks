@@ -6,7 +6,6 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
 import { IUserProfile } from 'src/types/account.types';
-import { IPost } from 'src/queries';
 import PostDetailDialog from '../home/community/posts/PostDetailDialog';
 import { HiCamera } from 'react-icons/hi';
 import uiStore from 'src/store/uiStore';
@@ -16,19 +15,25 @@ import { AiFillDelete, AiOutlineUserAdd } from 'react-icons/ai';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import ListFriendDialog from './listfriend/ListFriendDialog';
 import SelectTopicMessage from 'src/components/dialogs/SelectTopicMessage';
+import { TopicChild } from 'src/types/topic.type';
+import postItemStore from 'src/store/postStore';
+import EditProfileModal from './editProfileModal';
+import AvatarDialog from './avatar/AvatarDialog';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
   const [user, setUser] = useState<IUserProfile>(null);
-  const [posts, setPosts] = useState<IPost[]>([]);
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
   const [postId, setPostId] = useState<number>();
   const [openConfirm, setOpenConFirm] = useState<boolean>(false);
   const [openListFriend, setOpenListFriend] = useState<boolean>(false);
   const [openSelectTopic, setOpenSelectTopic] = useState<boolean>(false);
+  const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
+  const [openUpdateAvatar, setUpdateAvatar] = useState<boolean>(false);
   const navigate = useNavigate();
   const content = `Cancel Friend with ${user?.username} ?`;
 
+  const posts = postItemStore?.posts;
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -48,7 +53,7 @@ const PartnerProfile = observer(() => {
       });
     getDataAPI(`/post/all-posts/aid=${id}`, account.access_token, axiosJWT)
       .then((res) => {
-        setPosts(res.data.data);
+        postItemStore?.setPosts(res.data.data);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -56,10 +61,10 @@ const PartnerProfile = observer(() => {
       });
   }, [id]);
 
-  const accessChat = (topicId: number) => {
+  const accessChat = (topic: TopicChild) => {
     const dataRequest = {
       userIdInSession: account.id,
-      topicChildrenId: topicId,
+      topicChildrenId: topic.id,
     };
     uiStore?.setLoading(true);
     postDataAPI(`/participant/${user?.id}`, dataRequest, account.access_token, axiosJWT)
@@ -168,16 +173,19 @@ const PartnerProfile = observer(() => {
         <Box className="avt_image">
           <div className="backgroud_image" />
           <img src={user?.imageUrl || logo} alt="avt" />
-          {isProfile && <HiCamera className="update_image" />}
+          {isProfile && <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />}
         </Box>
         <Box className="info_user">
           <Box className="bio_box">
             <Typography className="title">Bio</Typography>
-            <Typography>
-              I am a highly skilled and passionate software engineer with over 10 years of experience in the field. He
-              specializes in developing robust web applications and has a strong proficiency in multiple programming
-              languages, including Java, Python, and JavaScript.
-            </Typography>
+            {user?.bio !== '' ? (
+              <Typography>{user?.bio}</Typography>
+            ) : (
+              <Typography>
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx
+              </Typography>
+            )}
           </Box>
           <Grid container spacing={4} className="grid_container">
             <Grid item md={6}>
@@ -203,7 +211,7 @@ const PartnerProfile = observer(() => {
           </Grid>
           <Box className="action_box">
             {isProfile ? (
-              <Button>Update Profile</Button>
+              <Button onClick={() => setOpenEditProfile(true)}>Update Profile</Button>
             ) : (
               <Button onClick={() => setOpenSelectTopic(true)}>Message</Button>
             )}
@@ -297,6 +305,22 @@ const PartnerProfile = observer(() => {
       {openListFriend && <ListFriendDialog open={openListFriend} onClose={() => setOpenListFriend(false)} />}
       {openSelectTopic && (
         <SelectTopicMessage open={openSelectTopic} onClose={() => setOpenSelectTopic(false)} onConfirm={accessChat} />
+      )}
+      {openEditProfile && (
+        <EditProfileModal
+          isOpen={openEditProfile}
+          handleClose={() => setOpenEditProfile(false)}
+          userInfor={user}
+          setUserInfor={setUser}
+        />
+      )}
+      {openUpdateAvatar && (
+        <AvatarDialog
+          open={openUpdateAvatar}
+          onClose={() => setUpdateAvatar(false)}
+          userInfor={user}
+          setUserInfor={setUser}
+        />
       )}
     </Box>
   );

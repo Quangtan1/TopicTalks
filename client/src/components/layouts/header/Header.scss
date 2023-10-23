@@ -44,11 +44,13 @@
       color: #fff;
       font-family: Source Sans Pro, sans-serif;
       cursor: pointer;
+      padding: 5px 8px;
     }
     .selected_navigate,
     p:hover {
       color: var(--main-color);
-      text-decoration: underline;
+      background: #141634;
+      border-radius: 8px;
     }
   }
   .infor_header {

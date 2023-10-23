@@ -1,15 +1,18 @@
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FcCollapse, FcExpand, FcOk, FcTimeline } from 'react-icons/fc';
 import { MdDone, MdOutlineAccountCircle, MdOutlineCancel } from 'react-icons/md';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
+import SelectTopicMessage from 'src/components/dialogs/SelectTopicMessage';
+import ChatContext from 'src/context/ChatContext';
 import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
+import { TopicChild } from 'src/types/topic.type';
 import { createAxios, deleteDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 
@@ -24,7 +27,13 @@ const ConversationSetting = observer((props: ChatProps) => {
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [edit, setEdit] = useState<number>(null);
   const [renameGroup, setRenameGroup] = useState<string>('');
+  const [openUpdateTopic, setOpenUpdateTopic] = useState<boolean>(false);
+  const [statusDelete, setStatusDelete] = useState<string>('');
+  const [openLeave, setOpenLeave] = useState<boolean>(false);
   const { chat, setOpenSetting } = props;
+  const optionCode = 'option_1410#$#';
+
+  const { socket, setMessage } = useContext(ChatContext);
 
   const navigate = useNavigate();
   const isGroup = chat?.conversationInfor.isGroupChat;
@@ -46,7 +55,7 @@ const ConversationSetting = observer((props: ChatProps) => {
     }
   };
 
-  const memberDTO = chat?.partnerDTO.filter((item) => item.member);
+  const memberDTO = chat?.partnerDTO.filter((item) => item.member && item.id !== chat.conversationInfor.adminId);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
   const handleAprrove = (member: IPartnerDTO) => {
@@ -55,6 +64,29 @@ const ConversationSetting = observer((props: ChatProps) => {
       conversationId: chat?.conversationInfor.id,
       memberId: member.id,
     };
+
+    const receiveMessageDTO = {
+      data: {
+        message: `${optionCode},Approve, ${member.username}`,
+      },
+      TargetId: chat?.partnerDTO[0]?.id,
+      userId: account.id,
+      conversationId: chat.conversationInfor.id,
+      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+      groupChat: chat.conversationInfor.isGroupChat,
+    };
+    // const stateMessage = {
+    //   data: {
+    //     message: `${approveCode}, ${member.username}`,
+    //   },
+    //   username: account.username,
+    //   userId: account.id,
+    //   conversationId: chat.conversationInfor.id,
+    //   groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+    //   groupChat: chat.conversationInfor.isGroupChat,
+    // };
+    socket.emit('sendMessage', receiveMessageDTO);
+    setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     putDataAPI(`/participant/approve-member`, approveData, account.access_token, axiosJWT)
       .then((res) => {
         ToastSuccess(`You have just approved ${member.username}`);
@@ -67,7 +99,20 @@ const ConversationSetting = observer((props: ChatProps) => {
       });
   };
 
-  const handleReject = (memberId: number) => {
+  const handleReject = (member: IPartnerDTO, status: string) => {
+    const memberId = member?.id;
+    const receiveMessageDTO = {
+      data: {
+        message: `${optionCode},${status}, ${member.username}`,
+      },
+      TargetId: chat?.partnerDTO[0]?.id,
+      userId: account.id,
+      conversationId: chat.conversationInfor.id,
+      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+      groupChat: chat.conversationInfor.isGroupChat,
+    };
+    socket.emit('sendMessage', receiveMessageDTO);
+    setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     deleteDataAPI(
       `/participant/remove-member?aid=${account.id}&uid=${memberId}&cid=${chat?.conversationInfor.id}`,
       account.access_token,
@@ -79,6 +124,37 @@ const ConversationSetting = observer((props: ChatProps) => {
         chatStore?.setSelectedChat({ ...chat, partnerDTO: newPartner });
         chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
         setOpenConFirm(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const leaveGroup = (status: string) => {
+    const receiveMessageDTO = {
+      data: {
+        message: `${optionCode},${status}, ${account.username}`,
+      },
+      TargetId: chat?.partnerDTO[0]?.id,
+      userId: account.id,
+      conversationId: chat.conversationInfor.id,
+      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+      groupChat: chat.conversationInfor.isGroupChat,
+    };
+    socket.emit('sendMessage', receiveMessageDTO);
+    setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
+    deleteDataAPI(
+      `/participant/remove-member?aid=${chat.conversationInfor.adminId}&uid=${account.id}&cid=${chat?.conversationInfor.id}`,
+      account.access_token,
+      axiosJWT,
+    )
+      .then((res) => {
+        ToastSuccess(`Leave Group Successfully`);
+        const newChats = chatStore?.chats.filter((item) => item.conversationInfor.id !== chat.conversationInfor.id);
+        chatStore?.setSelectedChat(null);
+        chatStore?.setChats(newChats);
+        setOpenLeave(false);
+        setOpenSetting(false);
       })
       .catch((err) => {
         console.log(err);
@@ -130,10 +206,37 @@ const ConversationSetting = observer((props: ChatProps) => {
     }
   };
 
-  // const imageUser = (partnerDTO: IPartnerDTO[]) => {
-  //   const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
-  //   return image.toString();
-  // };
+  const updateTopicName = (topic: TopicChild) => {
+    const topicName = chat?.conversationInfor.topicChildren.topicChildrenName;
+    if (chat?.conversationInfor.topicChildren.id !== topic.id) {
+      const dataRequest = {
+        newTopicId: topic.id,
+        userIdUpdate: account.id,
+      };
+      putDataAPI(`/conversation/${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
+        .then((res) => {
+          ToastSuccess(`You have just renamed ${topicName} to ${topic.topicChildrenName} `);
+          chatStore?.setSelectedChat({
+            ...chat,
+            conversationInfor: {
+              ...chat.conversationInfor,
+              topicChildren: {
+                ...chat.conversationInfor,
+                id: topic.id,
+                topicChildrenName: topic.topicChildrenName,
+              },
+            },
+          });
+          chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
+          setOpenUpdateTopic(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      ToastError(`Please use different topic names with old name`);
+    }
+  };
 
   const partnerUser = chat?.partnerDTO.find((item) => item.id !== account.id);
 
@@ -142,14 +245,22 @@ const ConversationSetting = observer((props: ChatProps) => {
     navigate(`/personal-profile/${id}`);
   };
 
-  const handleConfirm = (memberDTO: IPartnerDTO) => {
+  const handleConfirm = (memberDTO: IPartnerDTO, status: string) => {
     setPartnerData(memberDTO);
+    setStatusDelete(status);
     setOpenConFirm(true);
+  };
+
+  const openConfirmLeave = () => {
+    setOpenLeave(true);
   };
 
   const clickEditName = () => {
     setEdit(1);
     setRenameGroup(chat?.conversationInfor.chatName);
+  };
+  const clickEditTopic = () => {
+    setOpenUpdateTopic(true);
   };
 
   const content = `Do you want to delete ${partnerData?.username}`;
@@ -181,8 +292,9 @@ const ConversationSetting = observer((props: ChatProps) => {
         </Box>
         <Box className="topic_setting">
           <Typography>Topic:</Typography>
+
           <Typography>{chat?.conversationInfor?.topicChildren.topicChildrenName}</Typography>
-          {isAdmin && <AiOutlineEdit />}
+          {(isAdmin || !isGroup) && <AiOutlineEdit onClick={clickEditTopic} />}
         </Box>
         {isGroup && (
           <Box className="member_setting">
@@ -204,7 +316,7 @@ const ConversationSetting = observer((props: ChatProps) => {
                       <strong>{chat?.conversationInfor.adminId === item.id && '(Admin)'}</strong>
                     </Typography>
                   </Box>
-                  {isAdmin && <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item)} />}
+                  {isAdmin && <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Delete')} />}
                 </Box>
               ))}
 
@@ -233,7 +345,7 @@ const ConversationSetting = observer((props: ChatProps) => {
                   {isAdmin && (
                     <Box className="option_member">
                       <FcOk onClick={() => handleAprrove(item)} />
-                      <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item)} />
+                      <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Reject')} />
                     </Box>
                   )}
                 </Box>
@@ -246,15 +358,25 @@ const ConversationSetting = observer((props: ChatProps) => {
           Delete Conversation
         </Button>
       ) : (
-        <Button className="button_delete">Leave Conversation</Button>
+        <Button className="button_delete" onClick={openConfirmLeave}>
+          Leave Conversation
+        </Button>
       )}
 
       {openConfirm && (
         <DialogCommon
           open={openConfirm}
           onClose={() => setOpenConFirm(false)}
-          onConfirm={() => handleReject(partnerData?.id)}
+          onConfirm={() => handleReject(partnerData, statusDelete)}
           content={content}
+        />
+      )}
+      {openLeave && (
+        <DialogCommon
+          open={openLeave}
+          onClose={() => setOpenLeave(false)}
+          onConfirm={() => leaveGroup('Leave')}
+          content="Do you want to leave this Group"
         />
       )}
       {openConfirmGroup && (
@@ -263,6 +385,13 @@ const ConversationSetting = observer((props: ChatProps) => {
           onClose={() => setOpenConFirmGroup(false)}
           onConfirm={deleteConversation}
           content={contenGroup}
+        />
+      )}
+      {openUpdateTopic && (
+        <SelectTopicMessage
+          open={openUpdateTopic}
+          onClose={() => setOpenUpdateTopic(false)}
+          onConfirm={updateTopicName}
         />
       )}
     </Box>

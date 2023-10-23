@@ -5,6 +5,23 @@
   flex-direction: column;
   margin: 0 auto;
   padding: 0px 100px;
+  .option_box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    padding: 30px 50px 0px;
+    justify-content: flex-end;
+    .select {
+      background: #fff;
+      min-width: 150px;
+    }
+    .create {
+      color: var(--main-color);
+      font-size: 40px;
+      cursor: pointer;
+    }
+  }
   .title_box {
     margin: 50px 0px 0px;
     position: relative;
