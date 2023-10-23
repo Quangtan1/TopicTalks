@@ -7,14 +7,18 @@ import { createAxios, deleteDataAPI, getDataAPI, postDataAPI } from 'src/utils';
 import './PostDetailDialog.scss';
 import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
-import { FcShare } from 'react-icons/fc';
+import { FcEditImage, FcShare } from 'react-icons/fc';
 import { formatTime } from 'src/utils/helper';
 import uiStore from 'src/store/uiStore';
 import { useNavigate } from 'react-router-dom';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { AiTwotoneHeart } from 'react-icons/ai';
-import { ToastError } from 'src/utils/toastOptions';
+import { AiOutlineEdit, AiTwotoneHeart } from 'react-icons/ai';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import { RiDeleteBin2Line, RiDeleteBin5Line } from 'react-icons/ri';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import NewPost from 'src/components/layouts/postManagement/newPost/NewPost';
+import postItemStore from 'src/store/postStore';
 
 interface DialogProps {
   open: boolean;
@@ -27,6 +31,8 @@ const PostDetailDialog = observer((props: DialogProps) => {
   const [comments, setComments] = useState<IComment[]>([]);
   const [inputComment, setInputComment] = useState<string>('');
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [openConfirm, setOpenConFirm] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const navigate = useNavigate();
   const emoijiRef = useRef(null);
 
@@ -163,6 +169,20 @@ const PostDetailDialog = observer((props: DialogProps) => {
     setShowEmojiPicker(!showEmojiPicker);
   };
 
+  const deletePost = () => {
+    deleteDataAPI(`/post/${post?.id}`, account.access_token, axiosJWT)
+      .then(() => {
+        ToastSuccess('Delete Post Succesfully');
+        const newPosts = postItemStore?.posts.filter((item) => item.id !== post?.id);
+        postItemStore?.setPosts(newPosts);
+        onClose();
+        setOpenConFirm(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
   return (
@@ -177,7 +197,25 @@ const PostDetailDialog = observer((props: DialogProps) => {
               <Avatar src={post?.avatar_url} onClick={() => handleNavigate(post?.author_id)} />
               <Typography onClick={() => handleNavigate(post?.author_id)}>{post?.username}</Typography>
             </span>
-            <BsThreeDots />
+            <Box>
+              {account.id === post?.author_id && (
+                <>
+                  {!post?.approved && (
+                    <Button
+                      onClick={() => setIsEdit(true)}
+                      className={`edit`}
+                      disabled={account.id !== post?.author_id}
+                    >
+                      <FcEditImage />
+                    </Button>
+                  )}
+
+                  <Button onClick={() => setOpenConFirm(true)} className={`delete`}>
+                    <RiDeleteBin5Line />
+                  </Button>
+                </>
+              )}
+            </Box>
           </Box>
           <Box className="list_comment_container">
             <Box className="list_comment">
@@ -236,6 +274,15 @@ const PostDetailDialog = observer((props: DialogProps) => {
           </Box>
         </Grid>
       </Grid>
+      {openConfirm && (
+        <DialogCommon
+          open={openConfirm}
+          onClose={() => setOpenConFirm(false)}
+          content="Do you want to delete this post"
+          onConfirm={deletePost}
+        />
+      )}
+      {isEdit && <NewPost isEdit open={isEdit} dataEdit={post} closePostModal={() => setIsEdit(false)} />}
     </Dialog>
   );
 });

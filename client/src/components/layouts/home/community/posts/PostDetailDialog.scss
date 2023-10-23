@@ -33,6 +33,7 @@
           align-items: center;
           border-bottom: 1px solid rgb(239, 239, 239);
           justify-content: space-between;
+          position: relative;
           span {
             display: flex;
             gap: 8px;
@@ -48,9 +49,18 @@
               opacity: 0.7;
             }
           }
+          .edit {
+          }
+          button {
+            padding: 2px;
+            min-width: 30px;
+          }
           svg {
             font-size: 20px;
             cursor: pointer;
+          }
+          .delete {
+            color: red;
           }
         }
         .list_comment_container {

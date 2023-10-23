@@ -168,11 +168,11 @@ const Profile = observer(() => {
         </Grid>
       </Grid>
       <NewPost open={isEdit} closePostModal={() => setIsEdit(!isEdit)} />
-      <EditProfileModal
+      {/* <EditProfileModal
         isOpen={isEditProfile}
         handleClose={() => setIsEditProfile(!isEditProfile)}
         onEditSuccess={refetchUserById}
-      />
+      /> */}
     </Box>
   );
 });

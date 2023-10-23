@@ -36,6 +36,7 @@ import { observer } from 'mobx-react';
 import { IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
 import { createAxios } from 'src/utils';
+import postItemStore from 'src/store/postStore';
 
 // const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
@@ -120,10 +121,7 @@ const NewPost: React.FC<Props> = observer(
         const result = await useEditPost.mutateAsync(postData);
         if (result.status === 200) {
           ToastSuccess('Edit post successfully!');
-          onEditSuccess?.();
-          refetchPost();
-          refetchPostByAuthorId();
-          refetchPostByIsApproved();
+          postItemStore?.updatePost(dataEdit.id, result.data);
         }
       } catch (error) {
         ToastError(`Error edit post!`);

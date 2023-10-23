@@ -9,7 +9,7 @@ import './SelectTopicMessage.scss';
 interface DialogProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: (topicId: number) => void;
+  onConfirm: (topic: TopicChild) => void;
 }
 const SelectTopicMessage = observer((props: DialogProps) => {
   const { open, onClose, onConfirm } = props;
@@ -63,7 +63,7 @@ const SelectTopicMessage = observer((props: DialogProps) => {
 
   const handleAccess = () => {
     if (selected) {
-      onConfirm(selected?.id);
+      onConfirm(selected);
     }
   };
 
