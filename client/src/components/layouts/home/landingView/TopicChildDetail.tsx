@@ -69,7 +69,7 @@ const TopicChildDetail = observer(() => {
       axiosJWT,
     )
       .then((res) => {
-        ToastSuccess('Join Group Sucessfully');
+        ToastSuccess('Waiting Approve from Admin');
         navigate('/message');
         setTimeout(() => {
           // chatStore?.setChats([res.data.data, ...chatStore?.chats]);

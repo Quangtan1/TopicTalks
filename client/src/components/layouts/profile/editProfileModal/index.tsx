@@ -72,14 +72,12 @@ const EditProfileModal = observer((props: Props) => {
     initialValues: {
       id: userInfor?.id,
       fullName: userInfor?.fullName,
-      username: userInfor?.username,
       email: userInfor?.email,
       phoneNumber: userInfor?.phoneNumber,
-      dob: formatDate(userInfor?.dob) || new Date().toISOString(),
+      dob: formatDate(userInfor?.dob) === '' ? null : formatDate(userInfor?.dob),
       bio: userInfor?.bio,
       gender: userInfor?.gender,
       country: userInfor?.country,
-      imageUrl: userInfor?.imageUrl,
     },
     validationSchema,
     innerRef: formRef,
@@ -96,25 +94,6 @@ const EditProfileModal = observer((props: Props) => {
       <DialogContent className="dialog-content">
         <AvatarComponent url={account?.url_img} username={account?.username} />
         {<DialogContentText className="post-label">Edit User Profile:</DialogContentText>}
-        <TextField
-          autoFocus
-          margin="dense"
-          id="username"
-          {...getFieldProps('username')}
-          label="Username"
-          type="text"
-          fullWidth
-          required
-          variant="outlined"
-          error={touched.username && Boolean(errors.username)}
-          helperText={
-            touched.username && errors.username ? (
-              <Typography variant="caption" color="error">
-                {errors.username as string}
-              </Typography>
-            ) : null
-          }
-        />
 
         <TextField
           autoFocus
@@ -253,7 +232,7 @@ const EditProfileModal = observer((props: Props) => {
       </DialogContent>
       <DialogActions className="dialog-actions">
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={submitForm} disabled={!dirty}>
+        <Button onClick={handleUpdateProfile} disabled={!dirty}>
           Update
         </Button>
       </DialogActions>

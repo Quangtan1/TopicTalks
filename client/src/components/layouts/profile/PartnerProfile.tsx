@@ -19,6 +19,7 @@ import { TopicChild } from 'src/types/topic.type';
 import postItemStore from 'src/store/postStore';
 import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
+import { formatDate } from 'src/utils/helper';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -132,11 +133,6 @@ const PartnerProfile = observer(() => {
   );
 
   const deleteFriend = () => {
-    // const inforRerquest = friendStore?.friends.filter(
-    //   (item) =>
-    //     (item.friendId === account.id || item.userid === account.id) &&
-    //     (item.friendId === user?.id || item.userid === user?.id),
-    // );
     const userId = friendListCustom.userid;
     const friendId = friendListCustom.friendId;
 
@@ -194,7 +190,7 @@ const PartnerProfile = observer(() => {
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Dob :...</Typography>
-              <Typography>{user?.dob || 'XX YY ZZZZ'}</Typography>
+              <Typography>{formatDate(user?.dob) || 'XX YY ZZZZ'}</Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Phone :...</Typography>

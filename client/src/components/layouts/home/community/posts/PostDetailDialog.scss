@@ -101,8 +101,53 @@
                     white-space: pre-line;
                   }
                 }
-                p:nth-child(2) {
-                  font-size: 12px;
+                .box_edit_comment {
+                  display: flex;
+                  gap: 5px;
+                  align-items: center;
+                  .MuiInputBase-root {
+                    padding: 0px;
+                    max-height: 100px;
+                    overflow-y: auto;
+                    width: 100%;
+                    textarea {
+                      min-height: 40px;
+                      padding: 2px 5px;
+                      font-size: 14px;
+                    }
+                    // fieldset {
+                    //   border: none;
+                    // }
+                  }
+                  .disable_done {
+                    opacity: 0.6;
+                    cursor: default;
+                  }
+                  svg {
+                    font-size: 18px;
+                    cursor: pointer;
+                  }
+                  svg:nth-child(2) {
+                    color: rgb(98, 218, 98);
+                  }
+                  svg:nth-child(3) {
+                    color: red;
+                  }
+                }
+                .time_content {
+                  display: flex;
+                  gap: 8px;
+                  p {
+                    font-size: 12px;
+                  }
+                  p:nth-child(2):hover {
+                    cursor: pointer;
+                    opacity: 0.6;
+                  }
+                  p:nth-child(3):hover {
+                    cursor: pointer;
+                    opacity: 0.6;
+                  }
                 }
               }
             }

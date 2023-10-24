@@ -66,15 +66,19 @@ const ImageUpload: FC<Props> = ({
           }}
         />
       </Box>
-      {!isSelected && values?.imageUrl && (
-        <img src={values?.imageUrl} alt="Selected" className="selected-image-preview" />
-      )}
-      {selectedImage !== '' && (
+
+      <img
+        src={selectedImage !== '' ? selectedImage : values?.imageUrl}
+        alt="Selected"
+        className="selected-image-preview"
+      />
+
+      {/* {selectedImage !== '' && (
         <Typography>
           {selectedImage.slice(0, 20)}
           <AiOutlineCloseCircle width={50} height={50} onClick={() => setSelectedImage('')} />
         </Typography>
-      )}
+      )} */}
     </>
   );
 };

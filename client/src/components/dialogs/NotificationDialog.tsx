@@ -10,6 +10,7 @@ import accountStore from 'src/store/accountStore';
 import { useNavigate } from 'react-router-dom';
 import chatStore from 'src/store/chatStore';
 import uiStore from 'src/store/uiStore';
+import { notifiData } from 'src/utils';
 
 interface DialogProps {
   open: boolean;
@@ -23,31 +24,23 @@ const NotificationDialog = observer((props: DialogProps) => {
 
   const notifiGroup = (message: string) => {
     const result = message.split(',')[2].trim() === account.username ? 'You' : message.split(',')[2].trim();
-    if (message.includes('Approve')) {
-      return (
-        <>
-          <strong>{result}</strong> just approved to
-        </>
-      );
-    } else if (message.includes('Reject')) {
-      return (
-        <>
-          <strong>{result}</strong> was refused from
-        </>
-      );
-    } else if (message.includes('Delete')) {
-      return (
-        <>
-          <strong> {result}</strong> just deleted from
-        </>
-      );
-    } else if (message.includes('Leave')) {
-      return (
-        <>
-          <strong> {result}</strong> just leaved
-        </>
-      );
-    }
+    let notification: any = '';
+
+    notifiData.forEach((item) => {
+      if (message.includes(item.title)) {
+        const messageA = item.messageA ? `${item.messageA} ` : '';
+        const name = item.isName ? <strong>{result} </strong> : '';
+        notification = (
+          <>
+            {messageA}
+            {name}
+            {item.messageB}
+          </>
+        );
+      }
+    });
+
+    return notification;
   };
 
   const readNotifi = (id) => {
@@ -56,7 +49,9 @@ const NotificationDialog = observer((props: DialogProps) => {
     setNotification(newNotifi);
     setTimeout(() => {
       const selectChat = chatStore?.chats?.find((item) => item.conversationInfor.id === id);
-      chatStore?.setSelectedChat(selectChat);
+      if (selectChat !== undefined) {
+        chatStore?.setSelectedChat(selectChat);
+      }
       onClose();
     }, 400);
   };
@@ -71,7 +66,7 @@ const NotificationDialog = observer((props: DialogProps) => {
           <Box key={index} className="notifi_item" onClick={() => readNotifi(item.conversationId)}>
             {item.data.message.includes('option_1410#$#') ? (
               <Typography>
-                {notifiGroup(item.data.message)} <strong>{item.groupChatName}</strong>
+                {notifiGroup(item.data.message)} <strong>{item.groupChat ? item.groupChatName : item.username}</strong>
               </Typography>
             ) : (
               <Typography>

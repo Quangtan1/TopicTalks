@@ -53,10 +53,11 @@ interface Props {
   dataEdit?: IPost;
   onEditSuccess?: () => void;
   onCreateSuccess?: () => void;
+  setPost?: React.Dispatch<React.SetStateAction<IPost>>;
 }
 
 const NewPost: React.FC<Props> = observer(
-  ({ onCreateSuccess, onEditSuccess, open, closePostModal, isEdit, dataEdit }) => {
+  ({ onCreateSuccess, onEditSuccess, open, closePostModal, isEdit, dataEdit, setPost }) => {
     const formRef = useRef<FormikProps<any>>(null);
     // ========================== get store Mobx ==========================
     const account = accountStore?.account;
@@ -121,6 +122,7 @@ const NewPost: React.FC<Props> = observer(
         const result = await useEditPost.mutateAsync(postData);
         if (result.status === 200) {
           ToastSuccess('Edit post successfully!');
+          setPost(result.data);
           postItemStore?.updatePost(dataEdit.id, result.data);
         }
       } catch (error) {
@@ -132,7 +134,7 @@ const NewPost: React.FC<Props> = observer(
       const postData = {
         postId: dataEdit?.id,
         content: data?.postContent,
-        image: data?.imageUrl || selectedImage,
+        image: selectedImage !== '' ? selectedImage : data?.imageUrl,
         author_id: +accountStore.account.id,
         title: data?.postTitle,
         tparent_id: +data?.selectedTopicParent,

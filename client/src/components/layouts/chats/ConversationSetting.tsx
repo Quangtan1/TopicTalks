@@ -55,7 +55,7 @@ const ConversationSetting = observer((props: ChatProps) => {
     }
   };
 
-  const memberDTO = chat?.partnerDTO.filter((item) => item.member && item.id !== chat.conversationInfor.adminId);
+  const memberDTO = chat?.partnerDTO.filter((item) => item.member);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
   const handleAprrove = (member: IPartnerDTO) => {
@@ -162,6 +162,17 @@ const ConversationSetting = observer((props: ChatProps) => {
   };
 
   const deleteConversation = () => {
+    const receiveMessageDTO = {
+      data: {
+        message: `${optionCode},DeleteConversation,`,
+      },
+      TargetId: chat?.partnerDTO[0]?.id,
+      userId: account.id,
+      conversationId: chat.conversationInfor.id,
+      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+      groupChat: chat.conversationInfor.isGroupChat,
+    };
+    socket.emit('sendMessage', receiveMessageDTO);
     deleteDataAPI(`/conversation?cid=${chat?.conversationInfor.id}`, account.access_token, axiosJWT)
       .then((res) => {
         ToastSuccess(
@@ -185,6 +196,18 @@ const ConversationSetting = observer((props: ChatProps) => {
         topicChildrenId: chat?.conversationInfor.topicChildren.id,
         adminId: account.id,
       };
+      const receiveMessageDTO = {
+        data: {
+          message: `${optionCode},UpdateGroupName,${chat?.conversationInfor.chatName} to ${renameGroup}`,
+        },
+        TargetId: chat?.partnerDTO[0]?.id,
+        userId: account.id,
+        conversationId: chat.conversationInfor.id,
+        groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+        groupChat: chat.conversationInfor.isGroupChat,
+      };
+      socket.emit('sendMessage', receiveMessageDTO);
+      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
       putDataAPI(`/conversation/rename?cid=${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
         .then((res) => {
           ToastSuccess(`You have just renamed ${chat?.conversationInfor.chatName} to ${renameGroup} `);
@@ -213,6 +236,18 @@ const ConversationSetting = observer((props: ChatProps) => {
         newTopicId: topic.id,
         userIdUpdate: account.id,
       };
+      const receiveMessageDTO = {
+        data: {
+          message: `${optionCode},UpdateTopic,${topicName} to ${topic.topicChildrenName}`,
+        },
+        TargetId: chat?.partnerDTO[0]?.id,
+        userId: account.id,
+        conversationId: chat.conversationInfor.id,
+        groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+        groupChat: chat.conversationInfor.isGroupChat,
+      };
+      socket.emit('sendMessage', receiveMessageDTO);
+      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
       putDataAPI(`/conversation/${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
         .then((res) => {
           ToastSuccess(`You have just renamed ${topicName} to ${topic.topicChildrenName} `);
