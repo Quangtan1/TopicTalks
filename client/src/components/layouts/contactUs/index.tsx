@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent, Container, Typography, TextField, Button, Grid } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import './styles.scss';
@@ -6,23 +6,40 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { RE_CAPTCHA_SITE_KEY } from 'src/utils/helper';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
-import { createAxios, postDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
+import { CollapseQA } from './collapseQA';
+import _ from 'lodash';
+import uiStore from 'src/store/uiStore';
 
 const ContactUs = observer(() => {
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+  const account = accountStore?.account;
+  const axiosJWT = createAxios(account, setAccount);
+
   const [isShowBtnSend, setIsShowBtnSend] = useState(false);
+
+  const [selfQA, setSelfQA] = useState([]);
+
+  useEffect(() => {
+    uiStore?.setLoading(true);
+    getDataAPI(`/qa/${account.id}/all`, account.access_token, axiosJWT)
+      .then((res) => {
+        setSelfQA(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        uiStore?.setLoading(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onToggleBtnSend = () => {
     setIsShowBtnSend((prev) => !prev);
   };
-
-  const account = accountStore?.account;
-
-  const setAccount = () => {
-    return accountStore?.setAccount;
-  };
-
-  const axiosJWT = createAxios(account, setAccount);
 
   const handleSubmit = (data, { resetForm }) => {
     console.log(data);
@@ -50,6 +67,10 @@ const ContactUs = observer(() => {
 
   return (
     <Container className="container-contact-us">
+      <Grid className="grid-contact-us">
+        {/* {!_.isEmpty(selfQA) && <CollapseQA selfQA={selfQA || []} />} */}
+        <CollapseQA selfQA={selfQA || []} />
+      </Grid>
       <Grid className="grid-contact-us">
         <Card className="card-contact-us">
           <CardContent>

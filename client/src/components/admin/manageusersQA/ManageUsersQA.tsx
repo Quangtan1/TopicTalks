@@ -13,7 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { isEmptyArray } from 'formik';
 import { useEffect, memo, useState } from 'react';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import accountStore from 'src/store/accountStore';
@@ -22,6 +21,7 @@ import { createAxios, getDataAPI } from 'src/utils';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { observer } from 'mobx-react';
 import AnswerQAModal from './answerModal';
+import _ from 'lodash';
 
 const USER_IMAGE = 'https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg';
 
@@ -53,6 +53,7 @@ const ManageUserQA = observer(() => {
       .catch((err) => {
         console.log(err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChangePage = (event, newPage) => {};
@@ -64,7 +65,7 @@ const ManageUserQA = observer(() => {
     setUserQA(item);
   };
 
-  const userList = usersQA || [];
+  const userList = _.isEmpty(usersQA) ? [] : usersQA;
 
   return (
     <>
@@ -94,7 +95,7 @@ const ManageUserQA = observer(() => {
         <TableContainer className="table_container_body">
           <Table>
             <TableBody className="table_body">
-              {!isEmptyArray(userList) &&
+              {!_.isEmpty(userList) &&
                 userList.map((item, index: number) => {
                   const timeAgo = dayjs(item?.created_at).fromNow();
                   return (

@@ -1,31 +1,45 @@
 .container-answer-qa {
-    color: #ffffff;
-    position: absolute;
-    right: 5;
-    top: 10;
-    .grid-answer-qa {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 4px;
-  
-      .card-answer-qa {
+  color: #ffffff;
+  position: absolute;
+  right: 5;
+  top: 10;
+  .grid-answer-qa {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    .close-btn-wrap {
+      width: 100%;
+      font-size: 50px;
+      position: relative;
+      background: #000;
+      cursor: pointer;
+      justify-content: flex-end;
+      align-items: center;
+      .close-btn {
+        position: absolute;
+        right: 0;
+        cursor: pointer;
+        color: #ffffff;
+      }
+    }
+    .card-answer-qa {
+      background-color: #000000;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+    .btn-wrap {
+      display: flex;
+      justify-content: flex-end;
+      .button-Send {
         background-color: #000000;
         color: #ffffff;
-        margin-bottom: 20px;
+        padding: 10px 20px;
+        margin-bottom: 10px;
       }
-      .btn-wrap {
-        display: flex;
-        justify-content: flex-end;
-        .button-Send {
-          background-color: #000000;
-          color: #ffffff;
-          padding: 10px 20px;
-          margin-bottom: 10px;
-        }
-        :hover {
-          background-color: #ffffff;
-          color: #000000;
-        }
+      :hover {
+        background-color: #ffffff;
+        color: #000000;
       }
     }
   }
+}

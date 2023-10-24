@@ -8,6 +8,7 @@ import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import { createAxios, putDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
+import { AiFillCloseCircle } from 'react-icons/ai';
 
 const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) => {
   const [isShowBtnSend, setIsShowBtnSend] = useState(false);
@@ -20,6 +21,10 @@ const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) 
 
   const setAccount = () => {
     return accountStore?.setAccount;
+  };
+
+  const handleClose = () => {
+    setIsOpenAnswerModal(false);
   };
 
   const axiosJWT = createAxios(account, setAccount);
@@ -52,6 +57,9 @@ const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) 
   return isOpen ? (
     <Container className="container-answer-qa">
       <Grid className="grid-answer-qa">
+        <Box className={'close-btn-wrap'} onClick={handleClose}>
+          <AiFillCloseCircle className={'close-btn'} />
+        </Box>
         <Card className="card-answer-qa">
           <CardContent>
             <Typography variant="h4" gutterBottom>
@@ -79,7 +87,7 @@ const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) 
                 <Typography sx={{ color: 'black', paddingY: 1, fontSize: 24 }}>{'Question Content:'}</Typography>
 
                 <Box sx={{ backgroundColor: 'black', padding: 2, maxHeight: 'fit-content' }}>
-                  <Typography>{questionData?.subject}</Typography>
+                  <Typography>{questionData?.content}</Typography>
                 </Box>
               </Grid>
               <Grid item xs={12}>
