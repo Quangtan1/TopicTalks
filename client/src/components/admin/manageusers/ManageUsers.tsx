@@ -14,12 +14,19 @@ import {
 import React, { useEffect, memo, useState } from 'react';
 import { GrView } from 'react-icons/gr';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
 import accountStore from 'src/store/accountStore';
 import uiStore from 'src/store/uiStore';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, putDataAPI } from 'src/utils';
+import { ToastSuccess } from 'src/utils/toastOptions';
+
+const CONTENT = 'Do you want to Ban user?';
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [banId, setBanId] = useState<number>(null);
+
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -43,7 +50,28 @@ const ManageUser = () => {
       .catch((err) => {
         console.log(err);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleBan = () => {
+    putDataAPI(`/user/ban/${+banId}`, null, account.access_token, axiosJWT)
+      .then((res) => {
+        ToastSuccess('Ban User Successfully!!!');
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleOpenModalBan = (id: number) => {
+    setBanId(id);
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const handleChangePage = (event, newPage) => {};
 
@@ -83,7 +111,7 @@ const ManageUser = () => {
                   <TableCell className="cell_age">{item.role}</TableCell>
                   <TableCell className="cell_email">{item.email}</TableCell>
                   <TableCell className="cell_action">
-                    <Button>Ban</Button>
+                    <Button onClick={() => handleOpenModalBan(item.id)}>Ban</Button>
                     <Button>
                       <GrView />
                       View
@@ -104,6 +132,7 @@ const ManageUser = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <DialogCommon open={open} onClose={onClose} onConfirm={handleBan} content={CONTENT} />
     </Box>
   );
 };
