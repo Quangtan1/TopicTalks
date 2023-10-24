@@ -23,7 +23,7 @@ const ChatContainer = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
-    if (chat !== null) {
+    if (chat !== null && chat !== undefined) {
       // uiStore?.setLoading(true);
       getDataAPI(`/message/${chat.conversationInfor.id}`, account.access_token, axiosJWT)
         .then((res) => {

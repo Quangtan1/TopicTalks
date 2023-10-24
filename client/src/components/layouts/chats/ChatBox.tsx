@@ -26,6 +26,52 @@ import friendStore from 'src/store/friendStore';
 import { ToastError } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 
+///const
+const notifeMessageData = [
+  {
+    keyword: 'Approve',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just approved to the group',
+    icon: <AiOutlineUserAdd className="add_icon" />,
+  },
+  {
+    keyword: 'Reject',
+    prefix: 'Refused',
+    highlightResult: true,
+    suffix: ' to join the group',
+    icon: <IoCloseCircleOutline className="reject_icon" />,
+  },
+  {
+    keyword: 'Delete',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just been deleted from the Group',
+    icon: <RiDeleteBack2Line className="reject_icon" />,
+  },
+  {
+    keyword: 'Leave',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' just left the Group',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateTopic',
+    prefix: 'Topic changed',
+    highlightResult: true,
+    suffix: '',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateGroupName',
+    prefix: 'Group Name changed',
+    highlightResult: true,
+    suffix: '',
+    icon: null,
+  },
+];
+
 interface ChatProps {
   chat: ListMesage;
   handleOpenSetting: () => void;
@@ -189,31 +235,27 @@ const ChatBox = observer((props: ChatProps) => {
 
   const notifiGroup = (message: string) => {
     const result = message.split(',')[2].trim() === account.username ? 'You' : message.split(',')[2].trim();
-    if (message.includes('Approve')) {
-      return (
-        <>
-          <strong>{result}</strong> has just approved to the group <AiOutlineUserAdd className="add_icon" />
-        </>
-      );
-    } else if (message.includes('Reject')) {
-      return (
-        <>
-          Refused<strong>{result}</strong> to join the group <IoCloseCircleOutline className="reject_icon" />
-        </>
-      );
-    } else if (message.includes('Delete')) {
-      return (
-        <>
-          <strong> {result}</strong> has just deleted from the Group <RiDeleteBack2Line className="reject_icon" />
-        </>
-      );
-    } else if (message.includes('Leave')) {
-      return (
-        <>
-          <strong> {result}</strong> just leaved the Group
-        </>
-      );
-    }
+    let notification: any = '';
+
+    notifeMessageData.forEach((item) => {
+      if (message.includes(item.keyword)) {
+        const prefix = item.prefix ? `${item.prefix} ` : '';
+        const suffix = item.suffix ? ` ${item.suffix}` : '';
+        const name = item.highlightResult ? <strong>{result}</strong> : '';
+        const icon = item.icon ? item.icon : null;
+
+        notification = (
+          <>
+            {prefix}
+            {name}
+            {suffix}
+            {icon}
+          </>
+        );
+      }
+    });
+
+    return notification;
   };
 
   const isRemove = message[message?.length - 1]?.data.message.includes(`option_1410#$#,Delete, ${account.username}`);
@@ -225,7 +267,7 @@ const ChatBox = observer((props: ChatProps) => {
         {isSelecedChat && isMember === 'true' && (
           <>
             <Box className="title_name">
-              <Typography>{isGroup ? chat.conversationInfor.chatName : partnerName[0]?.username}</Typography>
+              <Typography>{isGroup ? chat?.conversationInfor.chatName : partnerName[0]?.username}</Typography>
               <Typography>({chat?.conversationInfor?.topicChildren.topicChildrenName})</Typography>
             </Box>
 

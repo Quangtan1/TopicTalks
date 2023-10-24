@@ -68,3 +68,48 @@ export const headerRoute = [
     path: '/contact',
   },
 ];
+
+export const notifiData = [
+  {
+    title: 'Approve',
+    messageA: '',
+    isName: true,
+    messageB: 'just approved to',
+  },
+  {
+    title: 'Reject',
+    messageA: '',
+    isName: true,
+    messageB: 'was refused from',
+  },
+  {
+    title: 'DeleteConversation',
+    messageA: '',
+    isName: false,
+    messageB: 'Conversation deleted from',
+  },
+  {
+    title: 'Remove',
+    messageA: '',
+    isName: true,
+    messageB: 'just deleted from',
+  },
+  {
+    title: 'Leave',
+    messageA: '',
+    isName: true,
+    messageB: 'just leaved',
+  },
+  {
+    title: 'UpdateTopic',
+    messageA: 'Topic',
+    isName: true,
+    messageB: 'from',
+  },
+  {
+    title: 'UpdateGroupName',
+    messageA: 'Group Name changed',
+    isName: true,
+    messageB: 'from',
+  },
+];

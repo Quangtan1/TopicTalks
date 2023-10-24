@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { IComment, IPost } from 'src/queries';
 import accountStore from 'src/store/accountStore';
-import { createAxios, deleteDataAPI, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import './PostDetailDialog.scss';
 import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
@@ -19,6 +19,7 @@ import { RiDeleteBin2Line, RiDeleteBin5Line } from 'react-icons/ri';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import NewPost from 'src/components/layouts/postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
+import { MdDone, MdOutlineCancel } from 'react-icons/md';
 
 interface DialogProps {
   open: boolean;
@@ -33,6 +34,10 @@ const PostDetailDialog = observer((props: DialogProps) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const [openConfirm, setOpenConFirm] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEditComment, setIsEditComment] = useState<number>();
+  const [inputEdit, setInputEdit] = useState<string>('');
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [commentId, setCommentId] = useState<number>();
   const navigate = useNavigate();
   const emoijiRef = useRef(null);
 
@@ -183,6 +188,53 @@ const PostDetailDialog = observer((props: DialogProps) => {
       });
   };
 
+  const clickEditComment = (comment: IComment) => {
+    setIsEditComment(comment.id);
+    setInputEdit(comment.content);
+  };
+
+  const handleEditComment = (id: number) => {
+    const commentData = {
+      userId: account.id,
+      content: inputEdit,
+    };
+    putDataAPI(`/comment/update/${id}`, commentData, account.access_token, axiosJWT)
+      .then((res) => {
+        const updatedComment = res.data.data;
+        console.log(updatedComment);
+
+        setComments((prevComments) => {
+          const updatedComments = [...prevComments];
+          const index = updatedComments.findIndex((item) => item.id === id);
+          if (index !== -1) {
+            updatedComments[index] = updatedComment;
+          }
+          return updatedComments;
+        });
+        setIsEditComment(null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const confirmDeleteComment = (id: number) => {
+    setCommentId(id);
+    setOpenDelete(true);
+  };
+
+  const handleDeleteComment = (id: number) => {
+    deleteDataAPI(`/comment/${account.id}/${id}`, account.access_token, axiosJWT)
+      .then(() => {
+        const newComments = comments.filter((item) => item.id !== id);
+        setComments(newComments);
+        setOpenDelete(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
   return (
@@ -226,9 +278,34 @@ const PostDetailDialog = observer((props: DialogProps) => {
                     <Box className="comment_item">
                       <Box className="comment_content">
                         <Typography onClick={() => handleNavigate(item.userId)}>{item?.username}</Typography>
-                        <Typography>{item?.content}</Typography>
+                        {isEditComment === item.id ? (
+                          <Box className="box_edit_comment">
+                            <TextField
+                              className="edit_comment"
+                              value={inputEdit}
+                              multiline
+                              rows={1}
+                              onChange={(e) => setInputEdit(e.target.value)}
+                            />
+                            <MdDone
+                              className={(inputEdit === '' || inputEdit === item.content) && 'disable_done'}
+                              onClick={() => handleEditComment(item.id)}
+                            />
+                            <MdOutlineCancel onClick={() => setIsEditComment(null)} />
+                          </Box>
+                        ) : (
+                          <Typography>{item?.content}</Typography>
+                        )}
                       </Box>
-                      <Typography>{formatTime(item?.createAt)}</Typography>
+                      <Box className="time_content">
+                        <Typography>{formatTime(item?.createAt)}</Typography>
+                        {account.id === item.userId && (
+                          <>
+                            <Typography onClick={() => clickEditComment(item)}>Edit</Typography>
+                            <Typography onClick={() => confirmDeleteComment(item.id)}>Delete</Typography>
+                          </>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
                 ))}
@@ -282,7 +359,17 @@ const PostDetailDialog = observer((props: DialogProps) => {
           onConfirm={deletePost}
         />
       )}
-      {isEdit && <NewPost isEdit open={isEdit} dataEdit={post} closePostModal={() => setIsEdit(false)} />}
+      {openDelete && (
+        <DialogCommon
+          open={openDelete}
+          onClose={() => setOpenDelete(false)}
+          onConfirm={() => handleDeleteComment(commentId)}
+          content="Do you want to delete this comment?"
+        />
+      )}
+      {isEdit && (
+        <NewPost isEdit open={isEdit} dataEdit={post} closePostModal={() => setIsEdit(false)} setPost={setPost} />
+      )}
     </Dialog>
   );
 });
