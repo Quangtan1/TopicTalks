@@ -43,7 +43,7 @@ const notifeMessageData = [
     icon: <IoCloseCircleOutline className="reject_icon" />,
   },
   {
-    keyword: 'Delete',
+    keyword: 'Remove',
     prefix: '',
     highlightResult: true,
     suffix: ' has just been deleted from the Group',

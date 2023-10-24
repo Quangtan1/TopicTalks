@@ -351,7 +351,7 @@ const ConversationSetting = observer((props: ChatProps) => {
                       <strong>{chat?.conversationInfor.adminId === item.id && '(Admin)'}</strong>
                     </Typography>
                   </Box>
-                  {isAdmin && <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Delete')} />}
+                  {isAdmin && <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Remove')} />}
                 </Box>
               ))}
 
