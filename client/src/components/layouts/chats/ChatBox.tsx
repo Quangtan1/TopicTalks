@@ -18,13 +18,14 @@ import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
 import { IoCloseCircleOutline, IoLogoSnapchat } from 'react-icons/io5';
-import { ListMesage } from 'src/types/chat.type';
+import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { FcCallback, FcSettings } from 'react-icons/fc';
-import { HiPhoneMissedCall } from 'react-icons/hi';
+import { HiMinusCircle, HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
 import friendStore from 'src/store/friendStore';
 import { ToastError } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
+import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
 
 ///const
 const notifeMessageData = [
@@ -221,7 +222,7 @@ const ChatBox = observer((props: ChatProps) => {
     }
   };
 
-  const partnerName = chat?.partnerDTO.filter((item) => item.id !== account.id);
+  const partnerUser = chat?.partnerDTO.find((item) => item.id !== account.id);
   const imageUser = (message: IMessage) => {
     const image = chat?.partnerDTO.filter((item) => item.id === message.userId).map((item) => item.image);
     return image.toString();
@@ -230,7 +231,7 @@ const ChatBox = observer((props: ChatProps) => {
   const isFriend =
     chat?.partnerDTO.length > 0 &&
     friendStore?.friends.some(
-      (item) => (item.friendId === partnerName[0]?.id || item.userid === partnerName[0]?.id) && item.accept,
+      (item) => (item.friendId === partnerUser?.id || item.userid === partnerUser?.id) && item.accept,
     );
 
   const notifiGroup = (message: string) => {
@@ -267,7 +268,7 @@ const ChatBox = observer((props: ChatProps) => {
         {isSelecedChat && isMember === 'true' && (
           <>
             <Box className="title_name">
-              <Typography>{isGroup ? chat?.conversationInfor.chatName : partnerName[0]?.username}</Typography>
+              <Typography>{isGroup ? chat?.conversationInfor.chatName : partnerUser?.username}</Typography>
               <Typography>({chat?.conversationInfor?.topicChildren.topicChildrenName})</Typography>
             </Box>
 
@@ -299,12 +300,19 @@ const ChatBox = observer((props: ChatProps) => {
                   key={index}
                 >
                   {item.userId !== account.id && !item.data.message.includes('option_1410#$#') && (
-                    <Avatar
-                      src={imageUser(item)}
-                      alt="avatar"
-                      className={isGroup && 'avatar'}
-                      onClick={() => handleOpenTooltip(item)}
-                    />
+                    <span className="active_avatar">
+                      <Avatar
+                        src={imageUser(item)}
+                        alt="avatar"
+                        className={isGroup && 'avatar'}
+                        onClick={() => handleOpenTooltip(item)}
+                      />
+                      {item.userId === partnerUser.id && partnerUser.active ? (
+                        <FiberManualRecordTwoTone className="online" />
+                      ) : (
+                        <FiberManualRecordTwoTone className="offline" />
+                      )}
+                    </span>
                   )}
                   <Box className="message_box">
                     {isImage.some((ext) => item.data.message.endsWith(ext)) ? (

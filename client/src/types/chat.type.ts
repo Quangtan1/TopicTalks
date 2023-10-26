@@ -17,6 +17,7 @@ export interface IPartnerDTO {
   image: string;
   bannedAt: string | null;
   member: boolean;
+  active: boolean;
 }
 export interface ListMesage {
   conversationInfor: IConversation;

@@ -10,11 +10,14 @@ import PostDetailDialog from './posts/PostDetailDialog';
 import { IoAddCircleSharp } from 'react-icons/io5';
 import NewPost from '../../postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
+import { ListTopic } from 'src/types/topic.type';
 
 const HomePage = observer(() => {
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
   const [postId, setPostId] = useState<number>();
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false);
+  const [selectTopic, setSelectTopic] = useState<number>(0);
+  const [listTopic, setListTopic] = useState<ListTopic[]>([]);
 
   const posts = postItemStore?.posts;
   const account = accountStore?.account;
@@ -26,8 +29,24 @@ const HomePage = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
+    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+      .then((res) => {
+        if (res.data.data !== 'Not exist any children topic.') {
+          setListTopic(res.data.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
     uiStore?.setLoading(true);
-    getDataAPI(`post/all-posts/is-approved=${true}`, account.access_token, axiosJWT)
+    getDataAPI(
+      `${selectTopic === 0 ? `post/all-posts/is-approved=${true}` : `/post/all-posts/tpid=${selectTopic}`}`,
+      account.access_token,
+      axiosJWT,
+    )
       .then((res) => {
         postItemStore?.setPosts(res.data.data);
         uiStore?.setLoading(false);
@@ -35,7 +54,7 @@ const HomePage = observer(() => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [selectTopic]);
 
   const handleDetailPost = (id: number) => {
     setOpenPostDetail(true);
@@ -44,14 +63,18 @@ const HomePage = observer(() => {
   return (
     <Box className="community_container">
       <Box className="option_box">
-        <Select value={0} className="select">
-          <MenuItem value={0} key={0}>
-            All Posts
-          </MenuItem>
-          <MenuItem value={1} key={1}>
-            Friend Posts
-          </MenuItem>
-        </Select>
+        {selectTopic !== null && (
+          <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)} className="select">
+            <MenuItem value={0}>All</MenuItem>
+            {listTopic.length > 0 &&
+              listTopic.map((item) => (
+                <MenuItem value={item.id} key={item.id}>
+                  {item.topicParentName}
+                </MenuItem>
+              ))}
+          </Select>
+        )}
+
         <IoAddCircleSharp className="create" onClick={() => setOpenCreatePost(true)} />
       </Box>
       <Box className="title_box">

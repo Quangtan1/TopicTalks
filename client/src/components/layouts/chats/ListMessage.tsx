@@ -17,6 +17,7 @@ import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
+import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
 
 const tabOption = [
   {
@@ -108,6 +109,10 @@ const ListMessage = observer(() => {
     const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
     return usernames;
   };
+  const isActive = (chat: ListMesage) => {
+    const result = chat.partnerDTO.some((item) => item.active);
+    return result;
+  };
 
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
@@ -161,7 +166,14 @@ const ListMessage = observer(() => {
                 className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
                 onClick={() => setSelectedChat(item)}
               >
-                <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
+                <span className="active_avatar">
+                  <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
+                  {isActive(item) ? (
+                    <FiberManualRecordTwoTone className="online" />
+                  ) : (
+                    <FiberManualRecordTwoTone className="offline" />
+                  )}
+                </span>
                 <ListItemText className="chat_text_item">
                   <Typography className={isCheckNotifi(item.conversationInfor.id) && 'notifi'}>
                     {item.conversationInfor.isGroupChat === true
@@ -176,7 +188,15 @@ const ListMessage = observer(() => {
           {selectedTab === 1 &&
             listFriend?.map((item) => (
               <ListItem key={item?.friendListId} className={`chat_item`}>
-                <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
+                <span className="active_avatar">
+                  <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
+                  {(item.userid === account.id ? item.friendActive : item.userActive) ? (
+                    <FiberManualRecordTwoTone className="online" />
+                  ) : (
+                    <FiberManualRecordTwoTone className="offline" />
+                  )}
+                </span>
+
                 <ListItemText className="chat_text_item">
                   <Typography>{item.userid === account.id ? item.friendName : item.userName}</Typography>
                 </ListItemText>
