@@ -34,19 +34,40 @@
           border-bottom: 1px solid rgb(239, 239, 239);
           justify-content: space-between;
           position: relative;
-          span {
+          .active_avatar {
             display: flex;
             gap: 8px;
             align-items: center;
-            .MuiAvatar-root {
+            position: relative;
+            .avatar {
               cursor: pointer;
             }
             p {
               color: #000;
+              font-weight: 600;
+            }
+            .link_title:hover {
+              opacity: 0.7;
               cursor: pointer;
             }
-            p:hover {
-              opacity: 0.7;
+            .online,
+            .offline {
+              position: absolute;
+              left: 26px;
+              top: 25px;
+              font-size: 20px;
+              path {
+                opacity: 1;
+              }
+              path:nth-child(2) {
+                color: #fff;
+              }
+            }
+            .online {
+              color: rgb(49, 162, 76);
+            }
+            .offline {
+              color: #7f1d1d;
             }
           }
           .edit {
@@ -75,22 +96,45 @@
               display: flex;
               gap: 12px;
               padding: 10px 0px;
-              .MuiAvatar-root {
-                cursor: pointer;
+              .active_avatar {
+                position: relative;
+                .avatar {
+                  cursor: pointer;
+                }
+                .online,
+                .offline {
+                  position: absolute;
+                  left: 26px;
+                  top: 25px;
+                  font-size: 20px;
+                  path {
+                    opacity: 1;
+                  }
+                  path:nth-child(2) {
+                    color: #fff;
+                  }
+                }
+                .online {
+                  color: rgb(49, 162, 76);
+                }
+                .offline {
+                  color: #7f1d1d;
+                }
               }
               .comment_item {
                 .comment_content {
                   display: flex;
                   align-items: flex-start;
                   gap: 10px;
+                  .link,
                   p:nth-child(1) {
                     font-weight: 600;
                     font-size: 14px;
                     font-stretch: 100%;
                     vertical-align: top;
-                    cursor: pointer;
                   }
-                  p:nth-child(1):hover {
+                  .link:hover {
+                    cursor: pointer;
                     opacity: 0.7;
                   }
                   p:nth-child(2) {

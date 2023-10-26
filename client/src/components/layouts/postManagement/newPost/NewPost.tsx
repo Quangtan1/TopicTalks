@@ -225,11 +225,11 @@ const NewPost: React.FC<Props> = observer(
               ) : null
             }
           />
-          {!values?.selectedTopicParent && (
+          {/* {!values?.selectedTopicParent && (
             <Button variant="outlined" size="small" className="post-button" onClick={() => refetchTopic()}>
               Reload Topic Parent
             </Button>
-          )}
+          )} */}
 
           {!isLoadingTopicParent && (
             <FormControl fullWidth variant="outlined" className="topic-parent-select">
@@ -270,7 +270,7 @@ const NewPost: React.FC<Props> = observer(
             {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }}
           />
 
-          <Box className="actions-container">
+          {/* <Box className="actions-container">
             <Button className="post-button" onClick={submitForm}>
               {isEdit ? 'Edit' : 'Post'}
             </Button>
@@ -283,7 +283,7 @@ const NewPost: React.FC<Props> = observer(
               emotion={emotion}
               setEmotion={setEmotion}
             />
-          </Box>
+          </Box> */}
           {/* <SuggestedTopicsComponent suggestedTopic={suggestedTopic} /> */}
         </DialogContent>
         <DialogActions className="dialog-actions">
