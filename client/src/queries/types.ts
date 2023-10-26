@@ -56,6 +56,7 @@ export interface IPost {
   img_url: string;
   totalComment: number;
   tparent_id: number;
+  author_active: boolean;
   like: ILike;
   avatar_url: string;
   username: string;
@@ -93,6 +94,7 @@ export interface IComment {
   id: number;
   postId: number;
   userId: number;
+  active: boolean;
   username: string;
   userImage: string;
   content: string;

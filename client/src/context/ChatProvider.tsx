@@ -8,6 +8,7 @@ import chatStore from 'src/store/chatStore';
 import { ICallData, ListMesage } from 'src/types/chat.type';
 import VideoCall from 'src/components/layouts/chats/videocall/VideoCall';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import { createAxios, postDataAPI } from 'src/utils';
 
 interface ChatProviderProps {
   children: React.ReactNode;
@@ -17,6 +18,12 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const [message, setMessage] = useState<IMessage[]>([]);
   const account = accountStore?.account;
   const chat = chatStore?.selectedChat;
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
 
   //notification
   //tam thoi thong bao trc cho message
@@ -115,7 +122,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         const isOption = receiveMessageDTO.data.message.includes('option_1410#$#');
         const index = prevNotification.findIndex((item) => item.conversationId === receiveMessageDTO.conversationId);
         const indexOption = prevNotification.findIndex((item) => item.data.message.includes('option_1410#$#'));
-
+        // saveNotifi(receiveMessageDTO);
         const updatedNotification = [...prevNotification];
         if (index !== -1 && !isOption && index !== indexOption) {
           updatedNotification[index] = receiveMessageDTO;
@@ -127,6 +134,25 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         return updatedNotification;
       });
     }
+  };
+
+  const saveNotifi = (notifiData: IMessage) => {
+    const { conversationId, data, groupChat, groupChatName, userId } = notifiData;
+    const dataRequest = {
+      conversationId: groupChat ? conversationId : null,
+      userId: account.id,
+      message: data.message,
+      isRead: false,
+      partnerId: userId,
+      postId: null,
+    };
+    postDataAPI(`/notification/save-notifi`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleLeaveCall = () => {

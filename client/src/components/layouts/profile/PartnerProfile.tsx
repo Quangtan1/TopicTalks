@@ -20,6 +20,7 @@ import postItemStore from 'src/store/postStore';
 import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
 import { formatDate } from 'src/utils/helper';
+import { FiberManualRecordTwoTone } from '@mui/icons-material';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -157,6 +158,7 @@ const PartnerProfile = observer(() => {
     (item) => (item.friendId === user?.id || item.userid === user?.id) && item.accept,
   );
 
+  const isDisplay = isFriend || account?.id === user?.id;
   return (
     <Box className="partner-profile-container">
       <Box className="title_box">
@@ -169,12 +171,18 @@ const PartnerProfile = observer(() => {
         <Box className="avt_image">
           <div className="backgroud_image" />
           <img src={user?.imageUrl || logo} alt="avt" />
-          {isProfile && <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />}
+          {isProfile ? (
+            <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />
+          ) : user?.active ? (
+            <FiberManualRecordTwoTone className="online" />
+          ) : (
+            <FiberManualRecordTwoTone className="offline" />
+          )}
         </Box>
         <Box className="info_user">
           <Box className="bio_box">
             <Typography className="title">Bio</Typography>
-            {user?.bio !== '' ? (
+            {isDisplay && user?.bio !== '' ? (
               <Typography>{user?.bio}</Typography>
             ) : (
               <Typography>
@@ -190,19 +198,19 @@ const PartnerProfile = observer(() => {
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Dob :...</Typography>
-              <Typography>{formatDate(user?.dob) || 'XX YY ZZZZ'}</Typography>
+              <Typography>{(isDisplay && formatDate(user?.dob)) || 'XX YY ZZZZ'}</Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Phone :...</Typography>
-              <Typography>XXX XXXX XXXX</Typography>
+              <Typography> {(isDisplay && user?.phoneNumber) || 'XXX XXXX XXXX'}</Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Nationality :...</Typography>
-              <Typography>{user?.country || 'ZXZXX'}</Typography>
+              <Typography>{(isDisplay && user?.country) || 'ZXZXX'}</Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Email :...</Typography>
-              <Typography>{user?.email || 'ZXZXX'}</Typography>
+              <Typography>{(isDisplay && user?.email) || 'ZXZXX'}</Typography>
             </Grid>
           </Grid>
           <Box className="action_box">

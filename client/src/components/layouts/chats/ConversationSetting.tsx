@@ -1,3 +1,4 @@
+import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -55,6 +56,17 @@ const ConversationSetting = observer((props: ChatProps) => {
     }
   };
 
+  const commonMessage = {
+    data: {
+      message: `${optionCode}`,
+    },
+    TargetId: chat?.partnerDTO[0]?.id,
+    userId: account.id,
+    conversationId: chat?.conversationInfor.id,
+    groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+    groupChat: chat?.conversationInfor.isGroupChat,
+  };
+
   const memberDTO = chat?.partnerDTO.filter((item) => item.member);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
@@ -66,25 +78,11 @@ const ConversationSetting = observer((props: ChatProps) => {
     };
 
     const receiveMessageDTO = {
+      ...commonMessage,
       data: {
         message: `${optionCode},Approve, ${member.username}`,
       },
-      TargetId: chat?.partnerDTO[0]?.id,
-      userId: account.id,
-      conversationId: chat.conversationInfor.id,
-      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-      groupChat: chat.conversationInfor.isGroupChat,
     };
-    // const stateMessage = {
-    //   data: {
-    //     message: `${approveCode}, ${member.username}`,
-    //   },
-    //   username: account.username,
-    //   userId: account.id,
-    //   conversationId: chat.conversationInfor.id,
-    //   groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-    //   groupChat: chat.conversationInfor.isGroupChat,
-    // };
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     putDataAPI(`/participant/approve-member`, approveData, account.access_token, axiosJWT)
@@ -102,14 +100,10 @@ const ConversationSetting = observer((props: ChatProps) => {
   const handleReject = (member: IPartnerDTO, status: string) => {
     const memberId = member?.id;
     const receiveMessageDTO = {
+      ...commonMessage,
       data: {
         message: `${optionCode},${status}, ${member.username}`,
       },
-      TargetId: chat?.partnerDTO[0]?.id,
-      userId: account.id,
-      conversationId: chat.conversationInfor.id,
-      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-      groupChat: chat.conversationInfor.isGroupChat,
     };
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -132,14 +126,10 @@ const ConversationSetting = observer((props: ChatProps) => {
 
   const leaveGroup = (status: string) => {
     const receiveMessageDTO = {
+      ...commonMessage,
       data: {
         message: `${optionCode},${status}, ${account.username}`,
       },
-      TargetId: chat?.partnerDTO[0]?.id,
-      userId: account.id,
-      conversationId: chat.conversationInfor.id,
-      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-      groupChat: chat.conversationInfor.isGroupChat,
     };
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -163,14 +153,10 @@ const ConversationSetting = observer((props: ChatProps) => {
 
   const deleteConversation = () => {
     const receiveMessageDTO = {
+      ...commonMessage,
       data: {
         message: `${optionCode},DeleteConversation,`,
       },
-      TargetId: chat?.partnerDTO[0]?.id,
-      userId: account.id,
-      conversationId: chat.conversationInfor.id,
-      groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-      groupChat: chat.conversationInfor.isGroupChat,
     };
     socket.emit('sendMessage', receiveMessageDTO);
     deleteDataAPI(`/conversation?cid=${chat?.conversationInfor.id}`, account.access_token, axiosJWT)
@@ -197,14 +183,10 @@ const ConversationSetting = observer((props: ChatProps) => {
         adminId: account.id,
       };
       const receiveMessageDTO = {
+        ...commonMessage,
         data: {
           message: `${optionCode},UpdateGroupName,${chat?.conversationInfor.chatName} to ${renameGroup}`,
         },
-        TargetId: chat?.partnerDTO[0]?.id,
-        userId: account.id,
-        conversationId: chat.conversationInfor.id,
-        groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-        groupChat: chat.conversationInfor.isGroupChat,
       };
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -237,14 +219,10 @@ const ConversationSetting = observer((props: ChatProps) => {
         userIdUpdate: account.id,
       };
       const receiveMessageDTO = {
+        ...commonMessage,
         data: {
           message: `${optionCode},UpdateTopic,${topicName} to ${topic.topicChildrenName}`,
         },
-        TargetId: chat?.partnerDTO[0]?.id,
-        userId: account.id,
-        conversationId: chat.conversationInfor.id,
-        groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-        groupChat: chat.conversationInfor.isGroupChat,
       };
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -298,6 +276,8 @@ const ConversationSetting = observer((props: ChatProps) => {
     setOpenUpdateTopic(true);
   };
 
+  const isActive = chat?.partnerDTO.some((item) => item.active);
+
   const content = `Do you want to delete ${partnerData?.username}`;
   const contenGroup = `Do you want to delete this conversation`;
 
@@ -305,7 +285,15 @@ const ConversationSetting = observer((props: ChatProps) => {
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
-          <Avatar src={isGroup ? '' : partnerUser?.image} alt="avt" className="avatar" />
+          <span className="active_avatar_setting">
+            <Avatar src={isGroup ? '' : partnerUser?.image} alt="avt" className="avatar" />
+            {isActive ? (
+              <FiberManualRecordTwoTone className="online" />
+            ) : (
+              <FiberManualRecordTwoTone className="offline" />
+            )}
+          </span>
+
           {edit === 1 ? (
             <span className="edit_name">
               <TextField value={renameGroup} onChange={(e) => setRenameGroup(e.target.value)} />

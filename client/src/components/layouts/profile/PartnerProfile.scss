@@ -57,6 +57,7 @@
         z-index: 1;
         background: #fafcfb;
       }
+
       .update_image {
         font-size: 35px;
         padding: 5px;
@@ -67,6 +68,26 @@
         z-index: 2;
         bottom: -2px;
         right: -12px;
+      }
+      .online,
+      .offline {
+        position: absolute;
+        z-index: 2;
+        bottom: -2px;
+        right: -12px;
+        font-size: 35px;
+        path {
+          opacity: 1;
+        }
+        path:nth-child(2) {
+          color: #fff;
+        }
+      }
+      .online {
+        color: rgb(49, 162, 76);
+      }
+      .offline {
+        color: #7f1d1d;
       }
     }
     .info_user {

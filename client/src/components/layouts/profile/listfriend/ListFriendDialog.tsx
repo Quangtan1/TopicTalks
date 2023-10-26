@@ -58,7 +58,7 @@ const ListFriendDialog = observer((props: DialogProps) => {
     };
     postDataAPI(`/friends/acceptFriendsApply`, dataRequest, account.access_token, axiosJWT)
       .then((res) => {
-        ToastSuccess(`You and ${friendName} are now friends`);
+        ToastSuccess(`You and ${friendName} are friends now`);
         const newData = filteredDataTabFriend.filter((item) => item.friendListId !== friendListId);
         setFilteredDataTabFriend(newData);
         const newListFriends = friendStore?.friends.filter((item) => item.friendListId !== res.data.data.friendListId);

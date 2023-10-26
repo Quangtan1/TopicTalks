@@ -95,6 +95,28 @@
           border-radius: 5px;
           box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
           min-height: 70px;
+          .active_avatar {
+            position: relative;
+            .online,
+            .offline {
+              position: absolute;
+              right: -1px;
+              bottom: -3px;
+              font-size: 16px;
+              path {
+                opacity: 1;
+              }
+              path:nth-child(2) {
+                color: #fff;
+              }
+            }
+            .online {
+              color: rgb(49, 162, 76);
+            }
+            .offline {
+              color: #7f1d1d;
+            }
+          }
           .chat_text_item {
             width: 60px;
             p {
@@ -244,8 +266,27 @@
           align-items: end;
           gap: 8px;
           padding: 5px 10px;
-          .avatar {
-            cursor: pointer;
+          .active_avatar {
+            position: relative;
+            .online,
+            .offline {
+              position: absolute;
+              right: -1px;
+              bottom: -3px;
+              font-size: 16px;
+              path {
+                opacity: 1;
+              }
+              path:nth-child(2) {
+                color: #fff;
+              }
+            }
+            .online {
+              color: rgb(49, 162, 76);
+            }
+            .offline {
+              color: #7f1d1d;
+            }
           }
           .message_box {
             .image-message {
@@ -506,6 +547,33 @@
         align-items: center;
         gap: 8px;
         padding: 10px 0px 10px;
+        .active_avatar_setting {
+          position: relative;
+          .online,
+          .offline {
+            position: absolute;
+            right: 2px;
+            bottom: -3px;
+            font-size: 20px;
+            path {
+              opacity: 1;
+            }
+            path:nth-child(2) {
+              color: #fff;
+            }
+          }
+          .online {
+            color: rgb(49, 162, 76);
+          }
+          .offline {
+            color: #7f1d1d;
+          }
+          .avatar {
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+          }
+        }
         .edit_name {
           display: flex;
           gap: 5px;
@@ -532,11 +600,7 @@
             color: red;
           }
         }
-        .avatar {
-          width: 70px;
-          height: 70px;
-          cursor: pointer;
-        }
+
         p:nth-child(2) {
           display: flex;
           gap: 5px;

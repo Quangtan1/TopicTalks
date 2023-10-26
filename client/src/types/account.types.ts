@@ -20,6 +20,7 @@ export interface IUserProfile {
   gender: string;
   id: number;
   imageUrl: string;
+  active: boolean;
   phoneNumber: string;
   role: string;
   username: string;
@@ -31,10 +32,12 @@ export interface IFriends {
   friendId: number;
   friendName: string;
   friendUrl: string;
+  friendActive: boolean;
   updatedAt: string;
   createdAt: string;
   public: false;
   accept: false;
   userName: string;
   userUrl: string;
+  userActive: boolean;
 }
