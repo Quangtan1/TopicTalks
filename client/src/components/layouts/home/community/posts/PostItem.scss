@@ -26,6 +26,12 @@
       .card_action {
         display: flex;
         justify-content: center;
+        gap: 10px;
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+        }
         button {
           padding: 8px;
           width: 100px;

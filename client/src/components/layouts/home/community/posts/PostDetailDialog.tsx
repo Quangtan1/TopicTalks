@@ -20,6 +20,7 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import NewPost from 'src/components/layouts/postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { MdDone, MdOutlineCancel } from 'react-icons/md';
+import { FiberManualRecordTwoTone } from '@mui/icons-material';
 
 interface DialogProps {
   open: boolean;
@@ -100,6 +101,10 @@ const PostDetailDialog = observer((props: DialogProps) => {
           setComments([...comments, res.data.data]);
           const inputElement = document.getElementById('text_input');
           inputElement.blur();
+          setPost({
+            ...post,
+            totalComment: post?.totalComment + 1,
+          });
           setShowEmojiPicker(false);
           setInputComment('');
           uiStore?.setLoading(false);
@@ -167,7 +172,11 @@ const PostDetailDialog = observer((props: DialogProps) => {
   };
 
   const addEmoji = (emoji: any) => {
-    setInputComment(inputComment + emoji.native);
+    if (isEditComment) {
+      setInputEdit(inputEdit + emoji.native);
+    } else {
+      setInputComment(inputComment + emoji.native);
+    }
   };
 
   const toggleEmojiPicker = () => {
@@ -180,7 +189,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
         ToastSuccess('Delete Post Succesfully');
         const newPosts = postItemStore?.posts.filter((item) => item.id !== post?.id);
         postItemStore?.setPosts(newPosts);
-        onClose();
+        handleClose();
         setOpenConFirm(false);
       })
       .catch((err) => {
@@ -201,8 +210,6 @@ const PostDetailDialog = observer((props: DialogProps) => {
     putDataAPI(`/comment/update/${id}`, commentData, account.access_token, axiosJWT)
       .then((res) => {
         const updatedComment = res.data.data;
-        console.log(updatedComment);
-
         setComments((prevComments) => {
           const updatedComments = [...prevComments];
           const index = updatedComments.findIndex((item) => item.id === id);
@@ -228,6 +235,10 @@ const PostDetailDialog = observer((props: DialogProps) => {
       .then(() => {
         const newComments = comments.filter((item) => item.id !== id);
         setComments(newComments);
+        setPost({
+          ...post,
+          totalComment: post?.totalComment - 1,
+        });
         setOpenDelete(false);
       })
       .catch((err) => {
@@ -235,19 +246,38 @@ const PostDetailDialog = observer((props: DialogProps) => {
       });
   };
 
+  const handleClose = () => {
+    postItemStore?.updatePost(post?.id, post);
+    onClose();
+  };
+
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
   return (
-    <Dialog open={open} onClose={onClose} className="postdetail_dialog">
+    <Dialog open={open} onClose={handleClose} className="postdetail_dialog">
       <Grid container className="grid_container">
         <Grid item md={7.5} xs={12} className="image">
           <img src={post?.img_url} alt="img" />
         </Grid>
         <Grid item md={4.5} xs={12} className="post_infor">
           <Box className="infor_user">
-            <span>
-              <Avatar src={post?.avatar_url} onClick={() => handleNavigate(post?.author_id)} />
-              <Typography onClick={() => handleNavigate(post?.author_id)}>{post?.username}</Typography>
+            <span className="active_avatar">
+              <Avatar
+                src={post?.avatar_url}
+                onClick={() => handleNavigate(post?.author_id)}
+                className={post?.author_id !== account.id && 'avatar'}
+              />
+              {post?.author_active ? (
+                <FiberManualRecordTwoTone className="online" />
+              ) : (
+                <FiberManualRecordTwoTone className="offline" />
+              )}
+              <Typography
+                onClick={() => handleNavigate(post?.author_id)}
+                className={post?.author_id !== account.id && 'link_title'}
+              >
+                {post?.username}
+              </Typography>
             </span>
             <Box>
               {account.id === post?.author_id && (
@@ -274,10 +304,27 @@ const PostDetailDialog = observer((props: DialogProps) => {
               {comments?.length > 0 &&
                 comments?.map((item) => (
                   <Box className="comment_item_box" key={item.id}>
-                    <Avatar src={item?.userImage} alt="avt" onClick={() => handleNavigate(item.userId)} />
+                    <span className="active_avatar">
+                      <Avatar
+                        src={item?.userImage}
+                        alt="avt"
+                        onClick={() => handleNavigate(item.userId)}
+                        className={item.userId !== account.id && 'avatar'}
+                      />
+                      {item.active ? (
+                        <FiberManualRecordTwoTone className="online" />
+                      ) : (
+                        <FiberManualRecordTwoTone className="offline" />
+                      )}
+                    </span>
                     <Box className="comment_item">
                       <Box className="comment_content">
-                        <Typography onClick={() => handleNavigate(item.userId)}>{item?.username}</Typography>
+                        <Typography
+                          onClick={() => handleNavigate(item.userId)}
+                          className={item.userId !== account.id && 'link'}
+                        >
+                          {item?.username}
+                        </Typography>
                         {isEditComment === item.id ? (
                           <Box className="box_edit_comment">
                             <TextField

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import './PostItem.scss';
 import { IPost } from 'src/queries';
 import PostDetailDialog from './PostDetailDialog';
+import { AiOutlineHeart } from 'react-icons/ai';
+import { FaRegComment } from 'react-icons/fa';
 
 interface PostProps {
   posts?: IPost[];
@@ -26,7 +28,14 @@ const PostItem = (props: PostProps) => {
                 <Typography>{item.content}</Typography>
               </CardContent>
               <CardActions className="card_action">
+                <span className="item">
+                  {item.like.totalLike} <AiOutlineHeart />
+                </span>
+
                 <Button onClick={() => handleDetailPost(item.id)}>More</Button>
+                <span className="item">
+                  {item.totalComment} <FaRegComment />
+                </span>
               </CardActions>
             </Card>
           </Grid>
