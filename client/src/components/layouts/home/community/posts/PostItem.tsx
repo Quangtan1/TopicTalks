@@ -5,16 +5,24 @@ import { IPost } from 'src/queries';
 import PostDetailDialog from './PostDetailDialog';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
+import friendStore from 'src/store/friendStore';
+import accountStore from 'src/store/accountStore';
+import { observer } from 'mobx-react';
 
 interface PostProps {
   posts?: IPost[];
   handleDetailPost: (id: number) => void;
 }
 
-const PostItem = (props: PostProps) => {
+const PostItem = observer((props: PostProps) => {
   const { posts, handleDetailPost } = props;
 
-  const postApproves = posts?.filter((item) => item.approved);
+  const postApproves = posts?.filter((item) => {
+    const isFriend = friendStore?.friends.some(
+      (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
+    );
+    return item.status === 1 || (item.status === 2 && isFriend) || accountStore?.account.id === item.author_id;
+  });
 
   return (
     <Box className="postitem_container">
@@ -43,6 +51,6 @@ const PostItem = (props: PostProps) => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default PostItem;

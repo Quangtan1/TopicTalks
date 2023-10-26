@@ -63,8 +63,9 @@ const Header = observer(() => {
       };
       worker.postMessage(params);
     }
+
     return () => {
-      friendStore?.setFriends([]);
+      account === null && friendStore?.setFriends([]);
     };
   }, [account, location]);
 

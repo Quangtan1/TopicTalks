@@ -9,6 +9,7 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
+  MenuItem,
   Select,
   TextField,
   Typography,
@@ -138,19 +139,12 @@ const NewPost: React.FC<Props> = observer(
         author_id: +accountStore.account.id,
         title: data?.postTitle,
         tparent_id: +data?.selectedTopicParent,
+        status_id: +data?.status,
       };
 
       isEdit ? handleEditPost(postData) : handleMutationPost(postData);
       closePostModal?.(!open);
       setDefaultValue();
-    };
-
-    const openEmotionModal = () => {
-      setIsEmotionModalOpen(true);
-    };
-
-    const closeEmotionModal = () => {
-      setIsEmotionModalOpen(false);
     };
 
     const handleClickRemoveEmotion = () => {
@@ -163,6 +157,7 @@ const NewPost: React.FC<Props> = observer(
         selectedTopicParent: dataEdit?.tparent_id,
         postTitle: dataEdit?.title,
         imageUrl: dataEdit?.img_url,
+        status: dataEdit?.status || 1,
       },
       validationSchema,
       validateOnChange: false,
@@ -171,7 +166,7 @@ const NewPost: React.FC<Props> = observer(
       onSubmit: handleCreatePost,
     });
 
-    const { errors, touched, getFieldProps, submitForm, resetForm, values } = formik;
+    const { errors, touched, getFieldProps, submitForm, resetForm, dirty, values } = formik;
 
     return (
       <Dialog open={open} onClose={closePostModal} className="form-dialog-title">
@@ -181,6 +176,19 @@ const NewPost: React.FC<Props> = observer(
         <DialogContent className="dialog-content">
           <AvatarComponent url={url_img} username={account?.username} />
           {!isEdit && <DialogContentText className="post-label">Post a post you are interested:</DialogContentText>}
+          <FormControl fullWidth variant="outlined" className="topic-parent-select">
+            <InputLabel htmlFor="topic-parent">Select Status Post</InputLabel>
+
+            <Select label="Select Status" id="status" native {...getFieldProps('status')}>
+              <option value={1}>Public</option>
+              <option value={2}>Friend</option>
+              <option value={3}>Private</option>
+            </Select>
+
+            <Typography variant="caption" color="error">
+              {errors.status as string}
+            </Typography>
+          </FormControl>
           <TextField
             autoFocus
             margin="dense"
@@ -270,11 +278,9 @@ const NewPost: React.FC<Props> = observer(
             {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }}
           />
 
-          {/* <Box className="actions-container">
-            <Button className="post-button" onClick={submitForm}>
-              {isEdit ? 'Edit' : 'Post'}
-            </Button>
-            <Button startIcon={<EmojiEmotionsIcon />} className="emotion-button" onClick={openEmotionModal}>
+          {/* <Box className="actions-container"> */}
+
+          {/* <Button startIcon={<EmojiEmotionsIcon />} className="emotion-button" onClick={openEmotionModal}>
               Emotion
             </Button>
             <EmotionModal
@@ -282,13 +288,16 @@ const NewPost: React.FC<Props> = observer(
               onClose={closeEmotionModal}
               emotion={emotion}
               setEmotion={setEmotion}
-            />
-          </Box> */}
+            /> */}
+          {/* </Box> */}
           {/* <SuggestedTopicsComponent suggestedTopic={suggestedTopic} /> */}
         </DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={closePostModal} color="primary">
             Cancel
+          </Button>
+          <Button className="post-button" onClick={submitForm} disabled={!dirty}>
+            {isEdit ? 'Edit' : 'Post'}
           </Button>
         </DialogActions>
       </Dialog>
