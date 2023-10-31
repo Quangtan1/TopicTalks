@@ -12,6 +12,7 @@ import ContactUs from 'src/components/layouts/contactUs';
 import ManagePost from 'src/components/admin/managepost/ManagePost';
 import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
 import ManageUsersQA from 'src/components/admin/manageusersQA/ManageUsersQA';
+import ForgotPassword from 'src/components/layouts/auth/ForgotPassword';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -20,6 +21,7 @@ const publicRoutes = [
   { path: '/landing-view', component: LandingView, isAdmin: false },
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
+  { path: '/forgot-password', component: ForgotPassword, layout: null },
   { path: '/personal-profile/:id', component: PartnerProfile, isAdmin: false },
   { path: '/message', component: ChatContainer, isAdmin: false },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
