@@ -3,13 +3,23 @@ import Content from './content';
 import Gallery from './gallery';
 import Navbar from '../Navbar';
 import Footer from '../Footer';
+import LazyShow from '../Animated/LazyShow';
+import Canvas from '../Animated/Canvas';
 
 const About = () => {
   return (
     <>
       <Navbar />
-      <Content />
-      <Gallery />
+      <LazyShow>
+        <>
+          <Content />
+          <Canvas />
+        </>
+      </LazyShow>
+      <LazyShow>
+        <Gallery />
+      </LazyShow>
+      <Canvas />
       <Footer />
     </>
   );

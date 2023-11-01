@@ -4,12 +4,17 @@ import GetInTouch from './GetInTouch';
 import Footer from './Footer';
 import Navbar from './Navbar';
 import { getStarted } from './helpers';
+import LazyShow from './Animated/LazyShow';
+import Canvas from './Animated/Canvas';
 
 const LandingView = () => {
   return (
     <>
       <Navbar />
       <Header />
+      <LazyShow>
+        <Canvas />
+      </LazyShow>
       {getStarted.map((item, index) => (
         <GetStarted
           key={index}
@@ -21,7 +26,12 @@ const LandingView = () => {
           content2={item.content2}
         />
       ))}
-      <GetInTouch />
+      <LazyShow>
+        <Canvas />
+      </LazyShow>
+      <LazyShow>
+        <GetInTouch />
+      </LazyShow>
       <Footer />
     </>
   );
