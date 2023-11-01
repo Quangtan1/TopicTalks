@@ -12,6 +12,8 @@ import ContactUs from 'src/components/layouts/contactUs';
 import ManagePost from 'src/components/admin/managepost/ManagePost';
 import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
 import ManageUsersQA from 'src/components/admin/manageusersQA/ManageUsersQA';
+import LandingView from 'src/components/layouts/LandingView';
+import About from 'src/components/layouts/LandingView/about';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -28,6 +30,8 @@ const publicRoutes = [
   { path: '/manage-user', component: ManageUsers, isAdmin: true },
   { path: '/manage-post', component: ManagePost, isAdmin: true },
   { path: '/topic-detail/:id', component: TopicChildDetail },
+  { path: '/landing-view', component: LandingView, layout: null },
+  { path: '/about', component: About, layout: null },
   // { path: '/post-detail/:id', component: PostDetailDialog },
 ];
 
