@@ -1,4 +1,16 @@
-import { Avatar, Box, Button, Dialog, DialogTitle, Grid, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { IComment, IPost } from 'src/queries';
@@ -39,6 +51,9 @@ const PostDetailDialog = observer((props: DialogProps) => {
   const [inputEdit, setInputEdit] = useState<string>('');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>();
+  const [statusSelect, setStatusSelect] = useState<number>();
+  const [statusConfirm, setStatusConfirm] = useState<boolean>(false);
+  const [statusId, setStatusId] = useState<number>();
   const navigate = useNavigate();
   const emoijiRef = useRef(null);
 
@@ -251,6 +266,31 @@ const PostDetailDialog = observer((props: DialogProps) => {
     onClose();
   };
 
+  const updateStatus = () => {
+    putDataAPI(`/post/update-status?pid=${post?.id}&&sid=${statusId}`, null, account.access_token, axiosJWT)
+      .then((res) => {
+        setPost({
+          ...post,
+          status: statusId,
+        });
+        setStatusSelect(statusId);
+        setStatusConfirm(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onChangeStatus = (e) => {
+    const value = e.target.value;
+
+    if (value !== post?.status) {
+      setStatusConfirm(true);
+      setStatusId(value);
+    } else {
+      setStatusSelect(value);
+    }
+  };
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
   return (
@@ -272,12 +312,27 @@ const PostDetailDialog = observer((props: DialogProps) => {
               ) : (
                 <FiberManualRecordTwoTone className="offline" />
               )}
-              <Typography
-                onClick={() => handleNavigate(post?.author_id)}
-                className={post?.author_id !== account.id && 'link_title'}
-              >
-                {post?.username}
-              </Typography>
+              <Box className="select_status">
+                <Typography
+                  onClick={() => handleNavigate(post?.author_id)}
+                  className={post?.author_id !== account.id && 'link_title'}
+                >
+                  {post?.username}
+                </Typography>
+                {post?.author_id === account.id && (
+                  <Select
+                    value={statusSelect || post?.status}
+                    className="select"
+                    onChange={(e: SelectChangeEvent<number>) => onChangeStatus(e)}
+                  >
+                    <MenuItem value={1}>Public</MenuItem>
+                    <MenuItem value={2}>Friend</MenuItem>
+                    <MenuItem value={3}>Private</MenuItem>
+                  </Select>
+                )}
+
+                <Typography className="hashtag">#{post?.topicName}</Typography>
+              </Box>
             </span>
             <Box>
               {account.id === post?.author_id && (
@@ -412,6 +467,14 @@ const PostDetailDialog = observer((props: DialogProps) => {
           onClose={() => setOpenDelete(false)}
           onConfirm={() => handleDeleteComment(commentId)}
           content="Do you want to delete this comment?"
+        />
+      )}
+      {statusConfirm && (
+        <DialogCommon
+          open={statusConfirm}
+          onClose={() => setStatusConfirm(false)}
+          onConfirm={updateStatus}
+          content="Do you want to update status post?"
         />
       )}
       {isEdit && (

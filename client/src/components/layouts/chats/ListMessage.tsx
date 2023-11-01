@@ -43,7 +43,7 @@ const ListMessage = observer(() => {
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const account = accountStore?.account;
 
-  const { openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
+  const { socket, openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
 
   const chat = chatStore?.selectedChat;
   const listChats = chatStore?.chats;
@@ -53,6 +53,21 @@ const ListMessage = observer(() => {
 
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
+
+  const setSelectedChat = (selectChat: ListMesage) => {
+    if (socket) {
+      socket.emit('onJoinRoom', selectChat.conversationInfor.id);
+    }
+    const newNotifi = notification.filter((item) => item.conversationId !== selectChat.conversationInfor.id);
+    setNotification(newNotifi);
+    getDataAPI(`/participant/uid=${account.id}&&cid=${selectChat.conversationInfor.id}`, account.access_token, axiosJWT)
+      .then((res) => {
+        chatStore?.setSelectedChat(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     uiStore?.setLoading(true);
@@ -69,18 +84,6 @@ const ListMessage = observer(() => {
       chatStore?.setSelectedChat(null);
     };
   }, []);
-
-  const setSelectedChat = (chat: ListMesage) => {
-    const newNotifi = notification.filter((item) => item.conversationId !== chat.conversationInfor.id);
-    setNotification(newNotifi);
-    getDataAPI(`/participant/uid=${account.id}&&cid=${chat.conversationInfor.id}`, account.access_token, axiosJWT)
-      .then((res) => {
-        chatStore?.setSelectedChat(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   // const sendEmail = () => {
   //   const email = 'tantqde150382@fpt.edu.vn';

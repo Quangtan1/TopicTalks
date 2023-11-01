@@ -21,7 +21,11 @@ const PostItem = observer((props: PostProps) => {
     const isFriend = friendStore?.friends.some(
       (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
     );
-    return item.status === 1 || (item.status === 2 && isFriend) || accountStore?.account.id === item.author_id;
+    return (
+      item.status === 1 ||
+      (item.status === 2 && isFriend) ||
+      (accountStore?.account.id === item.author_id && item.status !== 3)
+    );
   });
 
   return (

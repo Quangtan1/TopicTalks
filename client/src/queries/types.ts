@@ -56,12 +56,14 @@ export interface IPost {
   img_url: string;
   totalComment: number;
   tparent_id: number;
+  topicName: string;
   author_active: boolean;
   like: ILike;
   avatar_url: string;
   username: string;
   author_id: number;
   status: number;
+  statusName: string;
   created_at: string;
   updated_at: string;
   approved: boolean;

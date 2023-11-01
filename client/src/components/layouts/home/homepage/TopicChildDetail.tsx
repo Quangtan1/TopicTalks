@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import accountStore from 'src/store/accountStore';
 import { TopicChild } from 'src/types/topic.type';
-import { createAxios, getDataAPI, imageGroup, postDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, imageGroup, postDataAPI } from 'src/utils';
 import './TopicChildDetail.scss';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
@@ -18,7 +18,7 @@ const content = 'Are you sure you want to join this group?';
 const TopicChildDetail = observer(() => {
   const { id } = useParams();
   const [topicChild, setTopicChild] = useState<TopicChild>(null);
-  const [listTopicChild, setListTopicChild] = useState<ListMesage[]>([]);
+  const [listGroup, setListGroup] = useState<ListMesage[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [openWarning, setOpenWarning] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<number>(null);
@@ -43,7 +43,7 @@ const TopicChildDetail = observer(() => {
       });
     getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
-        setListTopicChild(res.data.data);
+        setListGroup(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -58,9 +58,13 @@ const TopicChildDetail = observer(() => {
     const result = partnerDTO.some((item) => item.id === account.id);
     return result;
   };
+  const isMember = (partnerDTO: IPartnerDTO[]) => {
+    const result = partnerDTO.some((item) => item.id === account.id && item.member);
+    return result;
+  };
 
   const joinGroupChat = (groudId: number) => {
-    uiStore?.setLoading(true);
+    // uiStore?.setLoading(true);
     const groupData = {};
     postDataAPI(
       `/participant/join-group-chat/uid=${account.id}&&cid=${groudId}`,
@@ -70,12 +74,19 @@ const TopicChildDetail = observer(() => {
     )
       .then((res) => {
         ToastSuccess('Waiting Approve from Admin');
-        navigate('/message');
-        setTimeout(() => {
-          // chatStore?.setChats([res.data.data, ...chatStore?.chats]);
-          chatStore?.setSelectedChat(res.data.data);
-          uiStore?.setLoading(false);
-        }, 400);
+        const index = listGroup?.findIndex((item) => item.conversationInfor.id === groudId);
+
+        setListGroup((prev) => {
+          prev[index] = res.data.data;
+          return [...prev];
+        });
+        setOpenWarning(false);
+        // navigate('/message');
+        // setTimeout(() => {
+        //   // chatStore?.setChats([res.data.data, ...chatStore?.chats]);
+        //   chatStore?.setSelectedChat(res.data.data);
+        //   uiStore?.setLoading(false);
+        // }, 400);
       })
       .catch((err) => {
         console.log(err);
@@ -90,6 +101,29 @@ const TopicChildDetail = observer(() => {
       chatStore?.setSelectedChat({ ...selectedChat, isMember: isMember.toString() });
       uiStore?.setLoading(false);
     }, 200);
+  };
+
+  const cancelJoin = (chat: ListMesage) => {
+    deleteDataAPI(
+      `/participant/remove-member?aid=${chat.conversationInfor.adminId}&uid=${account.id}&cid=${chat?.conversationInfor.id}`,
+      account.access_token,
+      axiosJWT,
+    )
+      .then((res) => {
+        const index = listGroup?.findIndex((item) => item.conversationInfor.id === chat?.conversationInfor.id);
+        const newPartner = chat?.partnerDTO.filter((item) => item.id !== account.id);
+        setListGroup((prev) => {
+          const updatedChat = {
+            ...chat,
+            partnerDTO: newPartner,
+          };
+          prev[index] = updatedChat;
+          return [...prev];
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleConfirm = (groudId: number) => {
@@ -125,8 +159,8 @@ const TopicChildDetail = observer(() => {
           Create Your Own Group
         </Button>
         <Grid container className="group_container">
-          {listTopicChild?.length > 0 &&
-            listTopicChild?.map((item) => (
+          {listGroup?.length > 0 &&
+            listGroup?.map((item) => (
               <Grid item md={4} key={item.conversationInfor.id} className="group_box">
                 <Card>
                   <CardMedia image={imageGroup} className="image_group" />
@@ -137,9 +171,15 @@ const TopicChildDetail = observer(() => {
                   </CardContent>
                   <CardActions className="card_actions">
                     {isJoinGroup(item.partnerDTO) ? (
-                      <Button className="joined_before" onClick={() => handleJoinBefore(item)}>
-                        Joined Before
-                      </Button>
+                      isMember(item.partnerDTO) ? (
+                        <Button className="joined_before" onClick={() => handleJoinBefore(item)}>
+                          Joined Before
+                        </Button>
+                      ) : (
+                        <Button className="joined_before" onClick={() => cancelJoin(item)}>
+                          Cancel
+                        </Button>
+                      )
                     ) : (
                       <Button className="join_group" onClick={() => handleConfirm(item.conversationInfor.id)}>
                         Join Group

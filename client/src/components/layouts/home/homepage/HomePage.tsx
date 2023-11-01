@@ -1,7 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import React, { useEffect, useState, useMemo } from 'react';
 import memoizeOne from 'memoize-one';
-import './LandingView.scss';
+import './HomePage.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import { createAxios, getDataAPI } from 'src/utils';
@@ -10,11 +10,12 @@ import { ListTopic, TopicChild } from 'src/types/topic.type';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { GiPlainSquare } from 'react-icons/gi';
 
 export const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 4,
+    items: 3,
     slidesToSlide: 2, // optional, default to 1.
   },
   tablet: {
@@ -29,7 +30,7 @@ export const responsive = {
   },
 };
 
-const LandingView = observer(() => {
+const HomePage = observer(() => {
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);
   const [topicChildMap, setTopicChildMap] = useState<Map<number, TopicChild[]>>(new Map());
   const navigate = useNavigate();
@@ -91,13 +92,26 @@ const LandingView = observer(() => {
 
   return (
     <Box className="landing_container">
+      <Box className="intro_view"></Box>
       {listTopic.length > 0 &&
-        listTopic?.map((topicParent) => (
+        listTopic?.map((topicParent, index) => (
           <Box key={topicParent?.id} className="topic_box">
-            <Typography className="title_parent_topic">
-              <strong>Discovery</strong> {topicParent.topicParentName}
-            </Typography>
-            <Typography className="title_background">{topicParent.topicParentName}</Typography>
+            {index % 2 ? (
+              <Box className="box_title_parent">
+                <div className="divider_right">
+                  <GiPlainSquare />
+                </div>
+                <Typography className="title_parent_topic_right"> {topicParent.topicParentName}</Typography>
+              </Box>
+            ) : (
+              <Box className="box_title_parent">
+                <Typography className="title_parent_topic"> {topicParent.topicParentName}</Typography>
+                <div className="divider">
+                  <GiPlainSquare />
+                </div>
+              </Box>
+            )}
+
             <Carousel
               swipeable={false}
               draggable={false}
@@ -116,6 +130,10 @@ const LandingView = observer(() => {
                   >
                     <Typography className="topic_child_title">{topicChild.topicChildrenName}</Typography>
                     <img src={topicChild?.image} alt="topic" className="image_topic" />
+                    <Typography className="description">
+                      Lorem ipsum dolor sit amet, con sectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+                      eros.
+                    </Typography>
                     <div className="overlay"></div>
                   </Box>
                 ))}
@@ -127,4 +145,4 @@ const LandingView = observer(() => {
   );
 });
 
-export default LandingView;
+export default HomePage;

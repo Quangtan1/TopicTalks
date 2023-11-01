@@ -313,12 +313,12 @@ const ConversationSetting = observer((props: ChatProps) => {
             </Typography>
           )}
         </Box>
-        <Box className="topic_setting">
+        {/* <Box className="topic_setting">
           <Typography>Topic:</Typography>
 
           <Typography>{chat?.conversationInfor?.topicChildren.topicChildrenName}</Typography>
           {(isAdmin || !isGroup) && <AiOutlineEdit onClick={clickEditTopic} />}
-        </Box>
+        </Box> */}
         {isGroup && (
           <Box className="member_setting">
             <Box className="title_member_setting">
@@ -339,7 +339,9 @@ const ConversationSetting = observer((props: ChatProps) => {
                       <strong>{chat?.conversationInfor.adminId === item.id && '(Admin)'}</strong>
                     </Typography>
                   </Box>
-                  {isAdmin && <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Remove')} />}
+                  {isAdmin && item.id !== account.id && (
+                    <TiDeleteOutline className="svg_item" onClick={() => handleConfirm(item, 'Remove')} />
+                  )}
                 </Box>
               ))}
 
