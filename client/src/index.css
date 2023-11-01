@@ -15,7 +15,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Nunito Sans", Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, Lucida;
   font-size: 14px;
   font-weight: 400;
   line-height: 26px;
@@ -26,7 +26,7 @@ code {
     monospace;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 20px;
@@ -42,9 +42,9 @@ code {
 ::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 20px;
-}
+} */
 p {
-  font-family: Source Sans Pro,sans-serif;
+  font-family: Roboto, Helvetica, Arial, Lucida;
 }
 
 :root {

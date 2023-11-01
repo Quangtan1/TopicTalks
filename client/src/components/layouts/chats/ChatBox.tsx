@@ -269,7 +269,7 @@ const ChatBox = observer((props: ChatProps) => {
           <>
             <Box className="title_name">
               <Typography>{isGroup ? chat?.conversationInfor.chatName : partnerUser?.username}</Typography>
-              <Typography>({chat?.conversationInfor?.topicChildren.topicChildrenName})</Typography>
+              <Typography>{isGroup && `(${chat?.conversationInfor?.topicChildren.topicChildrenName})`}</Typography>
             </Box>
 
             <Box className="header_option">
@@ -307,7 +307,7 @@ const ChatBox = observer((props: ChatProps) => {
                         className={isGroup && 'avatar'}
                         onClick={() => handleOpenTooltip(item)}
                       />
-                      {item.userId === partnerUser.id && partnerUser.active ? (
+                      {item.userId === partnerUser?.id && partnerUser?.active ? (
                         <FiberManualRecordTwoTone className="online" />
                       ) : (
                         <FiberManualRecordTwoTone className="offline" />

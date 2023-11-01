@@ -63,10 +63,9 @@ const PartnerProfile = observer(() => {
       });
   }, [id]);
 
-  const accessChat = (topic: TopicChild) => {
+  const accessChat = () => {
     const dataRequest = {
       userIdInSession: account.id,
-      topicChildrenId: topic.id,
     };
     uiStore?.setLoading(true);
     postDataAPI(`/participant/${user?.id}`, dataRequest, account.access_token, axiosJWT)
@@ -105,9 +104,6 @@ const PartnerProfile = observer(() => {
       });
   };
 
-  const postApproves = posts?.filter((item) => item.approved);
-  const postWaitingApproves = posts?.filter((item) => !item.approved);
-
   const addFriend = () => {
     const friendData = {
       userId: account.id,
@@ -133,10 +129,10 @@ const PartnerProfile = observer(() => {
       (item.friendId === user?.id || item.userid === user?.id),
   );
 
-  const deleteFriend = () => {
-    const userId = friendListCustom.userid;
-    const friendId = friendListCustom.friendId;
+  const userId = friendListCustom?.userid;
+  const friendId = friendListCustom?.friendId;
 
+  const deleteFriend = () => {
     deleteDataAPI(`/friends/rejectFriendsApply?uid=${userId}&fid=${friendId}`, account.access_token, axiosJWT)
       .then((res) => {
         const newListFriends = friendStore?.friends.filter(
@@ -157,6 +153,15 @@ const PartnerProfile = observer(() => {
   const isFriend = friendStore?.friends.some(
     (item) => (item.friendId === user?.id || item.userid === user?.id) && item.accept,
   );
+
+  const postApproves = posts?.filter((item) => {
+    if (account.id === item.author_id) {
+      return item.approved;
+    } else {
+      return item.approved && (isFriend ? item.status !== 3 : item.status === 1);
+    }
+  });
+  const postWaitingApproves = posts?.filter((item) => !item.approved);
 
   const isDisplay = isFriend || account?.id === user?.id;
   return (
@@ -217,7 +222,7 @@ const PartnerProfile = observer(() => {
             {isProfile ? (
               <Button onClick={() => setOpenEditProfile(true)}>Update Profile</Button>
             ) : (
-              <Button onClick={() => setOpenSelectTopic(true)}>Message</Button>
+              <Button onClick={accessChat}>Message</Button>
             )}
             {isProfile ? (
               <Button className="add_request" onClick={() => setOpenListFriend(true)}>
@@ -307,9 +312,6 @@ const PartnerProfile = observer(() => {
         />
       )}
       {openListFriend && <ListFriendDialog open={openListFriend} onClose={() => setOpenListFriend(false)} />}
-      {openSelectTopic && (
-        <SelectTopicMessage open={openSelectTopic} onClose={() => setOpenSelectTopic(false)} onConfirm={accessChat} />
-      )}
       {openEditProfile && (
         <EditProfileModal
           isOpen={openEditProfile}

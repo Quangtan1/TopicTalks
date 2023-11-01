@@ -20,6 +20,8 @@ import emotion12 from 'src/assets/icons/emotions/12.svg';
 import emotion13 from 'src/assets/icons/emotions/13.svg';
 import emotion14 from 'src/assets/icons/emotions/14.svg';
 import imageGroup from 'src/assets/images/group_image.jpg';
+import logo_center from 'src/assets/images/logo_center.png';
+import logo1 from 'src/assets/logo/Logo1.svg';
 
 export {
   logo,
@@ -43,13 +45,15 @@ export {
   emotion13,
   emotion14,
   imageGroup,
+  logo_center,
+  logo1,
 };
 
 // router data
 export const headerRoute = [
   {
     title: 'Home',
-    path: '/landing-view',
+    path: '/home',
   },
   {
     title: 'Community',

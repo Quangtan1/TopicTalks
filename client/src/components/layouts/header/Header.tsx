@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon } from '@mui/material';
+import { Box, Typography, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon, Grid } from '@mui/material';
 import './Header.scss';
 import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 import Settings from '@mui/icons-material/Settings';
@@ -8,11 +8,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { headerRoute, logo } from 'src/utils';
+import { headerRoute, logo, logo_center } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
-import { worker_script } from '../../../utils/woker';
+import { notification_worker_script, worker_script } from '../../../utils/woker';
 import friendStore from 'src/store/friendStore';
+import uiStore from 'src/store/uiStore';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -20,14 +21,15 @@ const LOGOUT_CONTENT = 'Do you want to logout?';
 const Header = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [activeRoute, setActiveRoute] = useState<string>('/landing-view');
+  const [activeRoute, setActiveRoute] = useState<string>('/home');
   const [openNotifi, setOpenNotifi] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
   let worker;
+  let notificationWorker;
 
-  const { notification } = useContext(ChatContext);
+  const { notification, setNotification } = useContext(ChatContext);
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
@@ -62,6 +64,14 @@ const Header = observer(() => {
         access_token: account?.access_token,
       };
       worker.postMessage(params);
+
+      notificationWorker = new Worker(notification_worker_script);
+      notificationWorker.onmessage = (ev: any) => {
+        if (ev.data !== 'Empty') {
+          // setNotification(ev.data);
+        }
+      };
+      notificationWorker.postMessage(params);
     }
 
     return () => {
@@ -74,6 +84,7 @@ const Header = observer(() => {
     if (account) {
       accountRole.includes('ROLE_ADMIN') && navigate('/dashboard');
     }
+    uiStore?.setLocation(currentPath);
     setActiveRoute(currentPath);
   }, [location]);
 
@@ -88,13 +99,60 @@ const Header = observer(() => {
 
   return (
     <Box className="header">
-      <Box className="logo_sidebar">
-        <img src={logo} alt="logo" />
-        <Box className="title_logo">
-          <Typography>TopicTalks</Typography>
-          <Typography>Anonymously</Typography>
-        </Box>
-      </Box>
+      <Grid container className="first_header">
+        <Grid item md={4} className="logo_sidebar">
+          <img src={logo} alt="logo" />
+          <Box className="title_logo">
+            <Typography>TopicTalks</Typography>
+            <Typography>Anonymously</Typography>
+          </Box>
+        </Grid>
+        <Grid item md={4} className="image">
+          <img src={logo_center} alt="logo_center" className="logo_center" />
+        </Grid>
+        <Grid item md={4} className="infor_header">
+          <IoMailUnreadOutline />
+          <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
+          <span className="notifi_icon">{notification.length}</span>
+          <IconButton onClick={() => setAnchorEl(true)}>
+            <Avatar src={account?.url_img} alt="avatar" />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={openMenu}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              className: 'custom-paper',
+            }}
+            transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          >
+            <MenuItem onClick={handleGoToProfilePage}>
+              <ListItemIcon>
+                <Avatar src={account?.url_img} alt="avatar" />
+              </ListItemIcon>
+              Profile Infor
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Settings
+            </MenuItem>
+            <MenuItem onClick={() => setOpen(true)}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          </Menu>
+          <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
+        </Grid>
+      </Grid>
       <Box className="header_option">
         {headerRoute.map((item, index) => (
           <Typography
@@ -108,48 +166,6 @@ const Header = observer(() => {
             {item.title}
           </Typography>
         ))}
-      </Box>
-      <Box className="infor_header">
-        <IoMailUnreadOutline />
-        <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
-        <span className="notifi_icon">{notification.length}</span>
-        <IconButton onClick={() => setAnchorEl(true)}>
-          <Avatar src={account?.url_img} alt="avatar" />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          id="account-menu"
-          open={openMenu}
-          onClose={handleClose}
-          onClick={handleClose}
-          PaperProps={{
-            elevation: 0,
-            className: 'custom-paper',
-          }}
-          transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        >
-          <MenuItem onClick={handleGoToProfilePage}>
-            <ListItemIcon>
-              <Avatar src={account?.url_img} alt="avatar" />
-            </ListItemIcon>
-            Profile Infor
-          </MenuItem>
-          <Divider />
-          <MenuItem onClick={handleClose}>
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem>
-          <MenuItem onClick={() => setOpen(true)}>
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
-        <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
       </Box>
       {openNotifi && <NotificationDialog open={openNotifi} onClose={() => setOpenNotifi(false)} />}
       {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}

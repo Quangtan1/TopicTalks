@@ -50,7 +50,7 @@ const LoginPage = observer(() => {
         .post(`${API_KEY}/auth/authenticate/google`, user)
         .then((res) => {
           accountStore?.setAccount(res.data);
-          res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/landing-view');
+          res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
         })
         .catch((err) => {
           ToastError(err.response.data.message);
@@ -76,7 +76,7 @@ const LoginPage = observer(() => {
       .post(`${API_KEY}/auth/authenticate`, user)
       .then((res) => {
         accountStore?.setAccount(res.data);
-        res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/landing-view');
+        res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
       })
       .catch((err) => {
         ToastError(err.response.data.message);
