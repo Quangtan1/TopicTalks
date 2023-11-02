@@ -9,6 +9,7 @@ interface IConversation {
   topicChildren: ITopicChild;
   adminId: number;
   updatedAt?: string;
+  avtGroupImg: string;
 }
 export interface IPartnerDTO {
   id: number;

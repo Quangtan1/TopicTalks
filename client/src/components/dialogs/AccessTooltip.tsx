@@ -33,7 +33,6 @@ const AccessTooltip = observer((props: DialogProps) => {
   const accessChat = () => {
     const dataRequest = {
       userIdInSession: account.id,
-      topicChildrenId: topicId,
     };
     uiStore?.setLoading(true);
     postDataAPI(`/participant/${dataTooltip.userId}`, dataRequest, account.access_token, axiosJWT)

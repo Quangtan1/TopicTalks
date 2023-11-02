@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
-import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
+import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText, InputAdornment } from '@mui/material';
 import { BsChatDots, BsDot } from 'react-icons/bs';
 import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
-import { CiSettings } from 'react-icons/ci';
+import { CiLogout, CiSearch, CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
@@ -18,6 +18,8 @@ import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
 import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import { useNavigate } from 'react-router-dom';
 
 const tabOption = [
   {
@@ -36,11 +38,12 @@ const tabOption = [
     content: 'Groups',
   },
 ];
-
-const ListMessage = observer(() => {
+const LOGOUT_CONTENT = 'Do you want to logout?';
+const ListConversation = observer(() => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
+  const [openLogout, setOpenLogout] = useState<boolean>(false);
   const account = accountStore?.account;
 
   const { socket, openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
@@ -50,6 +53,7 @@ const ListMessage = observer(() => {
   const setAccount = () => {
     return accountStore?.setAccount;
   };
+  const navigate = useNavigate();
 
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
@@ -85,29 +89,6 @@ const ListMessage = observer(() => {
     };
   }, []);
 
-  // const sendEmail = () => {
-  //   const email = 'tantqde150382@fpt.edu.vn';
-
-  //   putDataAPI(`/user/regenerate-otp?email=${email}`, {}, account.access_token, axiosJWT)
-  //     .then((res) => {
-  //       console.log('email', res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  const forgetPassword = () => {
-    // const email = 'tantqde150382@fpt.edu.vn';
-    // postDataAPI(`/user/forgot-password?email=${email}`, {}, account.access_token, axiosJWT)
-    //   .then((res) => {
-    //     console.log('email', res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  };
-
   const partnerName = (partner) => {
     const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
     return usernames;
@@ -139,13 +120,35 @@ const ListMessage = observer(() => {
     return notification?.some((item) => item.conversationId === id);
   };
 
+  const onConfirm = () => {
+    accountStore?.setAccount(null);
+    accountStore?.clearStore();
+    navigate('/auth');
+  };
+
   return (
-    <Box className="list_message_container">
-      <Typography className="title_chat">Chat Rooms</Typography>
+    <Box className="list_conversation_container">
+      <Box className="list_header">
+        <Typography className="title_chat">Chat Rooms</Typography>
+        <span>
+          <GiPerspectiveDiceSixFacesRandom className="icon" onClick={() => setOpenRandom(true)} />
+          <AiOutlineUsergroupAdd className="icon" onClick={() => setOpen(true)} />
+        </span>
+      </Box>
       <Box className="chat_option">
-        <TextField required placeholder="Search..." autoFocus className="search" />
-        <GiPerspectiveDiceSixFacesRandom onClick={() => setOpenRandom(true)} />
-        <AiOutlineUsergroupAdd onClick={() => setOpen(true)} />
+        <TextField
+          required
+          placeholder="Search here..."
+          autoFocus
+          className="search"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <CiSearch />
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
       <List className="tab_option">
         {tabOption.map((item) => (
@@ -215,12 +218,20 @@ const ListMessage = observer(() => {
           <Avatar src={account.url_img} alt="avt" />
           <Typography>{account.username}</Typography>
         </Box>
-        <CiSettings onClick={forgetPassword} />
+        <CiLogout onClick={() => setOpenLogout(true)} />
       </Box>
       {openRandom && <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} />}
       {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
+      {openLogout && (
+        <DialogCommon
+          open={openLogout}
+          onClose={() => setOpenLogout(false)}
+          onConfirm={onConfirm}
+          content={LOGOUT_CONTENT}
+        />
+      )}
     </Box>
   );
 });
 
-export default memo(ListMessage);
+export default memo(ListConversation);

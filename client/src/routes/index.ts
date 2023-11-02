@@ -14,6 +14,7 @@ import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
 import ManageUsersQA from 'src/components/admin/manageusersQA/ManageUsersQA';
 import LandingView from 'src/components/layouts/LandingView';
 import About from 'src/components/layouts/LandingView/about';
+import GroupChat from 'src/components/layouts/groups/GroupChat';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -23,7 +24,7 @@ const publicRoutes = [
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
   { path: '/personal-profile/:id', component: PartnerProfile, isAdmin: false },
-  { path: '/message', component: ChatContainer, isAdmin: false },
+  { path: '/message', component: ChatContainer, isAdmin: false, layout: null },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
   { path: '/manage-qa', component: ManageUsersQA, isAdmin: true },
   { path: '/manage-topic', component: ManageTopic, isAdmin: true },
@@ -32,6 +33,7 @@ const publicRoutes = [
   { path: '/topic-detail/:id', component: TopicChildDetail },
   { path: '/landing-view', component: LandingView, layout: null },
   { path: '/about', component: About, layout: null },
+  { path: '/group-chat/:id', component: GroupChat },
   // { path: '/post-detail/:id', component: PostDetailDialog },
 ];
 
