@@ -14,7 +14,74 @@
     background-repeat: no-repeat;
     height: 700px;
     background-position-y: 50%;
+    display: flex;
+    justify-content: center;
+    position: relative;
     background-image: url(../../../../assets/images/background1.png);
+    .background_view {
+      max-width: 1200px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 60px 0px;
+      .box_image {
+        position: relative;
+        .support {
+          width: 300px;
+          height: auto;
+          object-fit: cover;
+        }
+        .overthink {
+          width: 280px;
+          height: 380px;
+          object-fit: cover;
+          position: absolute;
+          z-index: 2;
+          left: 100px;
+
+          top: 150px;
+        }
+      }
+      .about_me {
+        width: 380px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 40% 40% 0 0;
+      }
+    }
+    .title_lead {
+      position: absolute;
+      text-align: center;
+      top: 20%;
+      z-index: 3;
+      width: 540px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      p {
+        text-align: center;
+      }
+      p:nth-child(1) {
+        letter-spacing: 2px;
+      }
+      p:nth-child(1),
+      p:nth-child(3) {
+        font-size: 13px;
+      }
+      p:nth-child(2) {
+        font-size: 28px;
+        font-family: 'Yeseva One', display;
+        font-weight: 600;
+        letter-spacing: 1px;
+        -webkit-font-smoothing: antialiased;
+      }
+      p:nth-child(3) {
+        // background-color: rgb(247, 243, 240);
+        width: 450px;
+      }
+    }
   }
 
   .sologan_topic {
@@ -41,7 +108,7 @@
       padding: 50px 25px;
       .title_parent_topic,
       .title_parent_topic_right {
-        font-size: 28px;
+        font-size: 35px;
         font-weight: 600;
         color: #000;
         width: 20%;

@@ -1,6 +1,6 @@
 import React, { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
-import { BiPhoneCall } from 'react-icons/bi';
+import { BiDotsVerticalRounded, BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
 import { ImAttachment } from 'react-icons/im';
@@ -23,11 +23,15 @@ import { FcCallback, FcSettings } from 'react-icons/fc';
 import { HiMinusCircle, HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
 import friendStore from 'src/store/friendStore';
-import { ToastError } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { createAxios, deleteDataAPI } from 'src/utils';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import { useNavigate } from 'react-router-dom';
 
 ///const
+const contentGroup = `Do you want to delete this conversation`;
 const notifeMessageData = [
   {
     keyword: 'Approve',
@@ -75,7 +79,6 @@ const notifeMessageData = [
 
 interface ChatProps {
   chat: ListMesage;
-  handleOpenSetting: () => void;
 }
 const ChatBox = observer((props: ChatProps) => {
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -86,11 +89,24 @@ const ChatBox = observer((props: ChatProps) => {
   const [openAccessTooltip, setOpenAccessTooltip] = useState<boolean>(false);
   const [dataTooltip, setDataTooltip] = useState<IMessage>(null);
   const [topicId, setTopicId] = useState<number>(null);
+  const [tooltipSetting, setTooltipSetting] = useState<boolean>(false);
+  const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
-  const { chat, handleOpenSetting } = props;
+  const { chat } = props;
+
+  const navigate = useNavigate();
 
   const isImage = ['.png', 'jpg', '.svg', '.webp', '.jpeg'];
+
+  const optionCode = 'option_1410#$#';
+
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
 
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isMember = isGroup ? chat?.isMember : 'true';
@@ -222,6 +238,40 @@ const ChatBox = observer((props: ChatProps) => {
     }
   };
 
+  const commonMessage = {
+    data: {
+      message: `${optionCode}`,
+    },
+    TargetId: chat?.partnerDTO[0]?.id,
+    userId: account.id,
+    conversationId: chat?.conversationInfor.id,
+    groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
+    groupChat: chat?.conversationInfor.isGroupChat,
+  };
+
+  const deleteConversation = () => {
+    const receiveMessageDTO = {
+      ...commonMessage,
+      data: {
+        message: `${optionCode},DeleteConversation,`,
+      },
+    };
+    socket.emit('sendMessage', receiveMessageDTO);
+    deleteDataAPI(`/conversation?cid=${chat?.conversationInfor.id}`, account.access_token, axiosJWT)
+      .then((res) => {
+        ToastSuccess(
+          `You have just deleted ${isGroup ? chat?.conversationInfor.chatName : partnerUser.username} Conversation`,
+        );
+        chatStore?.setSelectedChat(null);
+        const newChats = chatStore?.chats.filter((item) => item.conversationInfor.id !== chat?.conversationInfor.id);
+        chatStore?.setChats(newChats);
+        setOpenConFirmGroup(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const partnerUser = chat?.partnerDTO.find((item) => item.id !== account.id);
   const imageUser = (message: IMessage) => {
     const image = chat?.partnerDTO.filter((item) => item.id === message.userId).map((item) => item.image);
@@ -262,14 +312,43 @@ const ChatBox = observer((props: ChatProps) => {
   const isRemove = message[message?.length - 1]?.data.message.includes(`option_1410#$#,Delete, ${account.username}`);
 
   const isDisable = isRemove || currentContent === '';
+
+  const isActive = chat?.partnerDTO.some((item) => item.active);
+
   return (
     <Box className="chatbox_container">
       <Box className="chatbox_header">
         {isSelecedChat && isMember === 'true' && (
           <>
             <Box className="title_name">
-              <Typography>{isGroup ? chat?.conversationInfor.chatName : partnerUser?.username}</Typography>
-              <Typography>{isGroup && `(${chat?.conversationInfor?.topicChildren.topicChildrenName})`}</Typography>
+              <span
+                className={`${!isGroup && 'link'} active_avatar`}
+                onClick={() => !isGroup && navigate(`/personal-profile/${partnerUser?.id}`)}
+              >
+                <Avatar
+                  src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+                  alt="avt"
+                  className="avatar_header"
+                />
+                {isActive ? (
+                  <FiberManualRecordTwoTone className="online" />
+                ) : (
+                  <FiberManualRecordTwoTone className="offline" />
+                )}
+              </span>
+
+              <span className="name">
+                <Typography
+                  className={`${!isGroup && 'link'} name_chat`}
+                  onClick={() => !isGroup && navigate(`/personal-profile/${partnerUser?.id}`)}
+                >
+                  {isGroup ? chat?.conversationInfor.chatName : partnerUser?.username}
+                </Typography>
+                <Typography className="active">{isActive ? 'Online' : 'Offline'}</Typography>
+              </span>
+              <Typography className="topic_name">
+                {isGroup && `(${chat?.conversationInfor?.topicChildren.topicChildrenName})`}
+              </Typography>
             </Box>
 
             <Box className="header_option">
@@ -277,10 +356,15 @@ const ChatBox = observer((props: ChatProps) => {
                 <>
                   <BiPhoneCall onClick={handleCall} className={!isFriend && 'disable_call'} />
                   <BsCameraVideo onClick={handleCallVideo} className={!isFriend && 'disable_call'} />
+                  <BiDotsVerticalRounded onClick={() => setTooltipSetting(!tooltipSetting)} />
                 </>
               )}
-              <FcSettings onClick={handleOpenSetting} />
             </Box>
+            {tooltipSetting && (
+              <Box className="tooltip_setting">
+                <Typography onClick={() => setOpenConFirmGroup(true)}>Delete Conversation</Typography>
+              </Box>
+            )}
           </>
         )}
       </Box>
@@ -413,7 +497,7 @@ const ChatBox = observer((props: ChatProps) => {
               rows={1}
               disabled={imageFile !== '' || isRemove}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
-              placeholder="Type your message"
+              placeholder="Type your message..."
               className="chatbox_input"
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                 setCurrentContent(e.target.value);
@@ -437,6 +521,14 @@ const ChatBox = observer((props: ChatProps) => {
           onClose={() => setOpenAccessTooltip(false)}
           dataTooltip={dataTooltip}
           topicId={topicId}
+        />
+      )}
+      {openConfirmGroup && (
+        <DialogCommon
+          open={openConfirmGroup}
+          onClose={() => setOpenConFirmGroup(false)}
+          onConfirm={deleteConversation}
+          content={contentGroup}
         />
       )}
     </Box>

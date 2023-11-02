@@ -1,181 +1,106 @@
 .topic_child_container {
-  width: 100vw;
+  // width: 100vw;
   height: 100%;
-  background: #0d1018;
   overflow-x: hidden;
-
+  display: flex;
+  padding: 60px 160px;
+  position: relative;
+  margin: 50px 0px;
+  .box_image_topic {
+    position: relative;
+    .backgroup_topic {
+      width: 400px;
+      height: 520px;
+      z-index: 1;
+      background: #f7f3f0;
+      object-fit: cover;
+    }
+    .image_topic {
+      width: 450px;
+      height: 450px;
+      object-fit: cover;
+      position: absolute;
+      left: 80px;
+      top: 30px;
+      z-index: 3;
+    }
+    // .overlay {
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 400px;
+    //   height: 520px;
+    //   background-color: rgba(84, 73, 73, 0.7);
+    //   z-index: 2;
+    // }
+  }
   .box_topic_child {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
     padding: 30px 0px 20px;
-    background: #0d1018;
+    gap: 10px;
+    p:nth-child(1) {
+      letter-spacing: 2px;
+    }
     .title_topic {
-      background-color: rgb(255, 178, 62);
-      background-image: linear-gradient(
-        268.67deg,
-        var(--main-color) 30.69%,
-        rgb(255, 163, 26) 55.54%,
-        rgb(255, 0, 115) 99%
-      );
-      -webkit-text-fill-color: transparent;
-      -webkit-background-clip: text;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background-clip: text;
-      font-size: 64px;
+      font-weight: 600;
+      font-size: 35px;
+      font-family: 'Yeseva One', display;
     }
     .sologan_topic {
-      color: #fff;
-      max-width: 780px;
-      margin: 32px auto 0;
-      font-size: 20px;
-      text-align: center;
-      .highlight_text {
-        font-style: italic;
-        color: rgb(255, 178, 62);
+      padding-top: 10px;
+      font-size: 14px;
+      // width: 450px;
+    }
+    .title_option,
+    .title_existing {
+      font-size: 14px;
+      padding-top: 20px;
+    }
+    .title_existing {
+      margin-top: 30px;
+    }
+    .box_create {
+      display: flex;
+
+      border-radius: 10px;
+      gap: 10px;
+      button {
+        padding: 10px;
+      }
+      button:nth-child(1) {
+        background: rgb(108, 96, 84);
+        color: #fff;
+      }
+      button:nth-child(2) {
+        background: #fff;
+        color: rgb(108, 96, 84);
+        border: 1px solid rgb(108, 96, 84);
+      }
+      button:nth-child(1):hover,
+      button:nth-child(2):hover {
+        background: #0d1018;
+        color: #fff;
       }
     }
-    .box_image {
-      margin: 40px 0px;
-      position: relative;
-      .button_option {
-        display: flex;
-        gap: 10px;
-        position: absolute;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        button {
-          display: flex;
-          justify-content: center;
-          width: 180px;
-          padding: 10px 6px;
-          border-radius: 15px;
-          font-weight: 600;
-        }
-        button:nth-child(1) {
-          border: 1px solid #fff;
-          color: #fff;
-        }
-        button:nth-child(1):hover {
-          background: #fff;
-          color: #000;
-        }
-        button:nth-child(2) {
-          background: #000;
-          color: #fff;
-        }
-      }
-      .image_topic {
-        width: 100%;
-        max-width: 1048px;
-        height: auto;
-        object-fit: cover;
-      }
-    }
-  }
-  .box_group_chat {
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    .title_box {
-      position: relative;
-      .title_backgroup {
-        color: #212332;
-        text-align: center;
-        font-size: 100px;
-        text-transform: uppercase;
-        padding-bottom: 30px;
-      }
-      .title_group {
-        position: absolute;
-        color: var(--main-color);
-        font-size: 25px;
-        top: 32%;
-        text-align: center;
-        margin: 0 auto;
-        width: 100%;
-        strong {
-          color: #fafcfb;
-        }
-      }
-    }
-    .create_group {
-      text-transform: capitalize;
-      background: var(--main-color);
-      color: #fff;
-    }
-    .group_container {
+    .view_group {
+      padding: 10px;
       background: #0d1018;
-      padding: 60px;
-      justify-content: center;
-      gap: 50px;
+      color: #fff;
+      width: 185px;
+      display: flex;
+      gap: 8px;
 
-      .group_box {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        gap: 20px;
-        width: 100%;
-        max-width: 270px;
-        height: 330px;
-
-        .MuiCard-root {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          background: #2a2828;
-          border-radius: 10px;
-          .image_group {
-            min-height: 220px;
-            object-fit: cover;
-          }
-          .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 220px;
-            background-color: rgba(84, 73, 73, 0.7);
-            z-index: 2;
-          }
-          .card_content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 5px 0px 0px;
-            p:nth-child(1) {
-              color: #fff;
-              font-size: 18px;
-            }
-            p:nth-child(2) {
-              display: flex;
-              justify-content: center;
-              font-size: 14px;
-              color: #fff;
-            }
-          }
-          .card_actions {
-            display: flex;
-            justify-content: center;
-            .join_group {
-              background: var(--main-color);
-              color: #fff;
-              text-transform: capitalize;
-            }
-            .joined_before {
-              text-transform: capitalize;
-              border: red solid 1px;
-              color: #7f1d1d;
-              background: #fef2f2;
-            }
-          }
-        }
+      svg {
+        color: #fff;
+      }
+    }
+    .view_group:hover {
+      background: #fff;
+      color: #000;
+      border: 1px solid #000;
+      svg {
+        color: #000;
       }
     }
   }

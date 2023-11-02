@@ -8,4 +8,5 @@ export interface TopicChild {
   id: number;
   topicChildrenName: string;
   image: string;
+  shortDescript: string;
 }

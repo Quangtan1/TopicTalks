@@ -1,0 +1,43 @@
+.sidebar_message {
+  min-width: 75px;
+  max-width: 75px;
+  height: 100vh;
+  min-height: 570px;
+  display: flex;
+  flex-direction: column;
+  background: #2e2e2e;
+  align-items: center;
+  padding: 20px 4px;
+  justify-content: space-between;
+  .logo {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 5px;
+  }
+  .route {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    svg {
+      padding: 5px;
+      font-size: 30px;
+      color: #878a92;
+    }
+    .selected {
+      svg {
+        cursor: pointer;
+        color: #2e2e2e;
+        background: #e3ded3;
+        border-radius: 5px;
+      }
+    }
+    svg:hover {
+      cursor: pointer;
+      color: #2e2e2e;
+      background: #e3ded3;
+      border-radius: 5px;
+    }
+  }
+}

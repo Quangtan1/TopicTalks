@@ -19,7 +19,6 @@ import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 
 interface ChatProps {
   chat: ListMesage;
-  setOpenSetting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ConversationSetting = observer((props: ChatProps) => {
   const [collapse, setCollapse] = useState<number[]>([1, 2]);
@@ -31,7 +30,7 @@ const ConversationSetting = observer((props: ChatProps) => {
   const [openUpdateTopic, setOpenUpdateTopic] = useState<boolean>(false);
   const [statusDelete, setStatusDelete] = useState<string>('');
   const [openLeave, setOpenLeave] = useState<boolean>(false);
-  const { chat, setOpenSetting } = props;
+  const { chat } = props;
   const optionCode = 'option_1410#$#';
 
   const { socket, setMessage } = useContext(ChatContext);
@@ -144,7 +143,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         chatStore?.setSelectedChat(null);
         chatStore?.setChats(newChats);
         setOpenLeave(false);
-        setOpenSetting(false);
       })
       .catch((err) => {
         console.log(err);
@@ -168,7 +166,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         const newChats = chatStore?.chats.filter((item) => item.conversationInfor.id !== chat?.conversationInfor.id);
         chatStore?.setChats(newChats);
         setOpenConFirmGroup(false);
-        setOpenSetting(false);
       })
       .catch((err) => {
         console.log(err);
@@ -333,8 +330,16 @@ const ConversationSetting = observer((props: ChatProps) => {
               memberDTO.map((item) => (
                 <Box className="memeber_item" key={item.id}>
                   <Box className="infor_member">
-                    <Avatar src={item.image} alt="avt" className="member_avt" />
-                    <Typography>
+                    <span className="active_avatar" onClick={() => navigate(`/personal-profile/${item.id}`)}>
+                      <Avatar src={item.image} alt="avt" className="member_avt" />
+                      {item.id === partnerUser?.id && partnerUser?.active ? (
+                        <FiberManualRecordTwoTone className="online" />
+                      ) : (
+                        <FiberManualRecordTwoTone className="offline" />
+                      )}
+                    </span>
+
+                    <Typography onClick={() => navigate(`/personal-profile/${item.id}`)}>
                       {item.username}
                       <strong>{chat?.conversationInfor.adminId === item.id && '(Admin)'}</strong>
                     </Typography>

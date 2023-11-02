@@ -4,7 +4,7 @@ import memoizeOne from 'memoize-one';
 import './HomePage.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { createAxios, getDataAPI } from 'src/utils';
+import { aboutme, createAxios, getDataAPI, overthink, support } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import Carousel from 'react-multi-carousel';
@@ -92,7 +92,25 @@ const HomePage = observer(() => {
 
   return (
     <Box className="landing_container">
-      <Box className="intro_view"></Box>
+      <Box className="intro_view">
+        <Box className="background_view">
+          <Box className="box_image">
+            <img src={support} alt="support" className="support" />
+            <img src={overthink} alt="overthink" className="overthink" />
+          </Box>
+          <img src={aboutme} alt="about me" className="about_me" />
+        </Box>
+        <Box className="title_lead">
+          <Typography>MAKE YOUR EMOTION FUN</Typography>
+          <Typography>
+            TopicTalks fosters a supportive and enjoyable chat environment and grow your communicate
+          </Typography>
+          <Typography>
+            Le site web actuel vise à améliorer la vie des utilisateurs en favorisant l'ouverture d'esprit et une
+            meilleure communication. En fournissant un espace accueillant et sécurisé pour les échanges
+          </Typography>
+        </Box>
+      </Box>
       {listTopic.length > 0 &&
         listTopic?.map((topicParent, index) => (
           <Box key={topicParent?.id} className="topic_box">
