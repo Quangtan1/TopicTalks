@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Box, Typography, IconButton, Avatar, Menu, MenuItem, Divider, ListItemIcon, Grid } from '@mui/material';
-import './Header.scss';
 import { IoMailUnreadOutline, IoNotificationsOutline } from 'react-icons/io5';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
@@ -14,13 +13,16 @@ import ChatContext from 'src/context/ChatContext';
 import { notification_worker_script, worker_script } from '../../../utils/woker';
 import friendStore from 'src/store/friendStore';
 import uiStore from 'src/store/uiStore';
-import chatStore from 'src/store/chatStore';
+import { Home } from '@mui/icons-material';
+import './SideBarMessage.scss';
+import { AiFillHome, AiFillShop } from 'react-icons/ai';
+import { TiMessages } from 'react-icons/ti';
+import { MdGroups2, MdOutlineHelp } from 'react-icons/md';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
 
-const Header = observer(() => {
-  const [open, setOpen] = useState<boolean>(false);
+const SideBarMessage = observer(() => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeRoute, setActiveRoute] = useState<string>('/home');
   const [openNotifi, setOpenNotifi] = useState<boolean>(false);
@@ -48,10 +50,6 @@ const Header = observer(() => {
     navigate('/auth');
   };
 
-  const onClose = () => {
-    setOpen(false);
-  };
-
   useEffect(() => {
     if (account !== null) {
       worker = new Worker(worker_script);
@@ -76,7 +74,6 @@ const Header = observer(() => {
     }
 
     return () => {
-      chatStore?.setChats([]);
       account === null && friendStore?.setFriends([]);
     };
   }, [account, location]);
@@ -95,84 +92,57 @@ const Header = observer(() => {
     navigate(`/personal-profile/${account.id}`);
   };
 
-  const handleActive = (navigate: string) => {
-    setActiveRoute(navigate);
+  const handleActive = (route: string) => {
+    setActiveRoute(route);
+    navigate(route);
   };
 
+  const routeData = [
+    {
+      icon: <AiFillHome />,
+      route: '/home',
+      title: 'Home',
+    },
+    {
+      icon: <AiFillShop />,
+      route: '/community',
+      title: 'Community',
+    },
+    {
+      icon: <TiMessages />,
+      route: '/message',
+      title: 'Message',
+    },
+    {
+      icon: <MdGroups2 />,
+      route: '/all-group',
+      title: 'All Group',
+    },
+    {
+      icon: <MdOutlineHelp />,
+      route: '/contact',
+      title: 'Contact Us',
+    },
+  ];
   return (
-    <Box className="header">
-      <Grid container className="first_header">
-        <Grid item md={4} className="logo_sidebar">
-          <img src={logo} alt="logo" />
-          <Box className="title_logo">
-            <Typography>TopicTalks</Typography>
-            <Typography>Anonymously</Typography>
-          </Box>
-        </Grid>
-        <Grid item md={4} className="image">
-          <img src={logo_center} alt="logo_center" className="logo_center" />
-        </Grid>
-        <Grid item md={4} className="infor_header">
-          <IoMailUnreadOutline />
-          <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
-          <span className="notifi_icon">{notification.length}</span>
-          <IconButton onClick={() => setAnchorEl(true)}>
-            <Avatar src={account?.url_img} alt="avatar" />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            id="account-menu"
-            open={openMenu}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              className: 'custom-paper',
-            }}
-            transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-          >
-            <MenuItem onClick={handleGoToProfilePage}>
-              <ListItemIcon>
-                <Avatar src={account?.url_img} alt="avatar" />
-              </ListItemIcon>
-              Profile Infor
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem onClick={() => setOpen(true)}>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-          <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
-        </Grid>
-      </Grid>
-      <Box className="header_option">
-        {headerRoute.map((item, index) => (
-          <Typography
+    <Box className="sidebar_message">
+      <img src={logo} alt="logo" className="logo" />
+      <Box className="route">
+        {routeData.map((item, index: number) => (
+          <Box
             key={index}
-            onClick={() => {
-              navigate(`${item.path}`);
-              handleActive(item.path);
-            }}
-            className={`${activeRoute === item.path && 'selected_navigate'}`}
+            title={item.title}
+            onClick={() => handleActive(item.route)}
+            className={item.route === activeRoute && 'selected'}
           >
-            {item.title}
-          </Typography>
+            {item.icon}
+          </Box>
         ))}
       </Box>
+      <span>.</span>
       {openNotifi && <NotificationDialog open={openNotifi} onClose={() => setOpenNotifi(false)} />}
-      {open && <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />}
     </Box>
   );
 });
 
-export default Header;
+export default SideBarMessage;

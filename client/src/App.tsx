@@ -27,7 +27,7 @@ function App() {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/" element={<Navigate to="/landing-view" />} />
+          <Route path="/" element={<Navigate to="/home" />} />
           {publicRoutes.map((route, index) => {
             const Page = route.component;
             let AdLayout = AdminLayout;

@@ -288,7 +288,7 @@ const LoginPage = observer(() => {
 
               <Typography onClick={() => setSignIn(!isSignIn)}>{isSignIn ? 'Sign up account?' : 'Sign In?'}</Typography>
             </Box>
-            {true ? (
+            {showOTP ? (
               <>
                 <MuiOtpInput value={otp} length={6} onChange={handleChangeOTP} />
 

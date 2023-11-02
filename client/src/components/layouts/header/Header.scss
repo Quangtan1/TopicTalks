@@ -96,11 +96,12 @@
       font-family: Roboto, Helvetica, Arial, Lucida;
       cursor: pointer;
       padding: 5px 8px;
+      letter-spacing: 2px;
     }
     .selected_navigate,
     p:hover {
-      color: var(--main-color);
-      // background: #141634;
+      color: #fff;
+      background: #8e6e51;
       border-radius: 8px;
     }
   }
