@@ -173,7 +173,14 @@ const ListConversation = observer(() => {
                 onClick={() => setSelectedChat(item)}
               >
                 <span className="active_avatar">
-                  <Avatar src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`} alt="avt" />
+                  <Avatar
+                    src={`${
+                      item?.conversationInfor.isGroupChat
+                        ? item.conversationInfor.avtGroupImg
+                        : imageUser(item?.partnerDTO)
+                    }`}
+                    alt="avt"
+                  />
                   {isActive(item) ? (
                     <FiberManualRecordTwoTone className="online" />
                   ) : (

@@ -4,7 +4,7 @@ import Header from '../layouts/header/Header';
 import Loading from '../loading/Loading';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { BiArrowToTop } from 'react-icons/bi';
 import { HiArrowUp } from 'react-icons/hi';
 import { FaFacebookMessenger } from 'react-icons/fa';
@@ -14,11 +14,15 @@ import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import ListMessage from './ListMessage';
 import { ListMesage } from 'src/types/chat.type';
+import { MdNotificationsActive } from 'react-icons/md';
+import ChatContext from 'src/context/ChatContext';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
+
+  const { notification } = useContext(ChatContext);
 
   const account = accountStore?.account;
   const setAccount = () => {
@@ -80,6 +84,8 @@ const DefaultLayout = observer(({ children }) => {
         )}
         {chatStore?.chats.length > 0 && <ListMessage sortChats={sortChats} />}
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
+        {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
+
         <Footer />
       </Box>
     </Box>

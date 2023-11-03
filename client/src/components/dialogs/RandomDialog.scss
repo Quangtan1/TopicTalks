@@ -6,18 +6,22 @@
     background: rgb(51 47 47 / 65%);
   }
   .MuiPaper-root {
-    width: 600px;
-    height: 450px;
-    background: rgb(20, 27, 45);
+    width: 700px;
+    height: 500px;
     padding-bottom: 10px;
+    max-width: 100%;
     .dialog_title {
+      text-align: center;
       p:nth-child(1) {
         font-weight: 600;
-        color: #fff;
+        color: #000;
+        letter-spacing: 1px;
         font-size: 20px;
+        font-family: 'Yeseva One', display;
       }
       p:nth-child(2) {
-        color: var(--main-color);
+        color: rgb(142, 110, 81);
+        font-weight: 600;
       }
     }
     .loading {
@@ -28,7 +32,7 @@
       gap: 5px;
       .animate_icon {
         display: flex;
-        color: #fff;
+        color: #3377d3;
         gap: 5px;
         align-items: end;
         animation: slide 2s infinite linear;
@@ -38,11 +42,11 @@
       }
       div {
         width: 200px;
-        border-bottom: 1px solid #fff;
+        border-bottom: 1px solid #3377d3;
       }
       p {
         font-size: 25px;
-        color: #fff;
+        color: #3377d3;
       }
     }
     @keyframes slide {
@@ -55,49 +59,55 @@
     }
     .dialog_content {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      .chat_name_box {
+      .partner {
+        width: 50%;
+        object-fit: cover;
+      }
+      .box_random {
         display: flex;
-        align-items: center;
         flex-direction: column;
-        p {
+        width: 50%;
+        padding: 0px 15px 5px;
+        .chat_name_box {
           font-size: 20px;
           font-weight: 600;
-          color: #fff;
-        }
-      }
-      .topic_box {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        height: 300px;
-        .MuiInputBase-root {
-          max-height: 50px;
-          min-width: 120px;
           color: #000;
-          background: #fff;
+        }
+        .topic_box {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-direction: column;
+
+          .MuiInputBase-root {
+            max-height: 50px;
+            width: 100%;
+            color: #000;
+            background: #fff;
+            .MuiSelect-select {
+              padding: 8px 10px;
+            }
+          }
         }
         .topic_child {
           display: flex;
-          flex-wrap: wrap;
           gap: 10px;
-          width: 80%;
+          flex-direction: column;
+          padding: 10px 0px;
+          overflow-y: auto;
+          width: 100%;
+          height: 255px;
           .topic_item {
+            cursor: pointer;
+            width: 100%;
+            padding: 10px;
             display: flex;
             justify-content: center;
-            padding: 8px 10px;
-            flex-basis: calc(50% - 10px);
-            max-width: 50%;
-            flex-grow: 1;
-            color: #fff;
-            background: #798899;
-            border-radius: 10px;
-            cursor: pointer;
+            background: aliceblue;
           }
           .selected_topic,
           .topic_item:hover {
-            background: var(--main-color);
+            background: #c6dbed;
           }
         }
       }
@@ -105,11 +115,14 @@
   }
   .dialog_action {
     button {
-      background: var(--main-color);
+      background: #8e6e51;
       color: #fff;
     }
-    .disable_button {
+    button:hover {
       opacity: 0.7;
+    }
+    .disable_button {
+      opacity: 0.5;
     }
   }
 }

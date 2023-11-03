@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ChatContext from './ChatContext';
-import { IMessage } from 'src/types';
+import { IMessage, INotifiSystem } from 'src/types';
 import { observer } from 'mobx-react';
 import { io } from 'socket.io-client';
 import accountStore from 'src/store/accountStore';
@@ -28,6 +28,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   //notification
   //tam thoi thong bao trc cho message
   const [notification, setNotification] = useState<IMessage[]>([]);
+  const [notifiSystem, setNotifiSystem] = useState<INotifiSystem[]>([]);
 
   //call
   const [openVideoCall, setOpenVideoCall] = useState<boolean>(false);
@@ -235,6 +236,8 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
           setIsRandoming,
           openRandom,
           setOpenRandom,
+          notifiSystem,
+          setNotifiSystem,
         }}
       >
         {props.children}

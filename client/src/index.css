@@ -15,15 +15,14 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: Roboto, Helvetica, Arial, Lucida;
+  font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 26px;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
 }
 
 /* ::-webkit-scrollbar {
@@ -44,7 +43,7 @@ code {
   border-radius: 20px;
 } */
 p {
-  font-family: Roboto, Helvetica, Arial, Lucida;
+  font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
 }
 
 :root {

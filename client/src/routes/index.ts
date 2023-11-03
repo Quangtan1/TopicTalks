@@ -16,6 +16,7 @@ import ForgotPassword from 'src/components/layouts/auth/ForgotPassword';
 import LandingView from 'src/components/layouts/LandingView';
 import About from 'src/components/layouts/LandingView/about';
 import GroupChat from 'src/components/layouts/groups/GroupChat';
+import PostDetail from 'src/components/layouts/home/community/posts/PostDetail';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -36,7 +37,7 @@ const publicRoutes = [
   { path: '/landing-view', component: LandingView, layout: null },
   { path: '/about', component: About, layout: null },
   { path: '/group-chat/:id', component: GroupChat },
-  // { path: '/post-detail/:id', component: PostDetailDialog },
+  { path: '/post-detail/:id', component: PostDetail },
 ];
 
 export { publicRoutes };

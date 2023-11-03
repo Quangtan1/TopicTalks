@@ -145,7 +145,7 @@ const GroupChat = observer(() => {
             listGroup?.map((item) => (
               <Grid item md={4} key={item.conversationInfor.id} className="group_box">
                 <Card>
-                  <CardMedia image={imageGroup} className="image_group" />
+                  <CardMedia image={item.conversationInfor.avtGroupImg || imageGroup} className="image_group" />
                   <div className="overlay"></div>
                   <CardContent className="card_content">
                     <Typography>{item.conversationInfor.chatName}</Typography>
