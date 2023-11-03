@@ -42,19 +42,19 @@ const LoginPage = observer(() => {
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
 
       const user = {
-        fullName: decode.name,
-        email: decode.email,
-        urlImage: decode.picture,
+        fullName: decode?.name,
+        email: decode?.email,
+        urlImage: decode?.picture,
       };
 
       axios
         .post(`${API_KEY}/auth/authenticate/google`, user)
         .then((res) => {
-          accountStore?.setAccount(res.data);
-          res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+          accountStore?.setAccount(res?.data);
+          res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
         })
         .catch((err) => {
-          ToastError(err.response.data.message);
+          ToastError(err?.response?.data?.message);
         });
     } catch (err) {
       console.log(err);
@@ -76,11 +76,11 @@ const LoginPage = observer(() => {
     axios
       .post(`${API_KEY}/auth/authenticate`, user)
       .then((res) => {
-        accountStore?.setAccount(res.data);
-        res.data.roles.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+        accountStore?.setAccount(res?.data);
+        res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
       })
       .catch((err) => {
-        ToastError(err.response.data.message);
+        ToastError(err?.response?.data?.message);
       });
   };
 
@@ -154,7 +154,7 @@ const LoginPage = observer(() => {
         })
         .catch((err) => {
           uiStore?.setLoading(false);
-          console.log(err.response.data.message);
+          console.log(err?.response?.data?.message);
         });
     }
   };
@@ -184,6 +184,7 @@ const LoginPage = observer(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
             setOpenSelect(true);
+            setOtp('');
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
           }, 2000);
@@ -192,7 +193,7 @@ const LoginPage = observer(() => {
         }
       })
       .catch((err) => {
-        ToastError(err.response.data.message);
+        ToastError(err?.response?.data?.message);
       });
   };
 

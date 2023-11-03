@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, TextField, Box, Typography, Grid, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,23 +16,61 @@ import { MdOutlineMailOutline } from 'react-icons/md';
 const ForgotPassword = observer(() => {
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const emailRef = useRef('');
+  const [showNewInputPW, setShowNewInputPW] = useState(false);
+
+  const generateOTP = (e) => {
+    e.preventDefault();
+    const formData: any = new FormData(e.currentTarget);
+    const email = formData.get('email');
+    emailRef.current = email;
+    uiStore?.setLoading(true);
+    axios
+      .post(`${API_KEY}/auth/regenerate-otp?email=${emailRef.current}`)
+      .then((res) => {
+        if (res.status === 200) {
+          ToastSuccess('Correctly Email!');
+          uiStore?.setLoading(false);
+          setShowNewInputPW(true);
+        } else {
+          uiStore?.setLoading(false);
+          ToastError('Email not exits in system!');
+          console.log(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        uiStore?.setLoading(false);
+        ToastError(err.response.data.message);
+      });
+  };
 
   const handleForgotPW = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
-    const email = formData.get('email');
-    if (!emailRegex.test(email)) {
+    const newPassword = formData.get('newPassword');
+    const cpassword = formData.get('cpassword');
+    if (!emailRegex.test(emailRef.current)) {
       ToastError('Please input correct email');
+    } else if (!passwordRegex.test(newPassword) || newPassword !== cpassword) {
+      newPassword !== cpassword
+        ? ToastError('Confirm Password is incorrect ')
+        : ToastError('Password must contain capital letters,numbers and more than 8 characters');
     } else {
       axios
-        .post(`${API_KEY}/user/forgot-password?email=${email}`)
+        .put(`${API_KEY}/auth/forgot-password?email=${emailRef.current}`, null, {
+          headers: {
+            newPassword: newPassword,
+          },
+        })
         .then((res) => {
           console.log(res);
           ToastSuccess('Send email successfully!');
+          navigate('/auth');
         })
         .catch((err) => {
           ToastError('Send email failed');
-          ToastError(err.response.data.message);
+          ToastError(err?.response?.data?.message);
         });
     }
   };
@@ -62,7 +100,7 @@ const ForgotPassword = observer(() => {
             </Typography>
           </Box>
 
-          <Box component="form" noValidate onSubmit={handleForgotPW} className="form">
+          <Box component="form" noValidate onSubmit={showNewInputPW ? handleForgotPW : generateOTP} className="form">
             <TextField
               name="email"
               required
@@ -78,8 +116,43 @@ const ForgotPassword = observer(() => {
               autoFocus
             />
 
+            {showNewInputPW && (
+              <>
+                <TextField
+                  name="newPassword"
+                  required
+                  type="password"
+                  id="newPassword"
+                  placeholder="Enter your new password"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MdOutlineMailOutline />
+                      </InputAdornment>
+                    ),
+                  }}
+                  autoFocus
+                />
+                <TextField
+                  name="cpassword"
+                  required
+                  id="cpassword"
+                  type="password"
+                  placeholder="Confirm your new password"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <MdOutlineMailOutline />
+                      </InputAdornment>
+                    ),
+                  }}
+                  autoFocus
+                />
+              </>
+            )}
+
             <Button type="submit" fullWidth variant="contained" className="submit-button">
-              Reset password
+              {!showNewInputPW ? 'Next' : 'Reset password'}
             </Button>
 
             <Box className="forgot-password" onClick={goToLogin}>
