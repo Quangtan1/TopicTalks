@@ -135,6 +135,10 @@ const ChatBox = observer((props: ChatProps) => {
   }, []);
 
   useEffect(() => {
+    setTooltipSetting(false);
+  }, [chat]);
+
+  useEffect(() => {
     if (imageFile === 'err') {
       uiStore?.setLoading(false);
       setImageFile('');
