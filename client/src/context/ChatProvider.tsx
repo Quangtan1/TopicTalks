@@ -26,7 +26,6 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   //notification
-  //tam thoi thong bao trc cho message
   const [notification, setNotification] = useState<IMessage[]>([]);
   const [notifiSystem, setNotifiSystem] = useState<INotifiSystem[]>([]);
 

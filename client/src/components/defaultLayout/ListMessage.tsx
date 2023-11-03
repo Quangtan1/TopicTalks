@@ -20,6 +20,7 @@ import { TbCircleDotFilled } from 'react-icons/tb';
 import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import './ListMessage.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaEnvelopeOpen } from 'react-icons/fa';
 
 const tabOption = [
   {
@@ -36,12 +37,15 @@ const tabOption = [
 
 interface ListMessageProps {
   sortChats: ListMesage[];
+  setSortChat: React.Dispatch<React.SetStateAction<ListMesage[]>>;
 }
 
 const ListMessage = observer((props: ListMessageProps) => {
-  const { sortChats } = props;
+  const { sortChats, setSortChat } = props;
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [filterData, setFilterData] = useState<ListMesage[]>([]);
+  const [inputSearch, setInputSearch] = useState<string>('');
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -82,16 +86,7 @@ const ListMessage = observer((props: ListMessageProps) => {
 
   useEffect(() => {
     uiStore?.setCollapse(true);
-    // uiStore?.setLoading(true);
-    // getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
-    //   .then((res) => {
-    //     chatStore?.setChats(res.data.data);
-    //     setSortChat(res.data.data);
-    //     uiStore?.setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    setFilterData(listChats);
   }, []);
 
   const partnerName = (partner) => {
@@ -106,11 +101,13 @@ const ListMessage = observer((props: ListMessageProps) => {
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
     if (tab === 0) {
+      setFilterData(sortChats);
       chatStore?.setChats(sortChats);
     } else if (tab === 2) {
       const groupChat =
         chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
       chatStore?.setChats(groupChat);
+      setFilterData(groupChat);
     }
   };
 
@@ -133,6 +130,19 @@ const ListMessage = observer((props: ListMessageProps) => {
     return arr.length;
   };
 
+  useEffect(() => {
+    if (inputSearch !== '') {
+      const newlistChats = listChats?.filter((item) =>
+        item.conversationInfor.isGroupChat
+          ? item.conversationInfor.chatName.toLowerCase().includes(inputSearch.toLowerCase())
+          : item.partnerDTO[0].username.toLowerCase().includes(inputSearch.toLowerCase()),
+      );
+      setFilterData(newlistChats);
+    } else {
+      setFilterData(listChats);
+    }
+  }, [inputSearch, selectedTab]);
+
   const uiDisplay = uiStore?.collapse;
 
   return (
@@ -145,7 +155,14 @@ const ListMessage = observer((props: ListMessageProps) => {
         <>
           <Typography className="title_chat">Your List Message</Typography>
           <Box className="chat_option">
-            <TextField required placeholder="Search..." autoFocus className="search" />
+            <TextField
+              required
+              placeholder="Search..."
+              autoFocus
+              className="search"
+              value={inputSearch}
+              onChange={(e) => setInputSearch(e.target.value)}
+            />
           </Box>
           <List className="tab_option">
             {tabOption.map((item) => (
@@ -163,7 +180,7 @@ const ListMessage = observer((props: ListMessageProps) => {
             <List className="list_box">
               {listChats?.length > 0 &&
                 selectedTab !== 1 &&
-                listChats?.map((item) => (
+                filterData?.map((item) => (
                   <ListItem
                     key={item?.conversationInfor.id}
                     className={`${
@@ -173,11 +190,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                   >
                     <span className="active_avatar">
                       <Avatar
-                        src={`${
+                        src={
                           item?.conversationInfor.isGroupChat
                             ? item.conversationInfor.avtGroupImg
                             : imageUser(item?.partnerDTO)
-                        }`}
+                        }
                         alt="avt"
                       />
                       {isActive(item) ? (
@@ -198,25 +215,13 @@ const ListMessage = observer((props: ListMessageProps) => {
                     />
                   </ListItem>
                 ))}
-              {/* {selectedTab === 1 &&
-            listFriend?.map((item) => (
-              <ListItem key={item?.friendListId} className={`chat_item`}>
-                <span className="active_avatar">
-                  <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
-                  {(item.userid === account.id ? item.friendActive : item.userActive) ? (
-                    <FiberManualRecordTwoTone className="online" />
-                  ) : (
-                    <FiberManualRecordTwoTone className="offline" />
-                  )}
-                </span>
-
-                <ListItemText className="chat_text_item">
-                  <Typography>{item.userid === account.id ? item.friendName : item.userName}</Typography>
-                </ListItemText>
-              </ListItem>
-            ))} */}
-              {((listFriend?.length === 0 && selectedTab === 1) || listChats === null) && (
-                <Typography className="no_data">There is no data</Typography>
+              {filterData?.length === 0 && (
+                <Box className="box_no_data">
+                  <span>
+                    <FaEnvelopeOpen />
+                  </span>
+                  <Typography>There is no data</Typography>
+                </Box>
               )}
             </List>
           </Box>
@@ -236,11 +241,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                 >
                   <span className="active_avatar">
                     <Avatar
-                      src={`${
+                      src={
                         item?.conversationInfor.isGroupChat
                           ? item.conversationInfor.avtGroupImg
                           : imageUser(item?.partnerDTO)
-                      }`}
+                      }
                       alt="avt"
                       title={
                         item?.conversationInfor.isGroupChat

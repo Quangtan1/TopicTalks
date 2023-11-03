@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import accountStore from 'src/store/accountStore';
 import { TopicChild } from 'src/types/topic.type';
@@ -13,6 +13,8 @@ import chatStore from 'src/store/chatStore';
 import uiStore from 'src/store/uiStore';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { AiOutlineArrowRight } from 'react-icons/ai';
+import ChatContext from 'src/context/ChatContext';
+import RandomDialog from 'src/components/dialogs/RandomDialog';
 
 const content = 'Are you sure you want to join this group?';
 
@@ -23,6 +25,7 @@ const TopicChildDetail = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [openWarning, setOpenWarning] = useState<boolean>(false);
   const [groupId, setGroupId] = useState<number>(null);
+  const { openRandom, setOpenRandom } = useContext(ChatContext);
   const account = accountStore?.account;
   const navigate = useNavigate();
 
@@ -66,14 +69,17 @@ const TopicChildDetail = observer(() => {
 
         <Box className="box_create">
           <Button onClick={() => setOpen(true)}>CREATE YOUR GROUP CHAT</Button>
-          <Button>FINDING RANDOM PARTNER</Button>
+          <Button onClick={() => setOpenRandom(true)}>FINDING RANDOM PARTNER</Button>
         </Box>
         <Typography className="title_existing">Finding existing groups</Typography>
         <Button className="view_group" onClick={() => navigate(`/group-chat/${id}`)}>
           VIEW GROUP CHAT <AiOutlineArrowRight />
         </Button>
       </Grid>
-      {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} />}
+      {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
+      {openRandom && (
+        <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
+      )}
     </Grid>
   );
 });

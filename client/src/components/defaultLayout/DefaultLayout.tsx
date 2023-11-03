@@ -82,7 +82,7 @@ const DefaultLayout = observer(({ children }) => {
             <HiArrowUp />
           </Button>
         )}
-        {chatStore?.chats.length > 0 && <ListMessage sortChats={sortChats} />}
+        {chatStore?.chats.length > 0 && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
         {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
 

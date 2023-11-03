@@ -169,7 +169,7 @@ const NotificationDialog = observer((props: DialogProps) => {
             <span>
               <FaEnvelopeOpen />
             </span>
-            <Typography>This is no data</Typography>
+            <Typography>There is no data</Typography>
           </Box>
         ) : tab === 1 ? (
           notifiSort?.map((item: INotifiSystem, index: number) => (

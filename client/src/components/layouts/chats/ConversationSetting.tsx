@@ -300,7 +300,11 @@ const ConversationSetting = observer((props: ChatProps) => {
       <Box className="container_setting">
         <Box className="avatar_setting">
           <span className="active_avatar_setting">
-            <Avatar src={isGroup ? '' : partnerUser?.image} alt="avt" className="avatar" />
+            <Avatar
+              src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+              alt="avt"
+              className="avatar"
+            />
             {isActive ? (
               <FiberManualRecordTwoTone className="online" />
             ) : (

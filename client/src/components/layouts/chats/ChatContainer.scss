@@ -98,11 +98,25 @@
         display: flex;
         flex-direction: column;
         gap: 5px;
-        .no_data {
-          text-align: center;
-          color: #fff;
-          border-bottom: 1px solid #ced4da;
-          padding-bottom: 10px;
+        .box_no_data {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          gap: 10px;
+          padding-top: 30px;
+          span {
+            padding: 15px;
+            border-radius: 50%;
+            background: linear-gradient(#9bc7e4, #dce1e9);
+            svg {
+              font-size: 50px;
+              color: #4f4f99;
+            }
+          }
+          p {
+            font-weight: 600;
+          }
         }
         .chat_item {
           display: flex;
@@ -632,8 +646,9 @@
     background: #fff;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 10px 10px 26px;
     justify-content: space-between;
+
     .container_setting {
       display: flex;
       flex-direction: column;
@@ -747,7 +762,7 @@
         flex-direction: column;
         gap: 8px;
         padding-top: 10px;
-        height: 43vh;
+        height: 40vh;
         overflow-y: auto;
         .title_member_setting {
           display: flex;

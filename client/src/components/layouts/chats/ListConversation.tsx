@@ -20,6 +20,7 @@ import { TbCircleDotFilled } from 'react-icons/tb';
 import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
+import { FaEnvelopeOpen } from 'react-icons/fa';
 
 const tabOption = [
   {
@@ -44,6 +45,8 @@ const ListConversation = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const [openLogout, setOpenLogout] = useState<boolean>(false);
+  const [filterData, setFilterData] = useState<ListMesage[] | IFriends[]>([]);
+  const [inputSearch, setInputSearch] = useState<string>('');
   const account = accountStore?.account;
 
   const { socket, openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
@@ -79,6 +82,7 @@ const ListConversation = observer(() => {
       .then((res) => {
         chatStore?.setChats(res.data.data);
         setSortChat(res.data.data);
+        setFilterData(res.data.data);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -97,15 +101,19 @@ const ListConversation = observer(() => {
     const result = chat.partnerDTO.some((item) => item.active);
     return result;
   };
-
+  const listFriend = friendStore?.friends && friendStore?.friends.filter((item) => item.accept);
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
     if (tab === 0) {
+      setFilterData(sortChats);
       chatStore?.setChats(sortChats);
+    } else if (tab === 1) {
+      setFilterData(listFriend);
     } else if (tab === 2) {
       const groupChat =
         chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
       chatStore?.setChats(groupChat);
+      setFilterData(groupChat);
     }
   };
 
@@ -113,8 +121,6 @@ const ListConversation = observer(() => {
     const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
     return image.toString();
   };
-
-  const listFriend = friendStore?.friends.filter((item) => item.accept);
 
   const isCheckNotifi = (id: number) => {
     return notification?.some((item) => item.conversationId === id);
@@ -125,6 +131,28 @@ const ListConversation = observer(() => {
     accountStore?.clearStore();
     navigate('/auth');
   };
+
+  useEffect(() => {
+    if (inputSearch !== '') {
+      if (selectedTab === 1) {
+        const filteredFriends = listFriend?.filter((item) =>
+          item.userid === account.id
+            ? item.friendName.toLowerCase().includes(inputSearch.toLowerCase())
+            : item.userName.toLowerCase().includes(inputSearch.toLowerCase()),
+        );
+        setFilterData(filteredFriends);
+      } else {
+        const newlistChats = listChats?.filter((item) =>
+          item.conversationInfor.isGroupChat
+            ? item.conversationInfor.chatName.toLowerCase().includes(inputSearch.toLowerCase())
+            : item.partnerDTO[0].username.toLowerCase().includes(inputSearch.toLowerCase()),
+        );
+        setFilterData(newlistChats);
+      }
+    } else {
+      selectedTab === 1 ? setFilterData(listFriend) : setFilterData(listChats);
+    }
+  }, [inputSearch, selectedTab]);
 
   return (
     <Box className="list_conversation_container">
@@ -137,6 +165,8 @@ const ListConversation = observer(() => {
       </Box>
       <Box className="chat_option">
         <TextField
+          value={inputSearch}
+          onChange={(e) => setInputSearch(e.target.value)}
           required
           placeholder="Search here..."
           autoFocus
@@ -166,7 +196,7 @@ const ListConversation = observer(() => {
         <List className="list_box">
           {listChats?.length > 0 &&
             selectedTab !== 1 &&
-            listChats?.map((item) => (
+            filterData?.map((item) => (
               <ListItem
                 key={item?.conversationInfor.id}
                 className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
@@ -174,11 +204,11 @@ const ListConversation = observer(() => {
               >
                 <span className="active_avatar">
                   <Avatar
-                    src={`${
+                    src={
                       item?.conversationInfor.isGroupChat
                         ? item.conversationInfor.avtGroupImg
                         : imageUser(item?.partnerDTO)
-                    }`}
+                    }
                     alt="avt"
                   />
                   {isActive(item) ? (
@@ -199,7 +229,7 @@ const ListConversation = observer(() => {
               </ListItem>
             ))}
           {selectedTab === 1 &&
-            listFriend?.map((item) => (
+            filterData?.map((item) => (
               <ListItem key={item?.friendListId} className={`chat_item`}>
                 <span className="active_avatar">
                   <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
@@ -215,8 +245,13 @@ const ListConversation = observer(() => {
                 </ListItemText>
               </ListItem>
             ))}
-          {((listFriend?.length === 0 && selectedTab === 1) || listChats === null) && (
-            <Typography className="no_data">There is no data</Typography>
+          {filterData?.length === 0 && (
+            <Box className="box_no_data">
+              <span>
+                <FaEnvelopeOpen />
+              </span>
+              <Typography>There is no data</Typography>
+            </Box>
           )}
         </List>
       </Box>

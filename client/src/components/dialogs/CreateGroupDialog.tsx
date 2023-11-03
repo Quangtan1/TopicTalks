@@ -24,10 +24,11 @@ import uiStore from 'src/store/uiStore';
 interface DialogProps {
   open: boolean;
   onClose: () => void;
+  topicChildProps?: TopicChild;
 }
 
 const CreateGroupDialog = observer((props: DialogProps) => {
-  const { open, onClose } = props;
+  const { open, onClose, topicChildProps } = props;
   const [inputName, setInputName] = useState<string>('');
   const [selectTopic, setSelectTopic] = useState<number | ''>(1);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
@@ -47,24 +48,30 @@ const CreateGroupDialog = observer((props: DialogProps) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
-    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
-      .then((res) => {
-        setListTopic(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (topicChildProps) {
+      setSelected(topicChildProps);
+    } else {
+      getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+        .then((res) => {
+          setListTopic(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, []);
 
   useEffect(() => {
-    getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
-      .then((res) => {
-        setTopicChild(res.data.data);
-        setSelected(null);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (!topicChildProps) {
+      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+        .then((res) => {
+          setTopicChild(res.data.data);
+          setSelected(null);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [selectTopic]);
 
   const handleSelect = (topicChild: TopicChild) => {
@@ -122,31 +129,39 @@ const CreateGroupDialog = observer((props: DialogProps) => {
             <Typography>Chat Name:</Typography>
             <TextField placeholder="Input here..." value={inputName} onChange={(e) => setInputName(e.target.value)} />
           </Box>
-          <Box className="topic_box">
-            <span>
-              <Typography>Select Topic:</Typography>
-              <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-                {listTopic.length > 0 &&
-                  listTopic.map((item) => (
-                    <MenuItem value={item.id} key={item.id}>
-                      {item.topicParentName}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </span>
-            <Box className="topic_child">
-              {topicChild.length > 0 &&
-                topicChild?.map((item) => (
-                  <Typography
-                    key={item.id}
-                    className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
-                    onClick={() => handleSelect(item)}
-                  >
-                    {item.topicChildrenName}
-                  </Typography>
-                ))}
+          {topicChildProps ? (
+            <Box className="selected_topic">
+              <Typography className="chat_name_box">Your Topic Selected:</Typography>
+              <Typography>{topicChildProps?.topicChildrenName}</Typography>
+              <span>______________________</span>
             </Box>
-          </Box>
+          ) : (
+            <Box className="topic_box">
+              <span>
+                <Typography>Select Topic:</Typography>
+                <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+                  {listTopic.length > 0 &&
+                    listTopic.map((item) => (
+                      <MenuItem value={item.id} key={item.id}>
+                        {item.topicParentName}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </span>
+              <Box className="topic_child">
+                {topicChild.length > 0 &&
+                  topicChild?.map((item) => (
+                    <Typography
+                      key={item.id}
+                      className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
+                      onClick={() => handleSelect(item)}
+                    >
+                      {item.topicChildrenName}
+                    </Typography>
+                  ))}
+              </Box>
+            </Box>
+          )}
         </Box>
       </DialogContent>
       <DialogActions className="dialog_action">
