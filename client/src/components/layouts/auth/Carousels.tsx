@@ -3,8 +3,10 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 import { Box, Typography } from '@mui/material';
 import { carousel1, carousel2 } from 'src/utils/consts';
+import { useNavigate } from 'react-router-dom';
 
 const Carousels = () => {
+  const navigate = useNavigate();
   return (
     <Carousel
       autoPlay={true}
@@ -17,22 +19,24 @@ const Carousels = () => {
     >
       <Box>
         <img src={carousel1} alt="carousel1" />
-        <Box className="legend">
-          <Typography> ____ Join the Club</Typography>
-          <Typography> Talk and share confidently</Typography>
+        <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
+          <Typography>Join the Community</Typography>
+          <Typography>Chat Anonymously and Confidently</Typography>
           <Typography>
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.
+            Join our platform to engage in discussions and share your thoughts freely, knowing that your privacy is our
+            priority.
           </Typography>
         </Box>
         <div className="overlay"></div>
       </Box>
       <Box>
         <img src={carousel2} alt="carousel2" />
-        <Box className="legend">
-          <Typography> ____ Join the Club</Typography>
-          <Typography> Talk and share confidently</Typography>
+        <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
+          <Typography> ____ Join the Conversation</Typography>
+          <Typography> Connect and Share with Confidence</Typography>
           <Typography>
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.
+            Join our platform to engage in meaningful conversations and share your ideas freely, knowing that your
+            identity is protected.
           </Typography>
         </Box>
         <div className="overlay"></div>
