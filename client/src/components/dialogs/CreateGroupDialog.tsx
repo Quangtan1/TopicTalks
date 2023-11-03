@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { aboutme, createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
@@ -107,6 +107,8 @@ const CreateGroupDialog = observer((props: DialogProps) => {
     }
   };
 
+  const disable = selected === null || inputName === '';
+
   return (
     <Dialog open={open} onClose={onClose} className="create_group_dialog">
       <DialogTitle className="dialog_title">
@@ -114,36 +116,44 @@ const CreateGroupDialog = observer((props: DialogProps) => {
         <Typography>New Conversation</Typography>
       </DialogTitle>
       <DialogContent className="dialog_content">
-        <Box className="chat_name_box">
-          <Typography>Chat Name:</Typography>
-          <TextField placeholder="Enter Chat Name" value={inputName} onChange={(e) => setInputName(e.target.value)} />
-        </Box>
-        <Box className="topic_box">
-          <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-            {listTopic.length > 0 &&
-              listTopic.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {item.topicParentName}
-                </MenuItem>
-              ))}
-          </Select>
-          <Box className="topic_child">
-            {topicChild.length > 0 &&
-              topicChild?.map((item) => (
-                <Typography
-                  key={item.id}
-                  className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
-                  onClick={() => handleSelect(item)}
-                >
-                  {item.topicChildrenName}
-                </Typography>
-              ))}
+        <img src={aboutme} alt="about" className="image" />
+        <Box className="box_create">
+          <Box className="chat_name_box">
+            <Typography>Chat Name:</Typography>
+            <TextField placeholder="Input here..." value={inputName} onChange={(e) => setInputName(e.target.value)} />
+          </Box>
+          <Box className="topic_box">
+            <span>
+              <Typography>Select Topic:</Typography>
+              <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+                {listTopic.length > 0 &&
+                  listTopic.map((item) => (
+                    <MenuItem value={item.id} key={item.id}>
+                      {item.topicParentName}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </span>
+            <Box className="topic_child">
+              {topicChild.length > 0 &&
+                topicChild?.map((item) => (
+                  <Typography
+                    key={item.id}
+                    className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
+                    onClick={() => handleSelect(item)}
+                  >
+                    {item.topicChildrenName}
+                  </Typography>
+                ))}
+            </Box>
           </Box>
         </Box>
       </DialogContent>
       <DialogActions className="dialog_action">
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={createGroupChat}>Submit</Button>
+        <Button disabled={disable} className={disable && 'disable'} onClick={createGroupChat}>
+          Submit
+        </Button>
       </DialogActions>
     </Dialog>
   );

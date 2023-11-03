@@ -83,7 +83,7 @@ const ManagePost = observer(() => {
       const res = await useApprovePost.mutateAsync(post.id);
       if (res?.status === 200) {
         ToastSuccess('Approve post successfully!');
-        const content = 'Your post are approved by Admin';
+        const content = `This post has approved by Admin`;
         saveNotifi(post, content);
         setIsOpen(false);
         // reLoadPostUser();
@@ -99,7 +99,7 @@ const ManagePost = observer(() => {
       const result = await useDeletePost.mutateAsync(post.id);
       if (result.status === 200) {
         ToastSuccess('Reject post successfully!');
-        const content = 'Your post are reject by Admin';
+        const content = `Reject,${post.title} `;
         saveNotifi(post, content);
         reLoadPost();
         setIsOpen(false);

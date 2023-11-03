@@ -54,3 +54,20 @@ export interface IMessage {
   groupChatName: string;
   groupChat: boolean;
 }
+
+export interface INotifiSystem {
+  notiId: number;
+  userId: number;
+  username: string;
+  partnerId?: number;
+  partnerUsername?: string;
+  message: string;
+  postId?: number;
+  isRead?: boolean;
+  conversationId?: number;
+  isGroupChat?: boolean;
+  chatName?: string;
+  postImage?: string;
+  groupImage?: string;
+  createAt?: string;
+}

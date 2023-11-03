@@ -26,6 +26,7 @@
       padding: 60px 0px;
       .box_image {
         position: relative;
+
         .support {
           width: 300px;
           height: auto;
@@ -49,6 +50,16 @@
         border-radius: 40% 40% 0 0;
       }
     }
+    @keyframes slideIn {
+      0% {
+        transform: translateX(-30%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
     .title_lead {
       position: absolute;
       text-align: center;
@@ -60,6 +71,7 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
+      animation: slideIn 0.75s ease-in-out;
       p {
         text-align: center;
       }
@@ -199,6 +211,9 @@
       // .overlay {
       //   background: transparent;
       // }
+    }
+    .react-multi-carousel-list {
+      box-shadow: 0px 20px 90px #f7f3f0;
     }
     .react-multi-carousel-item {
       display: flex;

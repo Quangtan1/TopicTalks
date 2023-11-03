@@ -11,7 +11,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, partner } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
@@ -146,29 +146,30 @@ const RandomDialog = observer((props: DialogProps) => {
         </DialogContent>
       ) : (
         <DialogContent className="dialog_content">
-          <Box className="chat_name_box">
-            <Typography>Please Choose Topic:</Typography>
-          </Box>
-          <Box className="topic_box">
-            <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-              {listTopic.length > 0 &&
-                listTopic.map((item) => (
-                  <MenuItem value={item.id} key={item.id}>
-                    {item.topicParentName}
-                  </MenuItem>
-                ))}
-            </Select>
-            <Box className="topic_child">
-              {topicChild.length > 0 &&
-                topicChild?.map((item) => (
-                  <Typography
-                    key={item.id}
-                    className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
-                    onClick={() => handleSelect(item)}
-                  >
-                    {item.topicChildrenName}
-                  </Typography>
-                ))}
+          <img src={partner} alt="partner" className="partner" />
+          <Box className="box_random">
+            <Typography className="chat_name_box">Please Choose Topic:</Typography>
+            <Box className="topic_box">
+              <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+                {listTopic.length > 0 &&
+                  listTopic.map((item) => (
+                    <MenuItem value={item.id} key={item.id}>
+                      {item.topicParentName}
+                    </MenuItem>
+                  ))}
+              </Select>
+              <Box className="topic_child">
+                {topicChild.length > 0 &&
+                  topicChild?.map((item) => (
+                    <Typography
+                      key={item.id}
+                      className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
+                      onClick={() => handleSelect(item)}
+                    >
+                      {item.topicChildrenName}
+                    </Typography>
+                  ))}
+              </Box>
             </Box>
           </Box>
         </DialogContent>
@@ -176,7 +177,11 @@ const RandomDialog = observer((props: DialogProps) => {
 
       <DialogActions className="dialog_action">
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button disabled={isRandoming} onClick={handleRandom} className={`${isRandoming && 'disable_button'}`}>
+        <Button
+          disabled={selected === null || isRandoming}
+          onClick={handleRandom}
+          className={`${(selected === null || isRandoming) && 'disable_button'}`}
+        >
           Random
         </Button>
       </DialogActions>

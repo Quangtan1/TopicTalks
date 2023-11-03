@@ -17,7 +17,7 @@ import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
-import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import './ListMessage.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -121,8 +121,16 @@ const ListMessage = observer((props: ListMessageProps) => {
 
   const listFriend = friendStore?.friends.filter((item) => item.accept);
 
-  const isCheckNotifi = (id: number) => {
-    return notification?.some((item) => item.conversationId === id);
+  const isCheckNotifi = (id) => {
+    const arr = [];
+    if (Array.isArray(notification)) {
+      notification?.forEach((item) => {
+        if (item.conversationId === id) {
+          arr.push(id);
+        }
+      });
+    }
+    return arr.length;
   };
 
   const uiDisplay = uiStore?.collapse;
@@ -165,7 +173,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                   >
                     <span className="active_avatar">
                       <Avatar
-                        src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`}
+                        src={`${
+                          item?.conversationInfor.isGroupChat
+                            ? item.conversationInfor.avtGroupImg
+                            : imageUser(item?.partnerDTO)
+                        }`}
                         alt="avt"
                       />
                       {isActive(item) ? (
@@ -175,13 +187,15 @@ const ListMessage = observer((props: ListMessageProps) => {
                       )}
                     </span>
                     <ListItemText className="chat_text_item">
-                      <Typography className={isCheckNotifi(item.conversationInfor.id) && 'notifi'}>
+                      <Typography className={isCheckNotifi(item.conversationInfor.id) > 0 && 'notifi'}>
                         {item.conversationInfor.isGroupChat === true
                           ? item.conversationInfor.chatName
                           : partnerName(item.partnerDTO)}
                       </Typography>
                     </ListItemText>
-                    <TbCircleDotFilled className={`dot ${!isCheckNotifi(item.conversationInfor.id) && 'not_notifi'}`} />
+                    <FiberManualRecord
+                      className={`dot ${isCheckNotifi(item.conversationInfor.id) === 0 && 'not_notifi'}`}
+                    />
                   </ListItem>
                 ))}
               {/* {selectedTab === 1 &&
@@ -222,7 +236,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                 >
                   <span className="active_avatar">
                     <Avatar
-                      src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`}
+                      src={`${
+                        item?.conversationInfor.isGroupChat
+                          ? item.conversationInfor.avtGroupImg
+                          : imageUser(item?.partnerDTO)
+                      }`}
                       alt="avt"
                       title={
                         item?.conversationInfor.isGroupChat
@@ -235,6 +253,9 @@ const ListMessage = observer((props: ListMessageProps) => {
                       <FiberManualRecordTwoTone className="online" />
                     ) : (
                       <FiberManualRecordTwoTone className="offline" />
+                    )}
+                    {isCheckNotifi(item.conversationInfor.id) > 0 && (
+                      <span className="notifi">{isCheckNotifi(item.conversationInfor.id)}</span>
                     )}
                   </span>
                   {/* <TbCircleDotFilled

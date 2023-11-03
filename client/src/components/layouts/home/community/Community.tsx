@@ -77,12 +77,7 @@ const HomePage = observer(() => {
 
         <IoAddCircleSharp className="create" onClick={() => setOpenCreatePost(true)} />
       </Box>
-      <Box className="title_box">
-        <Typography className="title_backgroud">Post</Typography>
-        <Typography className="title_group">
-          <strong>All</strong> Posts
-        </Typography>
-      </Box>
+
       <PostItem posts={posts} handleDetailPost={handleDetailPost} />
       {openPostDetail && (
         <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
