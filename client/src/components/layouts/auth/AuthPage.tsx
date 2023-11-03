@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Grid, InputAdornment } from '@mui/material';
+import React, { useRef, useState } from 'react';
+import { Button, FormControlLabel, Checkbox, Box, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import { RiLockPasswordLine } from 'react-icons/ri';
-import { GrUserExpert } from 'react-icons/gr';
-import { MdOutlineMailOutline } from 'react-icons/md';
-import { HiOutlineKey } from 'react-icons/hi';
+// import InstagramIcon from '@mui/icons-material/Instagram';
+// import FacebookIcon from '@mui/icons-material/Facebook';
+// import TwitterIcon from '@mui/icons-material/Twitter';
 import './AuthPage.scss';
 import Carousels from './Carousels';
 import { logo } from 'src/utils/consts';
@@ -23,18 +19,23 @@ import uiStore from 'src/store/uiStore';
 import Loading from 'src/components/loading/Loading';
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
-import { MuiOtpInput } from 'mui-one-time-password-input';
+import OtpInput from './otpInput';
+import AuthForm from './authForm';
+import CountDownOtp from './count';
 
 const LoginPage = observer(() => {
+  const emailRef = useRef('');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  let timeoutId;
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState<boolean>(true);
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [showOTP, setShowOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  let timeoutId;
+  const [showCountDown, setShowCountDown] = useState(true);
+  const [remainingSeconds, setRemainingSeconds] = useState(30);
 
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
@@ -83,38 +84,28 @@ const LoginPage = observer(() => {
       });
   };
 
-  const generateOTP = (e) => {
-    e.preventDefault();
-    const formData: any = new FormData(e.currentTarget);
-    const anonymousName = formData.get('anonymousName');
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const cpassword = formData.get('cpassword');
-
-    if (!anonymousName || !email || !password || !cpassword) {
-      ToastError('Please not empty textbox');
-    } else if (!emailRegex.test(email)) {
-      ToastError('Please input correct email');
-    } else if (!passwordRegex.test(password) || password !== cpassword) {
-      password !== cpassword
-        ? ToastError('Confirm Password is incorrect ')
-        : ToastError('Password must contain capital letters,numbers and more than 8 characters');
-    } else {
-      axios
-        .post(`${API_KEY}/user/regenerate-otp?email=${email}`)
-        .then((res) => {
-          uiStore?.setLoading(true);
+  const generateOTP = () => {
+    uiStore?.setLoading(true);
+    axios
+      .post(`${API_KEY}/auth/regenerate-otp?email=${emailRef.current}`)
+      .then((res) => {
+        if (res.status === 200) {
           ToastSuccess('Send OTP Successfully');
           setShowOTP(true);
+          startCountdown();
           timeoutId = setTimeout(() => {
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
-          }, 2000);
-        })
-        .catch((err) => {
-          ToastError(err.response.data.message);
-        });
-    }
+          }, 1000);
+        } else {
+          uiStore?.setLoading(false);
+          ToastError(res?.data?.message);
+        }
+      })
+      .catch((err) => {
+        uiStore?.setLoading(false);
+        ToastError(err.response.data.message);
+      });
   };
 
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
@@ -139,21 +130,31 @@ const LoginPage = observer(() => {
         email: email,
         password: password,
       };
+      uiStore?.setLoading(true);
 
       axios
         .post(`${API_KEY}/auth/register`, user)
         .then((res) => {
-          generateOTP(e);
-          uiStore?.setLoading(true);
-          setAccountSignup(res.data);
-          ToastSuccess('Register Successfully');
-          timeoutId = setTimeout(() => {
-            clearTimeout(timeoutId);
+          if (res.status === 200) {
+            uiStore?.setLoading(true);
+            setShowOTP(true);
+            setAccountSignup(res.data);
+            emailRef.current = email;
+            ToastSuccess('The OTP code has been sent to your email, please verify to continue');
+            startCountdown();
+            timeoutId = setTimeout(() => {
+              clearTimeout(timeoutId);
+              uiStore?.setLoading(false);
+            }, 1000);
+          } else {
             uiStore?.setLoading(false);
-          }, 2000);
+            ToastSuccess('Register Fail');
+            console.log(res?.data?.message);
+          }
         })
         .catch((err) => {
-          ToastError(err.response.data.message);
+          uiStore?.setLoading(false);
+          console.log(err.response.data.message);
         });
     }
   };
@@ -171,31 +172,37 @@ const LoginPage = observer(() => {
     setOtp(value);
   };
 
-  const handleVerifyEmail = (e) => {
-    e.preventDefault();
-    const formData: any = new FormData(e.currentTarget);
-    const email = formData.get('email');
-
-    if (!emailRegex.test(email)) {
-      ToastError('Please input correct email');
-    } else {
-      axios
-        .post(`${API_KEY}/user/verify-account?email=${email}&otp=${otp}`)
-        .then((res) => {
+  const handleVerifyEmail = () => {
+    axios
+      .post(`${API_KEY}/auth/verify-account?email=${emailRef.current}&otp=${otp}`)
+      .then((res) => {
+        if (res.data === 'Please regenerate otp and try again') {
+          ToastError('Verify account fail, please regenerate otp and try again');
+        } else if (res.status === 200 && res.data !== 'Please regenerate otp and try again') {
           uiStore?.setLoading(true);
           timeoutId = setTimeout(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
-            // setSignIn(true);
             setOpenSelect(true);
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
           }, 2000);
-        })
-        .catch((err) => {
-          ToastError(err.response.data.message);
-        });
-    }
+        } else {
+          ToastError('Verify account fail');
+        }
+      })
+      .catch((err) => {
+        ToastError(err.response.data.message);
+      });
+  };
+
+  const startCountdown = () => {
+    setShowCountDown(true);
+    setRemainingSeconds(30);
+  };
+
+  const handleTimeout = () => {
+    setShowCountDown(false);
   };
 
   return (
@@ -208,74 +215,10 @@ const LoginPage = observer(() => {
         <Box className="box-auth">
           <img src={logo} alt="logo" className="logo-image" />
           <Typography variant="h4" padding={2} textAlign={'center'}>
-            {isSignIn ? 'Sign In' : 'Sign Up'}
+            {showOTP ? 'Verify Email' : isSignIn ? 'Sign In' : 'Sign Up'}
           </Typography>
           <Box component="form" noValidate onSubmit={isSignIn ? handleSignIn : handleSignUp} className="form">
-            {!showOTP && (
-              <>
-                {!isSignIn && (
-                  <TextField
-                    required
-                    id="email"
-                    placeholder="Email Address"
-                    name="email"
-                    autoFocus
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <MdOutlineMailOutline />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-                <TextField
-                  name="anonymousName"
-                  required
-                  id="anonymousName"
-                  placeholder="Anonymous Name"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <GrUserExpert />
-                      </InputAdornment>
-                    ),
-                  }}
-                  autoFocus
-                />
-
-                <TextField
-                  required
-                  name="password"
-                  placeholder="Password"
-                  type="password"
-                  id="password"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <RiLockPasswordLine />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                {!isSignIn && (
-                  <TextField
-                    required
-                    id="cpassword"
-                    placeholder="Confirm Password"
-                    name="cpassword"
-                    type="password"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <HiOutlineKey />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                )}
-              </>
-            )}
+            <AuthForm isSignIn={isSignIn} showOTP={showOTP} />
             {isSignIn && (
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" className="checkbox" />}
@@ -283,25 +226,30 @@ const LoginPage = observer(() => {
               />
             )}
 
-            <Box className="forgot-password">
-              <Typography onClick={goToForgotPw}>Forgot password?</Typography>
+            {!showOTP ? (
+              <Box className="forgot-password">
+                <Typography onClick={goToForgotPw}>Forgot password?</Typography>
 
-              <Typography onClick={() => setSignIn(!isSignIn)}>{isSignIn ? 'Sign up account?' : 'Sign In?'}</Typography>
-            </Box>
-            {showOTP ? (
+                <Typography onClick={() => setSignIn(!isSignIn)}>
+                  {isSignIn ? 'Sign up account?' : 'Sign In?'}
+                </Typography>
+              </Box>
+            ) : (
               <>
-                <MuiOtpInput value={otp} length={6} onChange={handleChangeOTP} />
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  className="submit-button"
-                  onClick={handleVerifyEmail}
-                >
-                  Verify Email
-                </Button>
+                {
+                  <CountDownOtp
+                    setRemainingSeconds={setRemainingSeconds}
+                    showCountDown={showCountDown}
+                    generateOTP={generateOTP}
+                    onTimeout={handleTimeout}
+                    remainingSeconds={remainingSeconds}
+                  />
+                }
               </>
+            )}
+
+            {showOTP ? (
+              <OtpInput otp={otp} handleChangeOTP={handleChangeOTP} handleVerifyEmail={handleVerifyEmail} />
             ) : (
               <>
                 <Button type="submit" fullWidth variant="contained" className="submit-button">
@@ -316,11 +264,11 @@ const LoginPage = observer(() => {
                   onSuccess={handleLoginGGSuccess}
                   onError={handleLoginFailed}
                 />
-                <Box className="box-social">
+                {/* <Box className="box-social">
                   <FacebookIcon />
                   <InstagramIcon />
                   <TwitterIcon />
-                </Box>
+                </Box> */}
               </>
             )}
           </Box>
