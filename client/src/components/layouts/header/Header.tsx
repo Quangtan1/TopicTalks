@@ -30,7 +30,7 @@ const Header = observer(() => {
   let worker;
   let notificationWorker;
 
-  const { notification, setNotification } = useContext(ChatContext);
+  const { notifiSystem, setNotifiSystem } = useContext(ChatContext);
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
@@ -69,7 +69,7 @@ const Header = observer(() => {
       notificationWorker = new Worker(notification_worker_script);
       notificationWorker.onmessage = (ev: any) => {
         if (ev.data !== 'Empty') {
-          // setNotification(ev.data);
+          setNotifiSystem(ev.data);
         }
       };
       notificationWorker.postMessage(params);
@@ -99,6 +99,9 @@ const Header = observer(() => {
     setActiveRoute(navigate);
   };
 
+  const notifiRead = notifiSystem?.filter((item) => !item.isRead);
+  const listRequest = friendStore?.friends.filter((item) => !item.accept && account.id === item.friendId);
+
   return (
     <Box className="header">
       <Grid container className="first_header">
@@ -113,9 +116,8 @@ const Header = observer(() => {
           <img src={logo_center} alt="logo_center" className="logo_center" />
         </Grid>
         <Grid item md={4} className="infor_header">
-          <IoMailUnreadOutline />
           <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
-          <span className="notifi_icon">{notification.length}</span>
+          <span className="notifi_icon">{notifiRead?.length + listRequest?.length}</span>
           <IconButton onClick={() => setAnchorEl(true)}>
             <Avatar src={account?.url_img} alt="avatar" />
           </IconButton>

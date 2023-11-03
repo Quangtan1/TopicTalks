@@ -2,11 +2,12 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { loading } from 'src/utils';
 import './Loading.scss';
+import { BiLoaderCircle } from 'react-icons/bi';
 
 const Loading = () => {
   return (
     <Box className="loading-container">
-      <img src={loading} alt="loading" />
+      <BiLoaderCircle className="icon" />
       <div className="overlay"></div>
     </Box>
   );

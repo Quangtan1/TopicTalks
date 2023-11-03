@@ -23,12 +23,26 @@
       position: fixed;
       bottom: 60px;
       left: 40px;
-      font-size: 50px;
+      font-size: 61px;
       color: #fff;
       fill: #8e6e51;
       z-index: 4;
       cursor: pointer;
+      background: #e5dac7;
+      border-radius: 50%;
+      padding: 7px;
       animation: shake 0.5s infinite;
+    }
+    .notifi_message {
+      position: fixed;
+      bottom: 96px;
+      left: 84px;
+      color: #e75454;
+      font-size: 27px;
+      z-index: 5;
+      background: #e3c1c1;
+      padding: 3px;
+      border-radius: 50%;
     }
 
     @keyframes shake {

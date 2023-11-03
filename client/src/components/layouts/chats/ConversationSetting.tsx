@@ -14,7 +14,7 @@ import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { TopicChild } from 'src/types/topic.type';
-import { createAxios, deleteDataAPI, putDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 
 interface ChatProps {
@@ -69,6 +69,21 @@ const ConversationSetting = observer((props: ChatProps) => {
   const memberDTO = chat?.partnerDTO.filter((item) => item.member);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
+  const saveNotifi = (userId: number, content: string) => {
+    const dataRequest = {
+      conversationId: chat?.conversationInfor.id,
+      userId: userId,
+      messageNoti: content,
+      partnerId: account.id,
+      postId: null,
+    };
+    postDataAPI(`/notification/pushNoti`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleAprrove = (member: IPartnerDTO) => {
     const approveData = {
       userInSessionId: account.id,
@@ -82,6 +97,7 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},Approve, ${member.username}`,
       },
     };
+    saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     putDataAPI(`/participant/approve-member`, approveData, account.access_token, axiosJWT)
@@ -104,6 +120,7 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},${status}, ${member.username}`,
       },
     };
+    saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     deleteDataAPI(
@@ -283,7 +300,11 @@ const ConversationSetting = observer((props: ChatProps) => {
       <Box className="container_setting">
         <Box className="avatar_setting">
           <span className="active_avatar_setting">
-            <Avatar src={isGroup ? '' : partnerUser?.image} alt="avt" className="avatar" />
+            <Avatar
+              src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+              alt="avt"
+              className="avatar"
+            />
             {isActive ? (
               <FiberManualRecordTwoTone className="online" />
             ) : (
