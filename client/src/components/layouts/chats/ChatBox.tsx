@@ -448,24 +448,10 @@ const ChatBox = observer((props: ChatProps) => {
               ))}
           </Box>
         ) : (
-          <Box className="sologan_conversation">
-            <Box className="icon-container">
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-            </Box>
-            {(isSelecedChat && isMember === 'false') || (isGroup && chat?.isMember === undefined) ? (
-              <Typography className="waiting_approve_text">
-                Wating Approve from Admin <strong> {chat?.conversationInfor.chatName}</strong>
-              </Typography>
-            ) : (
-              <>
-                <Typography>Let Started Anonymous Chat </Typography>
-                <Typography>A place where you can express yourself without fear of judgment.</Typography>
-              </>
-            )}
+          <Box className="no_data_selected">
+            <span className="img_no_select" />
+
+            <Typography>No chats selected</Typography>
           </Box>
         )}
       </ScrollToBottom>
