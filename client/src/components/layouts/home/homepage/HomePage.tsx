@@ -49,11 +49,11 @@ const HomePage = observer(() => {
     uiStore?.setLoading(true);
     getDataAPI(`/topic-parent/all`, accountToken, axiosJWT)
       .then((res) => {
-        if (res.data.data !== 'Not exist any children topic.') {
-          setListTopicParent(res.data.data);
-          if (res.data.data.length > 0) {
-            res.data.data.forEach((topicParent) => {
-              const parentId = topicParent.id;
+        if (res?.data?.data !== 'Not exist any children topic.') {
+          setListTopicParent(res?.data?.data);
+          if (res?.data?.data?.length > 0) {
+            res?.data?.data.forEach((topicParent) => {
+              const parentId = topicParent?.id;
               getTopicChildByParentId(parentId);
             });
           }
@@ -111,7 +111,7 @@ const HomePage = observer(() => {
           </Typography>
         </Box>
       </Box>
-      {listTopic.length > 0 &&
+      {listTopic?.length > 0 &&
         listTopic?.map((topicParent, index) => (
           <Box key={topicParent?.id} className="topic_box">
             {index % 2 ? (
