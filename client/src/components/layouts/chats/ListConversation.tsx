@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText, InputAdornment } from '@mui/material';
 import { BsChatDots, BsDot } from 'react-icons/bs';
-import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiLogout, CiSearch, CiSettings } from 'react-icons/ci';
@@ -17,10 +17,53 @@ import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
-import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
 import { FaEnvelopeOpen } from 'react-icons/fa';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import { RiDeleteBack2Line } from 'react-icons/ri';
+import { HiPhoneMissedCall } from 'react-icons/hi';
+import { FcCallback } from 'react-icons/fc';
+import { formatTime, formatTimeMessage } from 'src/utils/helper';
+
+const notifeMessageData = [
+  {
+    keyword: 'Approve',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just approved to the group',
+    icon: <AiOutlineUserAdd className="add_icon" />,
+  },
+  {
+    keyword: 'Reject',
+    prefix: 'Refused',
+    highlightResult: true,
+    suffix: ' to join the group',
+    icon: <IoCloseCircleOutline className="reject_icon" />,
+  },
+  {
+    keyword: 'Remove',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just been deleted from the Group',
+    icon: <RiDeleteBack2Line className="reject_icon" />,
+  },
+  {
+    keyword: 'Leave',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' just left the Group',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateGroupName',
+    prefix: 'Group Name changed',
+    highlightResult: true,
+    suffix: '',
+    icon: null,
+  },
+];
 
 const tabOption = [
   {
@@ -45,8 +88,8 @@ const ListConversation = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const [openLogout, setOpenLogout] = useState<boolean>(false);
-  const [filterData, setFilterData] = useState<ListMesage[] | IFriends[]>([]);
   const [inputSearch, setInputSearch] = useState<string>('');
+  const [dataFilter, setDataFilter] = useState<ListMesage[] | IFriends[]>([]);
   const account = accountStore?.account;
 
   const { socket, openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
@@ -82,7 +125,6 @@ const ListConversation = observer(() => {
       .then((res) => {
         chatStore?.setChats(res.data.data);
         setSortChat(res.data.data);
-        setFilterData(res.data.data);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -92,6 +134,15 @@ const ListConversation = observer(() => {
       chatStore?.setSelectedChat(null);
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedTab === 0) {
+      setSortChat(listChats);
+    } else if (selectedTab === 2) {
+      const groupChat = listChats?.filter((item) => item.conversationInfor.isGroupChat);
+      setSortChat(groupChat);
+    }
+  }, [selectedTab, listChats]);
 
   const partnerName = (partner) => {
     const usernames = partner.filter((item) => item.id !== account.id).map((item) => item.username);
@@ -104,17 +155,13 @@ const ListConversation = observer(() => {
   const listFriend = friendStore?.friends && friendStore?.friends.filter((item) => item.accept);
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
-    if (tab === 0) {
-      setFilterData(sortChats);
-      chatStore?.setChats(sortChats);
-    } else if (tab === 1) {
-      setFilterData(listFriend);
-    } else if (tab === 2) {
-      const groupChat =
-        chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
-      chatStore?.setChats(groupChat);
-      setFilterData(groupChat);
-    }
+    // if (tab === 0) {
+    //   chatStore?.setChats(sortChats);
+    // } else if (tab === 2) {
+    //   const groupChat =
+    //     chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
+    //   chatStore?.setChats(groupChat);
+    // }
   };
 
   const imageUser = (partnerDTO: IPartnerDTO[]) => {
@@ -132,27 +179,59 @@ const ListConversation = observer(() => {
     navigate('/auth');
   };
 
+  const notifiGroup = (message: string) => {
+    const result = message.split(',')[2]?.trim() === account.username ? 'You' : message.split(',')[2].trim();
+    let notification: any = '';
+
+    notifeMessageData.forEach((item) => {
+      if (message.includes(item.keyword)) {
+        const prefix = item.prefix ? `${item.prefix} ` : '';
+        const suffix = item.suffix ? ` ${item.suffix}` : '';
+        const name = item.highlightResult ? <strong>{result}</strong> : '';
+        const icon = item.icon ? item.icon : null;
+
+        notification = (
+          <>
+            {prefix}
+            {name}
+            {suffix}
+            {icon}
+          </>
+        );
+      }
+    });
+
+    return notification;
+  };
+
   useEffect(() => {
     if (inputSearch !== '') {
-      if (selectedTab === 1) {
-        const filteredFriends = listFriend?.filter((item) =>
+      if (selectedTab === 1 && listFriend !== null) {
+        const filterFriends = listFriend?.filter((item) =>
           item.userid === account.id
             ? item.friendName.toLowerCase().includes(inputSearch.toLowerCase())
             : item.userName.toLowerCase().includes(inputSearch.toLowerCase()),
         );
-        setFilterData(filteredFriends);
-      } else {
-        const newlistChats = listChats?.filter((item) =>
+        setDataFilter(filterFriends);
+      } else if (sortChats?.length > 0) {
+        const newListChats = sortChats?.filter((item) =>
           item.conversationInfor.isGroupChat
-            ? item.conversationInfor.chatName.toLowerCase().includes(inputSearch.toLowerCase())
-            : item.partnerDTO[0].username.toLowerCase().includes(inputSearch.toLowerCase()),
+            ? item.conversationInfor?.chatName.toLowerCase().includes(inputSearch.toLowerCase())
+            : item.partnerDTO[0]?.username.toLowerCase().includes(inputSearch.toLowerCase()),
         );
-        setFilterData(newlistChats);
+        setDataFilter(newListChats);
       }
     } else {
-      selectedTab === 1 ? setFilterData(listFriend) : setFilterData(listChats);
+      setDataFilter([]);
     }
-  }, [inputSearch, selectedTab]);
+  }, [inputSearch]);
+
+  const listMessageEmty =
+    (sortChats?.length === 0 || sortChats === null || sortChats === undefined) && selectedTab !== 1;
+  const listFriendEmty = listFriend === null && selectedTab === 1;
+
+  const displayDataFilter = inputSearch !== '' && sortChats?.length > 0 ? dataFilter : sortChats;
+  const friendFilter = inputSearch !== '' && listFriend !== null ? dataFilter : listFriend;
 
   return (
     <Box className="list_conversation_container">
@@ -167,6 +246,7 @@ const ListConversation = observer(() => {
         <TextField
           value={inputSearch}
           onChange={(e) => setInputSearch(e.target.value)}
+          onBlur={() => setInputSearch('')}
           required
           placeholder="Search here..."
           autoFocus
@@ -196,7 +276,7 @@ const ListConversation = observer(() => {
         <List className="list_box">
           {listChats?.length > 0 &&
             selectedTab !== 1 &&
-            filterData?.map((item) => (
+            displayDataFilter?.map((item) => (
               <ListItem
                 key={item?.conversationInfor.id}
                 className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}
@@ -218,18 +298,49 @@ const ListConversation = observer(() => {
                   )}
                 </span>
                 <ListItemText className="chat_text_item">
-                  <Typography className={isCheckNotifi(item.conversationInfor.id) && 'notifi'}>
+                  <Typography className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} username`}>
                     {item.conversationInfor.isGroupChat === true
                       ? item.conversationInfor.chatName
                       : partnerName(item.partnerDTO)}
                   </Typography>
+                  <Box className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} last_message`}>
+                    <Typography>
+                      {item.conversationInfor?.lastMessage?.senderId === account.id
+                        ? 'You'
+                        : item.conversationInfor?.lastMessage?.userName}
+                      :
+                    </Typography>
+                    {item.conversationInfor?.lastMessage?.message.includes('isCallCA01410') ? (
+                      <Typography className="message_content">
+                        {item.conversationInfor?.lastMessage?.message.includes('MA01410') ? (
+                          <>
+                            <HiPhoneMissedCall className="missing_call" /> Missing Call
+                          </>
+                        ) : (
+                          <>
+                            <FcCallback /> in {item.conversationInfor?.lastMessage?.message.split(',')[1].trim()}
+                          </>
+                        )}
+                      </Typography>
+                    ) : (
+                      <Typography>
+                        {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
+                          ? notifiGroup(item.conversationInfor?.lastMessage?.message)
+                          : item.conversationInfor?.lastMessage?.message}
+                      </Typography>
+                    )}
+                    <Typography className="time_item">
+                      {item.conversationInfor?.lastMessage?.timeAt &&
+                        formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)}
+                    </Typography>
+                  </Box>
                 </ListItemText>
-                <Typography className="time_item">8:00</Typography>
-                <TbCircleDotFilled className={`dot ${!isCheckNotifi(item.conversationInfor.id) && 'not_notifi'}`} />
+
+                <FiberManualRecord className={`dot ${!isCheckNotifi(item.conversationInfor.id) && 'not_notifi'}`} />
               </ListItem>
             ))}
           {selectedTab === 1 &&
-            filterData?.map((item) => (
+            friendFilter?.map((item) => (
               <ListItem key={item?.friendListId} className={`chat_item`}>
                 <span className="active_avatar">
                   <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
@@ -245,7 +356,7 @@ const ListConversation = observer(() => {
                 </ListItemText>
               </ListItem>
             ))}
-          {filterData?.length === 0 && (
+          {(displayDataFilter?.length === 0 || friendFilter?.length === 0 || listMessageEmty || listFriendEmty) && (
             <Box className="box_no_data">
               <span>
                 <FaEnvelopeOpen />

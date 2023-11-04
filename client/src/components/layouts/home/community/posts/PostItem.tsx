@@ -20,7 +20,7 @@ const PostItem = observer((props: PostProps) => {
   const { posts, handleDetailPost } = props;
 
   const postApproves = posts?.filter((item) => {
-    const isFriend = friendStore?.friends.some(
+    const isFriend = friendStore?.friends?.some(
       (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
     );
     return (

@@ -47,8 +47,8 @@ const ListFriendDialog = observer((props: DialogProps) => {
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
 
-  const listFriend = friends.filter((item) => item.accept);
-  const listRequest = friends.filter((item) => !item.accept && account.id === item.friendId);
+  const listFriend = friends?.filter((item) => item.accept);
+  const listRequest = friends?.filter((item) => !item.accept && account.id === item.friendId);
   // const isFriend = listFriend?.some((item) => item.userid === account.id);
 
   const acceptFriend = (friendId: number, friendName: string, friendListId: number) => {
@@ -78,7 +78,7 @@ const ListFriendDialog = observer((props: DialogProps) => {
   }, [active]);
 
   useEffect(() => {
-    if (search !== '') {
+    if (search !== '' && dataTabFriend !== undefined) {
       const filteredFriends = dataTabFriend.filter((item) =>
         item.userName.toLowerCase().includes(search.toLowerCase()),
       );
@@ -104,9 +104,9 @@ const ListFriendDialog = observer((props: DialogProps) => {
     deleteDataAPI(`/friends/rejectFriendsApply?uid=${userId}&fid=${friendId}`, account.access_token, axiosJWT)
       .then((res) => {
         ToastSuccess(`You just ${active === 0 ? 'Delete' : 'cancel Request of'}  ${friendName}`);
-        const newData = filteredDataTabFriend.filter((item) => item.friendListId !== friendListId);
+        const newData = filteredDataTabFriend?.filter((item) => item.friendListId !== friendListId);
         setFilteredDataTabFriend(newData);
-        const newListFriends = friendStore?.friends.filter((item) => item?.friendListId !== friendListId);
+        const newListFriends = friendStore?.friends?.filter((item) => item?.friendListId !== friendListId);
         friendStore?.setFriends(newListFriends);
         setOpenConFirm(false);
       })
@@ -152,11 +152,11 @@ const ListFriendDialog = observer((props: DialogProps) => {
             Request
           </Typography>
         </Box>
-        {filteredDataTabFriend.length === 0 ? (
+        {filteredDataTabFriend?.length === 0 || filteredDataTabFriend === undefined ? (
           <Typography className="not_data">Not have {active === 0 ? 'Friend' : 'Request'}</Typography>
         ) : (
           <Box className="box_friend_container">
-            {filteredDataTabFriend.map((item) => (
+            {filteredDataTabFriend?.map((item) => (
               <Box className="box_friends">
                 <Box className="friend_infor">
                   <Avatar

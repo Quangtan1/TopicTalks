@@ -145,10 +145,10 @@ const NotificationDialog = observer((props: DialogProps) => {
   });
 
   const content = `Do you want to reject request of ${friendNameCustom}`;
-  const listRequest = friendStore?.friends.filter((item) => !item.accept && account.id === item.friendId);
+  const listRequest = friendStore?.friends?.filter((item) => !item.accept && account.id === item.friendId);
 
-  const isNew = notifiGroup?.length === 0 && tab === 1;
-  const isRequest = listRequest?.length === 0 && tab === 2;
+  const isNew = notifiSort?.length === 0 && tab === 1;
+  const isRequest = (listRequest?.length === 0 || listRequest === undefined) && tab === 2;
 
   return (
     <Dialog open={open} onClose={onClose} className="notification_container">
@@ -172,9 +172,10 @@ const NotificationDialog = observer((props: DialogProps) => {
             <Typography>There is no data</Typography>
           </Box>
         ) : tab === 1 ? (
-          notifiSort?.map((item: INotifiSystem, index: number) => (
+          notifiSort &&
+          notifiSort?.map((item: INotifiSystem) => (
             <Box
-              key={index}
+              key={item.notiId}
               className="notifi_item"
               onClick={() => {
                 item.conversationId ? readNotifi(item.conversationId) : readPostDetail(item.postId);
@@ -206,7 +207,7 @@ const NotificationDialog = observer((props: DialogProps) => {
             </Box>
           ))
         ) : (
-          listRequest.map((item) => (
+          listRequest?.map((item) => (
             <Box className="notifi_request" key={item.friendListId}>
               <Avatar src={item.userUrl} alt="img" className="avatar" />
               <span>
