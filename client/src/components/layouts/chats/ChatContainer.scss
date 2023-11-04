@@ -632,6 +632,14 @@
         padding: 10px 0px 10px;
         .active_avatar_setting {
           position: relative;
+          .camera_icon {
+            position: absolute;
+            right: 25px;
+            bottom: 24px;
+            opacity: 0.5;
+            font-size: 20px;
+            color: #000;
+          }
           .online,
           .offline {
             position: absolute;
@@ -654,7 +662,16 @@
           .avatar {
             width: 70px;
             height: 70px;
-            cursor: pointer;
+          }
+        }
+        .update_image {
+          opacity: 0.6;
+        }
+        .update_image:hover {
+          cursor: pointer;
+          opacity: 1;
+          .camera_icon {
+            opacity: 1;
           }
         }
         .edit_name {

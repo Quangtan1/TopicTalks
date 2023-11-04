@@ -28,10 +28,18 @@ class ChatStore {
       this.chats = null;
     }
   }
-  updateChat(conversationId, updatedConversation) {
+  updateChat(conversationId, groupName?: string, grouImage?: string) {
     const index = this.chats.findIndex((chat) => chat.conversationInfor.id === conversationId);
     if (index !== -1) {
-      this.chats[index] = updatedConversation;
+      const updatedChat = {
+        ...this.chats[index],
+        conversationInfor: {
+          ...this.chats[index].conversationInfor,
+          chatName: groupName,
+          avtGroupImg: grouImage,
+        },
+      };
+      this.chats[index] = updatedChat;
     }
   }
   updateLastMessage(conversationId: number, lastMessage: LastMessage) {

@@ -100,4 +100,10 @@ export const notifiData = [
     isName: true,
     messageB: 'from',
   },
+  {
+    title: 'UpdateImage',
+    messageA: '',
+    isName: true,
+    messageB: 'changed group image',
+  },
 ];

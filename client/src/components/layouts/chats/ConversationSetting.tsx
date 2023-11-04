@@ -16,6 +16,8 @@ import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { TopicChild } from 'src/types/topic.type';
 import { createAxios, deleteDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import AvatarGroup from './updateImageGroup/AvatarGroup';
+import { BsFillCameraFill } from 'react-icons/bs';
 
 interface ChatProps {
   chat: ListMesage;
@@ -30,6 +32,7 @@ const ConversationSetting = observer((props: ChatProps) => {
   const [openUpdateTopic, setOpenUpdateTopic] = useState<boolean>(false);
   const [statusDelete, setStatusDelete] = useState<string>('');
   const [openLeave, setOpenLeave] = useState<boolean>(false);
+  const [openUpdateAvatar, setOpenUpdateAvatar] = useState<boolean>(false);
   const { chat } = props;
   const optionCode = 'option_1410#$#';
 
@@ -113,7 +116,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         ToastSuccess(`You have just approved ${member.username}`);
         const newData = res.data.data.partnerDTO?.filter((item) => item.id !== account.id);
         chatStore?.setSelectedChat({ ...chat, partnerDTO: newData });
-        chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
       })
       .catch((err) => {
         console.log(err);
@@ -148,7 +150,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         ToastSuccess(`You have just deleted ${partnerData?.username}`);
         const newPartner = chat?.partnerDTO.filter((item) => item.id !== memberId);
         chatStore?.setSelectedChat({ ...chat, partnerDTO: newPartner });
-        chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
         setOpenConFirm(false);
       })
       .catch((err) => {
@@ -238,7 +239,7 @@ const ConversationSetting = observer((props: ChatProps) => {
               chatName: res.data.data.chatName,
             },
           });
-          chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
+          chatStore?.updateChat(chat.conversationInfor.id, renameGroup, chat.conversationInfor.avtGroupImg);
           setEdit(null);
         })
         .catch((err) => {
@@ -246,47 +247,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         });
     } else {
       ToastError(`Please use different names with old name`);
-    }
-  };
-
-  const updateTopicName = (topic: TopicChild) => {
-    const topicName = chat?.conversationInfor.topicChildren.topicChildrenName;
-    if (chat?.conversationInfor.topicChildren.id !== topic.id) {
-      const dataRequest = {
-        newTopicId: topic.id,
-        userIdUpdate: account.id,
-      };
-      const receiveMessageDTO = {
-        ...commonMessage,
-        data: {
-          message: `${optionCode},UpdateTopic,${topicName} to ${topic.topicChildrenName}`,
-        },
-      };
-
-      socket.emit('sendMessage', receiveMessageDTO);
-      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
-      putDataAPI(`/conversation/${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
-        .then((res) => {
-          ToastSuccess(`You have just renamed ${topicName} to ${topic.topicChildrenName} `);
-          chatStore?.setSelectedChat({
-            ...chat,
-            conversationInfor: {
-              ...chat.conversationInfor,
-              topicChildren: {
-                ...chat.conversationInfor,
-                id: topic.id,
-                topicChildrenName: topic.topicChildrenName,
-              },
-            },
-          });
-          chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
-          setOpenUpdateTopic(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      ToastError(`Please use different topic names with old name`);
     }
   };
 
@@ -324,7 +284,10 @@ const ConversationSetting = observer((props: ChatProps) => {
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
-          <span className="active_avatar_setting">
+          <span
+            className={`${isGroup && isAdmin && 'update_image'} active_avatar_setting`}
+            onClick={() => isGroup && isAdmin && setOpenUpdateAvatar(true)}
+          >
             <Avatar
               src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
               alt="avt"
@@ -335,6 +298,7 @@ const ConversationSetting = observer((props: ChatProps) => {
             ) : (
               <FiberManualRecordTwoTone className="offline" />
             )}
+            {isGroup && isAdmin && <BsFillCameraFill className="camera_icon" />}
           </span>
 
           {edit === 1 ? (
@@ -463,12 +427,8 @@ const ConversationSetting = observer((props: ChatProps) => {
           content={contenGroup}
         />
       )}
-      {openUpdateTopic && (
-        <SelectTopicMessage
-          open={openUpdateTopic}
-          onClose={() => setOpenUpdateTopic(false)}
-          onConfirm={updateTopicName}
-        />
+      {openUpdateAvatar && (
+        <AvatarGroup open={openUpdateAvatar} onClose={() => setOpenUpdateAvatar(false)} chat={chat} />
       )}
     </Box>
   );

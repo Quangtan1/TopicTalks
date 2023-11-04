@@ -100,7 +100,9 @@ const Header = observer(() => {
   };
 
   const notifiRead = notifiSystem?.filter((item) => !item.isRead);
-  const listRequest = friendStore?.friends?.filter((item) => !item.accept && account.id === item.friendId);
+  const listRequest =
+    friendStore?.friends !== null &&
+    friendStore?.friends?.filter((item) => !item.accept && account.id === item.friendId);
   const totalNotifi = (notifiRead ? notifiRead?.length : 0) + (listRequest ? listRequest?.length : 0);
 
   return (

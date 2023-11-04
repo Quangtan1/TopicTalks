@@ -63,6 +63,13 @@ const notifeMessageData = [
     suffix: '',
     icon: null,
   },
+  {
+    keyword: 'UpdateImage',
+    prefix: '',
+    highlightResult: true,
+    suffix: 'changed group image',
+    icon: null,
+  },
 ];
 
 const tabOption = [
