@@ -138,7 +138,7 @@ const LoginPage = observer(() => {
           if (res.status === 200) {
             uiStore?.setLoading(true);
             setShowOTP(true);
-            setAccountSignup(res.data);
+            if (res?.data?.id) setAccountSignup(res.data);
             emailRef.current = email;
             ToastSuccess('The OTP code has been sent to your email, please verify to continue');
             startCountdown();
@@ -184,6 +184,7 @@ const LoginPage = observer(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
             setOpenSelect(true);
+            if (res?.data?.id) setAccountSignup(res.data);
             setOtp('');
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
