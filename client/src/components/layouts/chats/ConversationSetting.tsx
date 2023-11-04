@@ -97,6 +97,14 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},Approve, ${member.username}`,
       },
     };
+
+    const lastMessage = {
+      senderId: account.id,
+      userName: account.username,
+      message: receiveMessageDTO.data.message,
+      timeAt: new Date().toISOString(),
+    };
+    chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
     saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -120,6 +128,14 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},${status}, ${member.username}`,
       },
     };
+
+    const lastMessage = {
+      senderId: account.id,
+      userName: account.username,
+      message: receiveMessageDTO.data.message,
+      timeAt: new Date().toISOString(),
+    };
+    chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
     saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
@@ -202,6 +218,14 @@ const ConversationSetting = observer((props: ChatProps) => {
           message: `${optionCode},UpdateGroupName,${chat?.conversationInfor.chatName} to ${renameGroup}`,
         },
       };
+
+      const lastMessage = {
+        senderId: account.id,
+        userName: account.username,
+        message: receiveMessageDTO.data.message,
+        timeAt: new Date().toISOString(),
+      };
+      chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
       putDataAPI(`/conversation/rename?cid=${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
@@ -238,6 +262,7 @@ const ConversationSetting = observer((props: ChatProps) => {
           message: `${optionCode},UpdateTopic,${topicName} to ${topic.topicChildrenName}`,
         },
       };
+
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
       putDataAPI(`/conversation/${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)

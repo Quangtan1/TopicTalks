@@ -149,9 +149,10 @@ const ChatBox = observer((props: ChatProps) => {
         },
         TargetId: chat?.partnerDTO[0]?.id,
         userId: account.id,
-        conversationId: chat.conversationInfor.id,
+        conversationId: chat?.conversationInfor.id,
         groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-        groupChat: chat.conversationInfor.isGroupChat,
+        groupChat: chat?.conversationInfor.isGroupChat,
+        timeAt: new Date().toISOString(),
       };
       const stateMessage = {
         data: {
@@ -159,8 +160,17 @@ const ChatBox = observer((props: ChatProps) => {
         },
         username: account.username,
         userId: account.id,
-        conversationId: chat.conversationInfor.id,
+        conversationId: chat?.conversationInfor.id,
       };
+
+      const lastMessage = {
+        senderId: account.id,
+        userName: account.username,
+        message: message,
+        timeAt: new Date().toISOString(),
+      };
+      chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
+
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, stateMessage]);
       const inputElement = document.getElementById('text_input');

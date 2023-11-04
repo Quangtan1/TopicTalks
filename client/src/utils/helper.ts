@@ -97,8 +97,8 @@ export const formatTimeMessage = (time: string) => {
   } else if (minutes > 0) {
     return `${minutes}m`;
   } else if (seconds > 0) {
-    return `Just now`;
+    return `${seconds}s`;
   } else {
-    return 'Just now';
+    return '0s';
   }
 };

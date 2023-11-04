@@ -117,7 +117,22 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   const handleReceiveMessage = (receiveMessageDTO: IMessage) => {
     if (chat?.conversationInfor.id === receiveMessageDTO.conversationId) {
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
+      const lastMessage = {
+        senderId: receiveMessageDTO.userId,
+        userName: receiveMessageDTO.username,
+        message: receiveMessageDTO.data.message,
+        timeAt: receiveMessageDTO.timeAt,
+      };
+      chatStore?.chats && chatStore?.updateLastMessage(receiveMessageDTO.conversationId, lastMessage);
     } else {
+      const lastMessage = {
+        senderId: receiveMessageDTO.userId,
+        userName: receiveMessageDTO.username,
+        message: receiveMessageDTO.data.message,
+
+        timeAt: receiveMessageDTO.timeAt,
+      };
+      chatStore?.chats && chatStore?.updateLastMessage(receiveMessageDTO.conversationId, lastMessage);
       setNotification((prevNotification) => {
         const isOption = receiveMessageDTO.data.message.includes('option_1410#$#');
         const index = prevNotification.findIndex((item) => item.conversationId === receiveMessageDTO.conversationId);
@@ -134,25 +149,6 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
         return updatedNotification;
       });
     }
-  };
-
-  const saveNotifi = (notifiData: IMessage) => {
-    const { conversationId, data, groupChat, groupChatName, userId } = notifiData;
-    const dataRequest = {
-      conversationId: groupChat ? conversationId : null,
-      userId: account.id,
-      message: data.message,
-      isRead: false,
-      partnerId: userId,
-      postId: null,
-    };
-    postDataAPI(`/notification/save-notifi`, dataRequest, account.access_token, axiosJWT)
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   const handleLeaveCall = () => {
@@ -212,6 +208,14 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
       groupChatName: null,
       groupChat: true,
     };
+
+    const lastMessage = {
+      senderId: stateMessage.userId,
+      userName: stateMessage.username,
+      message: stateMessage.data.message,
+      timeAt: stateMessage.timeAt,
+    };
+    chatStore?.chats && chatStore?.updateLastMessage(stateMessage.conversationId, lastMessage);
     socket.emit('sendMessage', receiveMessag);
     if (stateMessage?.conversationId === chat?.conversationInfor?.id) {
       setMessage((prevMessages: IMessage[]) => [...prevMessages, stateMessage]);
