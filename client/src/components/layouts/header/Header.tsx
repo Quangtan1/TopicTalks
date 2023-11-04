@@ -100,7 +100,8 @@ const Header = observer(() => {
   };
 
   const notifiRead = notifiSystem?.filter((item) => !item.isRead);
-  const listRequest = friendStore?.friends.filter((item) => !item.accept && account.id === item.friendId);
+  const listRequest = friendStore?.friends?.filter((item) => !item.accept && account.id === item.friendId);
+  const totalNotifi = (notifiRead ? notifiRead?.length : 0) + (listRequest ? listRequest?.length : 0);
 
   return (
     <Box className="header">
@@ -117,7 +118,7 @@ const Header = observer(() => {
         </Grid>
         <Grid item md={4} className="infor_header">
           <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
-          <span className="notifi_icon">{notifiRead?.length + listRequest?.length}</span>
+          <span className="notifi_icon">{totalNotifi}</span>
           <IconButton onClick={() => setAnchorEl(true)}>
             <Avatar src={account?.url_img} alt="avatar" />
           </IconButton>

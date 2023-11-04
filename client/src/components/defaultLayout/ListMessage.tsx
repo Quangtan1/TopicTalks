@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
 import { BsChatDots, BsDot } from 'react-icons/bs';
-import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiCircleMore, CiSettings } from 'react-icons/ci';
@@ -21,6 +21,11 @@ import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-
 import './ListMessage.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEnvelopeOpen } from 'react-icons/fa';
+import { HiPhoneMissedCall } from 'react-icons/hi';
+import { FcCallback } from 'react-icons/fc';
+import { formatTimeMessage } from 'src/utils/helper';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import { RiDeleteBack2Line } from 'react-icons/ri';
 
 const tabOption = [
   {
@@ -35,6 +40,43 @@ const tabOption = [
   },
 ];
 
+const notifeMessageData = [
+  {
+    keyword: 'Approve',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just approved to the group',
+    icon: <AiOutlineUserAdd className="add_icon" />,
+  },
+  {
+    keyword: 'Reject',
+    prefix: 'Refused',
+    highlightResult: true,
+    suffix: ' to join the group',
+    icon: <IoCloseCircleOutline className="reject_icon" />,
+  },
+  {
+    keyword: 'Remove',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just been deleted from the Group',
+    icon: <RiDeleteBack2Line className="reject_icon" />,
+  },
+  {
+    keyword: 'Leave',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' just left the Group',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateGroupName',
+    prefix: 'Group Name changed',
+    highlightResult: true,
+    suffix: '',
+    icon: null,
+  },
+];
 interface ListMessageProps {
   sortChats: ListMesage[];
   setSortChat: React.Dispatch<React.SetStateAction<ListMesage[]>>;
@@ -116,8 +158,6 @@ const ListMessage = observer((props: ListMessageProps) => {
     return image.toString();
   };
 
-  const listFriend = friendStore?.friends.filter((item) => item.accept);
-
   const isCheckNotifi = (id) => {
     const arr = [];
     if (Array.isArray(notification)) {
@@ -144,6 +184,31 @@ const ListMessage = observer((props: ListMessageProps) => {
   }, [inputSearch, selectedTab]);
 
   const uiDisplay = uiStore?.collapse;
+
+  const notifiGroup = (message: string) => {
+    const result = message.split(',')[2]?.trim() === account.username ? 'You' : message.split(',')[2].trim();
+    let notification: any = '';
+
+    notifeMessageData.forEach((item) => {
+      if (message.includes(item.keyword)) {
+        const prefix = item.prefix ? `${item.prefix} ` : '';
+        const suffix = item.suffix ? ` ${item.suffix}` : '';
+        const name = item.highlightResult ? <strong>{result}</strong> : '';
+        const icon = item.icon ? item.icon : null;
+
+        notification = (
+          <>
+            {prefix}
+            {name}
+            {suffix}
+            {icon}
+          </>
+        );
+      }
+    });
+
+    return notification;
+  };
 
   return (
     <Box
@@ -204,11 +269,42 @@ const ListMessage = observer((props: ListMessageProps) => {
                       )}
                     </span>
                     <ListItemText className="chat_text_item">
-                      <Typography className={isCheckNotifi(item.conversationInfor.id) > 0 && 'notifi'}>
+                      <Typography className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} username`}>
                         {item.conversationInfor.isGroupChat === true
                           ? item.conversationInfor.chatName
                           : partnerName(item.partnerDTO)}
                       </Typography>
+                      <Box className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} last_message`}>
+                        <Typography>
+                          {item.conversationInfor?.lastMessage?.senderId === account.id
+                            ? 'You'
+                            : item.conversationInfor?.lastMessage?.userName}
+                          :
+                        </Typography>
+                        {item.conversationInfor?.lastMessage?.message.includes('isCallCA01410') ? (
+                          <Typography className="message_content">
+                            {item.conversationInfor?.lastMessage?.message.includes('MA01410') ? (
+                              <>
+                                <HiPhoneMissedCall className="missing_call" /> Missing Call
+                              </>
+                            ) : (
+                              <>
+                                <FcCallback /> in {item.conversationInfor?.lastMessage?.message.split(',')[1].trim()}
+                              </>
+                            )}
+                          </Typography>
+                        ) : (
+                          <Typography>
+                            {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
+                              ? notifiGroup(item.conversationInfor?.lastMessage?.message)
+                              : item.conversationInfor?.lastMessage?.message}
+                          </Typography>
+                        )}
+                        <Typography className="time_item">
+                          {item.conversationInfor?.lastMessage?.timeAt &&
+                            formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)}
+                        </Typography>
+                      </Box>
                     </ListItemText>
                     <FiberManualRecord
                       className={`dot ${isCheckNotifi(item.conversationInfor.id) === 0 && 'not_notifi'}`}

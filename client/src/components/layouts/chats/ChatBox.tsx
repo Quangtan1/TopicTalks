@@ -62,13 +62,6 @@ const notifeMessageData = [
     icon: null,
   },
   {
-    keyword: 'UpdateTopic',
-    prefix: 'Topic changed',
-    highlightResult: true,
-    suffix: '',
-    icon: null,
-  },
-  {
     keyword: 'UpdateGroupName',
     prefix: 'Group Name changed',
     highlightResult: true,
@@ -283,8 +276,8 @@ const ChatBox = observer((props: ChatProps) => {
   };
 
   const isFriend =
-    chat?.partnerDTO.length > 0 &&
-    friendStore?.friends.some(
+    chat?.partnerDTO?.length > 0 &&
+    friendStore?.friends?.some(
       (item) => (item.friendId === partnerUser?.id || item.userid === partnerUser?.id) && item.accept,
     );
 

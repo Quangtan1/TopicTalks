@@ -1,3 +1,10 @@
+export interface LastMessage {
+  senderId: number;
+  userName: string;
+  message?: string;
+  timeAt: string;
+}
+
 interface ITopicChild {
   id: number;
   topicChildrenName: string;
@@ -10,6 +17,7 @@ interface IConversation {
   adminId: number;
   updatedAt?: string;
   avtGroupImg: string;
+  lastMessage?: LastMessage;
 }
 export interface IPartnerDTO {
   id: number;
@@ -20,6 +28,7 @@ export interface IPartnerDTO {
   member: boolean;
   active: boolean;
 }
+
 export interface ListMesage {
   conversationInfor: IConversation;
   isMember: string;

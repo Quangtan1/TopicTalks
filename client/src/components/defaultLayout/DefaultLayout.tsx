@@ -21,6 +21,7 @@ const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
+  const [openList, setOpenList] = useState<boolean>(false);
 
   const { notification } = useContext(ChatContext);
 
@@ -47,19 +48,20 @@ const DefaultLayout = observer(({ children }) => {
   };
 
   const handleGetMessage = () => {
-    if (chatStore?.chats.length === 0) {
+    if (!openList) {
       // uiStore?.setLoading(true);
       getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
         .then((res) => {
           chatStore?.setChats(res.data.data);
           setSortChat(res.data.data);
+          setOpenList(true);
           // uiStore?.setLoading(false);
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      chatStore?.setChats([]);
+      setOpenList(false);
     }
   };
 
@@ -82,7 +84,7 @@ const DefaultLayout = observer(({ children }) => {
             <HiArrowUp />
           </Button>
         )}
-        {chatStore?.chats.length > 0 && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
+        {openList && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
         {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
 
