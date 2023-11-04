@@ -1,5 +1,5 @@
-import React from 'react'
-import { Box, Button, styled, Typography } from "@mui/material";
+import React from 'react';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 //img
 import undraw_group_chat_re_frmo from '../../../../assets/images/undraw_group_chat_re_frmo.svg';
@@ -94,16 +94,16 @@ const Header = () => {
               fontSize: '0.9rem',
               textTransform: 'capitalize',
               borderRadius: 0,
-              color: '#fff',
+              color: 'black',
               backgroundColor: 'transparent',
-              borderColor: '#fff',
+              borderColor: '#343a55',
               '&&:hover': {
                 color: '#343a55',
-                borderColor: '#343a55',
+                borderColor: 'black',
               },
               '&&:focus': {
                 color: '#343a55',
-                borderColor: '#343a55',
+                borderColor: 'black',
               },
             }}
           >
@@ -138,4 +138,4 @@ const Header = () => {
   );
 };
 
-export default Header
+export default Header;

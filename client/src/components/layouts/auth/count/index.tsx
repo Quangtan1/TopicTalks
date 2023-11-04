@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-const CountDownOtp = ({ remainingSeconds, setRemainingSeconds, showCountDown, generateOTP, onTimeout }) => {
+const CountDownOtp = ({ remainingSeconds, setRemainingSeconds, generateOTP, onTimeout }) => {
   const [showSendOTPAgain, setShowSendOTPAgain] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const CountDownOtp = ({ remainingSeconds, setRemainingSeconds, showCountDown, ge
 
   return (
     <Box className="forgot-password">
-      {showCountDown && remainingSeconds !== 0 && (
+      {remainingSeconds !== 0 && (
         <Typography variant="body1">
           <strong>{remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}s</strong> remain to invalid OTP
         </Typography>
