@@ -1,0 +1,66 @@
+.avatar_group_dialog {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
+  .MuiBackdrop-root {
+    background: rgb(51 47 47 / 65%);
+  }
+  .MuiPaper-root {
+    width: 40vw;
+    height: 70vh;
+    max-width: 450px;
+    max-height: 500px;
+    border-radius: 15px;
+    .dialog_title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 1px solid rgb(239, 239, 239);
+      padding: 10px;
+      position: relative;
+      svg {
+        position: absolute;
+        right: 15px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+    .dialog_content {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0px;
+      img {
+        width: 400px;
+        height: 300px;
+        min-height: 300px;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 10px;
+        position: relative;
+        z-index: 1;
+        background: #fafcfb;
+      }
+      svg {
+        font-size: 50px;
+        margin-bottom: 30px;
+      }
+      p {
+        cursor: pointer;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 10px;
+      }
+      .delete {
+        background: gray;
+      }
+      .choose_image {
+        background: rgb(0, 149, 246);
+      }
+    }
+  }
+}

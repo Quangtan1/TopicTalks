@@ -42,10 +42,21 @@
     p:nth-child(1) {
       letter-spacing: 2px;
     }
+    @keyframes topicIn {
+      0% {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
     .title_topic {
       font-weight: 600;
       font-size: 35px;
       font-family: 'Yeseva One', display;
+      animation: topicIn 0.75s ease-in-out;
     }
     .sologan_topic {
       padding-top: 10px;

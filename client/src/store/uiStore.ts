@@ -23,6 +23,8 @@ class UiStore {
     this.collapse = collapse;
   }
   setLocation(location: string) {
+    console.log('location', location);
+
     this.location = location;
   }
 }

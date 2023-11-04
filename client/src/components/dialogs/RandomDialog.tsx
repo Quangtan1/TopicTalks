@@ -11,7 +11,7 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, partner } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import { ToastSuccess } from 'src/utils/toastOptions';
@@ -21,17 +21,23 @@ import { FaCarSide } from 'react-icons/fa';
 import { ListMesage } from 'src/types/chat.type';
 import { io } from 'socket.io-client';
 import ChatContext from 'src/context/ChatContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface DialogProps {
   open: boolean;
   onClose: () => void;
+  topicChildProps?: TopicChild;
 }
 const RandomDialog = observer((props: DialogProps) => {
-  const { open, onClose } = props;
+  const { open, onClose, topicChildProps } = props;
   const [selectTopic, setSelectTopic] = useState<number | ''>(1);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [selected, setSelected] = useState<TopicChild>(null);
+  const selectedChat = chatStore?.selectedChat;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const account = accountStore?.account;
 
@@ -44,13 +50,17 @@ const RandomDialog = observer((props: DialogProps) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
-    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
-      .then((res) => {
-        setListTopic(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (topicChildProps) {
+      setSelected(topicChildProps);
+    } else {
+      getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+        .then((res) => {
+          setListTopic(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -73,14 +83,25 @@ const RandomDialog = observer((props: DialogProps) => {
   }, [open]);
 
   useEffect(() => {
-    getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
-      .then((res) => {
-        setTopicChild(res.data.data);
-        setSelected(null);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (selectTopic && selectedChat !== null && currentPath !== '/message') {
+      navigate('/message');
+      setTimeout(() => {
+        chatStore.setSelectedChat(selectedChat);
+      }, 500);
+    }
+  }, [selectedChat]);
+
+  useEffect(() => {
+    if (!topicChildProps) {
+      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+        .then((res) => {
+          setTopicChild(res.data.data);
+          setSelected(null);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [selectTopic]);
 
   const handleSelect = (topicChild: TopicChild) => {
@@ -146,37 +167,50 @@ const RandomDialog = observer((props: DialogProps) => {
         </DialogContent>
       ) : (
         <DialogContent className="dialog_content">
-          <Box className="chat_name_box">
-            <Typography>Please Choose Topic:</Typography>
-          </Box>
-          <Box className="topic_box">
-            <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-              {listTopic.length > 0 &&
-                listTopic.map((item) => (
-                  <MenuItem value={item.id} key={item.id}>
-                    {item.topicParentName}
-                  </MenuItem>
-                ))}
-            </Select>
-            <Box className="topic_child">
-              {topicChild.length > 0 &&
-                topicChild?.map((item) => (
-                  <Typography
-                    key={item.id}
-                    className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
-                    onClick={() => handleSelect(item)}
-                  >
-                    {item.topicChildrenName}
-                  </Typography>
-                ))}
+          <img src={partner} alt="partner" className="partner" />
+          {topicChildProps ? (
+            <Box className="selected_topic">
+              <Typography className="chat_name_box">Your Topic Selected:</Typography>
+              <Typography>{topicChildProps?.topicChildrenName}</Typography>
+              <span>______________________</span>
             </Box>
-          </Box>
+          ) : (
+            <Box className="box_random">
+              <Typography className="chat_name_box">Please Choose Topic:</Typography>
+              <Box className="topic_box">
+                <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
+                  {listTopic.length > 0 &&
+                    listTopic.map((item) => (
+                      <MenuItem value={item.id} key={item.id}>
+                        {item.topicParentName}
+                      </MenuItem>
+                    ))}
+                </Select>
+                <Box className="topic_child">
+                  {topicChild.length > 0 &&
+                    topicChild?.map((item) => (
+                      <Typography
+                        key={item.id}
+                        className={`${selected?.id === item.id && 'selected_topic'} topic_item`}
+                        onClick={() => handleSelect(item)}
+                      >
+                        {item.topicChildrenName}
+                      </Typography>
+                    ))}
+                </Box>
+              </Box>
+            </Box>
+          )}
         </DialogContent>
       )}
 
       <DialogActions className="dialog_action">
         <Button onClick={handleCancel}>Cancel</Button>
-        <Button disabled={isRandoming} onClick={handleRandom} className={`${isRandoming && 'disable_button'}`}>
+        <Button
+          disabled={selected === null || isRandoming}
+          onClick={handleRandom}
+          className={`${(selected === null || isRandoming) && 'disable_button'}`}
+        >
           Random
         </Button>
       </DialogActions>

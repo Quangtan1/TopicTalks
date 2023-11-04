@@ -12,6 +12,7 @@ import ConversationSetting from './ConversationSetting';
 import uiStore from 'src/store/uiStore';
 import ListConversation from './ListConversation';
 import SideBarMessage from './SideBarMessage';
+import Loading from 'src/components/loading/Loading';
 
 const ChatContainer = observer(() => {
   const { setMessage } = useContext(ChatContext);
@@ -42,6 +43,8 @@ const ChatContainer = observer(() => {
 
   return (
     <Box className="chat_container">
+      {uiStore?.loading && <Loading />}
+
       <SideBarMessage />
       <ListConversation />
       <ChatBox chat={chat} />

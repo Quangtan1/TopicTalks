@@ -8,6 +8,8 @@ import { FaRegComment } from 'react-icons/fa';
 import friendStore from 'src/store/friendStore';
 import accountStore from 'src/store/accountStore';
 import { observer } from 'mobx-react';
+import { HiOutlineArrowRight } from 'react-icons/hi';
+import { RiDoubleQuotesL } from 'react-icons/ri';
 
 interface PostProps {
   posts?: IPost[];
@@ -18,7 +20,7 @@ const PostItem = observer((props: PostProps) => {
   const { posts, handleDetailPost } = props;
 
   const postApproves = posts?.filter((item) => {
-    const isFriend = friendStore?.friends.some(
+    const isFriend = friendStore?.friends?.some(
       (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
     );
     return (
@@ -28,31 +30,43 @@ const PostItem = observer((props: PostProps) => {
     );
   });
 
+  const formatDate = (date: string) => {
+    const dateObj = new Date(date);
+
+    const day = dateObj.getDate();
+    const monthIndex = dateObj.getMonth();
+    const year = dateObj.getFullYear();
+
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    return `${months[monthIndex]} ${day} ${year}`;
+  };
+
+  const postApprovesSort = postApproves?.sort((a, b) => {
+    const timeA = new Date(a.created_at).getTime();
+    const timeB = new Date(b.created_at).getTime();
+    return Math.floor(timeB / 1000) - Math.floor(timeA / 1000);
+  });
   return (
     <Box className="postitem_container">
-      <Grid className="post_container" container spacing={4}>
-        {postApproves?.map((item) => (
-          <Grid md={4} xs={12} item key={item.id}>
-            <Card className="card_post">
-              <CardMedia image={item.img_url} className="image" />
-              <CardContent className="card_content">
-                <Typography>{item.title}</Typography>
-                <Typography>{item.content}</Typography>
-              </CardContent>
-              <CardActions className="card_action">
-                <span className="item">
-                  {item.like.totalLike} <AiOutlineHeart />
-                </span>
-
-                <Button onClick={() => handleDetailPost(item.id)}>More</Button>
-                <span className="item">
-                  {item.totalComment} <FaRegComment />
-                </span>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {postApprovesSort?.map((item, index: number) => (
+        <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+          <img src={item.img_url} className="image" alt="img" />
+          <Box className="box_card_content">
+            <RiDoubleQuotesL className="quotes" />
+            <Typography className="topic_name">{item.topicName},</Typography>
+            <Typography className="title">{item.title}</Typography>
+            <Typography className="date">
+              {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+            </Typography>
+            <span>_________</span>
+            <Typography className="content">{item.content}</Typography>
+            <Button onClick={() => handleDetailPost(item.id)}>
+              Read More <HiOutlineArrowRight />
+            </Button>
+          </Box>
+        </Box>
+      ))}
     </Box>
   );
 });

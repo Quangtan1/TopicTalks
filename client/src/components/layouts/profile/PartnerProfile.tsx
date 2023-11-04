@@ -65,10 +65,12 @@ const PartnerProfile = observer(() => {
 
   const accessChat = () => {
     const dataRequest = {
-      userIdInSession: account.id,
+      userIdInSession: account?.id,
+      topicChildrenId: 1,
     };
+
     uiStore?.setLoading(true);
-    postDataAPI(`/participant/${user?.id}`, dataRequest, account.access_token, axiosJWT)
+    postDataAPI(`/participant/${id}`, dataRequest, account.access_token, axiosJWT)
       .then((res) => {
         navigate('/message');
         setTimeout(() => {
@@ -96,7 +98,7 @@ const PartnerProfile = observer(() => {
     };
     postDataAPI(`/friends/acceptFriendsApply`, dataRequest, account.access_token, axiosJWT)
       .then((res) => {
-        const newListFriends = friendStore?.friends.filter((item) => item.friendListId !== res.data.data.friendListId);
+        const newListFriends = friendStore?.friends?.filter((item) => item.friendListId !== res.data.data.friendListId);
         friendStore?.setFriends([...newListFriends, res.data.data]);
       })
       .catch((err) => {
@@ -111,7 +113,9 @@ const PartnerProfile = observer(() => {
     };
     postDataAPI(`/friends/applyAddFriends`, friendData, account.access_token, axiosJWT)
       .then((res) => {
-        friendStore?.setFriends([...friendStore?.friends, res.data.data]);
+        friendStore?.friends !== null
+          ? friendStore?.setFriends([...friendStore?.friends, res.data.data])
+          : friendStore?.setFriends([res.data.data]);
       })
       .catch((err) => {
         console.log(err);
@@ -123,7 +127,7 @@ const PartnerProfile = observer(() => {
     setPostId(id);
   };
 
-  const friendListCustom = friendStore?.friends.find(
+  const friendListCustom = friendStore?.friends?.find(
     (item) =>
       (item.friendId === account.id || item.userid === account.id) &&
       (item.friendId === user?.id || item.userid === user?.id),
@@ -135,7 +139,7 @@ const PartnerProfile = observer(() => {
   const deleteFriend = () => {
     deleteDataAPI(`/friends/rejectFriendsApply?uid=${userId}&fid=${friendId}`, account.access_token, axiosJWT)
       .then((res) => {
-        const newListFriends = friendStore?.friends.filter(
+        const newListFriends = friendStore?.friends?.filter(
           (item) => item?.friendListId !== friendListCustom.friendListId,
         );
         friendStore?.setFriends(newListFriends);
@@ -148,9 +152,9 @@ const PartnerProfile = observer(() => {
 
   const isProfile = account.id === user?.id;
   const isAccept =
-    friendStore?.friends.length > 0 && friendStore?.friends.some((item) => item.userid === user?.id && !item.accept);
-  const isRequest = friendStore?.friends.some((item) => item.friendId === user?.id || item.userid === user?.id);
-  const isFriend = friendStore?.friends.some(
+    friendStore?.friends?.length > 0 && friendStore?.friends?.some((item) => item.userid === user?.id && !item.accept);
+  const isRequest = friendStore?.friends?.some((item) => item.friendId === user?.id || item.userid === user?.id);
+  const isFriend = friendStore?.friends?.some(
     (item) => (item.friendId === user?.id || item.userid === user?.id) && item.accept,
   );
 

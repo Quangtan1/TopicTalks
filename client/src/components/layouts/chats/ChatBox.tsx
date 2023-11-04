@@ -62,17 +62,17 @@ const notifeMessageData = [
     icon: null,
   },
   {
-    keyword: 'UpdateTopic',
-    prefix: 'Topic changed',
+    keyword: 'UpdateGroupName',
+    prefix: 'Group Name changed',
     highlightResult: true,
     suffix: '',
     icon: null,
   },
   {
-    keyword: 'UpdateGroupName',
-    prefix: 'Group Name changed',
+    keyword: 'UpdateImage',
+    prefix: '',
     highlightResult: true,
-    suffix: '',
+    suffix: 'changed group image',
     icon: null,
   },
 ];
@@ -135,6 +135,10 @@ const ChatBox = observer((props: ChatProps) => {
   }, []);
 
   useEffect(() => {
+    setTooltipSetting(false);
+  }, [chat]);
+
+  useEffect(() => {
     if (imageFile === 'err') {
       uiStore?.setLoading(false);
       setImageFile('');
@@ -152,9 +156,10 @@ const ChatBox = observer((props: ChatProps) => {
         },
         TargetId: chat?.partnerDTO[0]?.id,
         userId: account.id,
-        conversationId: chat.conversationInfor.id,
+        conversationId: chat?.conversationInfor.id,
         groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
-        groupChat: chat.conversationInfor.isGroupChat,
+        groupChat: chat?.conversationInfor.isGroupChat,
+        timeAt: new Date().toISOString(),
       };
       const stateMessage = {
         data: {
@@ -162,8 +167,17 @@ const ChatBox = observer((props: ChatProps) => {
         },
         username: account.username,
         userId: account.id,
-        conversationId: chat.conversationInfor.id,
+        conversationId: chat?.conversationInfor.id,
       };
+
+      const lastMessage = {
+        senderId: account.id,
+        userName: account.username,
+        message: message,
+        timeAt: new Date().toISOString(),
+      };
+      chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
+
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, stateMessage]);
       const inputElement = document.getElementById('text_input');
@@ -279,8 +293,8 @@ const ChatBox = observer((props: ChatProps) => {
   };
 
   const isFriend =
-    chat?.partnerDTO.length > 0 &&
-    friendStore?.friends.some(
+    chat?.partnerDTO?.length > 0 &&
+    friendStore?.friends?.some(
       (item) => (item.friendId === partnerUser?.id || item.userid === partnerUser?.id) && item.accept,
     );
 
@@ -441,24 +455,10 @@ const ChatBox = observer((props: ChatProps) => {
               ))}
           </Box>
         ) : (
-          <Box className="sologan_conversation">
-            <Box className="icon-container">
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-              <IoLogoSnapchat className="icon" />
-            </Box>
-            {(isSelecedChat && isMember === 'false') || (isGroup && chat?.isMember === undefined) ? (
-              <Typography className="waiting_approve_text">
-                Wating Approve from Admin <strong> {chat?.conversationInfor.chatName}</strong>
-              </Typography>
-            ) : (
-              <>
-                <Typography>Let Started Anonymous Chat </Typography>
-                <Typography>A place where you can express yourself without fear of judgment.</Typography>
-              </>
-            )}
+          <Box className="no_data_selected">
+            <span className="img_no_select" />
+
+            <Typography>No chats selected</Typography>
           </Box>
         )}
       </ScrollToBottom>
