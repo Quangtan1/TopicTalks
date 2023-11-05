@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Container, Typography, TextField, Button, Grid, MenuItem } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { RE_CAPTCHA_SITE_KEY } from 'src/utils/helper';
+import { RE_CAPTCHA_SITE_KEY, checkEmptyValueReturnArray } from 'src/utils/helper';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
@@ -48,6 +48,7 @@ const ContactUs = observer(() => {
       postDataAPI('/qa/create', qaData, account?.access_token, axiosJWT)
         .then((res) => {
           ToastSuccess('Send Question Successfully!!!');
+          window.location.reload();
           setMessage('');
           setQuestionAbout('');
         })
@@ -65,6 +66,8 @@ const ContactUs = observer(() => {
   const handleChangeMessage = (e) => {
     setMessage(e.target.value);
   };
+
+  const QAList = checkEmptyValueReturnArray(selfQA);
 
   return (
     <Container maxWidth="md" className="contactUs-container">
@@ -128,7 +131,7 @@ const ContactUs = observer(() => {
           </div>
         </Grid>
       </Grid>
-      <FAQSection selfQA={selfQA} />
+      <FAQSection selfQA={QAList} />
     </Container>
   );
 });

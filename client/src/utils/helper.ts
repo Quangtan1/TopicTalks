@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { ToastError } from './toastOptions';
+import _ from 'lodash';
 
 export const APIKeyGPT = `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`;
 
@@ -76,5 +77,13 @@ export const formatTime = (time: string) => {
     return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
   } else {
     return 'Just now';
+  }
+};
+
+export const checkEmptyValueReturnArray = (value) => {
+  if (_.isUndefined(value) || _.isNull(value) || _.isString(value) || (_.isArray(value) && _.isEmpty(value))) {
+    return [];
+  } else {
+    return value;
   }
 };
