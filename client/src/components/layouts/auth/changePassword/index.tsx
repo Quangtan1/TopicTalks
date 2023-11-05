@@ -20,19 +20,25 @@ const ForgotPassword = observer(() => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get('token');
+  // TODO: discuss w BE to remove "+" in token
+  const replacedToken = token?.replace(/ /g, '+');
 
   const decrypt = (strToDecrypt, secretKey) => {
-    const key = CryptoJS.enc.Utf8.parse(secretKey);
-    const bytes = CryptoJS.AES.decrypt(strToDecrypt, key, {
-      mode: CryptoJS.mode.ECB,
-      padding: CryptoJS.pad.Pkcs7,
-    });
-    return bytes.toString(CryptoJS.enc.Utf8);
+    if (strToDecrypt) {
+      const key = CryptoJS.enc.Utf8.parse(secretKey);
+      const bytes = CryptoJS.AES.decrypt(strToDecrypt, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+      });
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    return '';
   };
 
-  const emailDecode = `${decrypt(token, 'ThisIsASecretKey')}@gmail.com`;
+  const emailDecode = `${decrypt(token, 'ThisIsASecretKey')}`;
 
   const handleForgotPW = (e: React.FormEvent<HTMLFormElement>) => {
+    uiStore?.setLoading(true);
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
     const newPassword = formData.get('newPassword');
@@ -41,42 +47,35 @@ const ForgotPassword = observer(() => {
       newPassword !== cpassword
         ? ToastError('Confirm Password is incorrect ')
         : ToastError('Password must contain capital letters,numbers and more than 8 characters');
+      uiStore?.setLoading(false);
     } else {
+      const requestData = {
+        email: emailDecode?.includes('@gmail.com') ? `${emailDecode}` : `${emailDecode}@gmail.com`,
+        token: replacedToken,
+        newPassword: newPassword,
+      };
+
       axios
-        .put(`${API_KEY}/auth/new-password?email=${emailDecode}&token=${token}&newPassword=${newPassword}`)
+        .put(`${API_KEY}/auth/new-password`, requestData)
         .then((res) => {
           if (res.data === 'Token is out of date!') {
+            uiStore?.setLoading(false);
             ToastError('Change Password failed!');
-            ToastError('Token is out of date!');
+            ToastError('Token is out of date! Please send link again!!!');
             navigate('/change-password');
-          } else {
+          } else if (res.status === 200 && res.data === 'New password set successfully !') {
+            uiStore?.setLoading(false);
             ToastSuccess('Change password successfully!');
             navigate('/auth');
+          } else {
+            ToastError('Change password failed! Please try again!');
           }
         })
         .catch((err) => {
+          uiStore?.setLoading(false);
           ToastError('Send email failed');
           ToastError(err?.response?.data?.message);
         });
-      // axios
-      //   .put(
-      //     `${API_KEY}/auth/new-password?email=${emailDecode}&token=${token}`,
-      //     {},
-      //     {
-      //       headers: {
-      //         newPassword: newPassword,
-      //       },
-      //     },
-      //   )
-      //   .then((res) => {
-      //     console.log(res);
-      //     ToastSuccess('Change password successfully!');
-      //     navigate('/auth');
-      //   })
-      //   .catch((err) => {
-      //     ToastError('Send email failed');
-      //     ToastError(err?.response?.data?.message);
-      //   });
     }
   };
 
@@ -109,7 +108,7 @@ const ForgotPassword = observer(() => {
             <TextField
               name="email"
               required
-              value={emailDecode}
+              value={emailDecode?.includes('@gmail.com') ? `${emailDecode}` : `${emailDecode}@gmail.com`}
               disabled
               id="email"
               placeholder="Enter your email"

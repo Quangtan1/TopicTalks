@@ -34,8 +34,8 @@ const LoginPage = observer(() => {
   const [showOTP, setShowOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
+  console.log('🚀 ~ file: AuthPage.tsx:37 ~ LoginPage ~ accountSignup:', accountSignup);
   const [remainingSeconds, setRemainingSeconds] = useState(30);
-  const account = accountStore.account;
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
@@ -183,13 +183,13 @@ const LoginPage = observer(() => {
   };
 
   const handleVerifyEmail = () => {
+    uiStore?.setLoading(true);
     axios
       .get(`${API_KEY}/auth/verify-account?email=${emailRef.current}&otp=${otp}`)
       .then((res) => {
         if (res.data === 'Please regenerate otp and try again') {
           ToastError('Verify account fail, please regenerate otp and try again');
         } else if (res.status === 200 && res.data !== 'Please regenerate otp and try again') {
-          uiStore?.setLoading(true);
           timeoutId = setTimeout(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
@@ -203,6 +203,7 @@ const LoginPage = observer(() => {
         }
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         ToastError(err?.response?.data?.message);
       });
   };
@@ -281,7 +282,7 @@ const LoginPage = observer(() => {
           </Box>
         </Box>
       </Grid>
-      {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={account} onClose={onClose} />}
+      {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={accountSignup} onClose={onClose} />}
     </Grid>
   );
 });

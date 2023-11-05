@@ -14,12 +14,14 @@ import Carousels from '../Carousels';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import OtpInput from '../otpInput';
 import CountDownOtp from '../count';
+import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
+import accountStore from 'src/store/accountStore';
 
 const VerifyScreen = observer(() => {
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   const [openSelect, setOpenSelect] = useState<boolean>(false);
-  //   const [accountSignup, setAccountSignup] = useState<IUser>(null);
+  const account = accountStore.account;
+  const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
   const [remainingSeconds, setRemainingSeconds] = useState(30);
   const [showOtpInput, setShowOtpInput] = useState<boolean>(false);
@@ -67,17 +69,16 @@ const VerifyScreen = observer(() => {
   };
 
   const handleVerifyEmail = () => {
+    uiStore?.setLoading(true);
     axios
       .get(`${API_KEY}/auth/verify-account?email=${email}&otp=${otp}`)
       .then((res) => {
         if (res.data === 'Please regenerate otp and try again') {
           ToastError('Verify account fail, please regenerate otp and try again');
         } else if (res.status === 200 && res.data !== 'Please regenerate otp and try again') {
-          uiStore?.setLoading(true);
+          setOpenSelect(true);
           timeoutId = setTimeout(() => {
             ToastSuccess('Verify account successfully');
-            // setOpenSelect(true);
-            // if (res?.data?.id) setAccountSignup(res?.data);
             goToLogin();
             setOtp('');
             clearTimeout(timeoutId);
@@ -103,10 +104,10 @@ const VerifyScreen = observer(() => {
     navigate('/auth');
   };
 
-  //   const onClose = () => {
-  //     setOpenSelect(false);
-  //     goToLogin();
-  //   };
+  const onClose = () => {
+    setOpenSelect(false);
+    goToLogin();
+  };
 
   return (
     <Grid className="auth-container" container>
@@ -164,7 +165,7 @@ const VerifyScreen = observer(() => {
           </Box>
         </Box>
       </Grid>
-      {/* {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={accountSignup} onClose={onClose} />} */}
+      {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={account} onClose={onClose} />}
     </Grid>
   );
 });
