@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText, InputAdornment } from '@mui/material';
-import { BsChatDots, BsDot } from 'react-icons/bs';
+import { BsChatDots } from 'react-icons/bs';
 import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
-import { CiLogout, CiSearch, CiSettings } from 'react-icons/ci';
+import { CiLogout, CiSearch } from 'react-icons/ci';
 import { observer } from 'mobx-react';
-import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
@@ -15,11 +15,11 @@ import RandomDialog from 'src/components/dialogs/RandomDialog';
 import ChatContext from 'src/context/ChatContext';
 import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
-import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
-import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
+import { checkEmptyValueReturnArray } from 'src/utils/helper';
 
 const tabOption = [
   {
@@ -87,6 +87,7 @@ const ListConversation = observer(() => {
     return () => {
       chatStore?.setSelectedChat(null);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const partnerName = (partner) => {
@@ -114,7 +115,7 @@ const ListConversation = observer(() => {
     return image.toString();
   };
 
-  const listFriend = friendStore?.friends.filter((item) => item.accept);
+  const listFriend = checkEmptyValueReturnArray(friendStore?.friends)?.filter((item) => item.accept);
 
   const isCheckNotifi = (id: number) => {
     return notification?.some((item) => item.conversationId === id);
