@@ -20,6 +20,7 @@ import { observer } from 'mobx-react';
 import chatStore from 'src/store/chatStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import uiStore from 'src/store/uiStore';
+import groupChat from 'src/assets/images/groupChat.svg';
 
 interface DialogProps {
   open: boolean;
@@ -123,7 +124,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
         <Typography>New Conversation</Typography>
       </DialogTitle>
       <DialogContent className="dialog_content">
-        <img src={aboutme} alt="about" className="image" />
+        <img src={groupChat} alt="about" className="image" />
         <Box className="box_create">
           <Box className="chat_name_box">
             <Typography>Chat Name:</Typography>

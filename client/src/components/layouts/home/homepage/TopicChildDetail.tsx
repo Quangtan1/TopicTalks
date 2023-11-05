@@ -15,6 +15,7 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import ChatContext from 'src/context/ChatContext';
 import RandomDialog from 'src/components/dialogs/RandomDialog';
+import LazyShow from '../../LandingView/Animated/LazyShow';
 
 const content = 'Are you sure you want to join this group?';
 
@@ -52,35 +53,38 @@ const TopicChildDetail = observer(() => {
     //   .catch((err) => {
     //     console.log(err);
     //   });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
-    <Grid container className="topic_child_container">
-      <Grid item md={6} className="box_image_topic">
-        <img src={topicdetail} alt="topic" className="backgroup_topic" />
-        <div className="overlay" />
-        <img src={topicChild?.image} alt="img" className="image_topic" />
-      </Grid>
-      <Grid item md={6} className="box_topic_child">
-        <Typography>MAKE YOUR EMOTION FUN</Typography>
-        <Typography className="title_topic">{topicChild?.topicChildrenName}</Typography>
-        <Typography className="sologan_topic">{topicChild?.shortDescript}</Typography>
-        <Typography className="title_option">Create your own conversation with this topic:</Typography>
+    <LazyShow>
+      <Grid container className="topic_child_container">
+        <Grid item md={6} className="box_image_topic">
+          <img src={topicdetail} alt="topic" className="backgroup_topic" />
+          <div className="overlay" />
+          <img src={topicChild?.image} alt="img" className="image_topic" />
+        </Grid>
+        <Grid item md={6} className="box_topic_child">
+          <Typography>MAKE YOUR EMOTION FUN</Typography>
+          <Typography className="title_topic">{topicChild?.topicChildrenName}</Typography>
+          <Typography className="sologan_topic">{topicChild?.shortDescript}</Typography>
+          <Typography className="title_option">Create your own conversation with this topic:</Typography>
 
-        <Box className="box_create">
-          <Button onClick={() => setOpen(true)}>CREATE YOUR GROUP CHAT</Button>
-          <Button onClick={() => setOpenRandom(true)}>FINDING RANDOM PARTNER</Button>
-        </Box>
-        <Typography className="title_existing">Finding existing groups</Typography>
-        <Button className="view_group" onClick={() => navigate(`/group-chat/${id}`)}>
-          VIEW GROUP CHAT <AiOutlineArrowRight />
-        </Button>
+          <Box className="box_create">
+            <Button onClick={() => setOpen(true)}>CREATE YOUR GROUP CHAT</Button>
+            <Button onClick={() => setOpenRandom(true)}>FINDING RANDOM PARTNER</Button>
+          </Box>
+          <Typography className="title_existing">Finding existing groups</Typography>
+          <Button className="view_group" onClick={() => navigate(`/group-chat/${id}`)}>
+            VIEW GROUP CHAT <AiOutlineArrowRight />
+          </Button>
+        </Grid>
+        {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
+        {openRandom && (
+          <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
+        )}
       </Grid>
-      {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
-      {openRandom && (
-        <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
-      )}
-    </Grid>
+    </LazyShow>
   );
 });
 

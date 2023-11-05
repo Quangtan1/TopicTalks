@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 //img
-import undraw_group_chat_re_frmo from '../../../../assets/images/undraw_group_chat_re_frmo.svg';
+import groupChat from '../../../../assets/images/groupChat.svg';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ const Header = () => {
         })}
       >
         <img
-          src={undraw_group_chat_re_frmo}
+          src={groupChat}
           alt="headerImg"
           style={{
             width: '80%',

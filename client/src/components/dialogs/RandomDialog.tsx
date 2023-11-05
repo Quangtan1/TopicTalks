@@ -22,6 +22,7 @@ import { ListMesage } from 'src/types/chat.type';
 import { io } from 'socket.io-client';
 import ChatContext from 'src/context/ChatContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import findsvg from 'src/assets/images/findsvg.svg';
 
 interface DialogProps {
   open: boolean;
@@ -167,7 +168,7 @@ const RandomDialog = observer((props: DialogProps) => {
         </DialogContent>
       ) : (
         <DialogContent className="dialog_content">
-          <img src={partner} alt="partner" className="partner" />
+          <img src={findsvg} alt="partner" className="partner" />
           {topicChildProps ? (
             <Box className="selected_topic">
               <Typography className="chat_name_box">Your Topic Selected:</Typography>

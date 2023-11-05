@@ -84,7 +84,9 @@ const DefaultLayout = observer(({ children }) => {
   return (
     <Box className="common-page-container">
       {isLoading && <Loading />}
-      <Header />
+      <LazyShow>
+        <Header />
+      </LazyShow>
       <Box className="route-container">
         {account !== null && children}
         {isVisible && (
@@ -98,7 +100,9 @@ const DefaultLayout = observer(({ children }) => {
         <LazyShow>
           <Canvas />
         </LazyShow>
-        <Footer />
+        <LazyShow>
+          <Footer />
+        </LazyShow>
       </Box>
     </Box>
   );
