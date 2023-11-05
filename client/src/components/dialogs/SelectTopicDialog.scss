@@ -1,6 +1,6 @@
 .select_topic_dialog {
   .MuiBackdrop-root {
-    background: rgb(51 47 47 / 65%);
+    background: rgba(51, 47, 47, 0.65);
   }
   .MuiPaper-root {
     width: 50vw;
@@ -9,9 +9,11 @@
     max-width: 100%;
     margin: 0;
     border-radius: 12px;
-    background: linear-gradient(180deg, #fff4ed 50%, #bf8fec 100%);
+    background: #f7f3f0;
+    display: flex;
+    flex-direction: column;
     .dialog-title {
-      background: rgb(62, 67, 150);
+      background: #c4b1a0;
       p {
         color: #fff;
         font-size: 20px;
@@ -20,6 +22,7 @@
     }
     .dialog-content {
       display: flex;
+      height: fit-content;
       align-items: center;
       justify-content: center;
       gap: 20px;
@@ -32,13 +35,15 @@
       }
       .selected,
       p:hover {
-        background: rgb(62, 67, 150);
+        background: #c4b1a0;
         color: #fff;
       }
     }
     .dialog-action {
+      display: flex;
+      justify-content: space-between;
       button {
-        background: rgb(62, 67, 150);
+        background: #c4b1a0;
         color: #fff;
       }
     }

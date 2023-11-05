@@ -1,10 +1,11 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, Typography } from '@mui/material';
 import React, { useEffect, useState, memo } from 'react';
 import './SelectTopicDialog.scss';
 import axios from 'axios';
 import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import select from 'src/assets/images/select.svg';
 
 interface DialogProps {
   open: boolean;
@@ -70,19 +71,32 @@ const SelectTopicDialog = (props: DialogProps) => {
   return (
     <Dialog open={open} className="select_topic_dialog" TransitionComponent={Transition}>
       <DialogTitle className="dialog-title">
-        <Typography>Please select the topic you are referring to.</Typography>{' '}
+        <Typography>Please select the topic you are referring to.</Typography>
       </DialogTitle>
       <DialogContent className="dialog-content">
-        {listTopic?.length > 0 &&
-          listTopic?.map((item) => (
-            <Typography
-              key={item.id}
-              onClick={() => handleSelectTopic(item.id)}
-              className={`${selectedTopic.includes(item.id) && 'selected'}`}
-            >
-              {item.topicParentName}
-            </Typography>
-          ))}
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ padding: 8 }}>
+            {listTopic?.length <= 0 ? (
+              <>
+                <Typography variant="h4">No topic data</Typography>
+              </>
+            ) : (
+              listTopic?.map((item) => (
+                <Typography
+                  key={item.id}
+                  style={{ marginTop: 8 }}
+                  onClick={() => handleSelectTopic(item.id)}
+                  className={`${selectedTopic.includes(item.id) && 'selected'}`}
+                >
+                  {item.topicParentName}
+                </Typography>
+              ))
+            )}
+          </Box>
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img src={select} alt="select" width={300} height={200} />
+          </Box>
+        </Box>
       </DialogContent>
       <DialogActions className="dialog-action">
         <Button onClick={onClose}>Other Time</Button>
