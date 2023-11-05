@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, List, ListItem, Avatar, ListItemText } from '@mui/material';
 import { BsChatDots, BsDot } from 'react-icons/bs';
-import { AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiCircleMore, CiSettings } from 'react-icons/ci';
@@ -17,9 +17,15 @@ import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
-import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import './ListMessage.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaEnvelopeOpen } from 'react-icons/fa';
+import { HiPhoneMissedCall } from 'react-icons/hi';
+import { FcCallback } from 'react-icons/fc';
+import { formatTimeMessage } from 'src/utils/helper';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import { RiDeleteBack2Line } from 'react-icons/ri';
 
 const tabOption = [
   {
@@ -34,14 +40,61 @@ const tabOption = [
   },
 ];
 
+const notifeMessageData = [
+  {
+    keyword: 'Approve',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just approved to the group',
+    icon: <AiOutlineUserAdd className="add_icon" />,
+  },
+  {
+    keyword: 'Reject',
+    prefix: 'Refused',
+    highlightResult: true,
+    suffix: ' to join the group',
+    icon: <IoCloseCircleOutline className="reject_icon" />,
+  },
+  {
+    keyword: 'Remove',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' has just been deleted from the Group',
+    icon: <RiDeleteBack2Line className="reject_icon" />,
+  },
+  {
+    keyword: 'Leave',
+    prefix: '',
+    highlightResult: true,
+    suffix: ' just left the Group',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateGroupName',
+    prefix: 'Group Name changed',
+    highlightResult: true,
+    suffix: '',
+    icon: null,
+  },
+  {
+    keyword: 'UpdateImage',
+    prefix: '',
+    highlightResult: true,
+    suffix: 'changed group image',
+    icon: null,
+  },
+];
 interface ListMessageProps {
   sortChats: ListMesage[];
+  setSortChat: React.Dispatch<React.SetStateAction<ListMesage[]>>;
 }
 
 const ListMessage = observer((props: ListMessageProps) => {
-  const { sortChats } = props;
+  const { sortChats, setSortChat } = props;
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
+  const [filterData, setFilterData] = useState<ListMesage[]>([]);
+  const [inputSearch, setInputSearch] = useState<string>('');
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -82,16 +135,7 @@ const ListMessage = observer((props: ListMessageProps) => {
 
   useEffect(() => {
     uiStore?.setCollapse(true);
-    // uiStore?.setLoading(true);
-    // getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
-    //   .then((res) => {
-    //     chatStore?.setChats(res.data.data);
-    //     setSortChat(res.data.data);
-    //     uiStore?.setLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    setFilterData(listChats);
   }, []);
 
   const partnerName = (partner) => {
@@ -106,11 +150,13 @@ const ListMessage = observer((props: ListMessageProps) => {
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
     if (tab === 0) {
+      setFilterData(sortChats);
       chatStore?.setChats(sortChats);
     } else if (tab === 2) {
       const groupChat =
         chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
       chatStore?.setChats(groupChat);
+      setFilterData(groupChat);
     }
   };
 
@@ -119,14 +165,65 @@ const ListMessage = observer((props: ListMessageProps) => {
     return image.toString();
   };
 
-  const listFriend = friendStore?.friends.filter((item) => item.accept);
-
-  const isCheckNotifi = (id: number) => {
-    return notification?.some((item) => item.conversationId === id);
+  const isCheckNotifi = (id) => {
+    const arr = [];
+    if (Array.isArray(notification)) {
+      notification?.forEach((item) => {
+        if (item.conversationId === id) {
+          arr.push(id);
+        }
+      });
+    }
+    return arr.length;
   };
+
+  useEffect(() => {
+    if (inputSearch !== '') {
+      const newlistChats = listChats?.filter((item) =>
+        item.conversationInfor.isGroupChat
+          ? item.conversationInfor.chatName.toLowerCase().includes(inputSearch.toLowerCase())
+          : item.partnerDTO[0].username.toLowerCase().includes(inputSearch.toLowerCase()),
+      );
+      setFilterData(newlistChats);
+    } else {
+      setFilterData(listChats);
+    }
+  }, [inputSearch, selectedTab]);
 
   const uiDisplay = uiStore?.collapse;
 
+  const notifiGroup = (message: string) => {
+    const result = message.split(',')[2]?.trim() === account.username ? 'You' : message.split(',')[2].trim();
+    let notification: any = '';
+
+    notifeMessageData.forEach((item) => {
+      if (message.includes(item.keyword)) {
+        const prefix = item.prefix ? `${item.prefix} ` : '';
+        const suffix = item.suffix ? ` ${item.suffix}` : '';
+        const name = item.highlightResult ? <strong>{result}</strong> : '';
+        const icon = item.icon ? item.icon : null;
+
+        notification = (
+          <>
+            {prefix}
+            {name}
+            {suffix}
+            {icon}
+          </>
+        );
+      }
+    });
+
+    return notification;
+  };
+  const sortListChat =
+    filterData !== null &&
+    filterData !== undefined &&
+    filterData?.slice()?.sort((a, b) => {
+      const dateA = new Date(a?.conversationInfor?.lastMessage?.timeAt).getTime();
+      const dateB = new Date(b?.conversationInfor?.lastMessage?.timeAt).getTime();
+      return Math.floor(dateB / 1000) - Math.floor(dateA / 1000);
+    });
   return (
     <Box
       className={`${uiDisplay ? 'list_message_collap' : 'list_message_container'} ${
@@ -137,7 +234,14 @@ const ListMessage = observer((props: ListMessageProps) => {
         <>
           <Typography className="title_chat">Your List Message</Typography>
           <Box className="chat_option">
-            <TextField required placeholder="Search..." autoFocus className="search" />
+            <TextField
+              required
+              placeholder="Search..."
+              autoFocus
+              className="search"
+              value={inputSearch}
+              onChange={(e) => setInputSearch(e.target.value)}
+            />
           </Box>
           <List className="tab_option">
             {tabOption.map((item) => (
@@ -155,7 +259,7 @@ const ListMessage = observer((props: ListMessageProps) => {
             <List className="list_box">
               {listChats?.length > 0 &&
                 selectedTab !== 1 &&
-                listChats?.map((item) => (
+                sortListChat?.map((item) => (
                   <ListItem
                     key={item?.conversationInfor.id}
                     className={`${
@@ -165,7 +269,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                   >
                     <span className="active_avatar">
                       <Avatar
-                        src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`}
+                        src={
+                          item?.conversationInfor.isGroupChat
+                            ? item.conversationInfor.avtGroupImg
+                            : imageUser(item?.partnerDTO)
+                        }
                         alt="avt"
                       />
                       {isActive(item) ? (
@@ -175,34 +283,55 @@ const ListMessage = observer((props: ListMessageProps) => {
                       )}
                     </span>
                     <ListItemText className="chat_text_item">
-                      <Typography className={isCheckNotifi(item.conversationInfor.id) && 'notifi'}>
+                      <Typography className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} username`}>
                         {item.conversationInfor.isGroupChat === true
                           ? item.conversationInfor.chatName
                           : partnerName(item.partnerDTO)}
                       </Typography>
+                      <Box className={`${isCheckNotifi(item.conversationInfor.id) && 'notifi'} last_message`}>
+                        <Typography>
+                          {item.conversationInfor?.lastMessage?.senderId === account.id
+                            ? 'You'
+                            : item.conversationInfor?.lastMessage?.userName}
+                          :
+                        </Typography>
+                        {item.conversationInfor?.lastMessage?.message.includes('isCallCA01410') ? (
+                          <Typography className="message_content">
+                            {item.conversationInfor?.lastMessage?.message.includes('MA01410') ? (
+                              <>
+                                <HiPhoneMissedCall className="missing_call" /> Missing Call
+                              </>
+                            ) : (
+                              <>
+                                <FcCallback /> in {item.conversationInfor?.lastMessage?.message.split(',')[1].trim()}
+                              </>
+                            )}
+                          </Typography>
+                        ) : (
+                          <Typography>
+                            {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
+                              ? notifiGroup(item.conversationInfor?.lastMessage?.message)
+                              : item.conversationInfor?.lastMessage?.message}
+                          </Typography>
+                        )}
+                        <Typography className="time_item">
+                          {item.conversationInfor?.lastMessage?.timeAt &&
+                            formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)}
+                        </Typography>
+                      </Box>
                     </ListItemText>
-                    <TbCircleDotFilled className={`dot ${!isCheckNotifi(item.conversationInfor.id) && 'not_notifi'}`} />
+                    <FiberManualRecord
+                      className={`dot ${isCheckNotifi(item.conversationInfor.id) === 0 && 'not_notifi'}`}
+                    />
                   </ListItem>
                 ))}
-              {/* {selectedTab === 1 &&
-            listFriend?.map((item) => (
-              <ListItem key={item?.friendListId} className={`chat_item`}>
-                <span className="active_avatar">
-                  <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
-                  {(item.userid === account.id ? item.friendActive : item.userActive) ? (
-                    <FiberManualRecordTwoTone className="online" />
-                  ) : (
-                    <FiberManualRecordTwoTone className="offline" />
-                  )}
-                </span>
-
-                <ListItemText className="chat_text_item">
-                  <Typography>{item.userid === account.id ? item.friendName : item.userName}</Typography>
-                </ListItemText>
-              </ListItem>
-            ))} */}
-              {((listFriend?.length === 0 && selectedTab === 1) || listChats === null) && (
-                <Typography className="no_data">There is no data</Typography>
+              {filterData?.length === 0 && (
+                <Box className="box_no_data">
+                  <span>
+                    <FaEnvelopeOpen />
+                  </span>
+                  <Typography>There is no data</Typography>
+                </Box>
               )}
             </List>
           </Box>
@@ -214,7 +343,7 @@ const ListMessage = observer((props: ListMessageProps) => {
               <CiCircleMore />
             </ListItem>
             {listChats?.length > 0 &&
-              listChats?.slice(0, 5)?.map((item) => (
+              sortListChat?.slice(0, 5)?.map((item) => (
                 <ListItem
                   key={item?.conversationInfor.id}
                   className="collapse_chat_item"
@@ -222,7 +351,11 @@ const ListMessage = observer((props: ListMessageProps) => {
                 >
                   <span className="active_avatar">
                     <Avatar
-                      src={`${item?.conversationInfor.isGroupChat ? '' : imageUser(item?.partnerDTO)}`}
+                      src={
+                        item?.conversationInfor.isGroupChat
+                          ? item.conversationInfor.avtGroupImg
+                          : imageUser(item?.partnerDTO)
+                      }
                       alt="avt"
                       title={
                         item?.conversationInfor.isGroupChat
@@ -235,6 +368,9 @@ const ListMessage = observer((props: ListMessageProps) => {
                       <FiberManualRecordTwoTone className="online" />
                     ) : (
                       <FiberManualRecordTwoTone className="offline" />
+                    )}
+                    {isCheckNotifi(item.conversationInfor.id) > 0 && (
+                      <span className="notifi">{isCheckNotifi(item.conversationInfor.id)}</span>
                     )}
                   </span>
                   {/* <TbCircleDotFilled

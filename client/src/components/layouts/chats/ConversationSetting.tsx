@@ -14,8 +14,10 @@ import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { TopicChild } from 'src/types/topic.type';
-import { createAxios, deleteDataAPI, putDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import AvatarGroup from './updateImageGroup/AvatarGroup';
+import { BsFillCameraFill } from 'react-icons/bs';
 
 interface ChatProps {
   chat: ListMesage;
@@ -30,6 +32,7 @@ const ConversationSetting = observer((props: ChatProps) => {
   const [openUpdateTopic, setOpenUpdateTopic] = useState<boolean>(false);
   const [statusDelete, setStatusDelete] = useState<string>('');
   const [openLeave, setOpenLeave] = useState<boolean>(false);
+  const [openUpdateAvatar, setOpenUpdateAvatar] = useState<boolean>(false);
   const { chat } = props;
   const optionCode = 'option_1410#$#';
 
@@ -69,6 +72,21 @@ const ConversationSetting = observer((props: ChatProps) => {
   const memberDTO = chat?.partnerDTO.filter((item) => item.member);
   const memberWating = chat?.partnerDTO.filter((item) => !item.member);
 
+  const saveNotifi = (userId: number, content: string) => {
+    const dataRequest = {
+      conversationId: chat?.conversationInfor.id,
+      userId: userId,
+      messageNoti: content,
+      partnerId: account.id,
+      postId: null,
+    };
+    postDataAPI(`/notification/pushNoti`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleAprrove = (member: IPartnerDTO) => {
     const approveData = {
       userInSessionId: account.id,
@@ -82,6 +100,15 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},Approve, ${member.username}`,
       },
     };
+
+    const lastMessage = {
+      senderId: account.id,
+      userName: account.username,
+      message: receiveMessageDTO.data.message,
+      timeAt: new Date().toISOString(),
+    };
+    chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
+    saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     putDataAPI(`/participant/approve-member`, approveData, account.access_token, axiosJWT)
@@ -89,7 +116,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         ToastSuccess(`You have just approved ${member.username}`);
         const newData = res.data.data.partnerDTO?.filter((item) => item.id !== account.id);
         chatStore?.setSelectedChat({ ...chat, partnerDTO: newData });
-        chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
       })
       .catch((err) => {
         console.log(err);
@@ -104,6 +130,15 @@ const ConversationSetting = observer((props: ChatProps) => {
         message: `${optionCode},${status}, ${member.username}`,
       },
     };
+
+    const lastMessage = {
+      senderId: account.id,
+      userName: account.username,
+      message: receiveMessageDTO.data.message,
+      timeAt: new Date().toISOString(),
+    };
+    chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
+    saveNotifi(member.id, receiveMessageDTO.data.message);
     socket.emit('sendMessage', receiveMessageDTO);
     setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
     deleteDataAPI(
@@ -115,7 +150,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         ToastSuccess(`You have just deleted ${partnerData?.username}`);
         const newPartner = chat?.partnerDTO.filter((item) => item.id !== memberId);
         chatStore?.setSelectedChat({ ...chat, partnerDTO: newPartner });
-        chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
         setOpenConFirm(false);
       })
       .catch((err) => {
@@ -185,6 +219,14 @@ const ConversationSetting = observer((props: ChatProps) => {
           message: `${optionCode},UpdateGroupName,${chat?.conversationInfor.chatName} to ${renameGroup}`,
         },
       };
+
+      const lastMessage = {
+        senderId: account.id,
+        userName: account.username,
+        message: receiveMessageDTO.data.message,
+        timeAt: new Date().toISOString(),
+      };
+      chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
       putDataAPI(`/conversation/rename?cid=${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
@@ -197,7 +239,7 @@ const ConversationSetting = observer((props: ChatProps) => {
               chatName: res.data.data.chatName,
             },
           });
-          chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
+          chatStore?.updateChat(chat.conversationInfor.id, renameGroup, chat.conversationInfor.avtGroupImg);
           setEdit(null);
         })
         .catch((err) => {
@@ -205,46 +247,6 @@ const ConversationSetting = observer((props: ChatProps) => {
         });
     } else {
       ToastError(`Please use different names with old name`);
-    }
-  };
-
-  const updateTopicName = (topic: TopicChild) => {
-    const topicName = chat?.conversationInfor.topicChildren.topicChildrenName;
-    if (chat?.conversationInfor.topicChildren.id !== topic.id) {
-      const dataRequest = {
-        newTopicId: topic.id,
-        userIdUpdate: account.id,
-      };
-      const receiveMessageDTO = {
-        ...commonMessage,
-        data: {
-          message: `${optionCode},UpdateTopic,${topicName} to ${topic.topicChildrenName}`,
-        },
-      };
-      socket.emit('sendMessage', receiveMessageDTO);
-      setMessage((prevMessages) => [...prevMessages, receiveMessageDTO]);
-      putDataAPI(`/conversation/${chat?.conversationInfor.id}`, dataRequest, account.access_token, axiosJWT)
-        .then((res) => {
-          ToastSuccess(`You have just renamed ${topicName} to ${topic.topicChildrenName} `);
-          chatStore?.setSelectedChat({
-            ...chat,
-            conversationInfor: {
-              ...chat.conversationInfor,
-              topicChildren: {
-                ...chat.conversationInfor,
-                id: topic.id,
-                topicChildrenName: topic.topicChildrenName,
-              },
-            },
-          });
-          chatStore?.updateChat(chat?.conversationInfor.id, chatStore?.selectedChat);
-          setOpenUpdateTopic(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      ToastError(`Please use different topic names with old name`);
     }
   };
 
@@ -282,13 +284,21 @@ const ConversationSetting = observer((props: ChatProps) => {
     <Box className="conver_setting_container">
       <Box className="container_setting">
         <Box className="avatar_setting">
-          <span className="active_avatar_setting">
-            <Avatar src={isGroup ? '' : partnerUser?.image} alt="avt" className="avatar" />
+          <span
+            className={`${isGroup && isAdmin && 'update_image'} active_avatar_setting`}
+            onClick={() => isGroup && isAdmin && setOpenUpdateAvatar(true)}
+          >
+            <Avatar
+              src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+              alt="avt"
+              className="avatar"
+            />
             {isActive ? (
               <FiberManualRecordTwoTone className="online" />
             ) : (
               <FiberManualRecordTwoTone className="offline" />
             )}
+            {isGroup && isAdmin && <BsFillCameraFill className="camera_icon" />}
           </span>
 
           {edit === 1 ? (
@@ -417,12 +427,8 @@ const ConversationSetting = observer((props: ChatProps) => {
           content={contenGroup}
         />
       )}
-      {openUpdateTopic && (
-        <SelectTopicMessage
-          open={openUpdateTopic}
-          onClose={() => setOpenUpdateTopic(false)}
-          onConfirm={updateTopicName}
-        />
+      {openUpdateAvatar && (
+        <AvatarGroup open={openUpdateAvatar} onClose={() => setOpenUpdateAvatar(false)} chat={chat} />
       )}
     </Box>
   );

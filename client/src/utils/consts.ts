@@ -13,8 +13,12 @@ import support from 'src/assets/images/aboutme1.jpg';
 import overthink from 'src/assets/images/overthinkn.webp';
 import topicdetail from 'src/assets/images/topicidetail.png';
 import parttent from 'src/assets/images/pattern-05.png';
+import partner from 'src/assets/images/partner.jpg';
+import avatar_default from 'src/assets/images/avatarr_default.webp';
 
 export {
+  avatar_default,
+  partner,
   parttent,
   topicdetail,
   support,
@@ -97,5 +101,11 @@ export const notifiData = [
     messageA: 'Group Name changed',
     isName: true,
     messageB: 'from',
+  },
+  {
+    title: 'UpdateImage',
+    messageA: '',
+    isName: true,
+    messageB: 'changed group image',
   },
 ];
