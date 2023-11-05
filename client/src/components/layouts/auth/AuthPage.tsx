@@ -34,7 +34,6 @@ const LoginPage = observer(() => {
   const [showOTP, setShowOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
-  console.log('🚀 ~ file: AuthPage.tsx:37 ~ LoginPage ~ accountSignup:', accountSignup);
   const [remainingSeconds, setRemainingSeconds] = useState(30);
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
@@ -272,11 +271,6 @@ const LoginPage = observer(() => {
                   onSuccess={handleLoginGGSuccess}
                   onError={handleLoginFailed}
                 />
-                {/* <Box className="box-social">
-                  <FacebookIcon />
-                  <InstagramIcon />
-                  <TwitterIcon />
-                </Box> */}
               </>
             )}
           </Box>

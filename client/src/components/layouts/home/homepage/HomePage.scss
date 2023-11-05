@@ -39,15 +39,10 @@
           position: absolute;
           z-index: 2;
           left: 100px;
-
-          top: 150px;
+          top: 250px;
         }
       }
       .about_me {
-        width: 380px;
-        height: auto;
-        object-fit: cover;
-        border-radius: 40% 40% 0 0;
       }
     }
     @keyframes slideIn {

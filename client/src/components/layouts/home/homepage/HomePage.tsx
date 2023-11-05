@@ -1,10 +1,10 @@
-import { Box, Divider, Typography } from '@mui/material';
-import React, { useEffect, useState, useMemo } from 'react';
+import { Box, Typography } from '@mui/material';
+import { useEffect, useState, useMemo } from 'react';
 import memoizeOne from 'memoize-one';
 import './HomePage.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { aboutme, createAxios, getDataAPI, overthink, support } from 'src/utils';
+import { aboutme, beginChat, createAxios, getDataAPI, lettermessage, typing } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
 import Carousel from 'react-multi-carousel';
@@ -95,19 +95,19 @@ const HomePage = observer(() => {
       <Box className="intro_view">
         <Box className="background_view">
           <Box className="box_image">
-            <img src={support} alt="support" className="support" />
-            <img src={overthink} alt="overthink" className="overthink" />
+            <img src={beginChat} alt="support" className="support" />
+            <img src={lettermessage} alt="overthink" className="overthink" />
           </Box>
-          <img src={aboutme} alt="about me" className="about_me" />
+          <img src={typing} alt="about me" className="about_me" />
         </Box>
         <Box className="title_lead">
-          <Typography>MAKE YOUR EMOTION FUN</Typography>
+          <Typography>MAKE COMMUNICATION FUN</Typography>
           <Typography>
-            TopicTalks fosters a supportive and enjoyable chat environment and grow your communicate
+            TopicTalks fosters an enjoyable and supportive chat environment to enhance your interaction.
           </Typography>
           <Typography>
-            Le site web actuel vise à améliorer la vie des utilisateurs en favorisant l'ouverture d'esprit et une
-            meilleure communication. En fournissant un espace accueillant et sécurisé pour les échanges
+            The current website aims to improve users' lives by promoting open-mindedness and better communication. By
+            providing a welcoming and secure space for exchanges.
           </Typography>
         </Box>
       </Box>

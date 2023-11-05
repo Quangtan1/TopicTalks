@@ -15,10 +15,24 @@ import topicdetail from 'src/assets/images/topicidetail.png';
 import parttent from 'src/assets/images/pattern-05.png';
 import partner from 'src/assets/images/partner.jpg';
 import avatar_default from 'src/assets/images/avatarr_default.webp';
+import beginChat from 'src/assets/images/beginChat.svg';
+import chatcouple from 'src/assets/images/chatcouple.svg';
+import lettermessage from 'src/assets/images/lettermessage.svg';
+import contectedsvg from 'src/assets/images/contectedsvg.svg';
+import phoneCall from 'src/assets/images/phoneCall.svg';
+import socialNetwork from 'src/assets/images/socialnetwork.svg';
+import typing from 'src/assets/images/typing.svg';
 
 export {
+  typing,
+  socialNetwork,
   avatar_default,
   partner,
+  phoneCall,
+  lettermessage,
+  contectedsvg,
+  chatcouple,
+  beginChat,
   parttent,
   topicdetail,
   support,
@@ -49,10 +63,10 @@ export const headerRoute = [
     title: 'Message',
     path: '/message',
   },
-  {
-    title: 'All Group',
-    path: '/all-group',
-  },
+  // {
+  //   title: 'All Group',
+  //   path: '/all-group',
+  // },
   {
     title: 'Contact Us',
     path: '/contact',

@@ -8,13 +8,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { headerRoute, logo, logo_center } from 'src/utils';
+import { headerRoute, logo, logo1, logo_center } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
 import { notification_worker_script, worker_script } from '../../../utils/woker';
 import friendStore from 'src/store/friendStore';
 import uiStore from 'src/store/uiStore';
 import chatStore from 'src/store/chatStore';
+import logotext from 'src/assets/logo/logotext.png';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
@@ -108,10 +109,25 @@ const Header = observer(() => {
     <Box className="header">
       <Grid container className="first_header">
         <Grid item md={4} className="logo_sidebar">
-          <img src={logo} alt="logo" />
+          {/* <img src={logo} alt="logo" />
           <Box className="title_logo">
             <Typography>TopicTalks</Typography>
             <Typography>Anonymously</Typography>
+          </Box> */}
+          <Box
+            sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', alignItems: 'center' }}
+            onClick={() => navigate('/landing-view')}
+          >
+            <img
+              src={logo1}
+              alt="logoT"
+              width={40}
+              height={40}
+              style={{ backgroundColor: 'white', padding: 8, marginRight: 12 }}
+            />
+            <Typography variant="h6" component="h2">
+              Welcome
+            </Typography>
           </Box>
         </Grid>
         <Grid item md={4} className="image">

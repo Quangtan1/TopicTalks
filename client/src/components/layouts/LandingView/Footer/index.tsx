@@ -19,7 +19,7 @@ const Footer = () => {
   const BoxRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: '#ededed',
+    backgroundColor: '#f7f3f0',
     flex: 1,
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',

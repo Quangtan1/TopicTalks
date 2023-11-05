@@ -10,6 +10,7 @@ import uiStore from 'src/store/uiStore';
 import contactusSVG from 'src/assets/images/contactus.svg';
 import './styles.scss';
 import FAQSection from './QAsection';
+import LazyShow from '../LandingView/Animated/LazyShow';
 
 const ContactUs = observer(() => {
   const setAccount = () => {
@@ -131,7 +132,9 @@ const ContactUs = observer(() => {
           </div>
         </Grid>
       </Grid>
-      <FAQSection selfQA={QAList} />
+      <LazyShow>
+        <FAQSection selfQA={QAList} />
+      </LazyShow>
     </Container>
   );
 });

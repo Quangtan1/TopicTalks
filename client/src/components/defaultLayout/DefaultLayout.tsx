@@ -8,7 +8,6 @@ import { useState, useEffect, useContext } from 'react';
 import { BiArrowToTop } from 'react-icons/bi';
 import { HiArrowUp } from 'react-icons/hi';
 import { FaFacebookMessenger } from 'react-icons/fa';
-import Footer from '../layouts/footer/Footer';
 import accountStore from 'src/store/accountStore';
 import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
@@ -17,6 +16,9 @@ import { ListMesage } from 'src/types/chat.type';
 import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
 import { useLocation } from 'react-router-dom';
+import Footer from '../layouts/LandingView/Footer';
+import LazyShow from '../layouts/LandingView/Animated/LazyShow';
+import Canvas from '../layouts/LandingView/Animated/Canvas';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -93,7 +95,9 @@ const DefaultLayout = observer(({ children }) => {
         {openList && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
         {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
-
+        <LazyShow>
+          <Canvas />
+        </LazyShow>
         <Footer />
       </Box>
     </Box>

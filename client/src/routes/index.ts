@@ -12,13 +12,13 @@ import ContactUs from 'src/components/layouts/contactUs';
 import ManagePost from 'src/components/admin/managepost/ManagePost';
 import PartnerProfile from 'src/components/layouts/profile/PartnerProfile';
 import ManageUsersQA from 'src/components/admin/manageusersQA/ManageUsersQA';
-import ForgotPassword from 'src/components/layouts/auth/ForgotPassword';
 import LandingView from 'src/components/layouts/LandingView';
 import About from 'src/components/layouts/LandingView/about';
 import GroupChat from 'src/components/layouts/groups/GroupChat';
 import PostDetail from 'src/components/layouts/home/community/posts/PostDetail';
 import VerifyScreen from 'src/components/layouts/auth/verifyScreen';
-import ChangePassword from 'src/components/layouts/auth/changePassword';
+import ForgotPassword from 'src/components/layouts/auth/ChangePW';
+import ChangePassword from 'src/components/layouts/auth/SendLinkForgotPW';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
