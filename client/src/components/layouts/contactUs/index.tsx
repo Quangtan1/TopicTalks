@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Container, Typography, TextField, Button, Grid } from '@mui/material';
-import { Formik, Form, Field } from 'formik';
-import './styles.scss';
+import { Container, Typography, TextField, Button, Grid, MenuItem } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
-import { RE_CAPTCHA_SITE_KEY } from 'src/utils/helper';
+import { RE_CAPTCHA_SITE_KEY, checkEmptyValueReturnArray } from 'src/utils/helper';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
-import { CollapseQA } from './collapseQA';
-import _ from 'lodash';
 import uiStore from 'src/store/uiStore';
+import contactusSVG from 'src/assets/images/contactus.svg';
+import './styles.scss';
+import FAQSection from './QAsection';
 
 const ContactUs = observer(() => {
   const setAccount = () => {
@@ -20,6 +19,8 @@ const ContactUs = observer(() => {
   const axiosJWT = createAxios(account, setAccount);
 
   const [isShowBtnSend, setIsShowBtnSend] = useState(false);
+  const [questionAbout, setQuestionAbout] = useState('');
+  const [message, setMessage] = useState('');
 
   const [selfQA, setSelfQA] = useState([]);
 
@@ -27,7 +28,7 @@ const ContactUs = observer(() => {
     uiStore?.setLoading(true);
     getDataAPI(`/qa/${account.id}/all`, account.access_token, axiosJWT)
       .then((res) => {
-        setSelfQA(res.data.data);
+        if (res.status === 200) setSelfQA(res?.data?.data);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -37,22 +38,19 @@ const ContactUs = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onToggleBtnSend = () => {
-    setIsShowBtnSend((prev) => !prev);
-  };
-
-  const handleSubmit = (data, { resetForm }) => {
-    console.log(data);
+  const handleSubmit = () => {
     const sendQA = () => {
       const qaData = {
         senderId: account?.id,
-        subject: data?.subject,
-        content: data?.message,
+        subject: `I have a question about ${questionAbout}`,
+        content: message,
       };
-      postDataAPI('/qa/create', qaData, account.access_token, axiosJWT)
+      postDataAPI('/qa/create', qaData, account?.access_token, axiosJWT)
         .then((res) => {
           ToastSuccess('Send Question Successfully!!!');
-          resetForm();
+          window.location.reload();
+          setMessage('');
+          setQuestionAbout('');
         })
         .catch((err) => {
           console.log(err);
@@ -62,63 +60,78 @@ const ContactUs = observer(() => {
   };
 
   const onSuccessReCaptcha = () => {
-    onToggleBtnSend();
+    setIsShowBtnSend(true);
   };
 
+  const handleChangeMessage = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const QAList = checkEmptyValueReturnArray(selfQA);
+
   return (
-    <Container className="container-contact-us">
-      <Grid className="grid-contact-us">
-        {/* {!_.isEmpty(selfQA) && <CollapseQA selfQA={selfQA || []} />} */}
-        <CollapseQA selfQA={selfQA || []} />
-      </Grid>
-      <Grid className="grid-contact-us">
-        <Card className="card-contact-us">
-          <CardContent>
-            <Typography variant="h4" gutterBottom>
-              Contact Information
+    <Container maxWidth="md" className="contactUs-container">
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <img src={contactusSVG} alt="Maggie_Aboutme02" style={{ width: '100%', height: 500 }} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <div>
+            <Typography className="text" variant="body1">
+              SAY HELLO
             </Typography>
-            <Typography variant="subtitle1">Contact us if you need assistance</Typography>
-          </CardContent>
-        </Card>
-        <Formik
-          initialValues={{
-            subject: '',
-            message: '',
-          }}
-          onSubmit={handleSubmit}
-        >
-          <Form>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Field as={TextField} required name="subject" label="Subject" variant="outlined" fullWidth />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  as={TextField}
-                  required
-                  name="message"
-                  label="Message"
-                  placeholder="Write your message..."
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={8}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <ReCAPTCHA sitekey={RE_CAPTCHA_SITE_KEY} onChange={onSuccessReCaptcha} />,
-              </Grid>
+            <Typography className="text" variant="h4">
+              Thank you for getting in touch with me! We look forward to hearing from you!
+            </Typography>
+            <form>
+              <TextField
+                select
+                label="I have a question about"
+                fullWidth
+                margin="normal"
+                value={questionAbout}
+                onChange={(e) => setQuestionAbout(e.target.value)}
+              >
+                <MenuItem value="Post">Post</MenuItem>
+                <MenuItem value="Message">Message</MenuItem>
+                <MenuItem value="Chat 1:1">Chat 1:1</MenuItem>
+                <MenuItem value="Chat group">Chat group</MenuItem>
+                <MenuItem value="random chat problems">Random chat problems</MenuItem>
+                <MenuItem value="security problems">Security problems</MenuItem>
+                <MenuItem value="report account">Report account</MenuItem>
+              </TextField>
+              <TextField
+                value={message}
+                onChange={handleChangeMessage}
+                label="Message"
+                multiline
+                rows={4}
+                fullWidth
+                margin="normal"
+              />
+              {message && (
+                <Grid item xs={12}>
+                  <ReCAPTCHA sitekey={RE_CAPTCHA_SITE_KEY} onChange={onSuccessReCaptcha} />,
+                </Grid>
+              )}
               {isShowBtnSend && (
                 <Grid item xs={12} className="btn-wrap">
-                  <Button className="button-Send" variant="contained" color="primary" type="submit">
+                  <Button
+                    className="button-Send"
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                    onClick={handleSubmit}
+                  >
                     Send Message
                   </Button>
                 </Grid>
               )}
-            </Grid>
-          </Form>
-        </Formik>
+            </form>
+          </div>
+        </Grid>
       </Grid>
+      <FAQSection selfQA={QAList} />
     </Container>
   );
 });

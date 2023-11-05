@@ -111,7 +111,7 @@ const HomePage = observer(() => {
           </Typography>
         </Box>
       </Box>
-      {listTopic.length > 0 &&
+      {listTopic?.length > 0 &&
         listTopic?.map((topicParent, index) => (
           <Box key={topicParent?.id} className="topic_box">
             {index % 2 ? (

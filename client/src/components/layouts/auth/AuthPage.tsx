@@ -34,9 +34,8 @@ const LoginPage = observer(() => {
   const [showOTP, setShowOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
   const [accountSignup, setAccountSignup] = useState<IUser>(null);
-  const [showCountDown, setShowCountDown] = useState(true);
+  console.log('🚀 ~ file: AuthPage.tsx:37 ~ LoginPage ~ accountSignup:', accountSignup);
   const [remainingSeconds, setRemainingSeconds] = useState(30);
-
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
@@ -76,8 +75,13 @@ const LoginPage = observer(() => {
     axios
       .post(`${API_KEY}/auth/authenticate`, user)
       .then((res) => {
-        accountStore?.setAccount(res?.data);
-        res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+        if (!!res?.data?.access_token) {
+          accountStore?.setAccount(res?.data);
+          res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+        } else {
+          ToastError('Please verify email first');
+          navigate('/verify-account');
+        }
       })
       .catch((err) => {
         ToastError(err?.response?.data?.message);
@@ -136,9 +140,15 @@ const LoginPage = observer(() => {
         .post(`${API_KEY}/auth/register`, user)
         .then((res) => {
           if (res.status === 200) {
-            uiStore?.setLoading(true);
+            if (res?.data?.status === 403) {
+              uiStore?.setLoading(false);
+              return ToastError('This user name already exist!');
+            }
             setShowOTP(true);
-            if (res?.data?.id) setAccountSignup(res.data);
+            if (res?.data?.access_token) {
+              setAccountSignup(res.data);
+              accountStore?.setAccount(res?.data);
+            }
             emailRef.current = email;
             ToastSuccess('The OTP code has been sent to your email, please verify to continue');
             startCountdown();
@@ -165,7 +175,7 @@ const LoginPage = observer(() => {
   };
 
   const goToForgotPw = () => {
-    navigate('/forgot-password');
+    navigate('/change-password');
   };
 
   const handleChangeOTP = (value) => {
@@ -173,18 +183,17 @@ const LoginPage = observer(() => {
   };
 
   const handleVerifyEmail = () => {
+    uiStore?.setLoading(true);
     axios
-      .post(`${API_KEY}/auth/verify-account?email=${emailRef.current}&otp=${otp}`)
+      .get(`${API_KEY}/auth/verify-account?email=${emailRef.current}&otp=${otp}`)
       .then((res) => {
         if (res.data === 'Please regenerate otp and try again') {
           ToastError('Verify account fail, please regenerate otp and try again');
         } else if (res.status === 200 && res.data !== 'Please regenerate otp and try again') {
-          uiStore?.setLoading(true);
           timeoutId = setTimeout(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
             setOpenSelect(true);
-            if (res?.data?.id) setAccountSignup(res.data);
             setOtp('');
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
@@ -194,18 +203,16 @@ const LoginPage = observer(() => {
         }
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         ToastError(err?.response?.data?.message);
       });
   };
 
   const startCountdown = () => {
-    setShowCountDown(true);
     setRemainingSeconds(30);
   };
 
-  const handleTimeout = () => {
-    setShowCountDown(false);
-  };
+  const handleTimeout = () => {};
 
   return (
     <Grid className="auth-container" container>
@@ -241,7 +248,6 @@ const LoginPage = observer(() => {
                 {
                   <CountDownOtp
                     setRemainingSeconds={setRemainingSeconds}
-                    showCountDown={showCountDown}
                     generateOTP={generateOTP}
                     onTimeout={handleTimeout}
                     remainingSeconds={remainingSeconds}

@@ -4,9 +4,9 @@ import { BsChatDots, BsDot } from 'react-icons/bs';
 import { AiOutlineUserAdd, AiOutlineUsergroupAdd, AiOutlineUsergroupDelete } from 'react-icons/ai';
 import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
-import { CiLogout, CiSearch, CiSettings } from 'react-icons/ci';
+import { CiLogout, CiSearch } from 'react-icons/ci';
 import { observer } from 'mobx-react';
-import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, getDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
@@ -15,7 +15,6 @@ import RandomDialog from 'src/components/dialogs/RandomDialog';
 import ChatContext from 'src/context/ChatContext';
 import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
-import { IFriends } from 'src/types/account.types';
 import { TbCircleDotFilled } from 'react-icons/tb';
 import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
@@ -25,7 +24,8 @@ import { IoCloseCircleOutline } from 'react-icons/io5';
 import { RiDeleteBack2Line } from 'react-icons/ri';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import { FcCallback } from 'react-icons/fc';
-import { formatTime, formatTimeMessage } from 'src/utils/helper';
+import { checkEmptyValueReturnArray, formatTime, formatTimeMessage } from 'src/utils/helper';
+import { IFriends } from 'src/types/account.types';
 
 const notifeMessageData = [
   {
@@ -71,6 +71,11 @@ const notifeMessageData = [
     icon: null,
   },
 ];
+// import { FiberManualRecordTwoTone } from '@mui/icons-material';
+// import DialogCommon from 'src/components/dialogs/DialogCommon';
+// import { useNavigate } from 'react-router-dom';
+// import { checkEmptyValueReturnArray } from 'src/utils/helper';
+// import { IFriends } from 'src/types/account.types';
 
 const tabOption = [
   {
@@ -140,6 +145,7 @@ const ListConversation = observer(() => {
     return () => {
       chatStore?.setSelectedChat(null);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -159,7 +165,7 @@ const ListConversation = observer(() => {
     const result = chat.partnerDTO.some((item) => item.active);
     return result;
   };
-  const listFriend = friendStore?.friends && friendStore?.friends.filter((item) => item.accept);
+  // const listFriend = friendStore?.friends && friendStore?.friends.filter((item) => item.accept);
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
     // if (tab === 0) {
@@ -175,6 +181,8 @@ const ListConversation = observer(() => {
     const image = partnerDTO.filter((item) => item.id !== account.id).map((item) => item.image);
     return image.toString();
   };
+
+  const listFriend = checkEmptyValueReturnArray(friendStore?.friends)?.filter((item) => item.accept);
 
   const isCheckNotifi = (id: number) => {
     return notification?.some((item) => item.conversationId === id);
@@ -240,15 +248,6 @@ const ListConversation = observer(() => {
   const displayDataFilter = inputSearch !== '' && sortChats?.length > 0 ? dataFilter : sortChats;
   const friendFilter = inputSearch !== '' && listFriend !== null ? dataFilter : listFriend;
 
-  const sortListChat =
-    displayDataFilter !== null &&
-    displayDataFilter !== undefined &&
-    displayDataFilter?.slice()?.sort((a, b) => {
-      const dateA = new Date(a?.conversationInfor?.lastMessage?.timeAt).getTime();
-      const dateB = new Date(b?.conversationInfor?.lastMessage?.timeAt).getTime();
-      return Math.floor(dateB / 1000) - Math.floor(dateA / 1000);
-    });
-
   return (
     <Box className="list_conversation_container">
       <Box className="list_header">
@@ -292,7 +291,7 @@ const ListConversation = observer(() => {
         <List className="list_box">
           {listChats?.length > 0 &&
             selectedTab !== 1 &&
-            sortListChat?.map((item) => (
+            displayDataFilter?.map((item) => (
               <ListItem
                 key={item?.conversationInfor.id}
                 className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}

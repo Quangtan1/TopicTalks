@@ -17,6 +17,8 @@ import LandingView from 'src/components/layouts/LandingView';
 import About from 'src/components/layouts/LandingView/about';
 import GroupChat from 'src/components/layouts/groups/GroupChat';
 import PostDetail from 'src/components/layouts/home/community/posts/PostDetail';
+import VerifyScreen from 'src/components/layouts/auth/verifyScreen';
+import ChangePassword from 'src/components/layouts/auth/changePassword';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -26,6 +28,8 @@ const publicRoutes = [
   { path: '/auth', component: AuthPage, layout: null },
   { path: '/profile', component: Profile },
   { path: '/forgot-password', component: ForgotPassword, layout: null },
+  { path: '/change-password', component: ChangePassword, layout: null },
+  { path: '/verify-account', component: VerifyScreen, layout: null },
   { path: '/personal-profile/:id', component: PartnerProfile, isAdmin: false },
   { path: '/message', component: ChatContainer, isAdmin: false, layout: null },
   { path: '/dashboard', component: DashBoard, isAdmin: true },
