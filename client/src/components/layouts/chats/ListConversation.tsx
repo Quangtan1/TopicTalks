@@ -240,6 +240,15 @@ const ListConversation = observer(() => {
   const displayDataFilter = inputSearch !== '' && sortChats?.length > 0 ? dataFilter : sortChats;
   const friendFilter = inputSearch !== '' && listFriend !== null ? dataFilter : listFriend;
 
+  const sortListChat =
+    displayDataFilter !== null &&
+    displayDataFilter !== undefined &&
+    displayDataFilter?.slice()?.sort((a, b) => {
+      const dateA = new Date(a?.conversationInfor?.lastMessage?.timeAt).getTime();
+      const dateB = new Date(b?.conversationInfor?.lastMessage?.timeAt).getTime();
+      return Math.floor(dateB / 1000) - Math.floor(dateA / 1000);
+    });
+
   return (
     <Box className="list_conversation_container">
       <Box className="list_header">
@@ -283,7 +292,7 @@ const ListConversation = observer(() => {
         <List className="list_box">
           {listChats?.length > 0 &&
             selectedTab !== 1 &&
-            displayDataFilter?.map((item) => (
+            sortListChat?.map((item) => (
               <ListItem
                 key={item?.conversationInfor.id}
                 className={`${chat?.conversationInfor?.id === item.conversationInfor.id && 'selected_chat'} chat_item`}

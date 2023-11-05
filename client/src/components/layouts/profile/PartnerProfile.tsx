@@ -4,10 +4,10 @@ import './PartnerProfile.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
+import { avatar_default, createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
 import { IUserProfile } from 'src/types/account.types';
 import PostDetailDialog from '../home/community/posts/PostDetailDialog';
-import { HiCamera } from 'react-icons/hi';
+import { HiCamera, HiOutlineArrowRight } from 'react-icons/hi';
 import uiStore from 'src/store/uiStore';
 import chatStore from 'src/store/chatStore';
 import friendStore from 'src/store/friendStore';
@@ -21,6 +21,7 @@ import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
 import { formatDate } from 'src/utils/helper';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
+import { RiDoubleQuotesL } from 'react-icons/ri';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -170,16 +171,16 @@ const PartnerProfile = observer(() => {
   const isDisplay = isFriend || account?.id === user?.id;
   return (
     <Box className="partner-profile-container">
-      <Box className="title_box">
-        <Typography className="title_backgroud">Profile</Typography>
-        <Typography className="title_group">
-          <strong>{isProfile ? 'My' : user?.username}</strong> Profile
-        </Typography>
-      </Box>
       <Box className="partner_profile">
         <Box className="avt_image">
           <div className="backgroud_image" />
-          <img src={user?.imageUrl || logo} alt="avt" />
+
+          {!isDisplay ? (
+            <img src={avatar_default} alt="avt" />
+          ) : (
+            <img src={user?.imageUrl || avatar_default} alt="avt" />
+          )}
+
           {isProfile ? (
             <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />
           ) : user?.active ? (
@@ -190,36 +191,52 @@ const PartnerProfile = observer(() => {
         </Box>
         <Box className="info_user">
           <Box className="bio_box">
+            <span className="box_name">
+              <Typography className="title">Name :...</Typography>
+              <Typography className="user_name">{user?.username}</Typography>
+            </span>
             <Typography className="title">Bio</Typography>
             {isDisplay && user?.bio !== '' ? (
               <Typography>{user?.bio}</Typography>
             ) : (
-              <Typography>
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxx
+              <Typography className="bio_content_hidden">
+                <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,</span>
+                <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+                <span>xxxxxxxxxxxxxxxxxxxxxxxxxx</span>
               </Typography>
             )}
           </Box>
           <Grid container spacing={4} className="grid_container">
             <Grid item md={6}>
-              <Typography className="title">Age :...</Typography>
-              <Typography>ZX</Typography>
+              <Typography className="title">Gender :...</Typography>
+              <Typography className={(!isDisplay || !user?.gender) && 'content_hidden'}>
+                {(isDisplay && user?.gender) || 'ZXZXX'}
+              </Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Dob :...</Typography>
-              <Typography>{(isDisplay && formatDate(user?.dob)) || 'XX YY ZZZZ'}</Typography>
+              <Typography className={(!isDisplay || formatDate(user?.dob) === '') && 'content_hidden'}>
+                {(isDisplay && formatDate(user?.dob)) || 'XX YY ZZZZ'}
+              </Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Phone :...</Typography>
-              <Typography> {(isDisplay && user?.phoneNumber) || 'XXX XXXX XXXX'}</Typography>
+              <Typography className={(!isDisplay || !user?.phoneNumber) && 'content_hidden'}>
+                {' '}
+                {(isDisplay && user?.phoneNumber) || 'XXX XXXX XXXX'}
+              </Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Nationality :...</Typography>
-              <Typography>{(isDisplay && user?.country) || 'ZXZXX'}</Typography>
+              <Typography className={(!isDisplay || !user?.country) && 'content_hidden'}>
+                {(isDisplay && user?.country) || 'ZXZXX'}
+              </Typography>
             </Grid>
             <Grid item md={6}>
               <Typography className="title">Email :...</Typography>
-              <Typography>{(isDisplay && user?.email) || 'ZXZXX'}</Typography>
+              <Typography className={(!isDisplay || !user?.email) && 'content_hidden'}>
+                {(isDisplay && user?.email) || 'ZXZXXXXXXXXXXXX'}
+              </Typography>
             </Grid>
           </Grid>
           <Box className="action_box">
@@ -256,54 +273,67 @@ const PartnerProfile = observer(() => {
           </Box>
         </Box>
       </Box>
-      {isProfile && (
+      {isProfile && postWaitingApproves?.length > 0 && (
         <>
           <Box className="title_box">
             <Typography className="title_backgroud">Post</Typography>
-            <Typography className="title_group">
-              <strong>Wating </strong>Approve
-            </Typography>
+            <Typography className="title_group">List of unapproved posts</Typography>
           </Box>
-          <Grid className="post_container" container spacing={4}>
-            {postWaitingApproves?.map((item) => (
-              <Grid md={4} item key={item.id}>
-                <Card className="card_post">
-                  <CardMedia image={item.img_url} className="image" />
-                  <CardContent className="card_content">
-                    <Typography>{item.title}</Typography>
-                    <Typography>{item.content}</Typography>
-                  </CardContent>
-                  <CardActions className="card_action">
-                    <Button onClick={() => handleDetailPost(item.id)}>More</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
+          <Box className="post_container">
+            {postWaitingApproves?.map((item, index: number) => (
+              <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+                <img src={item.img_url} className="image" alt="img" />
+                <Box className="box_card_content">
+                  <RiDoubleQuotesL className="quotes" />
+                  <Typography className="topic_name">{item.topicName},</Typography>
+                  <Typography className="title">{item.title}</Typography>
+                  <Typography className="date">
+                    {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+                  </Typography>
+                  <span>_________</span>
+                  <Typography className="content">{item.content}</Typography>
+                  <Button onClick={() => handleDetailPost(item.id)}>
+                    Read More <HiOutlineArrowRight />
+                  </Button>
+                </Box>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </>
       )}
       <Box className="title_box">
-        <Typography className="title_backgroud">Post</Typography>
-        <Typography className="title_group">
-          <strong>All</strong> Posts
+        <Typography className="title_backgroud">
+          {account.id !== user?.id ? 'SOME OF MY POST' : 'LIST OF YOUR POST'}
         </Typography>
+
+        {postApproves?.length > 0 ? (
+          <Typography className="title_group">
+            {account.id !== user?.id ? 'Get to know me' : 'See details now'}
+          </Typography>
+        ) : (
+          <Typography className="title_group">No posts exist</Typography>
+        )}
       </Box>
-      <Grid className="post_container" container spacing={4}>
-        {postApproves?.map((item) => (
-          <Grid md={4} item key={item.id}>
-            <Card className="card_post">
-              <CardMedia image={item.img_url} className="image" />
-              <CardContent className="card_content">
-                <Typography>{item.title}</Typography>
-                <Typography>{item.content}</Typography>
-              </CardContent>
-              <CardActions className="card_action">
-                <Button onClick={() => handleDetailPost(item.id)}>More</Button>
-              </CardActions>
-            </Card>
-          </Grid>
+      <Box className="post_container">
+        {postApproves?.map((item, index: number) => (
+          <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+            <img src={item.img_url} className="image" alt="img" />
+            <Box className="box_card_content">
+              <RiDoubleQuotesL className="quotes" />
+              <Typography className="topic_name">{item.topicName},</Typography>
+              <Typography className="title">{item.title}</Typography>
+              <Typography className="date">
+                {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+              </Typography>
+              <span>_________</span>
+              <Typography className="content">{item.content}</Typography>
+              <Button onClick={() => handleDetailPost(item.id)}>
+                Read More <HiOutlineArrowRight />
+              </Button>
+            </Box>
+          </Box>
         ))}
-      </Grid>
+      </Box>
       {openPostDetail && (
         <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
       )}

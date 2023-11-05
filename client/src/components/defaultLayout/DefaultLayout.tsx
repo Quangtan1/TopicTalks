@@ -16,12 +16,14 @@ import ListMessage from './ListMessage';
 import { ListMesage } from 'src/types/chat.type';
 import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
+import { useLocation } from 'react-router-dom';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const [openList, setOpenList] = useState<boolean>(false);
+  const location = useLocation();
 
   const { notification } = useContext(ChatContext);
 
@@ -72,6 +74,10 @@ const DefaultLayout = observer(({ children }) => {
       window.removeEventListener('scroll', toggleVisibility);
     };
   }, []);
+
+  useEffect(() => {
+    setOpenList(false);
+  }, [location]);
 
   return (
     <Box className="common-page-container">

@@ -32,7 +32,7 @@ const Footer = () => {
             <Box className="content">
               <Typography>Join our online community to improve for yourself</Typography>
               <Typography>No infrigement of personal rights</Typography>
-              <Button>Contact Now</Button>
+              <Button disabled={true}>Contact Now</Button>
             </Box>
           </Grid>
         </Grid>

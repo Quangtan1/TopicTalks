@@ -11,6 +11,12 @@
     align-items: center;
     width: 100%;
     padding: 80px;
+    gap: 120px;
+    img {
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
+    }
     .footer_grid {
       display: flex;
       flex-direction: column;

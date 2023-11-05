@@ -14,8 +14,10 @@ import overthink from 'src/assets/images/overthinkn.webp';
 import topicdetail from 'src/assets/images/topicidetail.png';
 import parttent from 'src/assets/images/pattern-05.png';
 import partner from 'src/assets/images/partner.jpg';
+import avatar_default from 'src/assets/images/avatarr_default.webp';
 
 export {
+  avatar_default,
   partner,
   parttent,
   topicdetail,

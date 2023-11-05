@@ -76,7 +76,6 @@ const Header = observer(() => {
     }
 
     return () => {
-      chatStore?.setChats([]);
       account === null && friendStore?.setFriends([]);
     };
   }, [account, location]);

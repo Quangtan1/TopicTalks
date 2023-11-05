@@ -17,16 +17,7 @@ class ChatStore {
   }
 
   setChats(chat) {
-    if (Array.isArray(chat)) {
-      const chatsort = chat.sort((a, b) => {
-        const dateA = new Date(a.conversationInfor.updatedAt).getTime();
-        const dateB = new Date(b.conversationInfor.updatedAt).getTime();
-        return dateB - dateA;
-      });
-      this.chats = chatsort;
-    } else {
-      this.chats = null;
-    }
+    this.chats = chat;
   }
   updateChat(conversationId, groupName?: string, grouImage?: string) {
     const index = this.chats.findIndex((chat) => chat.conversationInfor.id === conversationId);

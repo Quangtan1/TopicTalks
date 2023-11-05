@@ -216,7 +216,14 @@ const ListMessage = observer((props: ListMessageProps) => {
 
     return notification;
   };
-
+  const sortListChat =
+    filterData !== null &&
+    filterData !== undefined &&
+    filterData?.slice()?.sort((a, b) => {
+      const dateA = new Date(a?.conversationInfor?.lastMessage?.timeAt).getTime();
+      const dateB = new Date(b?.conversationInfor?.lastMessage?.timeAt).getTime();
+      return Math.floor(dateB / 1000) - Math.floor(dateA / 1000);
+    });
   return (
     <Box
       className={`${uiDisplay ? 'list_message_collap' : 'list_message_container'} ${
@@ -252,7 +259,7 @@ const ListMessage = observer((props: ListMessageProps) => {
             <List className="list_box">
               {listChats?.length > 0 &&
                 selectedTab !== 1 &&
-                filterData?.map((item) => (
+                sortListChat?.map((item) => (
                   <ListItem
                     key={item?.conversationInfor.id}
                     className={`${
@@ -336,7 +343,7 @@ const ListMessage = observer((props: ListMessageProps) => {
               <CiCircleMore />
             </ListItem>
             {listChats?.length > 0 &&
-              listChats?.slice(0, 5)?.map((item) => (
+              sortListChat?.slice(0, 5)?.map((item) => (
                 <ListItem
                   key={item?.conversationInfor.id}
                   className="collapse_chat_item"
