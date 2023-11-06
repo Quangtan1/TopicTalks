@@ -37,6 +37,7 @@ const HomePage = observer(() => {
       })
       .catch((err) => {
         console.log(err);
+        uiStore?.setLoading(false);
       });
   }, []);
 
@@ -53,6 +54,7 @@ const HomePage = observer(() => {
       })
       .catch((err) => {
         console.log(err);
+        uiStore?.setLoading(false);
       });
   }, [selectTopic]);
 

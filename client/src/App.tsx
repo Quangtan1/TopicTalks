@@ -7,10 +7,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import DefaultLayout from './components/defaultLayout/DefaultLayout';
 import { publicRoutes } from './routes';
 import AdminLayout from './components/admin/adminLayout/AdminLayout';
-import LazyShow from './components/layouts/LandingView/Animated/LazyShow';
-import Canvas from './components/layouts/LandingView/Animated/Canvas';
-import Footer from './components/layouts/LandingView/Footer';
-// import { ReactQueryDevtools } from 'react-query/devtools';
 
 const ONE_HOUR = 60 * 60 * 1000;
 
@@ -54,12 +50,6 @@ function App() {
                       <Layout>
                         <Page />
                       </Layout>
-                      <LazyShow>
-                        <Canvas />
-                      </LazyShow>
-                      <LazyShow>
-                        <Footer />
-                      </LazyShow>
                     </>
                   )
                 }

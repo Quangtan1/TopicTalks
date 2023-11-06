@@ -16,6 +16,7 @@ import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
 import { useLocation } from 'react-router-dom';
 import LazyShow from '../layouts/LandingView/Animated/LazyShow';
+import Footer from '../layouts/LandingView/Footer';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -95,6 +96,9 @@ const DefaultLayout = observer(({ children }) => {
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
         {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
       </Box>
+      <LazyShow>
+        <Footer />
+      </LazyShow>
     </Box>
   );
 });
