@@ -43,11 +43,6 @@ const listSideBar: SidebarItem[] = [
     path: '/manage-topic',
   },
   {
-    title: 'Report',
-    icon: <MdBugReport />,
-    path: '/report',
-  },
-  {
     title: 'FAQ Page',
     icon: <IoIosHelpCircleOutline />,
     path: '/manage-qa',

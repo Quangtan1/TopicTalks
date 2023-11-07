@@ -1,0 +1,38 @@
+.dialog_view_user {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
+  .MuiPaper-root {
+    width: 500px;
+    gap: 10px;
+    border-radius: 15px;
+    .dialog_title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 1px solid rgb(239, 239, 239);
+      padding: 10px;
+      position: relative;
+    }
+    .dialog_content {
+      padding: 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+      .infor {
+        display: flex;
+        p:nth-child(1) {
+          width: 30%;
+          font-weight: 600;
+        }
+        p:nth-child(2) {
+          width: 70%;
+        }
+      }
+    }
+    .dialog_action {
+      border-top: 1px solid rgb(239, 239, 239);
+    }
+  }
+}

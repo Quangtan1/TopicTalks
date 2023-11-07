@@ -17,16 +17,20 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import accountStore from 'src/store/accountStore';
 import uiStore from 'src/store/uiStore';
+import { IUserProfile } from 'src/types/account.types';
 import { createAxios, getDataAPI, putDataAPI } from 'src/utils';
 import { ToastSuccess } from 'src/utils/toastOptions';
+import DialogBanUser from './DialogBanUser';
+import ViewDeitalUser from './ViewDeitailUser';
 
 const CONTENT = 'Do you want to Ban user?';
 
 const ManageUser = () => {
-  const [users, setUsers] = useState([]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [banId, setBanId] = useState<number>(null);
-
+  const [users, setUsers] = useState<IUserProfile[]>([]);
+  const [openView, setOpenView] = useState<boolean>(false);
+  const [openBan, setOpenBan] = useState<boolean>(false);
+  const [userBan, setUserBan] = useState<IUserProfile>(null);
+  const [isBan, setIsBan] = useState<boolean>(false);
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -53,24 +57,15 @@ const ManageUser = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleBan = () => {
-    putDataAPI(`/user/ban/${+banId}`, null, account.access_token, axiosJWT)
-      .then((res) => {
-        ToastSuccess('Ban User Successfully!!!');
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleOpenModalBan = (user: IUserProfile, isBan: boolean) => {
+    setUserBan(user);
+    setOpenBan(true);
+    setIsBan(isBan);
   };
 
-  const handleOpenModalBan = (id: number) => {
-    setBanId(id);
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
+  const handleOpenView = (user: IUserProfile) => {
+    setUserBan(user);
+    setOpenView(true);
   };
 
   const handleChangePage = (event, newPage) => {};
@@ -111,8 +106,13 @@ const ManageUser = () => {
                   <TableCell className="cell_age">{item.role}</TableCell>
                   <TableCell className="cell_email">{item.email}</TableCell>
                   <TableCell className="cell_action">
-                    <Button onClick={() => handleOpenModalBan(item.id)}>Ban</Button>
-                    <Button>
+                    {item.isBanned ? (
+                      <Button onClick={() => handleOpenModalBan(item, false)}>UnBan</Button>
+                    ) : (
+                      <Button onClick={() => handleOpenModalBan(item, true)}>Ban</Button>
+                    )}
+
+                    <Button onClick={() => handleOpenView(item)}>
                       <GrView />
                       View
                     </Button>
@@ -132,7 +132,17 @@ const ManageUser = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <DialogCommon open={open} onClose={onClose} onConfirm={handleBan} content={CONTENT} />
+      <ViewDeitalUser open={openView} onClose={() => setOpenView(false)} user={userBan} />
+      {openBan && (
+        <DialogBanUser
+          isBan={isBan}
+          listUser={users}
+          setUsers={setUsers}
+          open={openBan}
+          onClose={() => setOpenBan(false)}
+          user={userBan}
+        />
+      )}
     </Box>
   );
 };
