@@ -50,8 +50,10 @@ const PartnerProfile = observer(() => {
     getDataAPI(`/user/${id}`, account.access_token, axiosJWT)
       .then((res) => {
         setUser(res.data.data);
+        uiStore?.setLoading(false);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
     getDataAPI(`/post/all-posts/aid=${id}`, account.access_token, axiosJWT)
@@ -60,6 +62,7 @@ const PartnerProfile = observer(() => {
         uiStore?.setLoading(false);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
   }, [id]);
@@ -88,6 +91,7 @@ const PartnerProfile = observer(() => {
         }, 200);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
   };
@@ -103,6 +107,7 @@ const PartnerProfile = observer(() => {
         friendStore?.setFriends([...newListFriends, res.data.data]);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
   };
@@ -119,6 +124,7 @@ const PartnerProfile = observer(() => {
           : friendStore?.setFriends([res.data.data]);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
   };
@@ -147,6 +153,7 @@ const PartnerProfile = observer(() => {
         setOpenConFirm(false);
       })
       .catch((err) => {
+        uiStore?.setLoading(false);
         console.log(err);
       });
   };

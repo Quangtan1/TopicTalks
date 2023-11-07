@@ -111,3 +111,5 @@ export const checkEmptyValueReturnArray = (value) => {
     return value;
   }
 };
+
+export const defaultColor = '#f7f3f0';
