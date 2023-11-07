@@ -7,19 +7,19 @@ import { getStarted } from './helpers';
 import LazyShow from './Animated/LazyShow';
 import Canvas from './Animated/Canvas';
 import { observer } from 'mobx-react';
-import { useEffect } from 'react';
-import accountStore from 'src/store/accountStore';
-import { useNavigate } from 'react-router-dom';
+// import { useEffect } from 'react';
+// import accountStore from 'src/store/accountStore';
+// import { useNavigate } from 'react-router-dom';
 
 const LandingView = observer(() => {
-  const navigate = useNavigate();
-  const account = accountStore.account;
-  useEffect(() => {
-    if (!!account?.id) {
-      navigate('/');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account?.id]);
+  // const navigate = useNavigate();
+  // const account = accountStore.account;
+  // useEffect(() => {
+  //   if (!!account?.id) {
+  //     navigate('/');
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [account?.id]);
 
   return (
     <>

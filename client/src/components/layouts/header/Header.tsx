@@ -82,13 +82,18 @@ const Header = observer(() => {
   }, [account, location]);
 
   useEffect(() => {
-    account === null && navigate('/landing-view');
     if (account) {
-      accountRole.includes('ROLE_ADMIN') && navigate('/dashboard');
+      accountRole?.includes('ROLE_ADMIN') && navigate('/dashboard');
     }
+    account === null && navigate('/landing-view');
+
     uiStore?.setLocation(currentPath);
     setActiveRoute(currentPath);
   }, [location]);
+
+  useEffect(() => {
+    account?.isBanned && account !== null && navigate('/ban-page');
+  }, [account]);
 
   const handleGoToProfilePage = () => {
     handleClose();
@@ -116,7 +121,7 @@ const Header = observer(() => {
           </Box> */}
           <Box
             sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', alignItems: 'center' }}
-            onClick={() => navigate('/landing-view')}
+            onClick={() => navigate('/home')}
           >
             <img
               src={logo1}
