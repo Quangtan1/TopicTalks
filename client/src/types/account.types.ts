@@ -4,13 +4,16 @@ export interface IUser {
   url_img?: string;
   roles: string[];
   email?: string;
+  isBanned: boolean;
   access_token?: string;
   refresh_token?: string;
   token_type?: string;
+  bannedDate?: string;
+  dueDateUnBan?: string;
 }
 
 export interface IUserProfile {
-  banned: boolean;
+  isBanned: boolean;
   bannedDate: string | null;
   bio: string;
   country: string;

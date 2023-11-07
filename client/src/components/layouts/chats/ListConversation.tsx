@@ -233,6 +233,30 @@ const ListConversation = observer(() => {
     }
   }, [inputSearch]);
 
+  const accessChat = (friendId: number) => {
+    const dataRequest = {
+      userIdInSession: account.id,
+      topicChildrenId: 1,
+    };
+    uiStore?.setLoading(true);
+    postDataAPI(`/participant/${friendId}`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {
+        const result = chatStore?.chats.some(
+          (item) => item.conversationInfor.id === res.data.data.conversationInfor.id,
+        );
+        if (result) {
+          chatStore?.setSelectedChat(res.data.data);
+        } else {
+          chatStore?.setChats([res.data.data, ...chatStore?.chats]);
+          chatStore?.setSelectedChat(res.data.data);
+        }
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const listMessageEmty =
     (sortChats?.length === 0 || sortChats === null || sortChats === undefined) && selectedTab !== 1;
   const listFriendEmty = listFriend === null && selectedTab === 1;
@@ -357,7 +381,11 @@ const ListConversation = observer(() => {
             ))}
           {selectedTab === 1 &&
             friendFilter?.map((item) => (
-              <ListItem key={item?.friendListId} className={`chat_item`}>
+              <ListItem
+                key={item?.friendListId}
+                className={`chat_item`}
+                onClick={() => accessChat(item.userid === account.id ? item.friendId : item.userid)}
+              >
                 <span className="active_avatar">
                   <Avatar src={`${item.userid === account.id ? item.friendUrl : item.userUrl}`} alt="avt" />
                   {(item.userid === account.id ? item.friendActive : item.userActive) ? (
@@ -372,7 +400,10 @@ const ListConversation = observer(() => {
                 </ListItemText>
               </ListItem>
             ))}
-          {(displayDataFilter?.length === 0 || friendFilter?.length === 0 || listMessageEmty || listFriendEmty) && (
+          {((displayDataFilter?.length === 0 && selectedTab !== 1) ||
+            (friendFilter?.length === 0 && selectedTab === 1) ||
+            listMessageEmty ||
+            listFriendEmty) && (
             <Box className="box_no_data">
               <span>
                 <FaEnvelopeOpen />

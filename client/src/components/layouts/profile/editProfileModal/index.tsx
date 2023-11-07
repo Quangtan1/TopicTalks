@@ -26,7 +26,7 @@ import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import AvatarComponent from '../../postManagement/newPost/avatarComponent/AvatarComponent';
 import './styles.scss';
-import { formatDate } from 'src/utils/helper';
+import { formatDate, formatDateUserInfor } from 'src/utils/helper';
 import { IUserProfile } from 'src/types/account.types';
 
 const validationSchema = Yup.object({
@@ -74,7 +74,7 @@ const EditProfileModal = observer((props: Props) => {
       fullName: userInfor?.fullName,
       email: userInfor?.email,
       phoneNumber: userInfor?.phoneNumber,
-      dob: formatDate(userInfor?.dob) === '' ? null : formatDate(userInfor?.dob),
+      dob: formatDateUserInfor(userInfor?.dob) === '' ? null : formatDateUserInfor(userInfor?.dob),
       bio: userInfor?.bio,
       gender: userInfor?.gender,
       country: userInfor?.country,

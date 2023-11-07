@@ -1,7 +1,7 @@
 import React, { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Box, Typography, TextField, Avatar } from '@mui/material';
 import { BiDotsVerticalRounded, BiPhoneCall } from 'react-icons/bi';
-import { BsCameraVideo } from 'react-icons/bs';
+import { BsCameraVideo, BsCodeSlash } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
 import { ImAttachment } from 'react-icons/im';
 import { RiDeleteBack2Line, RiEmotionLaughLine } from 'react-icons/ri';
@@ -17,18 +17,20 @@ import { handleImageUpload } from 'src/utils/helper';
 import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
-import { IoCloseCircleOutline, IoLogoSnapchat } from 'react-icons/io5';
-import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
-import { FcCallback, FcSettings } from 'react-icons/fc';
-import { HiMinusCircle, HiPhoneMissedCall } from 'react-icons/hi';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+import { ListMesage } from 'src/types/chat.type';
+import { FcCallback } from 'react-icons/fc';
+import { HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
 import friendStore from 'src/store/friendStore';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
-import { Circle, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { createAxios, deleteDataAPI } from 'src/utils';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 ///const
 const contentGroup = `Do you want to delete this conversation`;
@@ -91,9 +93,12 @@ const ChatBox = observer((props: ChatProps) => {
   const [topicId, setTopicId] = useState<number>(null);
   const [tooltipSetting, setTooltipSetting] = useState<boolean>(false);
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
+  const [snippets, setSnippet] = useState<boolean>(false);
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
   const { chat } = props;
+
+  const codeSnippets = '%%snippet_syntax1410#$';
 
   const navigate = useNavigate();
 
@@ -152,7 +157,7 @@ const ChatBox = observer((props: ChatProps) => {
     if (currentContent.trim() !== '') {
       const receiveMessageDTO = {
         data: {
-          message: message,
+          message: snippets ? message + codeSnippets : message,
         },
         TargetId: chat?.partnerDTO[0]?.id,
         userId: account.id,
@@ -163,7 +168,7 @@ const ChatBox = observer((props: ChatProps) => {
       };
       const stateMessage = {
         data: {
-          message: message,
+          message: snippets ? message + codeSnippets : message,
         },
         username: account.username,
         userId: account.id,
@@ -176,8 +181,8 @@ const ChatBox = observer((props: ChatProps) => {
         message: message,
         timeAt: new Date().toISOString(),
       };
+      setSnippet(false);
       chatStore?.updateLastMessage(chat?.conversationInfor.id, lastMessage);
-
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, stateMessage]);
       const inputElement = document.getElementById('text_input');
@@ -242,6 +247,10 @@ const ChatBox = observer((props: ChatProps) => {
 
   const handleLinkClick = () => {
     fileInputRef.current.click();
+  };
+
+  const handleSnippetCode = () => {
+    setSnippet(!snippets);
   };
 
   const handleOpenTooltip = (data: IMessage) => {
@@ -421,6 +430,12 @@ const ChatBox = observer((props: ChatProps) => {
                         alt="message image"
                         className="image-message"
                       />
+                    ) : item.data.message.includes('snippet_syntax1410#$') ? (
+                      <>
+                        <SyntaxHighlighter language="javascript" style={atomOneDark}>
+                          {`${item.data.message.split('%%')[0]}`}
+                        </SyntaxHighlighter>
+                      </>
                     ) : (
                       <>
                         {item.data.message.includes('isCallCA01410') ? (
@@ -490,6 +505,7 @@ const ChatBox = observer((props: ChatProps) => {
               </span>
             )}
             <RiEmotionLaughLine onClick={toggleEmojiPicker} id="svg_emoiji" />
+            <BsCodeSlash title="Code Snippet" onClick={handleSnippetCode} className={snippets && 'snippet'} />
             <TextField
               id="text_input"
               required
@@ -497,7 +513,7 @@ const ChatBox = observer((props: ChatProps) => {
               rows={1}
               disabled={imageFile !== '' || isRemove}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
-              placeholder="Type your message..."
+              placeholder={snippets ? 'Code Snippet Here...' : 'Type your message...'}
               className="chatbox_input"
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                 setCurrentContent(e.target.value);

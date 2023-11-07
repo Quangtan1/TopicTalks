@@ -548,6 +548,10 @@
       position: relative;
       min-height: 50px;
       border-radius: 0px 0px 0px 10px;
+      .snippet {
+        font-size: 30px;
+        color: #000;
+      }
       .chatbox_input {
         width: 100%;
         .MuiInputBase-root {

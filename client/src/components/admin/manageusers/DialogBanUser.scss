@@ -1,0 +1,54 @@
+.dialog_ban_user {
+    &.MuiDialog-root {
+      z-index: 3;
+    }
+    .MuiPaper-root {
+      width: 500px;
+      gap: 10px;
+      border-radius: 15px;
+      .dialog_title {
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid rgb(239, 239, 239);
+        padding: 10px;
+        position: relative;
+      }
+      .dialog_content {
+        padding: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        .unban {
+          text-align: center;
+        }
+        .select_ban_date {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          p {
+            min-width: 140px;
+          }
+        }
+        .warning {
+          display: flex;
+          gap: 10px;
+          border: red solid 1px;
+          align-items: center;
+          padding: 6px 20px;
+          border-radius: 5px;
+          color: #7f1d1d;
+          background: #fef2f2;
+          margin: 12px 0px;
+          svg {
+            font-size: 15px;
+          }
+        }
+      }
+      .dialog_action {
+        border-top: 1px solid rgb(239, 239, 239);
+      }
+    }
+  }
+  
