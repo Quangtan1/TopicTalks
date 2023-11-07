@@ -1,56 +1,43 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
-import React from 'react';
-import { PieChart, Pie, Tooltip, ResponsiveContainer } from 'recharts';
-import PieChartColor from './pieColorChart';
+import { ResponsiveContainer } from 'recharts';
+import PieChartColor from './chart/pieColorChart';
 import './styles.scss';
-import { dataChart01 } from './helpers';
-import BarChartItem from './barChart';
+import BarChartItem from './chart/barChart';
 import chartImage from 'src/assets/images/chart.svg';
+import ChartTopicChildWGroupChat from './chart/pieSolidChart';
 
 const DashBoard = () => {
   return (
     <ResponsiveContainer className="containerChart" style={{ marginLeft: 250, marginTop: 50 }}>
       <>
         <Box className="titleGroup">
-          <Typography variant="h3">Dashboard</Typography>
-          <Typography variant="body1">Dashboard</Typography>
+          <Typography variant="h3">Welcome to TopicTalks Dashboard</Typography>
+          <Typography variant="body1">Here's an Overview of TopicTalks Data</Typography>
         </Box>
         <Grid container className="row1">
           <Grid item md={4} sm={6} xs={12} spacing={2} className="itemChart1">
             <Paper className="firstRowPaper">
-              {/* item 1 height */}
-              <PieChart width={300} height={240}>
-                <Pie
-                  dataKey="value"
-                  isAnimationActive={false}
-                  data={dataChart01}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label
-                />
-                <Tooltip />
-              </PieChart>
               <Box>
                 <Typography variant="h6" className="charTextTitleItem1">
-                  Topic Chart
+                  Topics of Highest Interest Within Group Chats
                 </Typography>
                 <Typography variant="body1" className="charTextItem1">
-                  Most popular Topic Chart
+                  Most Popular Topics and Group Chats
                 </Typography>
               </Box>
+              <ChartTopicChildWGroupChat />
+              <Typography variant="body2" className="charSubTextItem1">
+                Unit: individuals
+              </Typography>
             </Paper>
           </Grid>
           <Grid item md={7.8} sm={6} xs={12} spacing={2} className="itemImage">
             <Paper className="firsRowImage">
               <Box>
-                <Typography className="text" variant="h3">
-                  Sex Chart
+                <Typography className="text" variant="h5">
+                  Good admin theme is a tool of enthusiasm
                 </Typography>
-                <Typography className="text" variant="body1">
-                  Most popular sex Chart
-                </Typography>
+                <Typography className="text" variant="body1"></Typography>
               </Box>
               <img className="imageSVGChart" src={chartImage} alt="chartImage" />
             </Paper>
@@ -62,10 +49,10 @@ const DashBoard = () => {
               <PieChartColor />
               <Box>
                 <Typography className="text" variant="h4">
-                  Chart 2
+                  Sex Chart
                 </Typography>
                 <Typography className="text" variant="h6">
-                  Most popular Chart
+                  Gender Distribution
                 </Typography>
               </Box>
             </Paper>
@@ -79,6 +66,12 @@ const DashBoard = () => {
                 </Typography>
                 <Typography className="text" variant="h6">
                   Most popular Chart
+                </Typography>
+                <Typography style={{ color: '#8884d8' }} className="textNote" variant="body1">
+                  pv: Total number of post views
+                </Typography>
+                <Typography style={{ color: '#82ca9d' }} className="textNote" variant="body1">
+                  uv: Total number of topic views
                 </Typography>
               </Box>
             </Paper>

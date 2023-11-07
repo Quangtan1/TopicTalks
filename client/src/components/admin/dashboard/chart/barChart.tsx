@@ -2,49 +2,66 @@ import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 
 const data = [
   {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400,
+    name: 'Technology',
+    uv: 4000, // Thay đổi số liệu tương ứng với dữ liệu thực tế
+    pv: 2400, // Thay đổi số liệu tương ứng với dữ liệu thực tế
     amt: 2400,
   },
   {
-    name: 'Page B',
+    name: 'Health',
     uv: 3000,
     pv: 1398,
     amt: 2210,
   },
   {
-    name: 'Page C',
+    name: 'Business',
     uv: 2000,
     pv: 9800,
     amt: 2290,
   },
   {
-    name: 'Page D',
+    name: 'Education',
     uv: 2780,
     pv: 3908,
     amt: 2000,
   },
   {
-    name: 'Page E',
+    name: 'Art and Culture',
     uv: 1890,
     pv: 4800,
     amt: 2181,
   },
   {
-    name: 'Page F',
+    name: 'Science',
     uv: 2390,
     pv: 3800,
     amt: 2500,
   },
   {
-    name: 'Page G',
+    name: 'Travel',
     uv: 3490,
     pv: 4300,
     amt: 2100,
   },
+  {
+    name: 'Food and Drink',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Sports',
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: 'Fashion',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
 ];
-
 const BarChartItem = () => {
   return (
     <ResponsiveContainer width="100%" height={300}>
