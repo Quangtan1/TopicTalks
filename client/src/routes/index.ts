@@ -19,6 +19,7 @@ import PostDetail from 'src/components/layouts/home/community/posts/PostDetail';
 import VerifyScreen from 'src/components/layouts/auth/verifyScreen';
 import ForgotPassword from 'src/components/layouts/auth/ChangePW';
 import ChangePassword from 'src/components/layouts/auth/SendLinkForgotPW';
+import BanLayout from 'src/components/defaultLayout/BanLayout';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -42,6 +43,7 @@ const publicRoutes = [
   { path: '/about', component: About, layout: null },
   { path: '/group-chat/:id', component: GroupChat },
   { path: '/post-detail/:id', component: PostDetail },
+  { path: '/ban-page', component: BanLayout, layout: null },
 ];
 
 export { publicRoutes };

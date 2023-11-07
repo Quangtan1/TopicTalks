@@ -22,8 +22,10 @@ import contectedsvg from 'src/assets/images/contectedsvg.svg';
 import phoneCall from 'src/assets/images/phoneCall.svg';
 import socialNetwork from 'src/assets/images/socialnetwork.svg';
 import typing from 'src/assets/images/typing.svg';
+import banImage from 'src/assets/images/ban.svg';
 
 export {
+  banImage,
   typing,
   socialNetwork,
   avatar_default,
@@ -63,10 +65,10 @@ export const headerRoute = [
     title: 'Message',
     path: '/message',
   },
-  // {
-  //   title: 'All Group',
-  //   path: '/all-group',
-  // },
+  {
+    title: 'All Group',
+    path: '/all-group',
+  },
   {
     title: 'Contact Us',
     path: '/contact',

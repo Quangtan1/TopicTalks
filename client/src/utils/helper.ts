@@ -25,6 +25,11 @@ export const formatDateTime = (value: string, format: string = DateFormatDisplay
   return dayjs(value).format(format);
 };
 
+export const formatDateUserInfor = (value: string, format: string = 'YYYY-MM-DD') => {
+  if (!value) return '';
+
+  return dayjs(value).format(format);
+};
 const isImage = ['png', 'jpg', 'svg', 'webp', 'jpeg'];
 
 export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
