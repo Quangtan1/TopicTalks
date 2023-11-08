@@ -11,8 +11,12 @@ const DashBoard = () => {
     <ResponsiveContainer className="containerChart" style={{ marginLeft: 250, marginTop: 50 }}>
       <>
         <Box className="titleGroup">
-          <Typography variant="h3">Welcome to TopicTalks Dashboard</Typography>
-          <Typography variant="body1">Here's an Overview of TopicTalks Data</Typography>
+          <Typography variant="h3" className="text">
+            Welcome to TopicTalks Dashboard
+          </Typography>
+          <Typography variant="body1" className="text">
+            Here's an Overview of TopicTalks Data
+          </Typography>
         </Box>
         <Grid container className="row1">
           <Grid item md={4} sm={6} xs={12} spacing={2} className="itemChart1">

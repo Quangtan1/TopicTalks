@@ -1,5 +1,6 @@
 .sidebar_container_admin {
   display: flex;
+  padding-top: 70px;
   flex-direction: column;
   position: fixed;
   width: 230px;
@@ -8,7 +9,7 @@
   z-index: 3;
   height: 100vh;
   box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(180deg, #fff4ed 50%, #bf8fec 100%);
+  background: '#f7f3f0';
   .logo_sidebar {
     display: flex;
     align-items: center;
