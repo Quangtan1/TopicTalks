@@ -23,8 +23,10 @@ import phoneCall from 'src/assets/images/phoneCall.svg';
 import socialNetwork from 'src/assets/images/socialnetwork.svg';
 import typing from 'src/assets/images/typing.svg';
 import banImage from 'src/assets/images/ban.svg';
+import image_login from 'src/assets/images/login_imag.jpeg';
 
 export {
+  image_login,
   banImage,
   typing,
   socialNetwork,

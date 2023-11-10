@@ -47,7 +47,7 @@ const HomePage = observer(() => {
 
   useEffect(() => {
     uiStore?.setLoading(true);
-    getDataAPI(`/topic-parent/all`, accountToken, axiosJWT)
+    getDataAPI(`/topic-parent/all-tparent?isDisable=false`, accountToken, axiosJWT)
       .then((res) => {
         if (res?.data?.data !== 'Not exist any children topic.') {
           setListTopicParent(res?.data?.data);
@@ -73,7 +73,7 @@ const HomePage = observer(() => {
           uiStore?.setLoading(false);
           return topicChildMap.get(parentId);
         }
-        getDataAPI(`/topic-children/topic-parent=${parentId}`, accountToken, axiosJWT)
+        getDataAPI(`/topic-children?tpid=${parentId}&&is_expired=false`, accountToken, axiosJWT)
           .then((res) => {
             setTopicChildMap((prevMap) => new Map(prevMap).set(parentId, res.data.data));
             uiStore?.setLoading(false);

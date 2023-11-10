@@ -17,7 +17,9 @@ const fetchTopic = async (
 
   try {
     const response = await axiosJWT.get(
-      `${TOPIC_TALKS_DOMAIN}/topic-${isChildren ? 'children' : 'parent'}/all${isChildren ? `topic-parent=${id}` : ''}`,
+      `${TOPIC_TALKS_DOMAIN}/topic-${isChildren ? 'children' : 'parent'}/all-tparent?isDisable=false${
+        isChildren ? `topic-parent=${id}` : ''
+      }`,
       {
         headers: {
           Authorization: `Bearer ${bearerToken}`,

@@ -29,7 +29,7 @@ const HomePage = observer(() => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   useEffect(() => {
-    getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+    getDataAPI(`/topic-parent/all-tparent?isDisable=false`, account.access_token, axiosJWT)
       .then((res) => {
         if (res.data.data !== 'Not exist any children topic.') {
           setListTopic(res.data.data);

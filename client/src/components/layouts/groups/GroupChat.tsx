@@ -11,6 +11,7 @@ import { createAxios, deleteDataAPI, getDataAPI, imageGroup, postDataAPI } from 
 import { ToastSuccess } from 'src/utils/toastOptions';
 import './GroupChat.scss';
 import { TopicChild } from 'src/types/topic.type';
+import { BsArrowRight } from 'react-icons/bs';
 
 const content = 'Do you want to join this group?';
 const GroupChat = observer(() => {
@@ -28,20 +29,32 @@ const GroupChat = observer(() => {
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
   useEffect(() => {
-    getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
-      .then((res) => {
-        setTopicChild(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
-      .then((res) => {
-        setListGroup(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (id) {
+      getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          setTopicChild(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          setListGroup(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      uiStore?.setLoading(true);
+      getDataAPI(`/participant/group-chat?uid=${account?.id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          setListGroup(res.data.data);
+          uiStore?.setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [id]);
 
   const isJoinGroup = (partnerDTO: IPartnerDTO[]) => {
@@ -136,7 +149,7 @@ const GroupChat = observer(() => {
       <Box className="box_group_chat">
         <Box className="title_box">
           <Typography className="title_topic">
-            List <strong>{topicChild?.topicChildrenName}</strong> Group Chats
+            List <strong>{id && topicChild?.topicChildrenName}</strong> Group Chats
           </Typography>
           <h2>How we can work together</h2>
         </Box>
@@ -149,7 +162,9 @@ const GroupChat = observer(() => {
                   <div className="overlay"></div>
                   <CardContent className="card_content">
                     <Typography>{item.conversationInfor.chatName}</Typography>
-                    <Typography>{totalMember(item.partnerDTO)}/30 Members</Typography>
+                    <Typography>Members - - {totalMember(item.partnerDTO)}/30 </Typography>
+                    <Typography>{item.conversationInfor.topicChildren.topicChildrenName} </Typography>
+                    <span>____________</span>
                   </CardContent>
                   <CardActions className="card_actions">
                     {isJoinGroup(item.partnerDTO) ? (
@@ -158,13 +173,13 @@ const GroupChat = observer(() => {
                           Joined Before
                         </Button>
                       ) : (
-                        <Button className="joined_before" onClick={() => cancelJoin(item)}>
+                        <Button className="cancel" onClick={() => cancelJoin(item)}>
                           Cancel
                         </Button>
                       )
                     ) : (
                       <Button className="join_group" onClick={() => handleConfirm(item.conversationInfor.id)}>
-                        Join Group
+                        Join Group <BsArrowRight />
                       </Button>
                     )}
                   </CardActions>

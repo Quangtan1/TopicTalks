@@ -42,6 +42,7 @@ const publicRoutes = [
   { path: '/landing-view', component: LandingView, layout: null },
   { path: '/about', component: About, layout: null },
   { path: '/group-chat/:id', component: GroupChat },
+  { path: '/all-group', component: GroupChat },
   { path: '/post-detail/:id', component: PostDetail },
   { path: '/ban-page', component: BanLayout, layout: null },
 ];
