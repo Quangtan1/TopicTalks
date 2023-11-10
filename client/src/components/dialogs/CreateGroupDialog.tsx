@@ -52,7 +52,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
     if (topicChildProps) {
       setSelected(topicChildProps);
     } else {
-      getDataAPI(`/topic-parent/all`, account.access_token, axiosJWT)
+      getDataAPI(`/topic-parent/all-tparent?isDisable=false`, account.access_token, axiosJWT)
         .then((res) => {
           setListTopic(res.data.data);
         })
@@ -64,7 +64,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
 
   useEffect(() => {
     if (!topicChildProps) {
-      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+      getDataAPI(`/topic-children?tpid=${selectTopic}&&is_expired=false`, account.access_token, axiosJWT)
         .then((res) => {
           setTopicChild(res.data.data);
           setSelected(null);

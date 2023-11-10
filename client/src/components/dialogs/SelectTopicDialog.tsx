@@ -27,7 +27,7 @@ const SelectTopicDialog = (props: DialogProps) => {
 
   useEffect(() => {
     axios
-      .get(`${API_KEY}/topic-parent/all`, {
+      .get(`${API_KEY}/topic-parent/all-tparent?isDisable=false`, {
         headers: { Authorization: `Bearer ${accountSignup?.access_token}` },
       })
       .then((res) => {

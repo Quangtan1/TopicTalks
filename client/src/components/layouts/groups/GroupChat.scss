@@ -41,14 +41,14 @@
         gap: 20px;
         width: 100%;
         max-width: 380px;
-        height: 480px;
+        height: 450px;
 
         .MuiCard-root {
           width: 100%;
           height: 100%;
           position: relative;
-          background: #eae1de;
-          border-radius: 10px;
+          // background: #eae1de;
+          border-radius: 0px;
           object-fit: cover;
           box-shadow: 0px 20px 90px #f7f3f0;
 
@@ -77,9 +77,22 @@
               font-family: 'Yeseva One', display;
             }
             p:nth-child(2) {
-              display: flex;
-              justify-content: center;
-              font-size: 13px;
+              padding-top: 5px;
+              font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+              font-size: 12px;
+              letter-spacing: 1px;
+            }
+            p:nth-child(3) {
+              display: block;
+              text-transform: uppercase;
+              font-size: 11px;
+              letter-spacing: 1px;
+              line-height: 2.6em;
+              color: rgb(142, 110, 81);
+              font-weight: 600;
+            }
+            span {
+              color: rgb(142, 110, 81);
             }
           }
           .card_actions {
@@ -87,19 +100,28 @@
             justify-content: center;
             padding-top: 30px;
             button {
-              font-size: 20px;
-              //   font-weight: 600;
+              display: flex;
+              gap: 6px;
+              font-size: 12px;
+              font-weight: 400;
+              letter-spacing: 2px;
+              text-transform: uppercase;
+              width: 150px;
+              border-radius: 0px;
             }
             .join_group {
-              text-transform: capitalize;
-              color: #fff;
-              background: #8e6e51;
+              background-color: rgb(247, 243, 240);
+              color: #000;
             }
-            .joined_before {
-              text-transform: capitalize;
+            .cancel {
               border: red solid 1px;
               color: #7f1d1d;
               background: #fef2f2;
+            }
+            .joined_before {
+              border: #5491d3 solid 1px;
+              color: #fff;
+              background: #b9c4e2;
             }
             .join_group:hover {
               opacity: 0.8;

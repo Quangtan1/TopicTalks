@@ -1,5 +1,5 @@
 import { Box, List, ListItem, Typography, Divider, Avatar } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { logo } from 'src/utils/consts';
 import './SideBar.scss';
 
@@ -11,7 +11,7 @@ import { MdOutlineGroup, MdBugReport } from 'react-icons/md';
 import { BiEdit } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
 import { RiAccountCircleFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 
@@ -52,12 +52,18 @@ const listSideBar: SidebarItem[] = [
 const SideBar = observer(() => {
   const [activeItem, setActiveItem] = useState<string>('/dashboard');
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
   const account = accountStore?.account;
 
   const handleItemClick = (item: SidebarItem) => {
     setActiveItem(item.path);
     navigate(item.path);
   };
+
+  useEffect(() => {
+    setActiveItem(currentPath);
+  }, [location]);
 
   const renderSidebarItem = (item: SidebarItem) => {
     const isActive = activeItem === item.path;

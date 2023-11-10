@@ -53,21 +53,21 @@
       .MuiOutlinedInput-notchedOutline {
         border: none;
       }
-      .Mui-focused .MuiOutlinedInput-notchedOutline {
-        border: 1px solid #8224e3;
-      }
-      .submit-button {
-        background-color: #8224e3;
-        background-image: linear-gradient(90deg, #8224e3 0, #a968ec 50%, #8224e3 100%);
-        box-shadow: 0 1px 2px 0 rgba(130, 36, 227, 0.5);
-        color: #fff;
-        border-radius: 15px;
-      }
-      .submit-button:hover {
-        background-color: #9c51e9;
-        box-shadow: 0 1px 3px 0 rgba(130, 36, 227, 0.5);
-        color: #fff;
-      }
+      // .Mui-focused .MuiOutlinedInput-notchedOutline {
+      //   border: 1px solid #8224e3;
+      // }
+      // .submit-button {
+      //   background-color: #8224e3;
+      //   background-image: linear-gradient(90deg, #8224e3 0, #a968ec 50%, #8224e3 100%);
+      //   box-shadow: 0 1px 2px 0 rgba(130, 36, 227, 0.5);
+      //   color: #fff;
+      //   border-radius: 15px;
+      // }
+      // .submit-button:hover {
+      //   background-color: #9c51e9;
+      //   box-shadow: 0 1px 3px 0 rgba(130, 36, 227, 0.5);
+      //   color: #fff;
+      // }
       .button-gg {
         border-radius: 15px;
         display: flex;
@@ -78,10 +78,10 @@
         svg {
           font-size: 20px;
         }
-        p {
-          color: #8224e3;
-          font-size: 12px;
-        }
+        // p {
+        //   color: #8224e3;
+        //   font-size: 12px;
+        // }
       }
       .checkbox {
         padding-left: 15px;
@@ -98,10 +98,10 @@
         p {
           font-size: 13px;
         }
-        p:hover {
-          cursor: pointer;
-          color: #8224e3;
-        }
+        // p:hover {
+        //   cursor: pointer;
+        //   color: #8224e3;
+        // }
       }
       .box-social {
         padding-top: 20px;

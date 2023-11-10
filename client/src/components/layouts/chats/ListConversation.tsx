@@ -250,6 +250,7 @@ const ListConversation = observer(() => {
           chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           chatStore?.setSelectedChat(res.data.data);
         }
+        setSelectedTab(0);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
