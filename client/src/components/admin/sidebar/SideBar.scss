@@ -1,6 +1,5 @@
 .sidebar_container_admin {
   display: flex;
-  padding-top: 70px;
   flex-direction: column;
   position: fixed;
   width: 230px;
@@ -8,17 +7,18 @@
   top: 0;
   z-index: 3;
   height: 100vh;
-  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
-  background: '#f7f3f0';
+  // box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 10px 10px 10px #cdd1e1;
+  background: rgb(31, 42, 64);
   .logo_sidebar {
     display: flex;
     align-items: center;
     gap: 5px;
-    padding: 0px 20px;
-    background: #4c3b7d;
+    padding: 15px 20px;
+    // background: #4c3b7d;
     border-radius: 12px;
     margin: 1px 4px;
-    justify-content: space-between;
+    // justify-content: space-between;
     .title_logo {
       p:nth-child(1) {
         font-size: 23px;
@@ -26,7 +26,7 @@
         font-family: Poppins;
       }
       p:nth-child(2) {
-        color: #bfacf3;
+        color: var(--main-color);
         font-family: Poppins;
         font-size: 14px;
         font-style: italic;
@@ -57,6 +57,7 @@
     p:nth-child(2) {
       font-size: 25px;
       font-weight: 600;
+      color: rgb(216, 216, 216);
     }
     p:nth-child(3) {
       font-size: 14px;
@@ -77,11 +78,12 @@
       padding: 9px 30px;
       svg {
         font-size: 18px;
-        color: #000;
+        color: rgb(216, 216, 216);
       }
       p {
         font-size: 16px;
         font-family: 'Plus Jakarta Sans';
+        color: rgb(216, 216, 216);
       }
     }
     .active-bar,
@@ -107,16 +109,35 @@
     gap: 20px;
     padding: 20px;
     margin: 15px 10px;
-    svg {
-      font-size: 30px;
-      padding: 5px;
-      border-radius: 10px;
-      background: #c6b8c7;
-    }
-    svg:hover {
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
       cursor: pointer;
-      color: #fff;
-      background: var(--main-color);
+      width: 100%;
+      justify-content: center;
+      color: rgb(216, 216, 216);
+      padding: 7px 28px;
+      p {
+        font-size: 15px;
+        letter-spacing: 1px;
+      }
+      svg {
+        font-size: 30px;
+        padding: 5px;
+        border-radius: 10px;
+        color: rgb(216, 216, 216);
+      }
+    }
+    span:hover {
+      cursor: pointer;
+      background: rgba(172, 167, 234, 0.17);
+      border-radius: 5px;
+      p,
+      svg {
+        color: var(--main-color);
+      }
     }
   }
 }

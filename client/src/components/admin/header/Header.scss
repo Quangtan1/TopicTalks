@@ -1,14 +1,12 @@
 .header_container_admin {
   display: flex;
-  border-bottom: solid 2px var(--color-gray);
   height: 66px;
-
   position: fixed;
   z-index: 3;
   width: 100vw;
   padding-left: 245px;
   .grid_container {
-    background: #4c3b7d;
+    // background: #4c3b7d;
     border-radius: 10px;
     .header-bar {
       display: flex;

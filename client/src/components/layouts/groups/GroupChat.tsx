@@ -46,7 +46,7 @@ const GroupChat = observer(() => {
         });
     } else {
       uiStore?.setLoading(true);
-      getDataAPI(`/participant/group-chat?uid=${account?.id}`, account?.access_token, axiosJWT)
+      getDataAPI(`/participant?is_groupchat=true`, account?.access_token, axiosJWT)
         .then((res) => {
           setListGroup(res.data.data);
           uiStore?.setLoading(false);

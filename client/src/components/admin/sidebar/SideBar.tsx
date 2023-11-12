@@ -4,16 +4,17 @@ import { logo } from 'src/utils/consts';
 import './SideBar.scss';
 
 //icon
-import { AiOutlineHome, AiFillSetting } from 'react-icons/ai';
+import { AiFillSetting, AiOutlineBarChart } from 'react-icons/ai';
 import { IoIosHelpCircleOutline } from 'react-icons/io';
 import { BsPostcard } from 'react-icons/bs';
-import { MdOutlineGroup, MdBugReport } from 'react-icons/md';
+import { MdOutlineGroup } from 'react-icons/md';
 import { BiEdit } from 'react-icons/bi';
 import { CiLogout } from 'react-icons/ci';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
 
 type SidebarItem = {
   title: string;
@@ -24,7 +25,7 @@ type SidebarItem = {
 const listSideBar: SidebarItem[] = [
   {
     title: 'Dashboard',
-    icon: <AiOutlineHome />,
+    icon: <AiOutlineBarChart />,
     path: '/dashboard',
   },
   {
@@ -48,9 +49,10 @@ const listSideBar: SidebarItem[] = [
     path: '/manage-qa',
   },
 ];
-
+const LOGOUT_CONTENT = 'Do you want to logout?';
 const SideBar = observer(() => {
   const [activeItem, setActiveItem] = useState<string>('/dashboard');
+  const [open, setOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -59,6 +61,16 @@ const SideBar = observer(() => {
   const handleItemClick = (item: SidebarItem) => {
     setActiveItem(item.path);
     navigate(item.path);
+  };
+
+  const onConfirm = () => {
+    accountStore?.setAccount(null);
+    accountStore?.clearStore();
+    navigate('/auth');
+  };
+
+  const onClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -78,11 +90,11 @@ const SideBar = observer(() => {
   return (
     <Box className="sidebar_container_admin">
       <Box className="logo_sidebar">
+        <img src={logo} alt="logo" />
         <Box className="title_logo">
           <Typography>TopicTalks</Typography>
           <Typography>Admintration</Typography>
         </Box>
-        <img src={logo} alt="logo" />
       </Box>
       <Box className="admin_infor">
         <Avatar src={account?.url_img} alt="avt" />
@@ -93,10 +105,12 @@ const SideBar = observer(() => {
 
       <Divider />
       <List className="list_item_setting">
-        <RiAccountCircleFill />
-        <AiFillSetting />
-        <CiLogout />
+        <span onClick={() => setOpen(true)}>
+          <Typography>Logout</Typography>
+          <CiLogout />
+        </span>
       </List>
+      <DialogCommon open={open} onClose={onClose} onConfirm={onConfirm} content={LOGOUT_CONTENT} />
     </Box>
   );
 });

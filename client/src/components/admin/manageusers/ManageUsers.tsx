@@ -109,7 +109,9 @@ const ManageUser = () => {
                     {item.isBanned ? (
                       <Button onClick={() => handleOpenModalBan(item, false)}>UnBan</Button>
                     ) : (
-                      <Button onClick={() => handleOpenModalBan(item, true)}>Ban</Button>
+                      <Button disabled={item.role.includes('ADMIN')} onClick={() => handleOpenModalBan(item, true)}>
+                        Ban
+                      </Button>
                     )}
 
                     <Button onClick={() => handleOpenView(item)}>

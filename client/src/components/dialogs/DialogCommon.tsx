@@ -11,8 +11,8 @@ import {
 import React from 'react';
 import './DialogCommon.scss';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { CiWarning } from 'react-icons/ci';
 import { observer } from 'mobx-react';
+import { TiWarning } from 'react-icons/ti';
 
 interface DialogProps {
   open: boolean;
@@ -29,7 +29,7 @@ const DialogCommon = observer((props: DialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} TransitionComponent={Transition} className="dialog-common">
       <DialogTitle className="dialog-title">
-        <CiWarning />
+        <TiWarning className="icon_warning" />
         <Typography>Warning</Typography>
         <IconButton aria-label="close" onClick={onClose} className="close-icon">
           <IoCloseCircleOutline />
