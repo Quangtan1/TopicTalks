@@ -66,13 +66,13 @@ const DashBoard = observer(() => {
                   <PieChartColor gender={gender} />
                   <Box className="sex_data">
                     <Typography>
-                      <BsDot /> {((gender?.male * 100) / totalGender).toFixed(0)}%
+                      <BsDot /> Male: {((gender?.male * 100) / totalGender).toFixed(0)}%
                     </Typography>
                     <Typography>
-                      <BsDot /> {((gender?.female * 100) / totalGender).toFixed(0)}%
+                      <BsDot /> Female: {((gender?.female * 100) / totalGender).toFixed(0)}%
                     </Typography>
                     <Typography>
-                      <BsDot /> {((gender?.others * 100) / totalGender).toFixed(0)}%
+                      <BsDot /> Other: {((gender?.others * 100) / totalGender).toFixed(0)}%
                     </Typography>
                   </Box>
                 </Box>
