@@ -81,8 +81,8 @@ const BarChartItem = () => {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="pv" fill="#8884d8" shape={<Rectangle fill="pink" stroke="blue" />} />
-        <Bar dataKey="uv" fill="#82ca9d" shape={<Rectangle fill="gold" stroke="purple" />} />
+        <Bar dataKey="pv" fill="#4dc2d5" shape={<Rectangle fill="pink" stroke="blue" />} />
+        <Bar dataKey="uv" fill="#e3e6ef" shape={<Rectangle fill="gold" stroke="purple" />} />
       </BarChart>
     </ResponsiveContainer>
   );

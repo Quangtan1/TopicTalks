@@ -82,9 +82,9 @@ const DefaultLayout = observer(({ children }) => {
   return (
     <Box className="common-page-container">
       {isLoading && <Loading />}
-      <LazyShow>
-        <Header />
-      </LazyShow>
+      {/* <LazyShow> */}
+      <Header />
+      {/* </LazyShow> */}
       <Box className="route-container">
         {account !== null && children}
         {isVisible && (
@@ -96,9 +96,9 @@ const DefaultLayout = observer(({ children }) => {
         {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
         {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
       </Box>
-      <LazyShow>
-        <Footer />
-      </LazyShow>
+      {/* <LazyShow> */}
+      <Footer />
+      {/* </LazyShow> */}
     </Box>
   );
 });

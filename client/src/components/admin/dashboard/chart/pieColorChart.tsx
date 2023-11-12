@@ -2,8 +2,9 @@ import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { name: 'Male', value: 60 },
-  { name: 'Female', value: 40 },
+  { name: 'Male', value: 55 },
+  { name: 'Female', value: 35 },
+  { name: 'Other', value: 10 },
 ];
 // const data = [
 //   { name: 'Group A', value: 400 },
@@ -11,32 +12,34 @@ const data = [
 //   { name: 'Group C', value: 300 },
 //   { name: 'Group D', value: 200 },
 // ];
-const COLORS = ['#8884d8', '#ff6584'];
+const COLORS = ['#4dc2d5', '#e45d42', '#e3e6ef'];
 
 const RADIAN = Math.PI / 180;
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+// const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
-      {`${(percent * 100).toFixed(0)}%`}
-    </text>
-  );
-};
+//   return (
+//     <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+//       {`${(percent * 100).toFixed(0)}%`}
+//     </text>
+//   );
+// };
 
 const GenderAgeChart = () => {
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart width={300} height={340}>
+    <ResponsiveContainer>
+      <PieChart>
         <Pie
           data={data}
-          cx="50%"
-          cy="50%"
+          // cx="50%"
+          // cy="50%"
+          paddingAngle={1}
           labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={130}
+          // label={renderCustomizedLabel}
+          innerRadius={50}
+          outerRadius={80}
           fill="#8884d8"
           dataKey="value"
         >

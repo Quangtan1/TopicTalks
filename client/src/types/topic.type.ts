@@ -9,4 +9,5 @@ export interface TopicChild {
   topicChildrenName: string;
   image: string;
   shortDescript: string;
+  expired?: boolean;
 }

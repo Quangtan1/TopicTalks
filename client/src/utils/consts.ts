@@ -24,8 +24,10 @@ import socialNetwork from 'src/assets/images/socialnetwork.svg';
 import typing from 'src/assets/images/typing.svg';
 import banImage from 'src/assets/images/ban.svg';
 import image_login from 'src/assets/images/login_imag.jpeg';
+import admin_dashboard from 'src/assets/images/admin_dashboard.png';
 
 export {
+  admin_dashboard,
   image_login,
   banImage,
   typing,

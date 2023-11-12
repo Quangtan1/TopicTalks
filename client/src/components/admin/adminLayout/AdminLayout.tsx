@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import Loading from 'src/components/loading/Loading';
 import uiStore from 'src/store/uiStore';
-import Navbar from 'src/components/layouts/LandingView/Navbar';
+import Header from '../header/Header';
 
 const AdminLayout = observer(({ children }) => {
   const account = accountStore?.account;
@@ -16,7 +16,7 @@ const AdminLayout = observer(({ children }) => {
         <>
           <Box className="common-page-container_admin">
             {isLoading && <Loading />}
-            <Navbar isAdmin />
+            {/* <Header /> */}
             <Box className="route-container">
               <SideBar />
               {account !== null && children}
