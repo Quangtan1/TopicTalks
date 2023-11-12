@@ -1,21 +1,8 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { IUserProfile } from 'src/types/account.types';
 import './UpdateTopicDialog.scss';
-import { MdOutlineErrorOutline } from 'react-icons/md';
-import { createAxios, postDataAPI, putDataAPI } from 'src/utils';
-import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
+import { createAxios, putDataAPI } from 'src/utils';
+import { ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { TopicChild } from 'src/types/topic.type';

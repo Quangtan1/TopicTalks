@@ -5,9 +5,48 @@ import './styles.scss';
 import BarChartItem from './chart/barChart';
 import ChartTopicChildWGroupChat from './chart/pieSolidChart';
 import { BsDot, BsGenderTrans } from 'react-icons/bs';
-import { admin_dashboard } from 'src/utils';
+import { admin_dashboard, createAxios, getDataAPI } from 'src/utils';
+import React, { useEffect, memo, useState } from 'react';
+import { observer } from 'mobx-react';
+import accountStore from 'src/store/accountStore';
+import uiStore from 'src/store/uiStore';
 
-const DashBoard = () => {
+interface Gender {
+  female: number;
+  male: number;
+  others: number;
+}
+const DashBoard = observer(() => {
+  const [age, setAge] = useState<number[]>([]);
+  const [gender, setGender] = useState<Gender>(null);
+  const account = accountStore?.account;
+  const setAccount = () => {
+    return accountStore?.setAccount;
+  };
+
+  const accountJwt = account;
+  const axiosJWT = createAxios(accountJwt, setAccount);
+  useEffect(() => {
+    uiStore?.setLoading(true);
+    getDataAPI(`/user/all-age`, account.access_token, axiosJWT)
+      .then((res) => {
+        setAge(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    getDataAPI(`/user/all-gender`, account.access_token, axiosJWT)
+      .then((res) => {
+        setGender(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const totalGender = gender?.others + gender?.male + gender?.female;
+
   return (
     <ResponsiveContainer className="containerChart">
       <>
@@ -24,16 +63,16 @@ const DashBoard = () => {
                 </Typography>
                 <Typography className="avg_gender">Avg order Value</Typography>
                 <Box className="box_chart1">
-                  <PieChartColor />
+                  <PieChartColor gender={gender} />
                   <Box className="sex_data">
                     <Typography>
-                      <BsDot /> Male: 55%
+                      <BsDot /> {((gender?.male * 100) / totalGender).toFixed(0)}%
                     </Typography>
                     <Typography>
-                      <BsDot /> Female: 35%
+                      <BsDot /> {((gender?.female * 100) / totalGender).toFixed(0)}%
                     </Typography>
                     <Typography>
-                      <BsDot /> Other: 10%
+                      <BsDot /> {((gender?.others * 100) / totalGender).toFixed(0)}%
                     </Typography>
                   </Box>
                 </Box>
@@ -57,7 +96,7 @@ const DashBoard = () => {
                   <Typography className="charTextItem1">Most Popular Age in System</Typography>
                 </Box>
                 <Box className="age_box">
-                  <ChartTopicChildWGroupChat />
+                  <ChartTopicChildWGroupChat age={age} />
                   <Box className="age_data">
                     <Typography>
                       <BsDot /> {`< 18`}
@@ -88,6 +127,6 @@ const DashBoard = () => {
       </>
     </ResponsiveContainer>
   );
-};
+});
 
 export default DashBoard;

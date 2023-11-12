@@ -10,6 +10,7 @@ import {
   Input,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from '@mui/material';
 import { CloseRounded } from '@mui/icons-material';
@@ -43,6 +44,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   const [topicPrimary, setTopicPrimary] = useState<string>('');
   const [topicChild, setTopicChild] = useState<string>('');
   const [imageFile, setImageFile] = useState<string>('');
+  const [shortDescript, setNewDescript] = useState<string>('');
   const fileInputRef = useRef(null);
   const account = accountStore?.account;
 
@@ -61,6 +63,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
       topicParentId: selectTopic,
       topicChildrenName: topicChild,
       image: imageFile,
+      shortDescription: shortDescript,
     };
     if (active === 1 ? topicPrimary !== '' : topicChild !== '' && imageFile !== '') {
       postDataAPI(
@@ -75,6 +78,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
           setTopicPrimary('');
           setTopicChild('');
           setImageFile('');
+          setNewDescript('');
         })
         .catch((err) => {
           console.log(err);
@@ -167,6 +171,13 @@ const CreateTopicDialog = observer((props: DialogProps) => {
                 </Typography>
               )}
             </Box>
+            <TextField
+              placeholder="Input short description"
+              multiline
+              value={shortDescript}
+              onChange={(e) => setNewDescript(e.target.value)}
+              fullWidth
+            />
           </>
         )}
 

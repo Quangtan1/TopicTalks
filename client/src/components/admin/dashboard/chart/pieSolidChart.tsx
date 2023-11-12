@@ -1,11 +1,9 @@
 import React from 'react';
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-const dataChart01 = [
-  { name: '< 18 ', value: 45 },
-  { name: '18 - 30', value: 35 },
-  { name: '> 30', value: 20 },
-];
+interface AgeProps {
+  age: number[];
+}
 
 const COLORS = ['#4dc2d5', '#e45d42', '#e3e6ef'];
 const RADIAN = Math.PI / 180;
@@ -20,7 +18,22 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     </text>
   );
 };
-const ChartTopicChildWGroupChat = () => {
+const ChartTopicChildWGroupChat = (props: AgeProps) => {
+  const { age } = props;
+
+  const nonZeroAges = age.filter((value) => value !== 0);
+  const totalCount = nonZeroAges.length;
+
+  const dataChart01 = [
+    { name: '< 18 ', value: (nonZeroAges.filter((value) => value < 18).length * 100) / totalCount },
+    { name: '18 - 30', value: (nonZeroAges.filter((value) => value >= 18 && value <= 30).length * 100) / totalCount },
+    { name: '> 30', value: (nonZeroAges.filter((value) => value > 30).length * 100) / totalCount },
+  ];
+
+  const formatNumber = (number) => {
+    return number.toFixed(2);
+  };
+
   return (
     <ResponsiveContainer>
       <PieChart>
@@ -28,8 +41,6 @@ const ChartTopicChildWGroupChat = () => {
           dataKey="value"
           labelLine={false}
           data={dataChart01}
-          // cx="50%"
-          // cy="50%"
           outerRadius={100}
           fill="#8884d8"
           label={renderCustomizedLabel}
@@ -38,7 +49,7 @@ const ChartTopicChildWGroupChat = () => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip formatter={(value) => formatNumber(value)} />
       </PieChart>
     </ResponsiveContainer>
   );
