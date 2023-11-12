@@ -18,14 +18,20 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { GrAdd } from 'react-icons/gr';
 import CreateTopicDialog from '../admindialog/CreateTopicDialog';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
-import { createAxios, getDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, putDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
+import { ToastSuccess } from 'src/utils/toastOptions';
+import UpdateTopicDialog from './UpdateTopicDialog';
 
 const ManageTopic = () => {
   const [selectTopic, setSelectTopic] = useState<number>(null);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [open, setOpen] = useState<boolean>(false);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const [topicSelected, setTopicSelected] = useState<TopicChild>(null);
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false);
 
   const account = accountStore?.account;
 
@@ -63,14 +69,48 @@ const ManageTopic = () => {
   }, []);
 
   useEffect(() => {
-    getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+    if (selectTopic) {
+      getDataAPI(`/topic-children/topic-parent=${selectTopic}`, account.access_token, axiosJWT)
+        .then((res) => {
+          setTopicChild(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [selectTopic]);
+
+  const CONTENT = `Do you want to ${topicSelected?.expired ? 'undisable' : 'disale'} ${
+    topicSelected?.topicChildrenName
+  } topic`;
+
+  const handleConfirm = () => {
+    putDataAPI(
+      `/topic-children/update-expired?id=${topicSelected?.id}&&is_expired=${topicSelected?.expired ? false : true}`,
+      null,
+      account.access_token,
+      axiosJWT,
+    )
       .then((res) => {
-        setTopicChild(res.data.data);
+        ToastSuccess('Succesfully');
+        setTopicChild((prev) =>
+          prev.map((item) => (item.id === topicSelected?.id ? { ...item, expired: !topicSelected?.expired } : item)),
+        );
+        setOpenConfirm(false);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [selectTopic]);
+  };
+
+  const handleDisable = (item: TopicChild) => {
+    setTopicSelected(item);
+    setOpenConfirm(true);
+  };
+  const handleUpdate = (item: TopicChild) => {
+    setTopicSelected(item);
+    setOpenUpdate(true);
+  };
 
   return (
     <Box className="manage_topic_container">
@@ -117,8 +157,12 @@ const ManageTopic = () => {
                   <TableCell className="cell_tname">{item.topicChildrenName}</TableCell>
                   <TableCell className="cell_cby">Admin</TableCell>
                   <TableCell className="cell_action">
-                    <Button>Update</Button>
-                    <Button>Delete</Button>
+                    <Button onClick={() => handleUpdate(item)}>Update</Button>
+                    {item.expired ? (
+                      <Button onClick={() => handleDisable(item)}>Undisable</Button>
+                    ) : (
+                      <Button onClick={() => handleDisable(item)}>Disable</Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -137,6 +181,23 @@ const ManageTopic = () => {
       />
       {open === true && (
         <CreateTopicDialog open={open} onClose={onClose} listTopic={listTopic} setListTopic={setListTopic} />
+      )}
+      {openConfirm && (
+        <DialogCommon
+          open={openConfirm}
+          onClose={() => setOpenConfirm(false)}
+          onConfirm={handleConfirm}
+          content={CONTENT}
+        />
+      )}
+      {openUpdate && (
+        <UpdateTopicDialog
+          open={openUpdate}
+          onClose={() => setOpenUpdate(false)}
+          topic={topicSelected}
+          setTopicChild={setTopicChild}
+          topicParentId={selectTopic}
+        />
       )}
     </Box>
   );
