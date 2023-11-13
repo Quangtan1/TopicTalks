@@ -75,15 +75,15 @@ const SelectTopicMessage = observer((props: DialogProps) => {
         </Box>
         <Box className="topic_box">
           <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-            {listTopic.length > 0 &&
-              listTopic.map((item) => (
+            {listTopic?.length > 0 &&
+              listTopic?.map((item) => (
                 <MenuItem value={item.id} key={item.id}>
                   {item.topicParentName}
                 </MenuItem>
               ))}
           </Select>
           <Box className="topic_child">
-            {topicChild.length > 0 &&
+            {topicChild?.length > 0 &&
               topicChild?.map((item) => (
                 <Typography
                   key={item.id}

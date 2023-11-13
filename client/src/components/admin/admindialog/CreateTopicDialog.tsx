@@ -132,8 +132,8 @@ const CreateTopicDialog = observer((props: DialogProps) => {
             />
           ) : (
             <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
-              {listTopic.length > 0 &&
-                listTopic.map((item) => (
+              {listTopic?.length > 0 &&
+                listTopic?.map((item) => (
                   <MenuItem value={item.id} key={item.id}>
                     {item.topicParentName}
                   </MenuItem>
