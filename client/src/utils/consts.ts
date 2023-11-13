@@ -25,9 +25,13 @@ import typing from 'src/assets/images/typing.svg';
 import banImage from 'src/assets/images/ban.svg';
 import image_login from 'src/assets/images/login_imag.jpeg';
 import admin_dashboard from 'src/assets/images/admin_dashboard.png';
+import chatCarousel1 from 'src/assets/images/chat_carousel_1.svg';
+import chatCarousel2 from 'src/assets/images/chat_carousel_2.svg';
 
 export {
   admin_dashboard,
+  chatCarousel2,
+  chatCarousel1,
   image_login,
   banImage,
   typing,
