@@ -9,7 +9,7 @@
   height: 100vh;
   // box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
   box-shadow: 10px 10px 10px #cdd1e1;
-  background: rgb(31, 42, 64);
+  background: rgb(233 230 226);
   .logo_sidebar {
     display: flex;
     align-items: center;
@@ -22,7 +22,7 @@
     .title_logo {
       p:nth-child(1) {
         font-size: 23px;
-        color: #fff;
+        color: #000;
         font-family: Poppins;
       }
       p:nth-child(2) {
@@ -57,7 +57,7 @@
     p:nth-child(2) {
       font-size: 25px;
       font-weight: 600;
-      color: rgb(216, 216, 216);
+      color: #000;
     }
     p:nth-child(3) {
       font-size: 14px;
@@ -78,21 +78,21 @@
       padding: 9px 30px;
       svg {
         font-size: 18px;
-        color: rgb(216, 216, 216);
+        color: #000;
       }
       p {
         font-size: 16px;
         font-family: 'Plus Jakarta Sans';
-        color: rgb(216, 216, 216);
+        color: #000;
       }
     }
     .active-bar,
     li:hover {
-      background: rgba(172, 167, 234, 0.17);
+      background: rgb(216 206 197);
       border-radius: 5px;
       p,
       svg {
-        color: var(--main-color);
+        color: #fff;
       }
     }
   }
@@ -117,7 +117,7 @@
       cursor: pointer;
       width: 100%;
       justify-content: center;
-      color: rgb(216, 216, 216);
+      color: #000;
       padding: 7px 28px;
       p {
         font-size: 15px;
@@ -127,16 +127,16 @@
         font-size: 30px;
         padding: 5px;
         border-radius: 10px;
-        color: rgb(216, 216, 216);
+        color: #000;
       }
     }
     span:hover {
       cursor: pointer;
-      background: rgba(172, 167, 234, 0.17);
+      background: rgb(216 206 197);
       border-radius: 5px;
       p,
       svg {
-        color: var(--main-color);
+        color: #fff;
       }
     }
   }

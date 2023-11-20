@@ -83,8 +83,10 @@ const HomePage = observer(() => {
           });
         return null;
       }),
-    [],
+    [listTopic],
   );
+
+  const searchToopicParent = () => {};
 
   const navigateToDetailTopic = (id: number) => {
     navigate(`/topic-detail/${id}`);

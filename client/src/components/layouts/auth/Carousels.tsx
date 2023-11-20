@@ -2,7 +2,7 @@ import React from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { Box, Typography } from '@mui/material';
-import { chatCarousel1, chatCarousel2 } from 'src/utils/consts';
+import { aboutme, chatCarousel1, chatCarousel2, image_login } from 'src/utils/consts';
 import { useNavigate } from 'react-router-dom';
 
 const Carousels = () => {
@@ -18,7 +18,7 @@ const Carousels = () => {
       className="carousels"
     >
       <Box>
-        <img src={chatCarousel1} alt="carousel1" style={{ objectFit: 'contain' }} />
+        <img src={aboutme} alt="carousel1" />
         <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
           <Typography>Join the Community</Typography>
           <Typography>Chat Anonymously and Confidently</Typography>
@@ -30,7 +30,7 @@ const Carousels = () => {
         <div className="overlay"></div>
       </Box>
       <Box>
-        <img src={chatCarousel2} alt="carousel2" style={{ objectFit: 'contain' }} />
+        <img src={image_login} alt="carousel2" />
         <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
           <Typography> ____ Join the Conversation</Typography>
           <Typography> Connect and Share with Confidence</Typography>

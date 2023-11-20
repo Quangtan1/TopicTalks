@@ -48,7 +48,7 @@
       max-height: 60px;
       .table_head {
         .MuiTableRow-root {
-          background: rgb(62, 67, 150);
+          background: rgb(31, 42, 64);
 
           .MuiTableCell-root {
             color: #fff;
@@ -86,9 +86,9 @@
     height: 100%;
     .table_body {
       .MuiTableRow-root {
-        background: rgb(31, 42, 64);
+        background: #fdfcfa;
         .MuiTableCell-root {
-          color: #fff;
+          color: #000;
         }
         .cell_no {
           width: 10%;
@@ -135,7 +135,7 @@
   }
   .table_pagination {
     min-height: 55px;
-    background: rgb(62, 67, 150);
+    background: rgb(31, 42, 64);
     border-radius: 6px;
     color: #fff;
   }

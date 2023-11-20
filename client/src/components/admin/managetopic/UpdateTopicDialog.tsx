@@ -1,8 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './UpdateTopicDialog.scss';
 import { createAxios, putDataAPI } from 'src/utils';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { TopicChild } from 'src/types/topic.type';
@@ -27,26 +27,34 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   const handleConfirm = () => {
-    const data = {
-      newName: newName || topic?.topicChildrenName,
-      shortDescript: shortDescript || topic?.shortDescript,
-    };
-    putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
-      .then((res) => {
-        ToastSuccess('Update Succesfully');
-        setTopicChild((prev) =>
-          prev.map((item) =>
-            item.id === topic?.id
-              ? { ...item, topicChildrenName: data.newName, shortDescript: data.shortDescript }
-              : item,
-          ),
-        );
-        onClose();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (topic?.topicChildrenName !== newName || topic?.shortDescript !== shortDescript) {
+      const data = {
+        newName: newName || topic?.topicChildrenName,
+        shortDescript: shortDescript || topic?.shortDescript,
+      };
+      putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
+        .then((res) => {
+          ToastSuccess('Update Succesfully');
+          setTopicChild((prev) =>
+            prev.map((item) =>
+              item.id === topic?.id
+                ? { ...item, topicChildrenName: data.newName, shortDescript: data.shortDescript }
+                : item,
+            ),
+          );
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      ToastError('Please input not simmilar old content topic');
+    }
   };
+  useEffect(() => {
+    setNewName(topic?.topicChildrenName);
+    setNewDescript(topic?.shortDescript);
+  }, []);
 
   return (
     <Dialog open={open} onClose={onClose} className="dialog_update_topic">
@@ -57,14 +65,14 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           fullWidth
-          placeholder={topic?.topicChildrenName}
+          placeholder="Input Topic Name"
         />
         <TextField
           multiline
           value={shortDescript}
           onChange={(e) => setNewDescript(e.target.value)}
           fullWidth
-          placeholder={topic?.shortDescript}
+          placeholder="Input Short Description"
         />
       </DialogContent>
       <DialogActions className="dialog_action">

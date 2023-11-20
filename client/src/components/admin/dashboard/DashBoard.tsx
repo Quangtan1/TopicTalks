@@ -16,9 +16,16 @@ interface Gender {
   male: number;
   others: number;
 }
+interface TopicState {
+  topicId: number;
+  topicName: string;
+  totalGroupChat: number;
+  totalPost: number;
+}
 const DashBoard = observer(() => {
   const [age, setAge] = useState<number[]>([]);
   const [gender, setGender] = useState<Gender>(null);
+  const [topicData, setTopicData] = useState<TopicState[]>([]);
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -38,6 +45,13 @@ const DashBoard = observer(() => {
     getDataAPI(`/user/all-gender`, account.access_token, axiosJWT)
       .then((res) => {
         setGender(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    getDataAPI(`/topic-parent/retrieve`, account.access_token, axiosJWT)
+      .then((res) => {
+        setTopicData(res.data);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -78,7 +92,7 @@ const DashBoard = observer(() => {
                 </Box>
               </Paper>
             </Grid>
-            <Grid item md={7.8} sm={6} xs={12} spacing={2} className="itemImage">
+            <Grid item md={7.8} sm={6} xs={12} className="itemImage">
               <Paper className="firsRowImage">
                 <Box className="box_content">
                   <Typography className="text">Good admin theme is a tool of enthusiasm</Typography>
@@ -89,7 +103,7 @@ const DashBoard = observer(() => {
             </Grid>
           </Grid>
           <Grid container className="row2" spacing={18}>
-            <Grid item md={4} sm={6} xs={12} spacing={2} className="itemChart1">
+            <Grid item md={4} sm={6} xs={12} className="itemChart1">
               <Paper className="firstRowPaper">
                 <Box>
                   <Typography className="charTextTitleItem1">Age Group Chart</Typography>
@@ -114,7 +128,7 @@ const DashBoard = observer(() => {
 
             <Grid item md={7.8} sm={6} xs={12}>
               <Paper className="chart3">
-                <BarChartItem />
+                <BarChartItem topicData={topicData} />
                 <Box className="box_chart3">
                   <Typography>Most popular Topic in System</Typography>
                   <Typography>pv: Total number of post views</Typography>

@@ -62,13 +62,34 @@ const data = [
     amt: 2000,
   },
 ];
-const BarChartItem = () => {
+
+interface TopicState {
+  topicId: number;
+  topicName: string;
+  totalGroupChat: number;
+  totalPost: number;
+}
+interface TopicProps {
+  topicData: TopicState[];
+}
+const BarChartItem = (props: TopicProps) => {
+  const { topicData } = props;
+
+  const dataCustom = topicData?.map((item) => {
+    const itemCustom = {
+      name: item.topicName,
+      uv: item.totalGroupChat,
+      pv: item.totalPost,
+      amt: item.totalPost - item.totalGroupChat,
+    };
+    return itemCustom;
+  });
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         width={500}
         height={300}
-        data={data}
+        data={dataCustom}
         margin={{
           top: 5,
           right: 30,

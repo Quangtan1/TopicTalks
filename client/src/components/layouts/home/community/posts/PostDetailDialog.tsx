@@ -15,7 +15,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { IComment, IPost } from 'src/queries';
 import accountStore from 'src/store/accountStore';
-import { createAxios, deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from 'src/utils';
+import { API_KEY, createAxios, deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import './PostDetailDialog.scss';
 import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
@@ -291,6 +291,11 @@ const PostDetailDialog = observer((props: DialogProps) => {
       setStatusSelect(value);
     }
   };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(`http://localhost:3000/post-detail/${post?.id}`);
+    ToastSuccess('Copied Link This Post');
+  };
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
   return (
@@ -422,7 +427,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
               )}
 
               <FaRegComment />
-              <FcShare />
+              <FcShare onClick={handleShare} />
             </Box>
             <Typography>{post?.like.totalLike} likes</Typography>
             <Typography>{formatTime(post?.created_at)}</Typography>
