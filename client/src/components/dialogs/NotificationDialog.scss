@@ -39,6 +39,21 @@
           font-weight: 600;
           padding: 5px 8px;
           cursor: pointer;
+          position: relative;
+          span {
+            position: absolute;
+            right: -5px;
+            top: -7px;
+            color: rgb(207, 84, 84);
+            background: rgb(243, 213, 213);
+            border-radius: 10px;
+            padding: 2px;
+            width: 15px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
         }
       }
       .no_data {

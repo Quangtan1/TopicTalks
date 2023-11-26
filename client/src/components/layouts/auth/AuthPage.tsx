@@ -2,9 +2,6 @@ import React, { useRef, useState } from 'react';
 import { Button, FormControlLabel, Checkbox, Box, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-// import InstagramIcon from '@mui/icons-material/Instagram';
-// import FacebookIcon from '@mui/icons-material/Facebook';
-// import TwitterIcon from '@mui/icons-material/Twitter';
 import './AuthPage.scss';
 import Carousels from './Carousels';
 import { logo } from 'src/utils/consts';
@@ -71,20 +68,24 @@ const LoginPage = observer(() => {
       username: formData.get('anonymousName'),
       password: formData.get('password'),
     };
-    axios
-      .post(`${API_KEY}/auth/authenticate`, user)
-      .then((res) => {
-        if (!!res?.data?.access_token) {
-          accountStore?.setAccount(res?.data);
-          res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
-        } else {
-          ToastError('Please verify email first');
-          navigate('/verify-account');
-        }
-      })
-      .catch((err) => {
-        ToastError(err?.response?.data?.message);
-      });
+    if (!user.username || !user.password) {
+      ToastError('Please not empty textbox');
+    } else {
+      axios
+        .post(`${API_KEY}/auth/authenticate`, user)
+        .then((res) => {
+          if (!!res?.data?.access_token) {
+            accountStore?.setAccount(res?.data);
+            res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+          } else {
+            ToastError('Please verify email first');
+            navigate('/verify-account');
+          }
+        })
+        .catch((err) => {
+          ToastError(err?.response?.data?.message);
+        });
+    }
   };
 
   const generateOTP = () => {

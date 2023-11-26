@@ -124,6 +124,8 @@
             font-weight: 600;
             font-size: 18px;
           }
+          .real_name {
+          }
         }
         .bio_content_hidden {
           display: flex;
@@ -211,10 +213,11 @@
   .post_container {
     padding: 40px 120px;
     justify-content: center;
-    max-width: 1500px;
     display: flex;
     flex-direction: column;
     gap: 70px;
+    width: 100%;
+    align-items: center;
     .image_right {
       flex-direction: row-reverse;
       .box_card_content {
@@ -248,7 +251,8 @@
       display: flex;
       height: 400px;
       box-shadow: 0px 20px 90px #f7f3f0;
-
+      max-width: 1200px;
+      width: 100%;
       .image {
         height: 100%;
         min-width: 300px;

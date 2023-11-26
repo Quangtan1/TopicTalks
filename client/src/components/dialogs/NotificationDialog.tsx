@@ -110,17 +110,7 @@ const NotificationDialog = observer((props: DialogProps) => {
 
   const updateReadNotifi = (notifiId) => {
     putDataAPI(`/notification/${notifiId}`, null, account.access_token, axiosJWT)
-      .then((res) => {
-        // const index = notifiSystem?.findIndex((item) => item.notiId === notifiId);
-        // if (index !== -1) {
-        //   const updatedNotifications = [...notifiSystem];
-        //   updatedNotifications[index] = {
-        //     ...updatedNotifications[index],
-        //     isRead: true,
-        //   };
-        //   setNotifiSystem(updatedNotifications);
-        // }
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -149,6 +139,7 @@ const NotificationDialog = observer((props: DialogProps) => {
 
   const isNew = notifiSort?.length === 0 && tab === 1;
   const isRequest = (listRequest?.length === 0 || listRequest === undefined) && tab === 2;
+  const isUnRead = notifiSystem?.filter((item) => !item.isRead);
 
   return (
     <Dialog open={open} onClose={onClose} className="notification_container">
@@ -158,9 +149,11 @@ const NotificationDialog = observer((props: DialogProps) => {
       <Box className="tab_notifi">
         <Typography className={`${tab === 1 && 'active_tab'} title`} onClick={() => setTab(1)}>
           New
+          <span>{isUnRead?.length}</span>
         </Typography>
         <Typography className={`${tab === 2 && 'active_tab'} title`} onClick={() => setTab(2)}>
           Request
+          <span>{listRequest?.length}</span>
         </Typography>
       </Box>
       <DialogContent className={`${(isNew || isRequest) && 'no_data'} dialog_content`}>

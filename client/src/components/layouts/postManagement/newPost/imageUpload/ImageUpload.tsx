@@ -65,7 +65,7 @@ const ImageUpload: FC<Props> = observer(
         )}
         <Box className="add_image_child">
           <Typography>Upload Image: </Typography>
-          <IoDocumentAttachSharp onClick={handleLinkClick} />
+          <IoDocumentAttachSharp onClick={handleLinkClick} style={{ cursor: 'pointer' }} />
           <input
             type="file"
             ref={fileInputRef}
