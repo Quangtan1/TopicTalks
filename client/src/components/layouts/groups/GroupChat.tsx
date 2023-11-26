@@ -12,6 +12,7 @@ import { ToastSuccess } from 'src/utils/toastOptions';
 import './GroupChat.scss';
 import { TopicChild } from 'src/types/topic.type';
 import { BsArrowRight } from 'react-icons/bs';
+import { RiLoader2Line } from 'react-icons/ri';
 
 const content = 'Do you want to join this group?';
 const GroupChat = observer(() => {
@@ -21,6 +22,9 @@ const GroupChat = observer(() => {
   const [openWarning, setOpenWarning] = useState<boolean>(false);
   const navigate = useNavigate();
   const [groupId, setGroupId] = useState<number>(null);
+  const [page, setPage] = useState<number>(0);
+  const [isLast, setIsLast] = useState<boolean>(true);
+  const [isLoadGroup, setIsLoadGroup] = useState<boolean>(false);
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -28,8 +32,21 @@ const GroupChat = observer(() => {
 
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
+
+  const handleScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+
+    if (scrollTop >= scrollHeight - windowHeight && id === undefined) {
+      setPage((prePage) => prePage + 1);
+    }
+  };
+
   useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
     if (id) {
+      uiStore?.setLoading(true);
       getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
         .then((res) => {
           setTopicChild(res.data.data);
@@ -40,22 +57,35 @@ const GroupChat = observer(() => {
       getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
         .then((res) => {
           setListGroup(res.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      uiStore?.setLoading(true);
-      getDataAPI(`/participant?is_groupchat=true`, account?.access_token, axiosJWT)
-        .then((res) => {
-          setListGroup(res.data.data);
           uiStore?.setLoading(false);
         })
         .catch((err) => {
           console.log(err);
         });
     }
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      setIsLast(true);
+      setPage(0);
+    };
   }, [id]);
+
+  useEffect(() => {
+    if (isLast && id === undefined) {
+      setIsLoadGroup(true);
+      getDataAPI(`/participant?is_groupchat=true&page=${page}&size=6`, account?.access_token, axiosJWT)
+        .then((res) => {
+          const newGroup = res.data.data.content;
+          page === 0 ? setListGroup(newGroup) : setListGroup([...listGroup, ...newGroup]);
+          setIsLoadGroup(false);
+          const lengthData = res.data.data.content.length;
+          (lengthData === 0 || lengthData < 6) && setIsLast(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [page, id]);
 
   const isJoinGroup = (partnerDTO: IPartnerDTO[]) => {
     const result = partnerDTO.some((item) => item.id === account.id);
@@ -187,6 +217,11 @@ const GroupChat = observer(() => {
               </Grid>
             ))}
         </Grid>
+        {isLoadGroup && (
+          <Box className="load_group">
+            <RiLoader2Line />
+          </Box>
+        )}
       </Box>
       {openWarning && (
         <DialogCommon

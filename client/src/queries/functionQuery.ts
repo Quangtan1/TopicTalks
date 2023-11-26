@@ -136,7 +136,7 @@ const fetchAllPostByIsApproved = async (
       },
     });
 
-    return response?.data?.data ?? [];
+    return response?.data?.data.content ?? [];
   } catch (error) {
     console.log('🚀 ~error:', error);
   }

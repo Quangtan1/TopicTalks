@@ -201,6 +201,7 @@ const PartnerProfile = observer(() => {
             <span className="box_name">
               <Typography className="title">Name :...</Typography>
               <Typography className="user_name">{user?.username}</Typography>
+              <Typography className="real_name">{(isDisplay && `(${user?.fullName})`) || ''}</Typography>
             </span>
             <Typography className="title">Bio</Typography>
             {isDisplay && user?.bio !== '' ? (

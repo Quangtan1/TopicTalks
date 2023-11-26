@@ -46,6 +46,15 @@
           border: 1px solid rgb(62, 67, 150);
         }
       }
+      .add_image_child {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        svg {
+          cursor: pointer;
+          font-size: 18px;
+        }
+      }
       .primary_topic {
         display: flex;
         gap: 10px;
@@ -62,15 +71,7 @@
         gap: 10px;
         align-items: center;
       }
-      .add_image_child {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        svg {
-          cursor: pointer;
-          font-size: 18px;
-        }
-      }
+
       .warning {
         display: flex;
         gap: 10px;

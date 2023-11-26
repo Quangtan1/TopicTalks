@@ -4,7 +4,7 @@ import { BiDotsVerticalRounded, BiPhoneCall } from 'react-icons/bi';
 import { BsCameraVideo, BsCodeSlash } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
 import { ImAttachment } from 'react-icons/im';
-import { RiDeleteBack2Line, RiEmotionLaughLine } from 'react-icons/ri';
+import { RiDeleteBack2Line, RiEmotionLaughLine, RiLoader2Line } from 'react-icons/ri';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react';
@@ -81,6 +81,8 @@ const notifeMessageData = [
 
 interface ChatProps {
   chat: ListMesage;
+  isLoadMessage: boolean;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 const ChatBox = observer((props: ChatProps) => {
   const [currentContent, setCurrentContent] = useState<string>('');
@@ -94,9 +96,12 @@ const ChatBox = observer((props: ChatProps) => {
   const [tooltipSetting, setTooltipSetting] = useState<boolean>(false);
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [snippets, setSnippet] = useState<boolean>(false);
+
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
-  const { chat } = props;
+  const chatboxRef = useRef(null);
+  const firstRender = useRef(true);
+  const { chat, isLoadMessage, setPage } = props;
 
   const codeSnippets = '%%snippet_syntax1410#$';
 
@@ -119,6 +124,15 @@ const ChatBox = observer((props: ChatProps) => {
   const { message, setMessage, socket, setCallUser, setOpenVideoCall, setTurnMyVideo, setTurnUserVideo } =
     useContext(ChatContext);
 
+  const handleScroll = () => {
+    const boxChat = chatboxRef.current;
+    const scrollTop = boxChat.scrollTop;
+
+    if (scrollTop === 0) {
+      setPage((prevData) => prevData + 1);
+    }
+  };
+
   const handleClickOutside = (event) => {
     const idSvg = document.querySelector('#svg_emoiji');
     const idText = document.querySelector('#text_input');
@@ -131,16 +145,42 @@ const ChatBox = observer((props: ChatProps) => {
       setShowEmojiPicker(false);
     }
   };
+
+  const scrollToBottom = () => {
+    if (chatboxRef.current) {
+      chatboxRef.current.scrollTop = chatboxRef.current.scrollHeight;
+    }
+  };
+
   useEffect(() => {
+    const boxChat = chatboxRef.current;
+    boxChat.addEventListener('scroll', handleScroll);
     window.addEventListener('click', handleClickOutside);
+    scrollToBottom();
     return () => {
+      boxChat.removeEventListener('scroll', handleScroll);
       window.removeEventListener('click', handleClickOutside);
       chatStore?.setSelectedChat(null);
     };
   }, []);
 
   useEffect(() => {
+    const boxChat = chatboxRef.current;
+    const scrollTop = boxChat.scrollTop;
+
+    if (message && scrollTop > 0 && !firstRender.current) {
+      scrollToBottom();
+    } else if (firstRender.current) {
+      firstRender.current = false;
+      scrollToBottom();
+    }
+  }, [message]);
+
+  useEffect(() => {
     setTooltipSetting(false);
+    return () => {
+      firstRender.current = true;
+    };
   }, [chat]);
 
   useEffect(() => {
@@ -391,7 +431,7 @@ const ChatBox = observer((props: ChatProps) => {
           </>
         )}
       </Box>
-      <ScrollToBottom className="chat_box">
+      <Box className="chat_box" ref={chatboxRef}>
         {showEmojiPicker && (
           <span ref={emoijiRef}>
             <Picker data={data} onEmojiSelect={addEmoji} className="emoiji_box" />
@@ -399,6 +439,11 @@ const ChatBox = observer((props: ChatProps) => {
         )}
         {isSelecedChat && isMember === 'true' ? (
           <Box className="list_message">
+            {isLoadMessage && (
+              <Box className="load_message">
+                <RiLoader2Line />
+              </Box>
+            )}
             {message.length > 0 &&
               message.map((item: IMessage, index) => (
                 <Box
@@ -476,7 +521,7 @@ const ChatBox = observer((props: ChatProps) => {
             <Typography>No chats selected</Typography>
           </Box>
         )}
-      </ScrollToBottom>
+      </Box>
 
       <Box className="chatbox_footer">
         {isSelecedChat && isMember === 'true' && (

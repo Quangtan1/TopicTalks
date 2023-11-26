@@ -365,6 +365,25 @@
       box-shadow: 0 14px 54px rgba(0, 0, 0, 0.03);
       .list_message {
         padding: 10px 4px;
+        .load_message {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+          height: 50px;
+          svg {
+            animation: spin 1s infinite linear;
+            font-size: 30px;
+          }
+        }
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
         .message_notifi {
           display: flex;
           justify-content: center !important;
