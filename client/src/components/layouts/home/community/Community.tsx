@@ -11,6 +11,7 @@ import { IoAddCircleSharp } from 'react-icons/io5';
 import NewPost from '../../postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { ListTopic } from 'src/types/topic.type';
+import { RiLoader2Line } from 'react-icons/ri';
 
 const HomePage = observer(() => {
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
@@ -18,6 +19,9 @@ const HomePage = observer(() => {
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false);
   const [selectTopic, setSelectTopic] = useState<number>(0);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [isLast, setIsLast] = useState<boolean>(true);
+  const [isLoadPost, setIsLoadPost] = useState<boolean>(false);
 
   const posts = postItemStore?.posts;
   const account = accountStore?.account;
@@ -28,7 +32,30 @@ const HomePage = observer(() => {
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
 
+  const handleScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+
+    if (scrollTop >= scrollHeight - windowHeight) {
+      setPage((prePage) => prePage + 1);
+    }
+  };
+
+  const fectchAPI = (pageValue: number) => {
+    return getDataAPI(
+      `${
+        selectTopic === 0
+          ? `post/all-posts/is-approved=${true}?page=${pageValue}&size=5`
+          : `/post/all-posts/tpid=${selectTopic}?page=${pageValue}&size=5`
+      }`,
+      account.access_token,
+      axiosJWT,
+    );
+  };
+
   useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
     getDataAPI(`/topic-parent/all-tparent?isDisable=false`, account.access_token, axiosJWT)
       .then((res) => {
         if (res.data.data !== 'Not exist any children topic.') {
@@ -39,17 +66,18 @@ const HomePage = observer(() => {
         console.log(err);
         uiStore?.setLoading(false);
       });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
     uiStore?.setLoading(true);
-    getDataAPI(
-      `${selectTopic === 0 ? `post/all-posts/is-approved=${true}` : `/post/all-posts/tpid=${selectTopic}`}`,
-      account.access_token,
-      axiosJWT,
-    )
+    fectchAPI(0)
       .then((res) => {
-        postItemStore?.setPosts(res.data.data);
+        postItemStore?.setPosts(res.data.data.content);
+        setPage(0);
+        setIsLast(true);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -57,6 +85,24 @@ const HomePage = observer(() => {
         uiStore?.setLoading(false);
       });
   }, [selectTopic]);
+
+  useEffect(() => {
+    if (page !== 0 && isLast) {
+      setIsLoadPost(true);
+      fectchAPI(page)
+        .then((res) => {
+          const newPosts = res.data.data.content;
+          postItemStore?.setPosts([...postItemStore?.posts, ...newPosts]);
+          const lengthData = res.data.data.content.length;
+          (lengthData === 0 || lengthData < 5) && setIsLast(false);
+          setIsLoadPost(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoadPost(false);
+        });
+    }
+  }, [page]);
 
   const handleDetailPost = (id: number) => {
     setOpenPostDetail(true);
@@ -81,6 +127,11 @@ const HomePage = observer(() => {
       </Box>
 
       <PostItem posts={posts} handleDetailPost={handleDetailPost} />
+      {isLoadPost && (
+        <Box className="load_post">
+          <RiLoader2Line />
+        </Box>
+      )}
       {openPostDetail && (
         <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
       )}

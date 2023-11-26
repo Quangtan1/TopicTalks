@@ -19,16 +19,18 @@ interface PostProps {
 const PostItem = observer((props: PostProps) => {
   const { posts, handleDetailPost } = props;
 
-  const postApproves = posts?.filter((item) => {
-    const isFriend = friendStore?.friends?.some(
-      (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
-    );
-    return (
-      item.status === 1 ||
-      (item.status === 2 && isFriend) ||
-      (accountStore?.account.id === item.author_id && item.status !== 3)
-    );
-  });
+  const postApproves =
+    posts &&
+    posts?.filter((item) => {
+      const isFriend = friendStore?.friends?.some(
+        (friend) => (friend.friendId === item?.author_id || friend.userid === item?.author_id) && friend.accept,
+      );
+      return (
+        item.status === 1 ||
+        (item.status === 2 && isFriend) ||
+        (accountStore?.account.id === item.author_id && item.status !== 3)
+      );
+    });
 
   const formatDate = (date: string) => {
     const dateObj = new Date(date);
