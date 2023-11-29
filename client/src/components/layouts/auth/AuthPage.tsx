@@ -142,7 +142,7 @@ const LoginPage = observer(() => {
           if (res.status === 200) {
             if (res?.data?.status === 403) {
               uiStore?.setLoading(false);
-              return ToastError('This user name already exist!');
+              return ToastError('This user email or username already exist!');
             }
             setShowOTP(true);
             if (res?.data?.access_token) {
@@ -158,7 +158,7 @@ const LoginPage = observer(() => {
             }, 1000);
           } else {
             uiStore?.setLoading(false);
-            ToastSuccess('Register Fail');
+            ToastError('Register Fail');
             console.log(res?.data?.message);
           }
         })
