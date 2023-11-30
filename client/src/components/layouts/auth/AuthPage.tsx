@@ -147,7 +147,6 @@ const LoginPage = observer(() => {
             setShowOTP(true);
             if (res?.data?.access_token) {
               setAccountSignup(res.data);
-              accountStore?.setAccount(res?.data);
             }
             emailRef.current = email;
             ToastSuccess('The OTP code has been sent to your email, please verify to continue');
