@@ -21,7 +21,10 @@ import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
 import { formatDate } from 'src/utils/helper';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
-import { RiDoubleQuotesL } from 'react-icons/ri';
+import { RiDoubleQuotesL, RiLoader2Line } from 'react-icons/ri';
+import PersonalInfor from './personalInfor/PersonalInfor';
+import InforBox from './inforBox/InforBox';
+import { CiLock } from 'react-icons/ci';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -30,9 +33,12 @@ const PartnerProfile = observer(() => {
   const [postId, setPostId] = useState<number>();
   const [openConfirm, setOpenConFirm] = useState<boolean>(false);
   const [openListFriend, setOpenListFriend] = useState<boolean>(false);
-  const [openSelectTopic, setOpenSelectTopic] = useState<boolean>(false);
   const [openEditProfile, setOpenEditProfile] = useState<boolean>(false);
   const [openUpdateAvatar, setUpdateAvatar] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
+  const [isLast, setIsLast] = useState<boolean>(true);
+  const [isLoadPost, setIsLoadPost] = useState<boolean>(false);
+  const [isTabAprrove, setIsTabAprrove] = useState<boolean>(true);
   const navigate = useNavigate();
   const content = `Cancel Friend with ${user?.username} ?`;
 
@@ -45,26 +51,75 @@ const PartnerProfile = observer(() => {
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
 
+  const handleScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const windowHeight = window.innerHeight;
+    const total = scrollHeight - windowHeight;
+    if (scrollTop >= total && total > 0) {
+      setPage((prePage) => prePage + 1);
+    }
+  };
+
+  const fetchApi = (page: number, id: string, isTabAprrove: boolean) => {
+    return getDataAPI(
+      `/post/all-posts/aid=${id}?isApproved=${isTabAprrove}&page=${page}&size=5`,
+      account.access_token,
+      axiosJWT,
+    );
+  };
+
   useEffect(() => {
-    uiStore?.setLoading(true);
+    window.addEventListener('scroll', handleScroll);
+    setIsLoadPost(true);
     getDataAPI(`/user/${id}`, account.access_token, axiosJWT)
       .then((res) => {
         setUser(res.data.data);
-        uiStore?.setLoading(false);
       })
       .catch((err) => {
-        uiStore?.setLoading(false);
         console.log(err);
       });
-    getDataAPI(`/post/all-posts/aid=${id}`, account.access_token, axiosJWT)
+    fetchApi(0, id, isTabAprrove)
       .then((res) => {
-        postItemStore?.setPosts(res.data.data);
-        uiStore?.setLoading(false);
+        postItemStore?.setPosts(res.data.data.content);
+        const lengthData = res.data.data.content.length;
+        (lengthData === 0 || lengthData < 5) && setIsLast(false);
+        setIsLoadPost(false);
       })
       .catch((err) => {
-        uiStore?.setLoading(false);
+        setIsLoadPost(false);
         console.log(err);
       });
+    return () => {
+      setIsLast(true);
+      setPage(0);
+      window.removeEventListener('scroll', handleScroll);
+      postItemStore?.setPosts([]);
+    };
+  }, [id, isTabAprrove]);
+
+  useEffect(() => {
+    if (page !== 0 && isLast) {
+      setIsLoadPost(true);
+      fetchApi(page, id, isTabAprrove)
+        .then((res) => {
+          const newPosts = res.data.data.content;
+          postItemStore?.setPosts([...postItemStore?.posts, ...newPosts]);
+          const lengthData = res.data.data.content.length;
+          (lengthData === 0 || lengthData < 5) && setIsLast(false);
+          setIsLoadPost(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoadPost(false);
+        });
+    }
+  }, [page, id]);
+
+  useEffect(() => {
+    return () => {
+      setIsTabAprrove(true);
+    };
   }, [id]);
 
   const accessChat = () => {
@@ -168,179 +223,110 @@ const PartnerProfile = observer(() => {
 
   const postApproves = posts?.filter((item) => {
     if (account.id === item.author_id) {
-      return item.approved;
+      return item;
     } else {
       return item.approved && (isFriend ? item.status !== 3 : item.status === 1);
     }
   });
-  const postWaitingApproves = posts?.filter((item) => !item.approved);
 
   const isDisplay = isFriend || account?.id === user?.id;
   return (
     <Box className="partner-profile-container">
-      <Box className="partner_profile">
-        <Box className="avt_image">
-          <div className="backgroud_image" />
+      <Box className="box_detail_infor_container">
+        <Box className="box_first">
+          <InforBox user={user} isDisplay={isDisplay} />
+        </Box>
+        <Box className="box_container">
+          <PersonalInfor
+            user={user}
+            isDisplay={isDisplay}
+            isProfile={isProfile}
+            setUpdateAvatar={setUpdateAvatar}
+            setOpenEditProfile={setOpenEditProfile}
+            isFriend={isFriend}
+            isAccept={isAccept}
+            isRequest={isRequest}
+            accessChat={accessChat}
+            setOpenListFriend={setOpenListFriend}
+            setOpenConFirm={setOpenConFirm}
+            acceptFriend={acceptFriend}
+            deleteFriend={deleteFriend}
+            addFriend={addFriend}
+          />
 
           {!isDisplay ? (
-            <img src={avatar_default} alt="avt" />
-          ) : (
-            <img src={user?.imageUrl || avatar_default} alt="avt" />
-          )}
-
-          {isProfile ? (
-            <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />
-          ) : user?.active ? (
-            <FiberManualRecordTwoTone className="online" />
-          ) : (
-            <FiberManualRecordTwoTone className="offline" />
-          )}
-        </Box>
-        <Box className="info_user">
-          <Box className="bio_box">
-            <span className="box_name">
-              <Typography className="title">Name :...</Typography>
-              <Typography className="user_name">{user?.username}</Typography>
-              <Typography className="real_name">{(isDisplay && `(${user?.fullName})`) || ''}</Typography>
-            </span>
-            <Typography className="title">Bio</Typography>
-            {isDisplay && user?.bio !== '' ? (
-              <Typography>{user?.bio}</Typography>
-            ) : (
-              <Typography className="bio_content_hidden">
-                <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,</span>
-                <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-                <span>xxxxxxxxxxxxxxxxxxxxxxxxxx</span>
-              </Typography>
-            )}
-          </Box>
-          <Grid container spacing={4} className="grid_container">
-            <Grid item md={6}>
-              <Typography className="title">Gender :...</Typography>
-              <Typography className={(!isDisplay || !user?.gender) && 'content_hidden'}>
-                {(isDisplay && user?.gender) || 'ZXZXX'}
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography className="title">Dob :...</Typography>
-              <Typography className={(!isDisplay || formatDate(user?.dob) === '') && 'content_hidden'}>
-                {(isDisplay && formatDate(user?.dob)) || 'XX YY ZZZZ'}
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography className="title">Phone :...</Typography>
-              <Typography className={(!isDisplay || !user?.phoneNumber) && 'content_hidden'}>
-                {' '}
-                {(isDisplay && user?.phoneNumber) || 'XXX XXXX XXXX'}
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography className="title">Nationality :...</Typography>
-              <Typography className={(!isDisplay || !user?.country) && 'content_hidden'}>
-                {(isDisplay && user?.country) || 'ZXZXX'}
-              </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <Typography className="title">Email :...</Typography>
-              <Typography className={(!isDisplay || !user?.email) && 'content_hidden'}>
-                {(isDisplay && user?.email) || 'ZXZXXXXXXXXXXXX'}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Box className="action_box">
-            {isProfile ? (
-              <Button onClick={() => setOpenEditProfile(true)}>Update Profile</Button>
-            ) : (
-              <Button onClick={accessChat}>Message</Button>
-            )}
-            {isProfile ? (
-              <Button className="add_request" onClick={() => setOpenListFriend(true)}>
-                List Friend
-              </Button>
-            ) : isFriend ? (
-              <Button className="friend_request" onClick={() => setOpenConFirm(true)}>
-                Your Friend
-              </Button>
-            ) : isRequest ? (
-              isAccept ? (
-                <Button className="accept_request" onClick={acceptFriend}>
-                  <AiOutlineUserAdd />
-                  Accept Friend
-                </Button>
-              ) : (
-                <Button className="cancel_request" onClick={deleteFriend}>
-                  <AiFillDelete /> Cancel Request
-                </Button>
-              )
-            ) : (
-              <Button onClick={addFriend} className="add_request">
-                <AiOutlineUserAdd />
-                Add Friend
-              </Button>
-            )}
-          </Box>
-        </Box>
-      </Box>
-      {isProfile && postWaitingApproves?.length > 0 && (
-        <>
-          <Box className="title_box">
-            <Typography className="title_backgroud">Post</Typography>
-            <Typography className="title_group">List of unapproved posts</Typography>
-          </Box>
-          <Box className="post_container">
-            {postWaitingApproves?.map((item, index: number) => (
-              <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-                <img src={item.img_url} className="image" alt="img" />
-                <Box className="box_card_content">
-                  <RiDoubleQuotesL className="quotes" />
-                  <Typography className="topic_name">{item.topicName},</Typography>
-                  <Typography className="title">{item.title}</Typography>
-                  <Typography className="date">
-                    {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
-                  </Typography>
-                  <span>_________</span>
-                  <Typography className="content">{item.content}</Typography>
-                  <Button onClick={() => handleDetailPost(item.id)}>
-                    Read More <HiOutlineArrowRight />
-                  </Button>
-                </Box>
+            <>
+              <Box className="title_box">
+                <Typography className="title_backgroud">SOME OF MY PORTFOLIO</Typography>
+                <Typography className="title_group">Get to know me</Typography>
               </Box>
-            ))}
-          </Box>
-        </>
-      )}
-      <Box className="title_box">
-        <Typography className="title_backgroud">
-          {account.id !== user?.id ? 'SOME OF MY POST' : 'LIST OF YOUR POST'}
-        </Typography>
+              <Box className="not_friends">
+                <Typography>
+                  This is a private account <CiLock />
+                </Typography>
+                <Typography>Add friend to see photos and infor</Typography>
+                <Typography>theirs.</Typography>
+              </Box>
+            </>
+          ) : (
+            <>
+              <Box className="title_box">
+                <Typography className="title_backgroud">
+                  {account.id !== user?.id ? 'SOME OF MY POST' : 'LIST OF YOUR POST'}
+                </Typography>
 
-        {postApproves?.length > 0 ? (
-          <Typography className="title_group">
-            {account.id !== user?.id ? 'Get to know me' : 'See details now'}
-          </Typography>
-        ) : (
-          <Typography className="title_group">No posts exist</Typography>
-        )}
-      </Box>
-      <Box className="post_container">
-        {postApproves?.map((item, index: number) => (
-          <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-            <img src={item.img_url} className="image" alt="img" />
-            <Box className="box_card_content">
-              <RiDoubleQuotesL className="quotes" />
-              <Typography className="topic_name">{item.topicName},</Typography>
-              <Typography className="title">{item.title}</Typography>
-              <Typography className="date">
-                {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
-              </Typography>
-              <span>_________</span>
-              <Typography className="content">{item.content}</Typography>
-              <Button onClick={() => handleDetailPost(item.id)}>
-                Read More <HiOutlineArrowRight />
-              </Button>
-            </Box>
-          </Box>
-        ))}
+                {postApproves?.length > 0 ? (
+                  <>
+                    <Typography className="title_group">
+                      {isTabAprrove
+                        ? account.id !== user?.id
+                          ? 'Get to know me'
+                          : 'See details now'
+                        : 'Post Waiting Aprrove'}
+                    </Typography>
+                  </>
+                ) : (
+                  <Typography className="title_group">No posts exist</Typography>
+                )}
+                {account.id === user?.id && (
+                  <Box className="tab_option">
+                    <Button className={isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(true)}>
+                      Portfolio
+                    </Button>
+                    <Button className={!isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(false)}>
+                      Processing
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+              <Box className="post_container">
+                {postApproves?.map((item, index: number) => (
+                  <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+                    <img src={item.img_url} className="image" alt="img" />
+                    <Box className="box_card_content">
+                      <RiDoubleQuotesL className="quotes" />
+                      <Typography className="topic_name">{item.topicName},</Typography>
+                      <Typography className="title">{item.title}</Typography>
+                      <Typography className="date">
+                        {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+                      </Typography>
+                      <span>_________</span>
+                      <Typography className="content">{item.content}</Typography>
+                      <Button onClick={() => handleDetailPost(item.id)}>
+                        Read More <HiOutlineArrowRight />
+                      </Button>
+                    </Box>
+                  </Box>
+                ))}
+                {isLoadPost && (
+                  <Box className="load_post">
+                    <RiLoader2Line />
+                  </Box>
+                )}
+              </Box>
+            </>
+          )}
+        </Box>
       </Box>
       {openPostDetail && (
         <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />

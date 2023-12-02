@@ -14,13 +14,17 @@ import ChatContext from 'src/context/ChatContext';
 import { notification_worker_script, worker_script } from '../../../utils/woker';
 import friendStore from 'src/store/friendStore';
 import uiStore from 'src/store/uiStore';
-import chatStore from 'src/store/chatStore';
-import logotext from 'src/assets/logo/logotext.png';
+import { CiSearch } from 'react-icons/ci';
 
 //consts
 const LOGOUT_CONTENT = 'Do you want to logout?';
 
-const Header = observer(() => {
+interface IHeaderProps {
+  handleSearch: (isSearch) => void;
+}
+
+const Header = observer((props: IHeaderProps) => {
+  const { handleSearch } = props;
   const [open, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeRoute, setActiveRoute] = useState<string>('/home');
@@ -36,8 +40,6 @@ const Header = observer(() => {
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
 
-  const openMenu = Boolean(anchorEl);
-
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -51,6 +53,13 @@ const Header = observer(() => {
 
   const onClose = () => {
     setOpen(false);
+  };
+
+  const handleClickOutsideMenu = (event) => {
+    const idMenu = document.querySelector('#anchor');
+    if (!idMenu?.contains(event.target)) {
+      setAnchorEl(false);
+    }
   };
 
   useEffect(() => {
@@ -93,6 +102,10 @@ const Header = observer(() => {
 
   useEffect(() => {
     account?.isBanned && account !== null && navigate('/ban-page');
+    window.addEventListener('click', handleClickOutsideMenu);
+    return () => {
+      window.removeEventListener('click', handleClickOutsideMenu);
+    };
   }, [account]);
 
   const handleGoToProfilePage = () => {
@@ -107,18 +120,13 @@ const Header = observer(() => {
   const notifiRead = notifiSystem?.filter((item) => !item.isRead);
   const listRequest =
     friendStore?.friends !== null &&
-    friendStore?.friends?.filter((item) => !item.accept && account.id === item.friendId);
+    friendStore?.friends?.filter((item) => !item.accept && account?.id === item.friendId);
   const totalNotifi = (notifiRead ? notifiRead?.length : 0) + (listRequest ? listRequest?.length : 0);
 
   return (
     <Box className="header">
       <Grid container className="first_header">
         <Grid item md={4} className="logo_sidebar">
-          {/* <img src={logo} alt="logo" />
-          <Box className="title_logo">
-            <Typography>TopicTalks</Typography>
-            <Typography>Anonymously</Typography>
-          </Box> */}
           <Box
             sx={{ display: 'flex', justifyContent: 'center', cursor: 'pointer', alignItems: 'center' }}
             onClick={() => navigate('/home')}
@@ -139,44 +147,29 @@ const Header = observer(() => {
           <img src={logo_center} alt="logo_center" className="logo_center" />
         </Grid>
         <Grid item md={4} className="infor_header">
+          <CiSearch className="search" onClick={() => handleSearch(true)} />
           <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
           <span className="notifi_icon">{totalNotifi}</span>
-          <IconButton onClick={() => setAnchorEl(true)}>
+          <IconButton onClick={() => setAnchorEl(!anchorEl)} id="anchor">
             <Avatar src={account?.url_img} alt="avatar" />
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            id="account-menu"
-            open={openMenu}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              className: 'custom-paper',
-            }}
-            transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-          >
-            <MenuItem onClick={handleGoToProfilePage}>
-              <ListItemIcon>
-                <Avatar src={account?.url_img} alt="avatar" />
-              </ListItemIcon>
-              Profile Infor
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
-            <MenuItem onClick={() => setOpen(true)}>
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
+          {anchorEl && (
+            <Box className="menu_box" id="anchor">
+              <MenuItem className="item" onClick={handleGoToProfilePage}>
+                <ListItemIcon>
+                  <Avatar src={account?.url_img} alt="avatar" />
+                </ListItemIcon>
+                Profile Infor
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={() => setOpen(true)}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Box>
+          )}
           <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
         </Grid>
       </Grid>
@@ -187,6 +180,7 @@ const Header = observer(() => {
             onClick={() => {
               navigate(`${item.path}`);
               handleActive(item.path);
+              handleSearch(false);
             }}
             className={`${activeRoute === item.path && 'selected_navigate'}`}
           >

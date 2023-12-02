@@ -54,6 +54,9 @@
       gap: 20px;
       justify-content: flex-end;
       position: relative;
+      .search {
+        font-size: 25px;
+      }
       .notifi_icon {
         position: absolute;
         top: 30px;
@@ -75,6 +78,20 @@
       }
       .name_account {
         width: 30px;
+      }
+      .menu_box {
+        position: absolute;
+        right: -75px;
+        top: 95px;
+        z-index: 2;
+        background: #fff;
+        border: 1px solid gainsboro;
+        border-radius: 10px;
+        padding: 16px 8px;
+        .item {
+          display: flex;
+          gap: 10px;
+        }
       }
     }
   }

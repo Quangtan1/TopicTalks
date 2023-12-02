@@ -2,7 +2,7 @@ import Carousel from 'react-multi-carousel';
 import { IPost } from 'src/queries';
 import '../PostItem.scss';
 import { isEmptyArray } from 'formik';
-import { responsive } from 'src/components/layouts/home/homepage/HomePage';
+import { responsive } from 'src/utils/helper';
 
 const SimplePost = ({ posts, handleClickPostItem }) => {
   return (

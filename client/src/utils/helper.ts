@@ -118,3 +118,33 @@ export const checkEmptyValueReturnArray = (value) => {
 };
 
 export const defaultColor = '#f7f3f0';
+
+export const formatDatePost = (date: string) => {
+  const dateObj = new Date(date);
+
+  const day = dateObj.getDate();
+  const monthIndex = dateObj.getMonth();
+  const year = dateObj.getFullYear();
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  return `${months[monthIndex]} ${day} ${year}`;
+};
+
+export const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 3,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+};

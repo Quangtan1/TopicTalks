@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Input, InputAdornment, Typography } from '@mui/material';
 import './DefaultLayout.scss';
 import Header from '../layouts/header/Header';
 import Loading from '../loading/Loading';
@@ -14,16 +14,21 @@ import ListMessage from './ListMessage';
 import { ListMesage } from 'src/types/chat.type';
 import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
-import { useLocation } from 'react-router-dom';
-import LazyShow from '../layouts/LandingView/Animated/LazyShow';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from '../layouts/LandingView/Footer';
+import { CiSearch } from 'react-icons/ci';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { ToastError } from 'src/utils/toastOptions';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [sortChats, setSortChat] = useState<ListMesage[]>([]);
   const [openList, setOpenList] = useState<boolean>(false);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
+  const [inputSearch, setInputSearch] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
   const { notification } = useContext(ChatContext);
 
@@ -51,13 +56,11 @@ const DefaultLayout = observer(({ children }) => {
 
   const handleGetMessage = () => {
     if (!openList) {
-      // uiStore?.setLoading(true);
       getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
         .then((res) => {
           chatStore?.setChats(res.data.data);
           setSortChat(res.data.data);
           setOpenList(true);
-          // uiStore?.setLoading(false);
         })
         .catch((err) => {
           console.log(err);
@@ -79,26 +82,66 @@ const DefaultLayout = observer(({ children }) => {
     setOpenList(false);
   }, [location]);
 
+  const handleSearch = (isSearch: boolean) => {
+    setIsSearch(isSearch);
+  };
+
+  const disableSearch = inputSearch === '';
+
+  const navigateTopic = () => {
+    if (!disableSearch) {
+      setIsSearch(false);
+      navigate(`/list-topic/search/${inputSearch}`);
+      setInputSearch('');
+    } else {
+      ToastError('Please input data...');
+    }
+  };
+
   return (
     <Box className="common-page-container">
       {isLoading && <Loading />}
-      {/* <LazyShow> */}
-      <Header />
-      {/* </LazyShow> */}
-      <Box className="route-container">
-        {account !== null && children}
-        {isVisible && (
-          <Button className="scroll-to-top" onClick={scrollToTop}>
-            <HiArrowUp />
-          </Button>
-        )}
-        {openList && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
-        {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
-        {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
-      </Box>
-      {/* <LazyShow> */}
+      <Header handleSearch={handleSearch} />
+      {isSearch ? (
+        <Box className="search_container">
+          <Typography className="title_search">SEARCH</Typography>
+          <Input
+            value={inputSearch}
+            placeholder="Search topics here..."
+            endAdornment={
+              <InputAdornment position="end">
+                <CiSearch onClick={navigateTopic} />
+              </InputAdornment>
+            }
+            onKeyDown={(e) => {
+              if (e.keyCode === 13 && !e.shiftKey) {
+                navigateTopic();
+              }
+            }}
+            onChange={(e) => setInputSearch(e.target.value)}
+            className="input_search"
+          />
+          <Box className="suggested_search">
+            <Typography>Suggested keywords</Typography>
+            <Typography>World Tech Healthy Science Books Travel Business Music</Typography>
+            <AiOutlineCloseCircle onClick={() => setIsSearch(false)} />
+          </Box>
+        </Box>
+      ) : (
+        <Box className="route-container">
+          {account !== null && children}
+          {isVisible && (
+            <Button className="scroll-to-top" onClick={scrollToTop}>
+              <HiArrowUp />
+            </Button>
+          )}
+          {openList && <ListMessage sortChats={sortChats} setSortChat={setSortChat} />}
+          {account !== null && <FaFacebookMessenger className="message_tooltip" onClick={handleGetMessage} />}
+          {account !== null && notification?.length > 0 && <MdNotificationsActive className="notifi_message" />}
+        </Box>
+      )}
+
       <Footer />
-      {/* </LazyShow> */}
     </Box>
   );
 });

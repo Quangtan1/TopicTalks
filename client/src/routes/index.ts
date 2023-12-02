@@ -1,7 +1,6 @@
 import Community from 'src/components/layouts/home/community/Community';
 import AuthPage from 'src/components/layouts/auth/AuthPage';
 import ChatContainer from 'src/components/layouts/chats/ChatContainer';
-import Profile from 'src/components/layouts/profile/Profile';
 import DashBoard from 'src/components/admin/dashboard/DashBoard';
 import ManageTopic from 'src/components/admin/managetopic/ManageTopic';
 import ManageUsers from 'src/components/admin/manageusers/ManageUsers';
@@ -20,6 +19,7 @@ import VerifyScreen from 'src/components/layouts/auth/verifyScreen';
 import ForgotPassword from 'src/components/layouts/auth/ChangePW';
 import ChangePassword from 'src/components/layouts/auth/SendLinkForgotPW';
 import BanLayout from 'src/components/defaultLayout/BanLayout';
+import ListTopicChild from 'src/components/layouts/home/homepage/topicchild/ListTopicChild';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -27,7 +27,6 @@ const publicRoutes = [
   { path: '/contact', component: ContactUs, isAdmin: false },
   { path: '/home', component: HomePage, isAdmin: false },
   { path: '/auth', component: AuthPage, layout: null },
-  { path: '/profile', component: Profile },
   { path: '/forgot-password', component: ForgotPassword, layout: null },
   { path: '/change-password', component: ChangePassword, layout: null },
   { path: '/verify-account', component: VerifyScreen, layout: null },
@@ -41,9 +40,11 @@ const publicRoutes = [
   { path: '/topic-detail/:id', component: TopicChildDetail },
   { path: '/landing-view', component: LandingView, layout: null },
   { path: '/about', component: About, layout: null },
-  { path: '/group-chat/:id', component: GroupChat },
+  { path: '/group-chat/:id/:name', component: GroupChat },
   { path: '/all-group', component: GroupChat },
   { path: '/post-detail/:id', component: PostDetail },
+  { path: '/list-topic/:id/:name', component: ListTopicChild },
+  { path: '/list-topic/search/:search', component: ListTopicChild },
   { path: '/ban-page', component: BanLayout, layout: null },
 ];
 

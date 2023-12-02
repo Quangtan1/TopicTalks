@@ -1,6 +1,9 @@
 export interface ListTopic {
   id: number;
   topicParentName: string;
+  image: string;
+  shortDescript: string;
+  createdAt: string;
 }
 
 export interface TopicChild {

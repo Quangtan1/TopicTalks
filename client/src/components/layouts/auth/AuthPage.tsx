@@ -34,6 +34,7 @@ const LoginPage = observer(() => {
   const [remainingSeconds, setRemainingSeconds] = useState(30);
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
+      uiStore?.setLoading(true);
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
 
       const user = {
@@ -47,8 +48,10 @@ const LoginPage = observer(() => {
         .then((res) => {
           accountStore?.setAccount(res?.data);
           res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+          uiStore?.setLoading(false);
         })
         .catch((err) => {
+          uiStore?.setLoading(false);
           ToastError(err?.response?.data?.message);
         });
     } catch (err) {
@@ -63,6 +66,7 @@ const LoginPage = observer(() => {
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    uiStore?.setLoading(true);
     const formData: any = new FormData(e.currentTarget);
     const user = {
       username: formData.get('anonymousName'),
@@ -77,13 +81,15 @@ const LoginPage = observer(() => {
           if (!!res?.data?.access_token) {
             accountStore?.setAccount(res?.data);
             res?.data?.roles?.includes('ROLE_ADMIN') ? navigate('/dashboard') : navigate('/home');
+            uiStore?.setLoading(false);
           } else {
             ToastError('Please verify email first');
             navigate('/verify-account');
           }
         })
         .catch((err) => {
-          ToastError(err?.response?.data?.message);
+          uiStore?.setLoading(false);
+          ToastError(err?.response?.data?.message.split(':')[1]);
         });
     }
   };
@@ -147,6 +153,7 @@ const LoginPage = observer(() => {
             setShowOTP(true);
             if (res?.data?.access_token) {
               setAccountSignup(res.data);
+              accountStore?.setAccount(res.data);
             }
             emailRef.current = email;
             ToastSuccess('The OTP code has been sent to your email, please verify to continue');

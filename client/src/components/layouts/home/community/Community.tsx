@@ -13,7 +13,7 @@ import postItemStore from 'src/store/postStore';
 import { ListTopic } from 'src/types/topic.type';
 import { RiLoader2Line } from 'react-icons/ri';
 
-const HomePage = observer(() => {
+const Community = observer(() => {
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
   const [postId, setPostId] = useState<number>();
   const [openCreatePost, setOpenCreatePost] = useState<boolean>(false);
@@ -36,8 +36,8 @@ const HomePage = observer(() => {
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const windowHeight = window.innerHeight;
-
-    if (scrollTop >= scrollHeight - windowHeight) {
+    const total = scrollHeight - windowHeight;
+    if (scrollTop >= total && total > 0) {
       setPage((prePage) => prePage + 1);
     }
   };
@@ -67,6 +67,7 @@ const HomePage = observer(() => {
         uiStore?.setLoading(false);
       });
     return () => {
+      postItemStore?.setPosts([]);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -140,4 +141,4 @@ const HomePage = observer(() => {
   );
 });
 
-export default HomePage;
+export default Community;
