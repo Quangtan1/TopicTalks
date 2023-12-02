@@ -10,6 +10,7 @@ import accountStore from 'src/store/accountStore';
 import { observer } from 'mobx-react';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import { RiDoubleQuotesL } from 'react-icons/ri';
+import { formatDatePost } from 'src/utils/helper';
 
 interface PostProps {
   posts?: IPost[];
@@ -32,18 +33,6 @@ const PostItem = observer((props: PostProps) => {
       );
     });
 
-  const formatDate = (date: string) => {
-    const dateObj = new Date(date);
-
-    const day = dateObj.getDate();
-    const monthIndex = dateObj.getMonth();
-    const year = dateObj.getFullYear();
-
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    return `${months[monthIndex]} ${day} ${year}`;
-  };
-
   const postApprovesSort = postApproves?.sort((a, b) => {
     const timeA = new Date(a.created_at).getTime();
     const timeB = new Date(b.created_at).getTime();
@@ -59,7 +48,7 @@ const PostItem = observer((props: PostProps) => {
             <Typography className="topic_name">{item.topicName},</Typography>
             <Typography className="title">{item.title}</Typography>
             <Typography className="date">
-              {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+              {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
             </Typography>
             <span>_________</span>
             <Typography className="content">{item.content}</Typography>
