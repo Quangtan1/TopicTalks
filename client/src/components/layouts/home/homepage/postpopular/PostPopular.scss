@@ -1,0 +1,146 @@
+.post_popular_container {
+  width: 100%;
+  padding: 50px 170px 80px;
+  background: #f7f8f9;
+  display: flex;
+  justify-content: center;
+  .box_post_item {
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+    .box_post {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 75%;
+      .title {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+      .post_item {
+        display: flex;
+        gap: 30px;
+        img {
+          width: 100%;
+          max-width: 230px;
+          object-fit: cover;
+          height: 150px;
+          border-radius: 8px;
+        }
+        img:hover {
+          cursor: pointer;
+          transform: translateX(-3px);
+        }
+        .content_post {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+          p:nth-child(1) {
+            color: #007bff;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: lowercase;
+          }
+          p:nth-child(2) {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            svg {
+              background: gainsboro;
+              padding: 5px;
+              font-size: 30px;
+              border-radius: 3px;
+            }
+          }
+          p:nth-child(2):hover {
+            color: #007bff;
+            font-size: 22px;
+            cursor: pointer;
+          }
+          p:nth-child(3) {
+            padding-top: 5px;
+            font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+          }
+        }
+      }
+      .button_show_more {
+        background: #007bff;
+        color: #fff;
+        display: flex;
+        gap: 10px;
+        text-transform: capitalize;
+        width: 150px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+      .button_show_more:hover {
+        opacity: 0.7;
+      }
+    }
+    .box_comment {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 25%;
+      min-width: 270px;
+      .title {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+      .comment_item {
+        background: #fff;
+        border: 1px solid gainsboro;
+        border-radius: 8px;
+        padding: 25px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .avt {
+          cursor: pointer;
+          width: 45px;
+          height: 45px;
+        }
+        .box_infor {
+          display: flex;
+          flex-direction: column;
+          span {
+            display: flex;
+            gap: 10px;
+            p:nth-child(1) {
+              font-size: 14px;
+              letter-spacing: 1px;
+              font-weight: 700;
+            }
+
+            p:nth-child(3) {
+              padding-top: 5px;
+              font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+              font-size: 12px;
+              letter-spacing: 1px;
+            }
+          }
+          .content {
+            color: rgb(104, 115, 133);
+            font-size: 12px;
+          }
+        }
+      }
+      .comment_item:hover {
+        transform: scale(1.04);
+        box-shadow: 0 4px 60px 0 rgba(0, 0, 0, 0.2), 0 0 0 transparent;
+      }
+    }
+  }
+}
