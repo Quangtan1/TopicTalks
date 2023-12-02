@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './CreateGroupDialog.scss';
 import {
   Box,
@@ -21,6 +21,7 @@ import chatStore from 'src/store/chatStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import uiStore from 'src/store/uiStore';
 import groupChat from 'src/assets/images/groupChat.svg';
+import { RiLoader2Line } from 'react-icons/ri';
 
 interface DialogProps {
   open: boolean;
@@ -35,6 +36,9 @@ const CreateGroupDialog = observer((props: DialogProps) => {
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [selected, setSelected] = useState<TopicChild>(null);
+  const [page, setPage] = useState<number>(0);
+  const [isLast, setIsLast] = useState<boolean>(true);
+  const [isLoadTopic, setIsLoadTopic] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -47,6 +51,17 @@ const CreateGroupDialog = observer((props: DialogProps) => {
 
   const accountJwt = account;
   const axiosJWT = createAxios(accountJwt, setAccount);
+
+  const handleScroll = () => {
+    const boxChild = document.querySelector('#topic_child');
+    const scrollTop = boxChild.scrollTop;
+    const scrollHeight = boxChild.scrollHeight;
+    const windowHeight = boxChild.clientHeight;
+    const total = scrollHeight - windowHeight;
+    if (scrollTop >= total - 0.21 && total > 0) {
+      setPage((prePage) => prePage + 1);
+    }
+  };
 
   useEffect(() => {
     if (topicChildProps) {
@@ -62,18 +77,51 @@ const CreateGroupDialog = observer((props: DialogProps) => {
     }
   }, []);
 
+  const fetchApi = (pageValue: number) => {
+    return getDataAPI(
+      `/topic-children?tpid=${selectTopic}&&is_expired=false&page=${pageValue}&size=5`,
+      account.access_token,
+      axiosJWT,
+    );
+  };
+
   useEffect(() => {
+    const boxChild = document.querySelector('#topic_child');
+    boxChild && boxChild.addEventListener('scroll', handleScroll);
     if (!topicChildProps) {
-      getDataAPI(`/topic-children?tpid=${selectTopic}&&is_expired=false`, account.access_token, axiosJWT)
+      fetchApi(0)
         .then((res) => {
-          setTopicChild(res.data.data);
+          setTopicChild(res.data.data.content);
           setSelected(null);
         })
         .catch((err) => {
           console.log(err);
         });
     }
+    return () => {
+      boxChild && boxChild.removeEventListener('scroll', handleScroll);
+      setIsLast(true);
+      setPage(0);
+    };
   }, [selectTopic]);
+
+  useEffect(() => {
+    if (page !== 0 && isLast) {
+      setIsLoadTopic(true);
+      fetchApi(page)
+        .then((res) => {
+          const newTopic = res.data.data.content;
+          setTopicChild((prevTopic) => [...prevTopic, ...newTopic]);
+          const lengthData = res.data.data.content.length;
+          (lengthData === 0 || lengthData < 5) && setIsLast(false);
+          setIsLoadTopic(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoadTopic(false);
+        });
+    }
+  }, [page]);
 
   const handleSelect = (topicChild: TopicChild) => {
     if (selected?.id === topicChild.id) {
@@ -149,7 +197,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
                     ))}
                 </Select>
               </span>
-              <Box className="topic_child">
+              <Box className="topic_child" id="topic_child">
                 {topicChild.length > 0 &&
                   topicChild?.map((item) => (
                     <Typography
@@ -160,6 +208,11 @@ const CreateGroupDialog = observer((props: DialogProps) => {
                       {item.topicChildrenName}
                     </Typography>
                   ))}
+                {isLoadTopic && (
+                  <Box className="load_topic">
+                    <RiLoader2Line />
+                  </Box>
+                )}
               </Box>
             </Box>
           )}
