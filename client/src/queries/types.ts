@@ -67,6 +67,16 @@ export interface IPost {
   created_at: string;
   updated_at: string;
   approved: boolean;
+  lastComment?: ILastComment;
+}
+
+export interface ILastComment {
+  id: number;
+  userId: number;
+  username: string;
+  userImage: string;
+  content: string;
+  createAt: string;
 }
 
 export interface IUserInformation {

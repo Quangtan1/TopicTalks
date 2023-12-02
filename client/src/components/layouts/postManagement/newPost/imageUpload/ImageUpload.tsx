@@ -42,7 +42,7 @@ const ImageUpload: FC<Props> = observer(
 
     return (
       <>
-        {!isSelected && (
+        {/* {!isSelected && (
           <TextField
             autoFocus
             margin="dense"
@@ -62,7 +62,7 @@ const ImageUpload: FC<Props> = observer(
               ) : null
             }
           />
-        )}
+        )} */}
         <Box className="add_image_child">
           <Typography>Upload Image: </Typography>
           <IoDocumentAttachSharp onClick={handleLinkClick} style={{ cursor: 'pointer' }} />

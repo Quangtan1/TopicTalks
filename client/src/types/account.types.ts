@@ -27,6 +27,8 @@ export interface IUserProfile {
   phoneNumber: string;
   role: string;
   username: string;
+  totalNumOfPosts: string;
+  totalNumOfFriends: string;
 }
 
 export interface IFriends {
