@@ -58,6 +58,8 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   const createTopic = () => {
     const topic = {
       topicParentName: topicPrimary,
+      urlImage: imageFile,
+      shortDescription: shortDescript,
     };
     const topicChildParam = {
       topicParentId: selectTopic,
@@ -98,9 +100,20 @@ const CreateTopicDialog = observer((props: DialogProps) => {
     setSelectTopic(1);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      setTopicPrimary('');
+      setTopicChild('');
+      setImageFile('');
+      setNewDescript('');
+    };
+  }, [active]);
+
   const handleLinkClick = () => {
     fileInputRef.current.click();
   };
+
+  console.log(imageFile);
 
   return (
     <Dialog open={open} onClose={onClose} className="topic_dialog_container">
@@ -122,14 +135,41 @@ const CreateTopicDialog = observer((props: DialogProps) => {
         <Box className="primary_topic">
           <Typography>The Primary Topic:</Typography>
           {active === 1 ? (
-            <Input
-              placeholder="Input your primary topic"
-              className="text_field"
-              value={topicPrimary}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                setTopicPrimary(e.target.value);
-              }}
-            />
+            <>
+              <Input
+                placeholder="Input your primary topic"
+                className="text_field"
+                value={topicPrimary}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                  setTopicPrimary(e.target.value);
+                }}
+              />
+              <Box className="add_image_child">
+                <Typography>Add Topic Primary Image: </Typography>
+                <IoDocumentAttachSharp onClick={handleLinkClick} />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  style={{ display: ' none' }}
+                  onChange={(e) => {
+                    handleImageUpload(e.target.files, setImageFile, true);
+                    uiStore?.setLoading(true);
+                  }}
+                />
+                {imageFile !== '' && (
+                  <Typography>
+                    {imageFile.slice(0, 16)} <AiOutlineCloseCircle onClick={() => setImageFile('')} />
+                  </Typography>
+                )}
+              </Box>
+              <TextField
+                placeholder="Input short description"
+                multiline
+                value={shortDescript}
+                onChange={(e) => setNewDescript(e.target.value)}
+                fullWidth
+              />
+            </>
           ) : (
             <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
               {listTopic?.length > 0 &&

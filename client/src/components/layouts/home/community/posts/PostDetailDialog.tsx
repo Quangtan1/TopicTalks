@@ -103,7 +103,6 @@ const PostDetailDialog = observer((props: DialogProps) => {
   }, []);
 
   const handleComment = () => {
-    uiStore?.setLoading(true);
     if (inputComment.trim() !== '') {
       uiStore?.setLoading(true);
       const commentData = {
@@ -113,7 +112,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
       };
       postDataAPI(`/comment/create`, commentData, account.access_token, axiosJWT)
         .then((res) => {
-          setComments([...comments, res.data.data]);
+          comments?.length === undefined ? setComments([res.data.data]) : setComments([...comments, res.data.data]);
           const inputElement = document.getElementById('text_input');
           inputElement.blur();
           setPost({

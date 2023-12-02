@@ -84,6 +84,8 @@
       .content {
         padding-top: 15px;
         font-size: 13px;
+        max-height: 135px;
+        overflow-y: auto;
       }
 
       button {
