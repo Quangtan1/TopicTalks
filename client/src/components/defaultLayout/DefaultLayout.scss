@@ -2,6 +2,57 @@
   background: #fff;
   height: 100%;
   overflow-y: hidden;
+  .search_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+    gap: 20px;
+    .title_search {
+      font-size: 80px;
+      opacity: 0.1;
+      color: rgb(33, 37, 41);
+      line-height: 120px;
+      text-align: center;
+    }
+    .input_search {
+      width: 100%;
+      max-width: 800px;
+      input {
+        font-size: 20px;
+        padding-left: 10px;
+      }
+      .MuiInputAdornment-root {
+        svg {
+          font-size: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+    .suggested_search {
+      padding: 50px 0px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      p,
+      svg {
+        color: rgb(104, 115, 133);
+      }
+      p:nth-child(1) {
+        font-weight: 600;
+        font-size: 20px;
+      }
+      p:nth-child(2) {
+        font-size: 12px;
+      }
+      svg {
+        margin-top: 10px;
+        font-size: 30px;
+        cursor: pointer;
+      }
+    }
+  }
   .route-container {
     display: flex;
     overflow-x: hidden;
