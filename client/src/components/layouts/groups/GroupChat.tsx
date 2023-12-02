@@ -8,20 +8,19 @@ import chatStore from 'src/store/chatStore';
 import uiStore from 'src/store/uiStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { createAxios, deleteDataAPI, getDataAPI, imageGroup, postDataAPI } from 'src/utils';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import './GroupChat.scss';
-import { TopicChild } from 'src/types/topic.type';
 import { BsArrowRight } from 'react-icons/bs';
 import { RiLoader2Line } from 'react-icons/ri';
 
 const content = 'Do you want to join this group?';
 const GroupChat = observer(() => {
-  const { id } = useParams();
-  const [topicChild, setTopicChild] = useState<TopicChild>(null);
+  const { id, name } = useParams();
   const [listGroup, setListGroup] = useState<ListMesage[]>([]);
   const [openWarning, setOpenWarning] = useState<boolean>(false);
   const navigate = useNavigate();
   const [groupId, setGroupId] = useState<number>(null);
+  const [totalMeberGroup, setTotalMemberGroup] = useState<number>(null);
   const [page, setPage] = useState<number>(0);
   const [isLast, setIsLast] = useState<boolean>(true);
   const [isLoadGroup, setIsLoadGroup] = useState<boolean>(false);
@@ -37,32 +36,14 @@ const GroupChat = observer(() => {
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const windowHeight = window.innerHeight;
-
-    if (scrollTop >= scrollHeight - windowHeight && id === undefined) {
+    const total = scrollHeight - windowHeight;
+    if (scrollTop >= total && total > 0) {
       setPage((prePage) => prePage + 1);
     }
   };
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    if (id) {
-      uiStore?.setLoading(true);
-      getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
-        .then((res) => {
-          setTopicChild(res.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      getDataAPI(`/participant/group-chat/${id}`, account?.access_token, axiosJWT)
-        .then((res) => {
-          setListGroup(res.data.data);
-          uiStore?.setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
     return () => {
       window.removeEventListener('scroll', handleScroll);
       setIsLast(true);
@@ -71,9 +52,12 @@ const GroupChat = observer(() => {
   }, [id]);
 
   useEffect(() => {
-    if (isLast && id === undefined) {
+    const groupById = `/group-chat/${id}?&page=${page}&size=6`;
+    const allGroupChat = `?is_groupchat=true&page=${page}&size=6`;
+    if (isLast) {
       setIsLoadGroup(true);
-      getDataAPI(`/participant?is_groupchat=true&page=${page}&size=6`, account?.access_token, axiosJWT)
+
+      getDataAPI(`/participant${id === undefined ? allGroupChat : groupById}`, account?.access_token, axiosJWT)
         .then((res) => {
           const newGroup = res.data.data.content;
           page === 0 ? setListGroup(newGroup) : setListGroup([...listGroup, ...newGroup]);
@@ -85,7 +69,7 @@ const GroupChat = observer(() => {
           console.log(err);
         });
     }
-  }, [page, id]);
+  }, [page, id, isLast]);
 
   const isJoinGroup = (partnerDTO: IPartnerDTO[]) => {
     const result = partnerDTO.some((item) => item.id === account.id);
@@ -96,34 +80,32 @@ const GroupChat = observer(() => {
     return result;
   };
 
-  const joinGroupChat = (groudId: number) => {
-    // uiStore?.setLoading(true);
-    const groupData = {};
-    postDataAPI(
-      `/participant/join-group-chat/uid=${account.id}&&cid=${groudId}`,
-      groupData,
-      account?.access_token,
-      axiosJWT,
-    )
-      .then((res) => {
-        ToastSuccess('Waiting Approve from Admin');
-        const index = listGroup?.findIndex((item) => item.conversationInfor.id === groudId);
+  const joinGroupChat = (groudId: number, total: number) => {
+    if (total < 30) {
+      const groupData = {};
+      postDataAPI(
+        `/participant/join-group-chat/uid=${account.id}&&cid=${groudId}`,
+        groupData,
+        account?.access_token,
+        axiosJWT,
+      )
+        .then((res) => {
+          ToastSuccess('Waiting Approve from Admin');
+          const index = listGroup?.findIndex((item) => item.conversationInfor.id === groudId);
 
-        setListGroup((prev) => {
-          prev[index] = res.data.data;
-          return [...prev];
+          setListGroup((prev) => {
+            prev[index] = res.data.data;
+            return [...prev];
+          });
+          setOpenWarning(false);
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        setOpenWarning(false);
-        // navigate('/message');
-        // setTimeout(() => {
-        //   // chatStore?.setChats([res.data.data, ...chatStore?.chats]);
-        //   chatStore?.setSelectedChat(res.data.data);
-        //   uiStore?.setLoading(false);
-        // }, 400);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    } else {
+      setOpenWarning(false);
+      ToastError('This group has enough members');
+    }
   };
 
   const handleJoinBefore = (selectedChat: ListMesage) => {
@@ -159,8 +141,9 @@ const GroupChat = observer(() => {
       });
   };
 
-  const handleConfirm = (groudId: number) => {
+  const handleConfirm = (groudId: number, total: number) => {
     setGroupId(groudId);
+    setTotalMemberGroup(total);
     setOpenWarning(true);
   };
 
@@ -179,7 +162,7 @@ const GroupChat = observer(() => {
       <Box className="box_group_chat">
         <Box className="title_box">
           <Typography className="title_topic">
-            List <strong>{id && topicChild?.topicChildrenName}</strong> Group Chats
+            List <strong>{name}</strong> Group Chats
           </Typography>
           <h2>How we can work together</h2>
         </Box>
@@ -208,7 +191,10 @@ const GroupChat = observer(() => {
                         </Button>
                       )
                     ) : (
-                      <Button className="join_group" onClick={() => handleConfirm(item.conversationInfor.id)}>
+                      <Button
+                        className="join_group"
+                        onClick={() => handleConfirm(item.conversationInfor.id, totalMember(item.partnerDTO))}
+                      >
                         Join Group <BsArrowRight />
                       </Button>
                     )}
@@ -228,7 +214,7 @@ const GroupChat = observer(() => {
           open={openWarning}
           content={content}
           onClose={() => setOpenWarning(false)}
-          onConfirm={() => joinGroupChat(groupId)}
+          onConfirm={() => joinGroupChat(groupId, totalMeberGroup)}
         />
       )}
     </Box>
