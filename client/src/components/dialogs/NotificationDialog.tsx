@@ -121,6 +121,10 @@ const NotificationDialog = observer((props: DialogProps) => {
     onClose();
   };
 
+  const navigateProfile = (id: number) => {
+    navigate(`/personal-profile/${id}`);
+  };
+
   const handleConfirm = (fId: number, friendName: string, friendListId: number) => {
     setFriendIdCustom(fId);
     setFriendNameCustom(friendName);
@@ -202,7 +206,12 @@ const NotificationDialog = observer((props: DialogProps) => {
         ) : (
           listRequest?.map((item) => (
             <Box className="notifi_request" key={item.friendListId}>
-              <Avatar src={item.userUrl} alt="img" className="avatar" />
+              <Avatar
+                src={item.userUrl}
+                alt="img"
+                className="avatar"
+                onClick={() => navigateProfile(item.userid === account.id ? item.friendId : item.userid)}
+              />
               <span>
                 <Typography className="content">
                   <strong>{item.userName}</strong> sent you a friend request
