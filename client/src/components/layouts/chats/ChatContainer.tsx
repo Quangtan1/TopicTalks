@@ -30,7 +30,7 @@ const ChatContainer = observer(() => {
 
   const fetchApi = (page: number) => {
     setIsLoadMessage(true);
-    getDataAPI(`/message/${chat.conversationInfor.id}?page=${page}&size=10`, account.access_token, axiosJWT)
+    getDataAPI(`/message/${chat?.conversationInfor?.id}?page=${page}&size=10`, account.access_token, axiosJWT)
       .then((res) => {
         const newMessage = res.data.content;
         page === 0 ? setMessage(newMessage) : setMessage([...newMessage, ...message]);

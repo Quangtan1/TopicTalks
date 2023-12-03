@@ -20,7 +20,7 @@ import { TbCircleDotFilled } from 'react-icons/tb';
 import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
-import { FaEnvelopeOpen } from 'react-icons/fa';
+import { FaEnvelopeOpen, FaImage } from 'react-icons/fa';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { RiDeleteBack2Line } from 'react-icons/ri';
 import { HiPhoneMissedCall } from 'react-icons/hi';
@@ -98,6 +98,7 @@ const ListConversation = observer(() => {
   const [inputSearch, setInputSearch] = useState<string>('');
   const [dataFilter, setDataFilter] = useState<ListMesage[] | IFriends[]>([]);
   const account = accountStore?.account;
+  const isImage = ['.png', 'jpg', '.svg', '.webp', '.jpeg'];
 
   const { socket, openRandom, setOpenRandom, notification, setNotification } = useContext(ChatContext);
 
@@ -363,6 +364,8 @@ const ListConversation = observer(() => {
                           </>
                         )}
                       </Typography>
+                    ) : isImage.some((ext) => item.conversationInfor?.lastMessage?.message.endsWith(ext)) ? (
+                      <FaImage />
                     ) : (
                       <Typography>
                         {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
