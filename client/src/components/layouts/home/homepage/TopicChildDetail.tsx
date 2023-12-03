@@ -11,12 +11,15 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 import ChatContext from 'src/context/ChatContext';
 import RandomDialog from 'src/components/dialogs/RandomDialog';
 import LazyShow from '../../LandingView/Animated/LazyShow';
+import { GiRoundStar } from 'react-icons/gi';
+import Rating from './rating/Rating';
 
 const TopicChildDetail = observer(() => {
   const { id } = useParams();
   const [topicChild, setTopicChild] = useState<TopicChild>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { openRandom, setOpenRandom } = useContext(ChatContext);
+  const [openRating, setOpenRating] = useState<boolean>(false);
   const account = accountStore?.account;
   const navigate = useNavigate();
 
@@ -68,11 +71,19 @@ const TopicChildDetail = observer(() => {
             >
               VIEW GROUP CHAT <AiOutlineArrowRight />
             </Button>
+            <Box className="rating" onClick={() => setOpenRating(true)}>
+              <GiRoundStar />
+              <GiRoundStar />
+              <GiRoundStar />
+              <GiRoundStar />
+              <GiRoundStar />
+            </Box>
           </Grid>
           {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
           {openRandom && (
             <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
           )}
+          {openRating && <Rating open={openRating} onClose={() => setOpenRating(false)} />}
         </Grid>
       </Box>
     </LazyShow>

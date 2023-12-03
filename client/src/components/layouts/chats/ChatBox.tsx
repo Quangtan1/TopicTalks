@@ -31,6 +31,7 @@ import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import ImageZoom from './zoomImage/ImageZoom';
 
 ///const
 const contentGroup = `Do you want to delete this conversation`;
@@ -96,6 +97,7 @@ const ChatBox = observer((props: ChatProps) => {
   const [tooltipSetting, setTooltipSetting] = useState<boolean>(false);
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [snippets, setSnippet] = useState<boolean>(false);
+  const [zoomImage, setZoomImage] = useState<string>('');
 
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
@@ -474,6 +476,7 @@ const ChatBox = observer((props: ChatProps) => {
                         initialImage={'/path/to/initial/image'}
                         alt="message image"
                         className="image-message"
+                        onClick={() => setZoomImage(item.data.message)}
                       />
                     ) : item.data.message.includes('snippet_syntax1410#$') ? (
                       <>
@@ -592,6 +595,7 @@ const ChatBox = observer((props: ChatProps) => {
           content={contentGroup}
         />
       )}
+      {zoomImage !== '' && <ImageZoom open={zoomImage !== ''} onClose={() => setZoomImage('')} image={zoomImage} />}
     </Box>
   );
 });
