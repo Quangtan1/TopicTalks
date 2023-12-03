@@ -419,8 +419,8 @@ const ListConversation = observer(() => {
       </Box>
       <Box className="chat_setting">
         <Box className="infor_box">
-          <Avatar src={account.url_img} alt="avt" />
-          <Typography>{account.username}</Typography>
+          <Avatar src={account?.url_img} alt="avt" />
+          <Typography>{account?.username}</Typography>
         </Box>
         <CiLogout onClick={() => setOpenLogout(true)} />
       </Box>

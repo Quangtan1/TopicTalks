@@ -511,8 +511,8 @@ const ChatBox = observer((props: ChatProps) => {
                     </Typography>
                   </Box>
 
-                  {item.userId === account.id && !item.data.message.includes('option_1410#$#') && (
-                    <Avatar src={account.url_img} alt="avatar" />
+                  {item.userId === account?.id && !item.data.message.includes('option_1410#$#') && (
+                    <Avatar src={account?.url_img} alt="avatar" />
                   )}
                 </Box>
               ))}
