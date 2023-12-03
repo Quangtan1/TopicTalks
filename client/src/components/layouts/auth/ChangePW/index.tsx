@@ -24,18 +24,23 @@ const ForgotPassword = observer(() => {
   const replacedToken = token?.replace(/ /g, '+');
 
   const decrypt = (strToDecrypt, secretKey) => {
-    if (strToDecrypt) {
-      const key = CryptoJS.enc.Utf8.parse(secretKey);
-      const bytes = CryptoJS.AES.decrypt(strToDecrypt, key, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7,
-      });
-      return bytes.toString(CryptoJS.enc.Utf8);
+    try {
+      if (strToDecrypt) {
+        const key = CryptoJS.enc.Utf8.parse(secretKey);
+        const bytes = CryptoJS.AES.decrypt(strToDecrypt, key, {
+          mode: CryptoJS.mode.ECB,
+          padding: CryptoJS.pad.Pkcs7,
+        });
+        return bytes.toString(CryptoJS.enc.Utf8);
+      }
+      return '';
+    } catch (error) {
+      console.error('Decryption Error:', error);
+      return '';
     }
-    return '';
   };
 
-  const emailDecode = `${decrypt(token, 'ThisIsASecretKey')}`;
+  const emailDecode = `${decodeURIComponent(escape(decrypt(replacedToken, 'ThisIsASecretKey')))}`;
 
   const handleForgotPW = (e: React.FormEvent<HTMLFormElement>) => {
     uiStore?.setLoading(true);
@@ -50,7 +55,7 @@ const ForgotPassword = observer(() => {
       uiStore?.setLoading(false);
     } else {
       const requestData = {
-        email: emailDecode?.includes('@gmail.com') ? `${emailDecode}` : `${emailDecode}@gmail.com`,
+        email: emailDecode,
         token: replacedToken,
         newPassword: newPassword,
       };
@@ -68,7 +73,8 @@ const ForgotPassword = observer(() => {
             ToastSuccess('Change password successfully!');
             navigate('/auth');
           } else {
-            ToastError('Change password failed! Please try again!');
+            uiStore?.setLoading(false);
+            ToastError('Change password failed! Please send mail request again!');
           }
         })
         .catch((err) => {
@@ -108,7 +114,7 @@ const ForgotPassword = observer(() => {
             <TextField
               name="email"
               required
-              value={emailDecode?.includes('@gmail.com') ? `${emailDecode}` : `${emailDecode}@gmail.com`}
+              value={emailDecode}
               disabled
               id="email"
               placeholder="Enter your email"
