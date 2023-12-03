@@ -20,7 +20,7 @@ import './PostDetailDialog.scss';
 import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
 import { FcEditImage, FcShare } from 'react-icons/fc';
-import { formatTime } from 'src/utils/helper';
+import { formatDatePost, formatTime } from 'src/utils/helper';
 import uiStore from 'src/store/uiStore';
 import { useNavigate } from 'react-router-dom';
 import data from '@emoji-mart/data';
@@ -359,6 +359,29 @@ const PostDetailDialog = observer((props: DialogProps) => {
             </Box>
           </Box>
           <Box className="list_comment_container">
+            {post?.content && (
+              <Box className="content_post">
+                <span className="active_avatar">
+                  <Avatar
+                    src={post?.avatar_url}
+                    alt="avt"
+                    onClick={() => handleNavigate(post?.author_id)}
+                    className={post?.author_id !== account.id && 'avatar'}
+                  />
+                  {post?.author_active ? (
+                    <FiberManualRecordTwoTone className="online" />
+                  ) : (
+                    <FiberManualRecordTwoTone className="offline" />
+                  )}
+                </span>
+                <Box className="content">
+                  <Typography>{post?.content}</Typography>
+                  <Typography>
+                    {`---`} {formatDatePost(post?.created_at)} {`---`}
+                  </Typography>
+                </Box>
+              </Box>
+            )}
             <Box className="list_comment">
               {comments?.length > 0 &&
                 comments?.map((item) => (
