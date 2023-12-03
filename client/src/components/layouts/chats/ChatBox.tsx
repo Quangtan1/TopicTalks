@@ -308,7 +308,7 @@ const ChatBox = observer((props: ChatProps) => {
       message: `${optionCode}`,
     },
     TargetId: chat?.partnerDTO[0]?.id,
-    userId: account.id,
+    userId: account?.id,
     conversationId: chat?.conversationInfor.id,
     groupChatName: isGroup ? chat?.conversationInfor.chatName : null,
     groupChat: chat?.conversationInfor.isGroupChat,
@@ -469,7 +469,7 @@ const ChatBox = observer((props: ChatProps) => {
                     </span>
                   )}
                   <Box className="message_box">
-                    {isImage.some((ext) => item.data.message.endsWith(ext)) ? (
+                    {isImage.some((ext) => item.data.message.endsWith(ext) && item.data.message?.length > 90) ? (
                       <ReactImageFallback
                         src={item.data.message}
                         fallbackImage={'/path/to/default/image'}

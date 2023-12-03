@@ -129,7 +129,7 @@ const ListConversation = observer(() => {
 
   useEffect(() => {
     uiStore?.setLoading(true);
-    getDataAPI(`/participant/${account.id}/all`, account.access_token, axiosJWT)
+    getDataAPI(`/participant/${account?.id}/all`, account?.access_token, axiosJWT)
       .then((res) => {
         chatStore?.setChats(res.data.data);
         setSortChat(res.data.data);
@@ -364,7 +364,11 @@ const ListConversation = observer(() => {
                           </>
                         )}
                       </Typography>
-                    ) : isImage.some((ext) => item.conversationInfor?.lastMessage?.message.endsWith(ext)) ? (
+                    ) : isImage.some(
+                        (ext) =>
+                          item.conversationInfor?.lastMessage?.message.endsWith(ext) &&
+                          item.conversationInfor?.lastMessage?.message.length > 90,
+                      ) ? (
                       <FaImage />
                     ) : (
                       <Typography>
