@@ -132,19 +132,19 @@ const Header = observer((props: IHeaderProps) => {
             onClick={() => navigate('/home')}
           >
             <img
-              src={logo1}
+              src={logo}
               alt="logoT"
-              width={40}
-              height={40}
-              style={{ backgroundColor: 'white', padding: 8, marginRight: 12 }}
+              width={70}
+              height={70}
+              style={{ backgroundColor: 'white', padding: 8, marginRight: 4, marginBottom: 3 }}
             />
-            <Typography variant="h6" component="h2">
-              Welcome
+            <Typography variant="h5" component="h2" style={{ fontWeight: 'bold' }}>
+              TopicTalks
             </Typography>
           </Box>
         </Grid>
         <Grid item md={4} className="image">
-          <img src={logo_center} alt="logo_center" className="logo_center" />
+          {/* <img src={logo_center} alt="logo_center" className="logo_center" /> */}
         </Grid>
         <Grid item md={4} className="infor_header">
           <CiSearch className="search" onClick={() => handleSearch(true)} />

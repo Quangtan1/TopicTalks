@@ -23,24 +23,11 @@ import accountStore from 'src/store/accountStore';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useMutation } from 'react-query';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
-import { createAxios, postDataAPI } from 'src/utils';
+import { createAxios, postDataAPI, putDataAPI } from 'src/utils';
 
-// const mockData = [
-//   { id: 1, name: 'John Doe', age: 30, email: 'john.doe@example.com' },
-//   { id: 2, name: 'Jane Smith', age: 25, email: 'jane.smith@example.com' },
-//   { id: 3, name: 'David Johnson', age: 35, email: 'david.johnson@example.com' },
-//   { id: 4, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-//   { id: 5, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-//   { id: 6, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-//   { id: 7, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-//   { id: 8, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-//   { id: 9, name: 'Michael Brown', age: 40, email: 'michael.brown@example.com' },
-//   { id: 10, name: 'Emily Williams', age: 28, email: 'emily.williams@example.com' },
-// ];
+export const APPROVE_POST = 'Do you want to approve this post?';
 
-export const APPROVE_POST = 'Do you want to APPROVE this post?';
-
-export const REJECT_POST = 'Do you want to REJECT AND DELETE FOREVER this post?';
+export const REJECT_POST = 'Do you want to reject this post?';
 
 const ManagePost = observer(() => {
   dayjs.extend(relativeTime);
@@ -94,19 +81,22 @@ const ManagePost = observer(() => {
     }
   };
 
-  const handleRejectPost = async (post: IPost) => {
-    try {
-      const result = await useDeletePost.mutateAsync(post.id);
-      if (result.status === 200) {
+  const handleRejectPost = (post: IPost) => {
+    const data = {
+      postId: post.id,
+      reasonReject: 'Your post is not valid for the systems content',
+    };
+    putDataAPI(`/post/reject`, data, account?.access_token, axiosJWT)
+      .then(() => {
         ToastSuccess('Reject post successfully!');
-        const content = `Reject,${post.title} `;
+        const content = `This post has rejected by Admin`;
         saveNotifi(post, content);
         reLoadPost();
         setIsOpen(false);
-      }
-    } catch (error) {
-      ToastError('Error Reject post!');
-    }
+      })
+      .catch(() => {
+        ToastError('Error Reject post!');
+      });
   };
 
   const handleOpenModalApproveReject = (post: IPost, isReject = false) => {

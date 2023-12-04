@@ -66,6 +66,7 @@ const GroupChat = observer(() => {
           (lengthData === 0 || lengthData < 6) && setIsLast(false);
         })
         .catch((err) => {
+          setIsLoadGroup(false);
           console.log(err);
         });
     }

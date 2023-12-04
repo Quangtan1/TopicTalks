@@ -59,7 +59,7 @@ const notifeMessageData = [
     keyword: 'Remove',
     prefix: '',
     highlightResult: true,
-    suffix: ' has just been deleted from the Group',
+    suffix: ' has just deleted from the Group',
     icon: <RiDeleteBack2Line className="reject_icon" />,
   },
   {

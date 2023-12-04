@@ -55,17 +55,19 @@
         margin-bottom: 30px;
         .topic_child_title {
           color: #000;
-          position: absolute;
-          z-index: 999;
           font-weight: 600;
-          bottom: -20px;
-          left: 0px;
-          font-size: 30px;
-          font-family: 'Yeseva One', display;
+          font-size: 22px;
+          text-align: center;
+          padding: 5px 0px;
         }
         .description {
           font-family: Roboto, Helvetica, Arial, Lucida;
           font-size: 13px;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          text-align: center;
+          -webkit-box-orient: vertical;
         }
         .image_topic {
           width: 100%;

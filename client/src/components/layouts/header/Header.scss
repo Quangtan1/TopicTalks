@@ -7,12 +7,13 @@
   .first_header {
     display: flex;
     justify-content: space-between;
-    max-width: 1100px;
+    max-width: 1000px;
     width: 100%;
     .logo_sidebar {
       display: flex;
       align-items: center;
       gap: 5px;
+      height: 90px;
       img {
         // width: 54px;
         // height: 54px;
@@ -59,7 +60,7 @@
       }
       .notifi_icon {
         position: absolute;
-        top: 30px;
+        top: 26px;
         right: 122px;
         color: red;
         font-size: 15px;

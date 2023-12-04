@@ -80,13 +80,17 @@
         justify-content: center;
         border-radius: 5px;
         cursor: pointer;
+        align-items: center;
         p,
         svg {
-          font-family: var(--font-family-common);
           color: #fff;
           path {
             stroke: #fff;
           }
+        }
+        p {
+          font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+          font-size: 15px;
         }
       }
       .tab_selected {
@@ -327,7 +331,6 @@
       svg,
       p {
         color: rgba(73, 80, 87, 0.75);
-        font-family: var(--font-family-common);
       }
       .tooltip_setting {
         position: absolute;
@@ -774,7 +777,7 @@
         flex-direction: column;
         gap: 8px;
         padding-top: 10px;
-        height: 40vh;
+        height: 100%;
         overflow-y: auto;
         .title_member_setting {
           display: flex;

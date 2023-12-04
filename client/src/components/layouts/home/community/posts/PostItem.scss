@@ -85,7 +85,11 @@
         padding-top: 15px;
         font-size: 13px;
         max-height: 135px;
-        overflow-y: auto;
+        text-align: justify;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
       }
 
       button {
