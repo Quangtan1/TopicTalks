@@ -139,7 +139,7 @@ const Header = observer((props: IHeaderProps) => {
               style={{ backgroundColor: 'white', padding: 8, marginRight: 4, marginBottom: 3 }}
             />
             <Typography variant="h5" component="h2" style={{ fontWeight: 'bold' }}>
-              TopicTalks
+              Topictalks
             </Typography>
           </Box>
         </Grid>

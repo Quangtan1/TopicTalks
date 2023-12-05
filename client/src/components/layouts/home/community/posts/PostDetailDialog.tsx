@@ -465,7 +465,6 @@ const PostDetailDialog = observer((props: DialogProps) => {
               id="text_input"
               placeholder="Comment here..."
               multiline
-              rows={1}
               value={inputComment}
               onChange={(e) => setInputComment(e.target.value)}
               onKeyDown={(event) => {

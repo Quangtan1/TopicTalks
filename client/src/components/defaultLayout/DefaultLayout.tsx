@@ -15,10 +15,10 @@ import { ListMesage } from 'src/types/chat.type';
 import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Footer from '../layouts/LandingView/Footer';
 import { CiSearch } from 'react-icons/ci';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { ToastError } from 'src/utils/toastOptions';
+import Footer from '../layouts/footer/Footer';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -79,6 +79,8 @@ const DefaultLayout = observer(({ children }) => {
   }, []);
 
   useEffect(() => {
+    scrollToTop();
+    setIsSearch(false);
     setOpenList(false);
   }, [location]);
 
@@ -141,7 +143,7 @@ const DefaultLayout = observer(({ children }) => {
         </Box>
       )}
 
-      <Footer />
+      <Footer scrollToTop={scrollToTop} />
     </Box>
   );
 });

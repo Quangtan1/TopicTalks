@@ -25,6 +25,7 @@ import { RiDoubleQuotesL, RiLoader2Line } from 'react-icons/ri';
 import PersonalInfor from './personalInfor/PersonalInfor';
 import InforBox from './inforBox/InforBox';
 import { CiLock } from 'react-icons/ci';
+import { MdOutlineErrorOutline } from 'react-icons/md';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -311,6 +312,12 @@ const PartnerProfile = observer(() => {
                         {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
                       </Typography>
                       <span>_________</span>
+                      {item?.rejected && (
+                        <Typography className="reject">
+                          <MdOutlineErrorOutline />
+                          {item?.reasonRejected}
+                        </Typography>
+                      )}
                       <Typography className="content">{item.content}</Typography>
                       <Button onClick={() => handleDetailPost(item.id)}>
                         Read More <HiOutlineArrowRight />

@@ -404,7 +404,9 @@ const ListConversation = observer(() => {
                 </span>
 
                 <ListItemText className="chat_text_item">
-                  <Typography>{item.userid === account.id ? item.friendName : item.userName}</Typography>
+                  <Typography className="username">
+                    {item.userid === account.id ? item.friendName : item.userName}
+                  </Typography>
                 </ListItemText>
               </ListItem>
             ))}

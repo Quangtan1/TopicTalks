@@ -32,6 +32,8 @@ import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import ImageZoom from './zoomImage/ImageZoom';
+import { FaImage } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 
 ///const
 const contentGroup = `Do you want to delete this conversation`;
@@ -138,13 +140,17 @@ const ChatBox = observer((props: ChatProps) => {
   const handleClickOutside = (event) => {
     const idSvg = document.querySelector('#svg_emoiji');
     const idText = document.querySelector('#text_input');
+    const idDeleteConversation = document.querySelector('#delete_conversation');
+
     if (
       emoijiRef?.current &&
       !emoijiRef?.current.contains(event.target) &&
-      !idSvg.contains(event.target) &&
-      !idText.contains(event.target)
+      !idSvg?.contains(event.target) &&
+      !idText?.contains(event.target)
     ) {
       setShowEmojiPicker(false);
+    } else if (!idDeleteConversation?.contains(event.target)) {
+      setTooltipSetting(false);
     }
   };
 
@@ -181,6 +187,7 @@ const ChatBox = observer((props: ChatProps) => {
   useEffect(() => {
     setTooltipSetting(false);
     return () => {
+      setSnippet(false);
       firstRender.current = true;
     };
   }, [chat]);
@@ -228,10 +235,10 @@ const ChatBox = observer((props: ChatProps) => {
       socket.emit('sendMessage', receiveMessageDTO);
       setMessage((prevMessages) => [...prevMessages, stateMessage]);
       const inputElement = document.getElementById('text_input');
-      inputElement.blur();
       setShowEmojiPicker(false);
       setCurrentContent('');
       setImageFile('');
+      inputElement.focus();
     }
   };
 
@@ -421,13 +428,15 @@ const ChatBox = observer((props: ChatProps) => {
                 <>
                   <BiPhoneCall onClick={handleCall} className={!isFriend && 'disable_call'} />
                   <BsCameraVideo onClick={handleCallVideo} className={!isFriend && 'disable_call'} />
-                  <BiDotsVerticalRounded onClick={() => setTooltipSetting(!tooltipSetting)} />
+                  <BiDotsVerticalRounded onClick={() => setTooltipSetting(!tooltipSetting)} id="delete_conversation" />
                 </>
               )}
             </Box>
             {tooltipSetting && (
-              <Box className="tooltip_setting">
-                <Typography onClick={() => setOpenConFirmGroup(true)}>Delete Conversation</Typography>
+              <Box className="tooltip_setting" id="delete_conversation">
+                <Typography onClick={() => setOpenConFirmGroup(true)}>
+                  <MdDelete /> Delete Conversation
+                </Typography>
               </Box>
             )}
           </>
@@ -529,7 +538,7 @@ const ChatBox = observer((props: ChatProps) => {
       <Box className="chatbox_footer">
         {isSelecedChat && isMember === 'true' && (
           <>
-            <ImAttachment onClick={handleLinkClick} />
+            <FaImage onClick={handleLinkClick} />
             <input
               type="file"
               ref={fileInputRef}
@@ -558,16 +567,16 @@ const ChatBox = observer((props: ChatProps) => {
               id="text_input"
               required
               multiline
-              rows={1}
               disabled={imageFile !== '' || isRemove}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
-              placeholder={snippets ? 'Code Snippet Here...' : 'Type your message...'}
+              placeholder={snippets ? 'Write your note here...' : 'Type your message...'}
               className="chatbox_input"
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                 setCurrentContent(e.target.value);
               }}
               onKeyDown={(event) => {
                 if (event.keyCode === 13 && !event.shiftKey) {
+                  event.preventDefault();
                   sendMessage(currentContent);
                 }
               }}
