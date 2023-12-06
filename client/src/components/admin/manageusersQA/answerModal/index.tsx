@@ -42,6 +42,7 @@ const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) 
           resetForm();
           ToastSuccess('Reply Question Successfully!!!');
           setIsOpenAnswerModal(false);
+          window.location.reload();
         })
         .catch((err) => {
           console.log(err);

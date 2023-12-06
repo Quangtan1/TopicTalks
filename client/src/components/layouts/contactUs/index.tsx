@@ -110,7 +110,7 @@ const ContactUs = observer(() => {
                 fullWidth
                 margin="normal"
               />
-              {message && (
+              {message && questionAbout && (
                 <Grid item xs={12}>
                   <ReCAPTCHA sitekey={RE_CAPTCHA_SITE_KEY} onChange={onSuccessReCaptcha} />,
                 </Grid>
