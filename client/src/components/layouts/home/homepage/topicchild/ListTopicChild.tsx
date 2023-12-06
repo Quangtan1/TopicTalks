@@ -32,7 +32,6 @@ const ListTopicChild = observer(() => {
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const windowHeight = window.innerHeight;
-
     const total = scrollHeight - windowHeight;
     if (scrollTop >= total && total > 0) {
       setPage((prePage) => prePage + 1);
@@ -46,7 +45,7 @@ const ListTopicChild = observer(() => {
       setIsLast(true);
       setPage(0);
     };
-  }, [id]);
+  }, [id, search]);
 
   useEffect(() => {
     const searchUrl = `/topic-children/search?tp_name=${search}&is_expired=false&page=${page}&size=6`;

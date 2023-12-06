@@ -4,22 +4,53 @@
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  padding: 0px 100px 50px;
+  padding: 50px 100px 50px;
+  .title_topic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    p:nth-child(1) {
+      font-size: 25px;
+      font-weight: 600;
+    }
+    p:nth-child(2) {
+      font-size: 13px;
+    }
+  }
   .option_box {
     display: flex;
     gap: 10px;
     align-items: center;
     width: 100%;
-    padding: 30px 50px 0px;
+    padding: 30px 40px;
     justify-content: flex-end;
-    .select {
-      background: #fff;
-      min-width: 150px;
+    .filter {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      .select {
+        background: #fff;
+        min-width: 150px;
+        border-radius: 22px;
+        .MuiSelect-select {
+          padding: 10px 15px;
+        }
+      }
     }
     .create {
-      color: #8e6e51;
-      font-size: 40px;
+      color: #fff;
+      font-size: 14px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      background: #8e6e51;
+      padding: 10px 15px;
+      gap: 6px;
+      border-radius: 22px;
+      svg {
+        font-size: 16px;
+      }
     }
   }
   .load_post {

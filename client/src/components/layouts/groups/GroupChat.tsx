@@ -60,7 +60,7 @@ const GroupChat = observer(() => {
       getDataAPI(`/participant${id === undefined ? allGroupChat : groupById}`, account?.access_token, axiosJWT)
         .then((res) => {
           const newGroup = res.data.data.content;
-          page === 0 ? setListGroup(newGroup) : setListGroup([...listGroup, ...newGroup]);
+          page === 0 ? setListGroup(newGroup) : setListGroup((prevGroups) => [...prevGroups, ...newGroup]);
           setIsLoadGroup(false);
           const lengthData = res.data.data.content.length;
           (lengthData === 0 || lengthData < 6) && setIsLast(false);
@@ -161,11 +161,11 @@ const GroupChat = observer(() => {
   return (
     <Box className="group_chat_container">
       <Box className="box_group_chat">
-        <Box className="title_box">
-          <Typography className="title_topic">
-            List <strong>{name}</strong> Group Chats
+        <Box className="title_topic">
+          <Typography>Expand your network, join enthusiasts</Typography>
+          <Typography>
+            List of group chats {'>'} {name || 'All'}
           </Typography>
-          <h2>How we can work together</h2>
         </Box>
         <Grid container className="group_container">
           {listGroup?.length > 0 &&

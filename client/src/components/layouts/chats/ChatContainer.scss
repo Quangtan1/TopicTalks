@@ -90,7 +90,7 @@
         }
         p {
           font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
-          font-size: 15px;
+          font-size: 13px;
         }
       }
       .tab_selected {
@@ -293,17 +293,8 @@
         }
 
         .topic_name {
-          background-color: rgb(255, 178, 62);
-          background-image: linear-gradient(
-            268.67deg,
-            var(--main-color) 30.69%,
-            rgb(255, 163, 26) 55.54%,
-            rgb(255, 0, 115) 99%
-          );
-          -webkit-text-fill-color: transparent;
-          -webkit-background-clip: text;
+          color: #8e6e51;
           font-size: 16px;
-          font-style: italic;
         }
         .name {
           .name_chat {
@@ -339,10 +330,19 @@
         top: 80px;
         padding: 10px 10px;
         background: #fff;
+        border-radius: 5px 0px 5px 5px;
         box-shadow: 7px 13px 15px rgba(15, 34, 58, 0.12);
         p {
           cursor: pointer;
+          font-size: 12px;
+          display: flex;
+          gap: 4px;
+          align-items: center;
           color: #7f1d1d;
+          svg {
+            color: #7f1d1d;
+            font-size: 14px;
+          }
         }
       }
       .tooltip_setting::before {
@@ -447,7 +447,8 @@
               cursor: pointer;
             }
             p {
-              font-family: var(--font-family-common);
+              // font-family: var(--font-family-common);
+              font-size: 13px;
             }
             .message_content {
               padding: 12px 20px;
@@ -478,10 +479,10 @@
           justify-content: flex-end;
           .message_box {
             .image-message {
-              background: var(--main-color);
+              background: #8e6e51;
             }
             .message_content {
-              background: var(--main-color);
+              background: #8e6e51;
               border-radius: 8px 8px 0 8px;
               color: #fff;
               position: relative;
@@ -489,10 +490,10 @@
             .message_content::before {
               border-bottom: 5px solid transparent;
               border-left: 5px solid transparent;
-              border-right: 5px solid var(--main-color);
-              border-right-color: var(--main-color);
-              border-top: 5px solid var(--main-color);
-              border-top-color: var(--main-color);
+              border-right: 5px solid #8e6e51;
+              border-right-color: #8e6e51;
+              border-top: 5px solid #8e6e51;
+              border-top-color: #8e6e51;
               left: auto;
               right: 0;
               position: absolute;
@@ -580,7 +581,7 @@
         .MuiInputBase-root {
           padding: 6px 0px 6px 10px;
           color: #fff;
-          max-height: 50px;
+          max-height: 150px;
           border: none;
           textarea {
             background: #fff;
@@ -588,6 +589,7 @@
             color: #4e565f;
             border-radius: 5px;
             font-size: 14px;
+            max-height: 80px;
           }
           fieldset {
             border: none;
@@ -598,7 +600,7 @@
         }
       }
       svg {
-        color: var(--main-color);
+        color: #8e6e51;
         font-size: 22px;
         cursor: pointer;
       }
@@ -627,7 +629,7 @@
         cursor: default !important;
       }
       .send_icon {
-        background: var(--main-color);
+        background: #8e6e51;
         padding: 5px 9px;
         width: 35px;
         height: 32px;
@@ -736,7 +738,7 @@
           justify-content: center;
           padding: 5px 10px;
           min-width: 100px;
-          color: var(--main-color);
+          color: #000;
           font-weight: 600;
           svg {
             cursor: pointer;

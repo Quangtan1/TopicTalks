@@ -10,15 +10,15 @@
     display: flex;
     width: 100%;
     max-width: 1230px;
-    align-items: center;
-    padding: 25px;
+    padding: 0px 25px 25px;
+    flex-direction: column;
     .title_parent_topic,
     .title_parent_topic_right {
-      font-size: 25px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       font-weight: 600;
-      color: #000;
-      width: 35%;
-      font-family: 'Yeseva One', display;
+      padding-bottom: 8px;
     }
     .title_parent_topic_right {
       display: flex;
@@ -46,7 +46,7 @@
     }
     .divider,
     .divider_right::before {
-      border-top: 2px solid #000;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
       width: 100%;
       // height: 2px;
       display: inline-block;

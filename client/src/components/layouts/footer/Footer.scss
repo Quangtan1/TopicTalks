@@ -4,36 +4,76 @@
   align-items: center;
   flex-direction: column;
   gap: 25px;
-  background: rgb(247, 243, 240);
+  background: #f7f8f9;
+  border: 1px solid gainsboro;
+
   .footer_first {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 80px;
+    padding: 70px 150px 70px 200px;
     gap: 120px;
     img {
       width: 160px;
       height: 160px;
       object-fit: cover;
     }
+    .footer_grid:nth-child(3) {
+      .content {
+        width: 180px;
+      }
+    }
+
     .footer_grid {
+      gap: 20px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
       .title {
         font-weight: 600;
+        position: relative;
+        width: 150px;
+        padding: 5px 0px;
+        font-size: 14px;
+        border-bottom: 1px solid gainsboro;
+        &::after {
+          content: '';
+          background: #000c2d;
+          height: 3px;
+          width: 50px;
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+        }
       }
+
       .content {
+        display: flex;
+        flex-direction: column;
+        max-width: 250px;
+        gap: 10px;
         p {
           font-size: 13px;
         }
-        button {
-          background: #000;
-          color: #fff;
-          width: 300px;
-          margin-top: 20px;
-          font-family: Roboto, Helvetica, Arial, Lucida;
+        .search_box {
+          display: flex;
+          padding-top: 10px;
+          .MuiInputBase-root {
+            border-radius: 20px 0px 0px 20px;
+            input {
+              padding: 7px 15px;
+              font-size: 12px;
+            }
+          }
+          button {
+            border-radius: 0px 20px 20px 0px;
+            width: 100px;
+            background: #000;
+            color: #fff;
+            padding: 0px 20px;
+            font-size: 12px;
+            text-transform: capitalize;
+          }
         }
       }
     }

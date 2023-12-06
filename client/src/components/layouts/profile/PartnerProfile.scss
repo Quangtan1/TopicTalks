@@ -189,6 +189,20 @@
             span {
               color: rgb(142, 110, 81);
             }
+            .reject {
+              display: flex;
+              gap: 10px;
+              border: red solid 1px;
+              align-items: center;
+              padding: 6px 20px;
+              border-radius: 5px;
+              color: #7f1d1d;
+              background: #fef2f2;
+              margin: 12px 0px;
+              svg {
+                font-size: 15px;
+              }
+            }
             .content {
               padding-top: 15px;
               font-size: 13px;

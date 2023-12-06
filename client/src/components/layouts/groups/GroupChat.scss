@@ -5,22 +5,17 @@
     flex-direction: column;
     align-items: center;
     gap: 30px;
-    .title_box {
-      text-align: center;
-
-      .title_topic {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        strong {
-          color: #8e6e51;
-        }
-      }
-      h2 {
-        font-size: 28px;
+    .title_topic {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      p:nth-child(1) {
+        font-size: 23px;
         font-weight: 600;
-        font-family: 'Yeseva One', display;
-        letter-spacing: 2px;
+      }
+      p:nth-child(2) {
+        font-size: 13px;
       }
     }
     .create_group {

@@ -111,20 +111,31 @@ const Community = observer(() => {
   };
   return (
     <Box className="community_container">
+      <Box className="title_topic">
+        <Typography>Explore the beauty of the world</Typography>
+        <Typography>
+          List of posts {'>'}
+          {selectTopic !== 0 ? listTopic?.find((item) => item.id === selectTopic).topicParentName : 'All'}
+        </Typography>
+      </Box>
       <Box className="option_box">
-        {selectTopic !== null && (
-          <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)} className="select">
-            <MenuItem value={0}>All</MenuItem>
-            {listTopic.length > 0 &&
-              listTopic.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
-                  {item.topicParentName}
-                </MenuItem>
-              ))}
-          </Select>
-        )}
-
-        <IoAddCircleSharp className="create" onClick={() => setOpenCreatePost(true)} />
+        <Box className="filter">
+          <Typography>Filter:</Typography>
+          {selectTopic !== null && (
+            <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)} className="select">
+              <MenuItem value={0}>All</MenuItem>
+              {listTopic.length > 0 &&
+                listTopic?.map((item) => (
+                  <MenuItem value={item.id} key={item.id}>
+                    {item.topicParentName}
+                  </MenuItem>
+                ))}
+            </Select>
+          )}
+        </Box>
+        <Typography onClick={() => setOpenCreatePost(true)} className="create">
+          Create Post <IoAddCircleSharp />
+        </Typography>
       </Box>
 
       <PostItem posts={posts} handleDetailPost={handleDetailPost} />

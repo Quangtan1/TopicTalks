@@ -68,6 +68,8 @@ export interface IPost {
   updated_at: string;
   approved: boolean;
   lastComment?: ILastComment;
+  rejected: boolean;
+  reasonRejected?: string;
 }
 
 export interface ILastComment {

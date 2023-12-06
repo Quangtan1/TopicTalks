@@ -294,7 +294,7 @@
           gap: 10px;
           align-items: center;
           border-top: 1px solid rgb(239, 239, 239);
-          max-height: 80px;
+          max-height: 180px;
           min-height: 50px;
           position: relative;
           .emoiji {
@@ -312,10 +312,15 @@
             width: 100%;
             .MuiInputBase-root {
               padding: 0px;
-              max-height: 30px;
+              max-height: 170px;
               overflow-y: auto;
-              input {
-                padding: 2px 5px;
+              textarea {
+                background: #fff;
+                padding: 6px 0px 6px 10px;
+                color: #4e565f;
+                border-radius: 5px;
+                font-size: 14px;
+                max-height: 43px;
               }
               fieldset {
                 border: none;
