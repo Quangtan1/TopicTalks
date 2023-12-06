@@ -24,6 +24,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useMutation } from 'react-query';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { createAxios, postDataAPI, putDataAPI } from 'src/utils';
+import ViewPost from './view/ViewPost';
+import { GrView } from 'react-icons/gr';
 
 export const APPROVE_POST = 'Do you want to approve this post?';
 
@@ -34,6 +36,7 @@ const ManagePost = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [post, setPost] = useState<IPost>(null);
   const [isRejectAction, setIsRejectAction] = useState(false);
+  const [viewPost, setViewPost] = useState<IPost>(null);
 
   // ============================== Config mobx ==============================
   const account = accountStore?.account;
@@ -177,6 +180,9 @@ const ManagePost = observer(() => {
                     <TableCell className="cell_action">
                       <Button onClick={() => handleOpenModalApproveReject(item)}>Approve ✅</Button>
                       <Button onClick={() => handleOpenModalApproveReject(item, true)}>Reject ❌</Button>
+                      <Button onClick={() => setViewPost(item)}>
+                        <GrView />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -194,12 +200,15 @@ const ManagePost = observer(() => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      <DialogCommon
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={isRejectAction ? () => handleRejectPost(post) : () => handleApprovePost(post)}
-        content={isRejectAction ? REJECT_POST : APPROVE_POST}
-      />
+      {isOpen && (
+        <DialogCommon
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={isRejectAction ? () => handleRejectPost(post) : () => handleApprovePost(post)}
+          content={isRejectAction ? REJECT_POST : APPROVE_POST}
+        />
+      )}
+      {viewPost && <ViewPost open={viewPost !== null} onClose={() => setViewPost(null)} post={viewPost} />}
     </Box>
   );
 });

@@ -114,7 +114,7 @@ const Community = observer(() => {
       <Box className="title_topic">
         <Typography>Explore the beauty of the world</Typography>
         <Typography>
-          List of posts {'>'}
+          List of posts {'> '}
           {selectTopic !== 0 ? listTopic?.find((item) => item.id === selectTopic).topicParentName : 'All'}
         </Typography>
       </Box>

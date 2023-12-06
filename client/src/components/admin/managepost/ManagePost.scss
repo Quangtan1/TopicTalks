@@ -114,8 +114,10 @@
         }
         .cell_action {
           width: 20%;
+
           button {
             font-size: 12px;
+            text-transform: capitalize;
           }
           button:nth-child(1) {
             background: rgb(61, 165, 138);
@@ -127,7 +129,13 @@
             border-radius: 5px;
             color: #7f1d1d;
             background: #fef2f2;
-            margin-left: 10px;
+            margin-left: 5px;
+          }
+          button:nth-child(3) {
+            min-width: 30px;
+            svg {
+              font-size: 20px;
+            }
           }
         }
       }

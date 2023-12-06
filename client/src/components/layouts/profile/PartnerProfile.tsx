@@ -265,7 +265,7 @@ const PartnerProfile = observer(() => {
                 <Typography>
                   This is a private account <CiLock />
                 </Typography>
-                <Typography>Add friend to see photos and infor</Typography>
+                <Typography>Be friend to see photos and infor</Typography>
                 <Typography>theirs.</Typography>
               </Box>
             </>
