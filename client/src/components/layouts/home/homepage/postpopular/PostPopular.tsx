@@ -25,7 +25,7 @@ const PostPopular = (props: IPostProps) => {
     <Box className="post_popular_container">
       <Box className="box_post_item">
         <Box className="box_post">
-          <Typography className="title">Posts Popular</Typography>
+          <Typography className="title">Popular Posts</Typography>
           <Divider />
           {posts?.map((item) => (
             <Box className="post_item" key={item.id}>

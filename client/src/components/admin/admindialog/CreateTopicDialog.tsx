@@ -113,8 +113,6 @@ const CreateTopicDialog = observer((props: DialogProps) => {
     fileInputRef.current.click();
   };
 
-  console.log(imageFile);
-
   return (
     <Dialog open={open} onClose={onClose} className="topic_dialog_container">
       <DialogTitle className="dialog_title">

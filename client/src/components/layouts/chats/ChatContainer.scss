@@ -607,21 +607,26 @@
       .image-name {
         color: #000;
         display: flex;
-        background: #ced4da;
+        background: #9bc7e4;
         position: absolute;
         left: 70px;
-        top: -20px;
+        bottom: 80px;
         border-radius: 5px;
         align-items: center;
-        padding: 4px 8px;
-        p {
-          font-size: 14px;
+        padding: 6px;
+        img {
+          height: 250px;
+          width: 200px;
+          object-fit: cover;
         }
         svg {
+          position: absolute;
           display: flex;
           align-items: center;
-          color: #000;
-          font-size: 14px;
+          color: #4e565f;
+          font-size: 25px;
+          top: -5px;
+          right: -10px;
         }
       }
       .disable_chat {

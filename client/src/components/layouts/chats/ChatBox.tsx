@@ -34,6 +34,7 @@ import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import ImageZoom from './zoomImage/ImageZoom';
 import { FaImage } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
+import { IoIosCloseCircle } from 'react-icons/io';
 
 ///const
 const contentGroup = `Do you want to delete this conversation`;
@@ -188,6 +189,8 @@ const ChatBox = observer((props: ChatProps) => {
     setTooltipSetting(false);
     return () => {
       setSnippet(false);
+      setImageFile('');
+      setCurrentContent('');
       firstRender.current = true;
     };
   }, [chat]);
@@ -550,9 +553,9 @@ const ChatBox = observer((props: ChatProps) => {
             />
             {imageFile !== '' && (
               <span className="image-name">
-                <Typography>{imageFile.slice(0, 12)}...</Typography>
+                <img src={imageFile} alt="img" />
                 <span>
-                  <CiCircleRemove
+                  <IoIosCloseCircle
                     onClick={() => {
                       setImageFile('');
                       setCurrentContent('');

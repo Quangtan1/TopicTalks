@@ -23,6 +23,8 @@ import accountStore from 'src/store/accountStore';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import UpdateTopicDialog from './UpdateTopicDialog';
+import { BiEdit } from 'react-icons/bi';
+import UpdateTopicParent from './UpdateTopicParent';
 
 const ManageTopic = () => {
   const [selectTopic, setSelectTopic] = useState<number>(null);
@@ -32,6 +34,8 @@ const ManageTopic = () => {
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [topicSelected, setTopicSelected] = useState<TopicChild>(null);
   const [openUpdate, setOpenUpdate] = useState<boolean>(false);
+  const [openUpdateParent, setOpenUpdateParent] = useState<boolean>(false);
+  const [topicParent, setTopicParent] = useState<ListTopic>(null);
 
   const account = accountStore?.account;
 
@@ -61,6 +65,7 @@ const ManageTopic = () => {
         if (res.data.data !== 'Not exist any children topic.') {
           setListTopic(res.data.data);
           setSelectTopic(1);
+          setTopicParent(res.data.data[0]);
         }
       })
       .catch((err) => {
@@ -125,11 +130,12 @@ const ManageTopic = () => {
         <Select value={selectTopic} onChange={(e: any) => setSelectTopic(e.target.value)}>
           {listTopic?.length > 0 &&
             listTopic?.map((item) => (
-              <MenuItem value={item.id} key={item.id}>
+              <MenuItem value={item.id} key={item.id} onClick={() => setTopicParent(item)}>
                 {item.topicParentName}
               </MenuItem>
             ))}
         </Select>
+        <BiEdit onClick={() => setOpenUpdateParent(true)} />
       </Box>
       <Box className="warning">
         <MdOutlineErrorOutline />
@@ -198,6 +204,9 @@ const ManageTopic = () => {
           setTopicChild={setTopicChild}
           topicParentId={selectTopic}
         />
+      )}
+      {openUpdateParent && (
+        <UpdateTopicParent open={openUpdateParent} onClose={() => setOpenUpdateParent(false)} topic={topicParent} />
       )}
     </Box>
   );
