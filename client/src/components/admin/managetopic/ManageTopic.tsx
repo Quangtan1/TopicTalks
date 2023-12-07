@@ -206,7 +206,12 @@ const ManageTopic = () => {
         />
       )}
       {openUpdateParent && (
-        <UpdateTopicParent open={openUpdateParent} onClose={() => setOpenUpdateParent(false)} topic={topicParent} />
+        <UpdateTopicParent
+          open={openUpdateParent}
+          setTopicParent={setTopicParent}
+          onClose={() => setOpenUpdateParent(false)}
+          topic={topicParent}
+        />
       )}
     </Box>
   );

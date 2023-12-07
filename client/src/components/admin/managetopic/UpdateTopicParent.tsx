@@ -14,9 +14,10 @@ interface DialogProps {
   open: boolean;
   onClose: () => void;
   topic: ListTopic;
+  setTopicParent: React.Dispatch<React.SetStateAction<ListTopic>>;
 }
 const UpdateTopicParent = observer((props: DialogProps) => {
-  const { open, onClose, topic } = props;
+  const { open, onClose, topic, setTopicParent } = props;
   const [newName, setNewName] = useState<string>('');
   const [shortDescript, setNewDescript] = useState<string>('');
   const [imageFile, setImageFile] = useState<string>('');
@@ -30,29 +31,24 @@ const UpdateTopicParent = observer((props: DialogProps) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   const handleConfirm = () => {
-    // if (topic?.topicParentName !== newName || topic?.shortDescript !== shortDescript || topic?.image !== imageFile) {
-    //   const data = {
-    //     newName: newName || topic?.topicParentName,
-    //     shortDescript: shortDescript || topic?.shortDescript,
-    //   };
-    //   putDataAPI(`/topic-children/update?pid=$&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
-    //     .then((res) => {
-    //       ToastSuccess('Update Succesfully');
-    //       setTopicChild((prev) =>
-    //         prev.map((item) =>
-    //           item.id === topic?.id
-    //             ? { ...item, topicChildrenName: data.newName, shortDescript: data.shortDescript }
-    //             : item,
-    //         ),
-    //       );
-    //       onClose();
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // } else {
-    //   ToastError('Please input not simmilar old content topic');
-    // }
+    if (topic?.topicParentName !== newName || topic?.shortDescript !== shortDescript || imageFile !== '') {
+      const data = {
+        topicName: newName || topic?.topicParentName,
+        shortDescript: shortDescript || topic?.shortDescript,
+        urlImage: topic?.image || imageFile,
+      };
+      putDataAPI(`/topic-parent/update?id=${topic?.id}`, data, account.access_token, axiosJWT)
+        .then((res) => {
+          ToastSuccess('Update Succesfully');
+          setTopicParent(res.data.data);
+          onClose();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      ToastError('Please input not simmilar old content topic');
+    }
   };
   useEffect(() => {
     setNewName(topic?.topicParentName);

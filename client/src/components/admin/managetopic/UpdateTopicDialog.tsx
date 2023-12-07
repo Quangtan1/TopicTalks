@@ -32,10 +32,11 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
   const axiosJWT = createAxios(accountJwt, setAccount);
 
   const handleConfirm = () => {
-    if (topic?.topicChildrenName !== newName || topic?.shortDescript !== shortDescript || topic?.image !== imageFile) {
+    if (topic?.topicChildrenName !== newName || topic?.shortDescript !== shortDescript || imageFile !== '') {
       const data = {
-        newName: newName || topic?.topicChildrenName,
+        topicName: newName || topic?.topicChildrenName,
         shortDescript: shortDescript || topic?.shortDescript,
+        urlImage: topic?.image || imageFile,
       };
       putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
@@ -43,7 +44,7 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
           setTopicChild((prev) =>
             prev.map((item) =>
               item.id === topic?.id
-                ? { ...item, topicChildrenName: data.newName, shortDescript: data.shortDescript }
+                ? { ...item, topicChildrenName: data.topicName, shortDescript: data.shortDescript }
                 : item,
             ),
           );
