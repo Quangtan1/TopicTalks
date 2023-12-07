@@ -117,6 +117,7 @@ const EditProfileModal = observer((props: Props) => {
 
         <TextField
           autoFocus
+          disabled
           margin="dense"
           id="email"
           {...getFieldProps('email')}
