@@ -1,9 +1,8 @@
 import './styles.scss';
 import accountStore from 'src/store/accountStore';
 import { createAxios, putDataAPI } from 'src/utils';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -21,12 +20,10 @@ import {
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastSuccess } from 'src/utils/toastOptions';
-import { useMutation } from 'react-query';
 import { observer } from 'mobx-react';
-import uiStore from 'src/store/uiStore';
 import AvatarComponent from '../../postManagement/newPost/avatarComponent/AvatarComponent';
 import './styles.scss';
-import { formatDate, formatDateUserInfor } from 'src/utils/helper';
+import { formatDateUserInfor } from 'src/utils/helper';
 import { IUserProfile } from 'src/types/account.types';
 
 const validationSchema = Yup.object({
@@ -56,7 +53,7 @@ const EditProfileModal = observer((props: Props) => {
   const axiosJWT = createAxios(account, setAccount);
 
   const handleUpdateProfile = () => {
-    const updateData = formik?.values;
+    const updateData = values;
     putDataAPI(`/user/${account.id}`, updateData, account.access_token, axiosJWT)
       .then((res) => {
         ToastSuccess('Update Profile Successfully');
@@ -84,7 +81,7 @@ const EditProfileModal = observer((props: Props) => {
     onSubmit: handleUpdateProfile,
   });
 
-  const { errors, touched, getFieldProps, submitForm, values, dirty } = formik;
+  const { errors, touched, getFieldProps, dirty, values } = formik;
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth className="form-dialog-title">
@@ -142,7 +139,7 @@ const EditProfileModal = observer((props: Props) => {
           id="phoneNumber"
           {...getFieldProps('phoneNumber')}
           label="Phone Number"
-          type="tel"
+          type="number"
           fullWidth
           variant="outlined"
           error={touched.phoneNumber && Boolean(errors.phoneNumber)}
@@ -155,27 +152,17 @@ const EditProfileModal = observer((props: Props) => {
           }
         />
 
-        <TextField
-          autoFocus
-          margin="dense"
-          id="dob"
+        <input
           {...getFieldProps('dob')}
-          label="Date of Birth"
           type="date"
-          fullWidth
-          variant="outlined"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          error={touched.dob && Boolean(errors.dob)}
-          helperText={
-            touched.dob && errors.dob ? (
-              <Typography variant="caption" color="error">
-                {errors.dob as string}
-              </Typography>
-            ) : null
-          }
+          max={new Date().toISOString().split('T')[0]}
+          className="inputDate"
         />
+        {touched.dob && errors.dob && (
+          <Typography variant="caption" color="error">
+            {errors.dob as string}
+          </Typography>
+        )}
 
         <TextField
           autoFocus
