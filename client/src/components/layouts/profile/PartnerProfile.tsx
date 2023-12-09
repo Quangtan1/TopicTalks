@@ -19,7 +19,7 @@ import { TopicChild } from 'src/types/topic.type';
 import postItemStore from 'src/store/postStore';
 import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
-import { formatDate } from 'src/utils/helper';
+import { formatDate, formatDatePost } from 'src/utils/helper';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { RiDoubleQuotesL, RiLoader2Line } from 'react-icons/ri';
 import PersonalInfor from './personalInfor/PersonalInfor';
@@ -309,7 +309,8 @@ const PartnerProfile = observer(() => {
                       <Typography className="topic_name">{item.topicName},</Typography>
                       <Typography className="title">{item.title}</Typography>
                       <Typography className="date">
-                        {formatDate(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+                        {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment}{' '}
+                        COMMENTS
                       </Typography>
                       <span>_________</span>
                       {item?.rejected && (

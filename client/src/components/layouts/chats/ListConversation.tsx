@@ -259,6 +259,43 @@ const ListConversation = observer(() => {
       });
   };
 
+  const processMessage = (message) => {
+    const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
+    const matches = Array.from(message.matchAll(mentionRegex), (match) => ({
+      mention: match[1],
+      username: match[2],
+      memberId: match[3],
+    }));
+
+    if (matches.length > 0) {
+      const renderedElements = [];
+      let lastIndex = 0;
+
+      matches.forEach((match, index) => {
+        const mentionIndex = message.indexOf(match.mention, lastIndex);
+
+        if (mentionIndex > lastIndex) {
+          const textElement = `${message.slice(lastIndex, mentionIndex)}`;
+          renderedElements.push(textElement);
+        }
+
+        const mentionElement = <strong key={`mention-${index}`}>{`@${match.username}`}</strong>;
+        renderedElements.push(mentionElement);
+
+        lastIndex = mentionIndex + match.mention.length;
+      });
+
+      if (lastIndex < message.length) {
+        const textElement = `${message.slice(lastIndex)}`;
+        renderedElements.push(textElement);
+      }
+
+      return renderedElements;
+    } else {
+      return `${message}`;
+    }
+  };
+
   const listMessageEmty =
     (sortChats?.length === 0 || sortChats === null || sortChats === undefined) && selectedTab !== 1;
   const listFriendEmty = listFriend === null && selectedTab === 1;
@@ -374,7 +411,7 @@ const ListConversation = observer(() => {
                       <Typography>
                         {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
                           ? notifiGroup(item.conversationInfor?.lastMessage?.message)
-                          : item.conversationInfor?.lastMessage?.message}
+                          : processMessage(item.conversationInfor?.lastMessage?.message)}
                       </Typography>
                     )}
                     <Typography className="time_item">

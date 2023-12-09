@@ -18,7 +18,7 @@ import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ListMesage } from 'src/types/chat.type';
+import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { FcCallback } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
@@ -26,7 +26,7 @@ import friendStore from 'src/store/friendStore';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
-import { createAxios, deleteDataAPI } from 'src/utils';
+import { createAxios, defaultMentionStyle, defaultStyle, deleteDataAPI } from 'src/utils';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -35,6 +35,7 @@ import ImageZoom from './zoomImage/ImageZoom';
 import { FaImage } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { IoIosCloseCircle } from 'react-icons/io';
+import { MentionsInput, Mention } from 'react-mentions';
 
 ///const
 const contentGroup = `Do you want to delete this conversation`;
@@ -101,6 +102,7 @@ const ChatBox = observer((props: ChatProps) => {
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [snippets, setSnippet] = useState<boolean>(false);
   const [zoomImage, setZoomImage] = useState<string>('');
+  const mentionRegex = /(@\[@\w+\]\(\d+\))/g;
 
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
@@ -384,6 +386,70 @@ const ChatBox = observer((props: ChatProps) => {
     return notification;
   };
 
+  const processMessage = (message) => {
+    const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
+    const matches = Array.from(message.matchAll(mentionRegex), (match) => ({
+      mention: match[1],
+      username: match[2],
+      memberId: match[3],
+    }));
+
+    if (matches.length > 0) {
+      const renderedElements = [];
+      let lastIndex = 0;
+
+      matches.forEach((match, index) => {
+        const mentionIndex = message.indexOf(match.mention, lastIndex);
+
+        if (mentionIndex > lastIndex) {
+          const textElement = `${message.slice(lastIndex, mentionIndex)}`;
+          renderedElements.push(textElement);
+        }
+
+        const mentionElement = (
+          <strong
+            key={`mention-${index}`}
+            onClick={() => navigate(`/personal-profile/${match.memberId}`)}
+          >{`@${match.username}`}</strong>
+        );
+        renderedElements.push(mentionElement);
+
+        lastIndex = mentionIndex + match.mention.length;
+      });
+
+      if (lastIndex < message.length) {
+        const textElement = `${message.slice(lastIndex)}`;
+        renderedElements.push(textElement);
+      }
+
+      return renderedElements;
+    } else {
+      return `${message}`;
+    }
+  };
+
+  const renderSuggestion = (
+    suggestion: any,
+    search: string,
+    highlightedDisplay: React.ReactNode,
+    index: number,
+    focused: boolean,
+  ) => {
+    return (
+      <div
+        className={`mention-suggestion ${focused ? 'mention-suggestion-focused' : ''}`}
+        style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
+      >
+        <div className="mention-avatar">
+          <Avatar src={chat?.partnerDTO[index]?.image} alt="avt" />
+        </div>
+        <div className="mention-content">
+          <span>{highlightedDisplay}</span>
+        </div>
+      </div>
+    );
+  };
+
   const isRemove = message[message?.length - 1]?.data.message.includes(`option_1410#$#,Delete, ${account.username}`);
 
   const isDisable = isRemove || currentContent === '';
@@ -391,7 +457,7 @@ const ChatBox = observer((props: ChatProps) => {
   const isActive = chat?.partnerDTO.some((item) => item.active);
 
   return (
-    <Box className="chatbox_container">
+    <Box className={`chatbox_container ${isGroup ? 'group_chat' : 'person_chat'}`}>
       <Box className="chatbox_header">
         {isSelecedChat && isMember === 'true' && (
           <>
@@ -513,7 +579,9 @@ const ChatBox = observer((props: ChatProps) => {
                         ) : item.data.message.includes('option_1410#$#') ? (
                           <Typography>{notifiGroup(item.data.message)}</Typography>
                         ) : (
-                          <Typography className="message_content">{item.data.message.trim()}</Typography>
+                          <div className="message_content" dir="auto">
+                            {processMessage(item.data.message.trim())}
+                          </div>
                         )}
                       </>
                     )}
@@ -566,10 +634,10 @@ const ChatBox = observer((props: ChatProps) => {
             )}
             <RiEmotionLaughLine onClick={toggleEmojiPicker} id="svg_emoiji" />
             <BsCodeSlash title="Code Snippet" onClick={handleSnippetCode} className={snippets && 'snippet'} />
-            <TextField
+
+            <MentionsInput
               id="text_input"
               required
-              multiline
               disabled={imageFile !== '' || isRemove}
               value={imageFile === '' ? currentContent : 'Send Image First...'}
               placeholder={snippets ? 'Write your note here...' : 'Type your message...'}
@@ -583,7 +651,17 @@ const ChatBox = observer((props: ChatProps) => {
                   sendMessage(currentContent);
                 }
               }}
-            />
+              style={defaultStyle}
+            >
+              <Mention
+                appendSpaceOnAdd
+                trigger="@"
+                data={chat?.partnerDTO.map((item) => ({ id: item.id.toString(), display: `${item.username}` } || []))}
+                style={defaultMentionStyle}
+                renderSuggestion={renderSuggestion}
+              />
+            </MentionsInput>
+
             <GrSend
               className={`send_icon ${isDisable && 'disable_chat'}`}
               onClick={() => sendMessage(currentContent)}
