@@ -12,7 +12,7 @@ import './styles.scss';
 
 //
 import accountStore from 'src/store/accountStore';
-import { createAxios, putDataAPI } from 'src/utils';
+import { avatar_default, createAxios, putDataAPI } from 'src/utils';
 import {
   Avatar,
   Card,
@@ -287,20 +287,15 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
           <Grid item xs={3} className="edit-profile-dialog__grid__right">
             <Card className="edit-profile-dialog__grid__right__card">
               <CardActionArea className="edit-profile-dialog__grid__right__card__action-area">
-                {account?.url_img ? (
-                  <CardMedia
-                    component="img"
-                    image={account?.url_img}
-                    alt="green iguana"
-                    className="edit-profile-dialog__grid__right__card__action-area__img"
-                  />
-                ) : (
-                  <Avatar className="edit-profile-dialog__grid__right__card__action-area__img" />
-                )}
+                <CardMedia
+                  component="img"
+                  image={account?.url_img || avatar_default}
+                  alt="green iguana"
+                  className="edit-profile-dialog__grid__right__card__action-area__img"
+                />
                 <CardContent>
                   <Typography
                     className="edit-profile-dialog__grid__right__card__action-area__text"
-                    gutterBottom
                     variant="h5"
                     component="div"
                   >
