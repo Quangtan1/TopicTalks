@@ -428,6 +428,8 @@ const ChatBox = observer((props: ChatProps) => {
     }
   };
 
+  const partnerApprove = chat?.partnerDTO?.filter((item) => item.member);
+
   const renderSuggestion = (
     suggestion: any,
     search: string,
@@ -441,7 +443,7 @@ const ChatBox = observer((props: ChatProps) => {
         style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
       >
         <div className="mention-avatar">
-          <Avatar src={chat?.partnerDTO[index]?.image} alt="avt" />
+          <Avatar src={partnerApprove[index]?.image} alt="avt" />
         </div>
         <div className="mention-content">
           <span>{highlightedDisplay}</span>
@@ -656,7 +658,7 @@ const ChatBox = observer((props: ChatProps) => {
               <Mention
                 appendSpaceOnAdd
                 trigger="@"
-                data={chat?.partnerDTO.map((item) => ({ id: item.id.toString(), display: `${item.username}` } || []))}
+                data={partnerApprove?.map((item) => ({ id: item.id.toString(), display: `${item.username}` } || []))}
                 style={defaultMentionStyle}
                 renderSuggestion={renderSuggestion}
               />
