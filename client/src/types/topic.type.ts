@@ -14,3 +14,9 @@ export interface TopicChild {
   shortDescript: string;
   expired?: boolean;
 }
+
+export interface RatingByTopicChild {
+  rating: number;
+  tpcId: number;
+  userId: number;
+}

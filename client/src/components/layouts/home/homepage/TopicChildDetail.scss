@@ -141,13 +141,20 @@
           stroke: #000;
           font-size: 23px;
         }
-        svg:nth-child(1) {
+        .star-active {
           stroke-width: 40px;
           fill: #ee4d2d;
           stroke: #ee4d2d;
           font-size: 23px;
           cursor: pointer;
         }
+        // svg:nth-child(1) {
+        //   stroke-width: 40px;
+        //   fill: #ee4d2d;
+        //   stroke: #ee4d2d;
+        //   font-size: 23px;
+        //   cursor: pointer;
+        // }
       }
     }
   }

@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import accountStore from 'src/store/accountStore';
-import { TopicChild } from 'src/types/topic.type';
+import { RatingByTopicChild, TopicChild } from 'src/types/topic.type';
 import { createAxios, getDataAPI, topicdetail } from 'src/utils';
 import './TopicChildDetail.scss';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
@@ -20,6 +20,7 @@ const TopicChildDetail = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const { openRandom, setOpenRandom } = useContext(ChatContext);
   const [openRating, setOpenRating] = useState<boolean>(false);
+  const [ratingThisTopic, setRatingThisTopic] = useState<RatingByTopicChild>(null);
   const account = accountStore?.account;
   const navigate = useNavigate();
 
@@ -33,6 +34,16 @@ const TopicChildDetail = observer(() => {
     getDataAPI(`/topic-children/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
         setTopicChild(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [id]);
+
+  useEffect(() => {
+    getDataAPI(`/ratings/all/usr/${accountJwt?.id}/tpc/${id}`, account?.access_token, axiosJWT)
+      .then((res) => {
+        setRatingThisTopic(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -72,18 +83,28 @@ const TopicChildDetail = observer(() => {
               VIEW GROUP CHAT <AiOutlineArrowRight />
             </Button>
             <Box className="rating" onClick={() => setOpenRating(true)}>
-              <GiRoundStar />
-              <GiRoundStar />
-              <GiRoundStar />
-              <GiRoundStar />
-              <GiRoundStar />
+              {ratingThisTopic?.rating ? (
+                Array.from({ length: ratingThisTopic?.rating }, (_, index) => (
+                  <Box key={index}>
+                    <GiRoundStar className="star-active" />
+                  </Box>
+                ))
+              ) : (
+                <>
+                  <GiRoundStar />
+                  <GiRoundStar />
+                  <GiRoundStar />
+                  <GiRoundStar />
+                  <GiRoundStar />
+                </>
+              )}
             </Box>
           </Grid>
           {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
           {openRandom && (
             <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
           )}
-          {openRating && <Rating open={openRating} onClose={() => setOpenRating(false)} />}
+          {openRating && <Rating open={openRating} onClose={() => setOpenRating(false)} tpcId={id} />}
         </Grid>
       </Box>
     </LazyShow>
