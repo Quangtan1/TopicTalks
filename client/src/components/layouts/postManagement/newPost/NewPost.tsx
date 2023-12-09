@@ -154,7 +154,7 @@ const NewPost: React.FC<Props> = observer(
     const formik = useFormik({
       initialValues: {
         postContent: dataEdit?.content,
-        selectedTopicParent: dataEdit?.tparent_id,
+        selectedTopicParent: dataEdit?.tparent_id || 1,
         postTitle: dataEdit?.title,
         imageUrl: dataEdit?.img_url,
         status: dataEdit?.status || 1,
