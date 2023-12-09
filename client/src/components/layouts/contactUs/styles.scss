@@ -1,12 +1,14 @@
 .contactUs-container {
   .text {
     font-family: var(--font-family-common);
+    overflow-wrap: break-word;
     .waitingReplyText {
       font-family: var(--font-family-common);
       color: red;
       padding-top: 8px;
     }
   }
+
   padding: 50px 0px;
   margin: 32px;
   .btn-wrap {

@@ -1,10 +1,11 @@
 .edit-profile-dialog {
   &__app-bar {
-    background-color: #f7f8f9;
-    color: black;
+    background-color: #f7f8f9 !important;
+    color: black !important;
     text-align: center;
     &__title {
       flex: 1;
+      font-weight: bold !important;
     }
   }
 
@@ -16,9 +17,11 @@
     &__left {
       &__dialog {
         &__input {
-          margin: 16px 0;
+          margin: 12px 0 !important;
         }
         &__input-date {
+          margin: 16px 0;
+          padding: 16px 0;
           border-radius: 4px;
           width: 100%;
         }
@@ -29,8 +32,8 @@
       justify-content: center;
       align-items: center;
       &__card {
-        width: 75%;
-        height: 75%;
+        width: 350px;
+        height: 350px;
         &__action-area {
           &__text {
             padding: 4px 0;
@@ -39,14 +42,15 @@
           flex-direction: column;
           padding: 20px;
           justify-content: center;
-          text-align: center;
+          text-align: center !important;
           align-items: center;
           background-color: #fff;
           &__img {
+            padding: 12px;
             border-radius: 50%;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
           }
         }
       }

@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Carousel as SingleCarousel } from 'react-responsive-carousel';
-import { ListTopic } from 'src/types/topic.type';
+import { ListTopic, ListTopicHot } from 'src/types/topic.type';
 import './TopicPopular.scss';
 import { FiberManualRecord } from '@mui/icons-material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { formatDatePost } from 'src/utils/helper';
+import { GiRoundStar } from 'react-icons/gi';
 
 interface TopicParentProps {
-  listTopic: ListTopic[];
+  listTopic: ListTopicHot[];
 }
 const TopicPopular = (props: TopicParentProps) => {
   const { listTopic } = props;
@@ -47,11 +48,34 @@ const TopicPopular = (props: TopicParentProps) => {
           <Box className="box_topic_large" key={item.id}>
             <img src={item.image} alt="topic" />
             <Box className="box_topic_content">
-              <Typography>hot.</Typography>
-              <Typography>{item.topicParentName}</Typography>
+              <Typography className="hot">Hot Topic</Typography>
+              <Typography>{item.topicChildrenName}</Typography>
               <Typography>
                 {formatDatePost(item.createdAt)} <FiberManualRecord /> 3K Views
               </Typography>
+              <Typography className="max_rating">
+                Max Rating:
+                <Box sx={{ display: 'flex', pb: 1 }}>
+                  {item?.maxRating &&
+                    Array.from({ length: item?.maxRating }, (_, index) => (
+                      <Box key={index}>
+                        <GiRoundStar className="star-active" />
+                      </Box>
+                    ))}
+                </Box>
+              </Typography>
+              {item?.avgRating && (
+                <Typography className="max_rating">
+                  Average Rating:
+                  <Box sx={{ display: 'flex' }}>
+                    {Array.from({ length: item?.avgRating }, (_, index) => (
+                      <Box key={index}>
+                        <GiRoundStar className="star-active" />
+                      </Box>
+                    ))}
+                  </Box>
+                </Typography>
+              )}
             </Box>
           </Box>
         ))}
@@ -71,8 +95,8 @@ const TopicPopular = (props: TopicParentProps) => {
             <Box className="box_topic_small" key={item.id}>
               <img src={item.image} alt="topic" />
               <Box className="box_topic_content">
-                <Typography>{item.topicParentName}.</Typography>
-                <Typography>{item.shortDescript}</Typography>
+                <Typography>{item.topicChildrenName}.</Typography>
+                <Typography>{item.shortDescription}</Typography>
                 <Typography>
                   {formatDatePost(item.createdAt)} <FiberManualRecord /> 3K Views
                 </Typography>
