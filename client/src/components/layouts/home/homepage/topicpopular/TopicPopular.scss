@@ -42,6 +42,15 @@
       }
     }
     .box_topic_content {
+      .hot {
+        text-align: flex-start;
+        font-size: 50px;
+        color: #2c2c2c;
+        letter-spacing: 0.05em;
+        text-shadow: 4px 4px 0px #d5d5d5, 7px 7px 0px rgba(0, 0, 0, 0.2);
+        height: 100px;
+        padding-top: 40px;
+      }
       position: absolute;
       left: 250px;
       z-index: 1;
@@ -70,6 +79,17 @@
         svg {
           font-size: 10px;
         }
+      }
+      .max-rating {
+        display: flex;
+      }
+      .star-active {
+        stroke-width: 40px;
+        fill: #ee4d2d;
+        display: flex;
+        stroke: #ee4d2d;
+        font-size: 23px;
+        cursor: pointer;
       }
     }
   }
