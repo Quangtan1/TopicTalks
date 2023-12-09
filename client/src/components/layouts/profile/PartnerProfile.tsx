@@ -26,6 +26,7 @@ import PersonalInfor from './personalInfor/PersonalInfor';
 import InforBox from './inforBox/InforBox';
 import { CiLock } from 'react-icons/ci';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import EditProfileFullScreenDialog from './editProfileFullScreenDialog';
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -349,13 +350,14 @@ const PartnerProfile = observer(() => {
       )}
       {openListFriend && <ListFriendDialog open={openListFriend} onClose={() => setOpenListFriend(false)} />}
       {openEditProfile && (
-        <EditProfileModal
+        <EditProfileFullScreenDialog
           isOpen={openEditProfile}
           handleClose={() => setOpenEditProfile(false)}
           userInfor={user}
           setUserInfor={setUser}
         />
       )}
+
       {openUpdateAvatar && (
         <AvatarDialog
           open={openUpdateAvatar}
