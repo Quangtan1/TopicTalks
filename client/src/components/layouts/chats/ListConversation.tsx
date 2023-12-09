@@ -261,13 +261,15 @@ const ListConversation = observer(() => {
 
   const processMessage = (message: string) => {
     const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
-    const matches = Array.from(message?.matchAll(mentionRegex), (match) => ({
-      mention: match[1],
-      username: match[2],
-      memberId: match[3],
-    }));
+    const matches =
+      message &&
+      Array?.from(message?.matchAll(mentionRegex), (match) => ({
+        mention: match[1],
+        username: match[2],
+        memberId: match[3],
+      }));
 
-    if (matches?.length > 0) {
+    if (matches?.length > 0 && message) {
       const renderedElements = [];
       let lastIndex = 0;
 
@@ -292,7 +294,7 @@ const ListConversation = observer(() => {
 
       return renderedElements;
     } else {
-      return `${message}`;
+      return `${message || ''}`;
     }
   };
 
