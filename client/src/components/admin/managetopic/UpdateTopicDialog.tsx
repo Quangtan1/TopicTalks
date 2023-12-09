@@ -36,7 +36,7 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
       const data = {
         topicName: newName || topic?.topicChildrenName,
         shortDescript: shortDescript || topic?.shortDescript,
-        urlImage: topic?.image || imageFile,
+        urlImage: imageFile || topic?.image  ,
       };
       putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
@@ -44,7 +44,7 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
           setTopicChild((prev) =>
             prev.map((item) =>
               item.id === topic?.id
-                ? { ...item, topicChildrenName: data.topicName, shortDescript: data.shortDescript }
+                ? { ...item, topicChildrenName: data.topicName, shortDescript: data.shortDescript, urlImage: data.urlImage }
                 : item,
             ),
           );

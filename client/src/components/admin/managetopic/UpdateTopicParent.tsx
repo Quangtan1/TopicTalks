@@ -35,7 +35,7 @@ const UpdateTopicParent = observer((props: DialogProps) => {
       const data = {
         topicName: newName || topic?.topicParentName,
         shortDescript: shortDescript || topic?.shortDescript,
-        urlImage: topic?.image || imageFile,
+        urlImage: imageFile || topic?.image  ,
       };
       putDataAPI(`/topic-parent/update?id=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
