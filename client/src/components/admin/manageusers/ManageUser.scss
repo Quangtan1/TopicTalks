@@ -97,12 +97,18 @@
           width: 20%;
           button {
             font-size: 12px;
-          }
-          button:nth-child(1) {
-            background: rgb(61, 165, 138);
             border-radius: 5px;
             color: #fff;
           }
+          .ban {
+            background: rgb(61, 165, 138);
+          }
+          .un_ban {
+            background: #fef2f2;
+            color: #7f1d1d;
+            border: red solid 1px;
+          }
+
           button:nth-child(2) {
             border: #000 solid 1px;
             border-radius: 5px;

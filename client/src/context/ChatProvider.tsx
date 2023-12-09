@@ -91,11 +91,14 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
       });
       socket.on('partiAccess', (data: ListMesage) => {
         setTimeout(() => {
+          const result = chatStore?.chats.some((item) => item.conversationInfor.id === data?.conversationInfor.id);
           setIsRandoming(false);
           chatStore?.setSelectedChat(data);
           ToastSuccess('You access random chat succesfully');
           if (chatStore?.chats?.length > 0) {
-            chatStore?.setChats([data, ...chatStore?.chats]);
+            if (!result) {
+              chatStore?.setChats([data, ...chatStore?.chats]);
+            }
           } else {
             chatStore?.setChats([data]);
           }

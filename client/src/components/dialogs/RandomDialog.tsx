@@ -14,7 +14,7 @@ import {
 import { createAxios, getDataAPI, partner } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, TopicChild } from 'src/types/topic.type';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { observer } from 'mobx-react';
 import chatStore from 'src/store/chatStore';
 import { FaCarSide } from 'react-icons/fa';
@@ -39,6 +39,7 @@ const RandomDialog = observer((props: DialogProps) => {
   const [page, setPage] = useState<number>(0);
   const [isLast, setIsLast] = useState<boolean>(true);
   const [isLoadTopic, setIsLoadTopic] = useState<boolean>(false);
+  const [seconds, setSeconds] = useState<number>(30);
   const selectedChat = chatStore?.selectedChat;
   const navigate = useNavigate();
   const location = useLocation();
@@ -152,6 +153,39 @@ const RandomDialog = observer((props: DialogProps) => {
         });
     }
   }, [page]);
+
+  useEffect(() => {
+    if (isRandoming) {
+      const timer = setInterval(() => {
+        setSeconds((prevSeconds) => {
+          if (prevSeconds === 0 && selected !== null && socket) {
+            const topicChildren = {
+              userId: account.id,
+              targetName: 'null',
+              username: account.username,
+              timeAt: new Date().toISOString(),
+              targetId: account.id,
+              conversationId: 0,
+              data: {
+                id: selected?.id,
+              },
+            };
+            setIsRandoming(false);
+            setSeconds(30);
+            socket.emit('onLeaveChatRandom', topicChildren);
+            setSelected(null);
+            ToastError('No partners found');
+          }
+
+          return prevSeconds - 1;
+        });
+      }, 1000);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [isRandoming]);
 
   const handleSelect = (topicChild: TopicChild) => {
     if (selected?.id === topicChild.id) {
