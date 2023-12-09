@@ -216,6 +216,45 @@ const ListMessage = observer((props: ListMessageProps) => {
 
     return notification;
   };
+
+  const processMessage = (message: string) => {
+    const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
+    const matches =
+      message &&
+      Array?.from(message?.matchAll(mentionRegex), (match) => ({
+        mention: match[1],
+        username: match[2],
+        memberId: match[3],
+      }));
+
+    if (matches?.length > 0 && message) {
+      const renderedElements = [];
+      let lastIndex = 0;
+
+      matches?.forEach((match, index) => {
+        const mentionIndex = message?.indexOf(match?.mention, lastIndex);
+
+        if (mentionIndex > lastIndex) {
+          const textElement = `${message?.slice(lastIndex, mentionIndex)}`;
+          renderedElements.push(textElement);
+        }
+
+        const mentionElement = <strong key={`mention-${index}`}>{`@${match?.username}`}</strong>;
+        renderedElements.push(mentionElement);
+
+        lastIndex = mentionIndex + match?.mention.length;
+      });
+
+      if (lastIndex < message?.length) {
+        const textElement = `${message?.slice(lastIndex)}`;
+        renderedElements.push(textElement);
+      }
+
+      return renderedElements;
+    } else {
+      return `${message || ''}`;
+    }
+  };
   const sortListChat =
     filterData !== null &&
     filterData !== undefined &&
@@ -295,9 +334,9 @@ const ListMessage = observer((props: ListMessageProps) => {
                             : item.conversationInfor?.lastMessage?.userName}
                           :
                         </Typography>
-                        {item.conversationInfor?.lastMessage?.message.includes('isCallCA01410') ? (
+                        {item.conversationInfor?.lastMessage?.message?.includes('isCallCA01410') ? (
                           <Typography className="message_content">
-                            {item.conversationInfor?.lastMessage?.message.includes('MA01410') ? (
+                            {item.conversationInfor?.lastMessage?.message?.includes('MA01410') ? (
                               <>
                                 <HiPhoneMissedCall className="missing_call" /> Missing Call
                               </>
@@ -309,14 +348,15 @@ const ListMessage = observer((props: ListMessageProps) => {
                           </Typography>
                         ) : (
                           <Typography>
-                            {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
+                            {item.conversationInfor?.lastMessage?.message?.includes('option_1410#$#')
                               ? notifiGroup(item.conversationInfor?.lastMessage?.message)
-                              : item.conversationInfor?.lastMessage?.message}
+                              : processMessage(item.conversationInfor?.lastMessage?.message)}
                           </Typography>
                         )}
                         <Typography className="time_item">
-                          {item.conversationInfor?.lastMessage?.timeAt &&
-                            formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)}
+                          {item.conversationInfor?.lastMessage?.userName
+                            ? formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)
+                            : ''}
                         </Typography>
                       </Box>
                     </ListItemText>

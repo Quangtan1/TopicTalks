@@ -391,34 +391,35 @@ const ListConversation = observer(() => {
                         : item.conversationInfor?.lastMessage?.userName}
                       :
                     </Typography>
-                    {item.conversationInfor?.lastMessage?.message.includes('isCallCA01410') ? (
+                    {item.conversationInfor?.lastMessage?.message?.includes('isCallCA01410') ? (
                       <Typography className="message_content">
-                        {item.conversationInfor?.lastMessage?.message.includes('MA01410') ? (
+                        {item.conversationInfor?.lastMessage?.message?.includes('MA01410') ? (
                           <>
                             <HiPhoneMissedCall className="missing_call" /> Missing Call
                           </>
                         ) : (
                           <>
-                            <FcCallback /> in {item.conversationInfor?.lastMessage?.message.split(',')[1].trim()}
+                            <FcCallback /> in {item.conversationInfor?.lastMessage?.message?.split(',')[1].trim()}
                           </>
                         )}
                       </Typography>
                     ) : isImage.some(
                         (ext) =>
-                          item.conversationInfor?.lastMessage?.message.endsWith(ext) &&
-                          item.conversationInfor?.lastMessage?.message.length > 90,
+                          item.conversationInfor?.lastMessage?.message?.endsWith(ext) &&
+                          item.conversationInfor?.lastMessage?.message?.length > 90,
                       ) ? (
                       <FaImage />
                     ) : (
                       <Typography>
-                        {item.conversationInfor?.lastMessage?.message.includes('option_1410#$#')
+                        {item.conversationInfor?.lastMessage?.message?.includes('option_1410#$#')
                           ? notifiGroup(item.conversationInfor?.lastMessage?.message)
                           : processMessage(item.conversationInfor?.lastMessage?.message)}
                       </Typography>
                     )}
                     <Typography className="time_item">
-                      {item.conversationInfor?.lastMessage?.timeAt &&
-                        formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)}
+                      {item.conversationInfor?.lastMessage?.userName
+                        ? formatTimeMessage(item.conversationInfor?.lastMessage?.timeAt)
+                        : ''}
                     </Typography>
                   </Box>
                 </ListItemText>
