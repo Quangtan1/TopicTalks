@@ -244,7 +244,7 @@ const NewPost: React.FC<Props> = observer(
               <InputLabel htmlFor="topic-parent">Select a Topic Parent</InputLabel>
 
               <Select label="Select a Topic Parent" id="topic-parent" native {...getFieldProps('selectedTopicParent')}>
-                <option aria-label="None" value="" />
+                {/* <option aria-label="None" value="" /> */}
                 {topicParentData?.data?.map((topicParent) => (
                   <option key={topicParent.id} value={topicParent.id}>
                     {topicParent?.topicParentName}
