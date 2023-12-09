@@ -259,34 +259,34 @@ const ListConversation = observer(() => {
       });
   };
 
-  const processMessage = (message) => {
+  const processMessage = (message: string) => {
     const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
-    const matches = Array.from(message.matchAll(mentionRegex), (match) => ({
+    const matches = Array.from(message?.matchAll(mentionRegex), (match) => ({
       mention: match[1],
       username: match[2],
       memberId: match[3],
     }));
 
-    if (matches.length > 0) {
+    if (matches?.length > 0) {
       const renderedElements = [];
       let lastIndex = 0;
 
-      matches.forEach((match, index) => {
-        const mentionIndex = message.indexOf(match.mention, lastIndex);
+      matches?.forEach((match, index) => {
+        const mentionIndex = message?.indexOf(match?.mention, lastIndex);
 
         if (mentionIndex > lastIndex) {
-          const textElement = `${message.slice(lastIndex, mentionIndex)}`;
+          const textElement = `${message?.slice(lastIndex, mentionIndex)}`;
           renderedElements.push(textElement);
         }
 
-        const mentionElement = <strong key={`mention-${index}`}>{`@${match.username}`}</strong>;
+        const mentionElement = <strong key={`mention-${index}`}>{`@${match?.username}`}</strong>;
         renderedElements.push(mentionElement);
 
-        lastIndex = mentionIndex + match.mention.length;
+        lastIndex = mentionIndex + match?.mention.length;
       });
 
-      if (lastIndex < message.length) {
-        const textElement = `${message.slice(lastIndex)}`;
+      if (lastIndex < message?.length) {
+        const textElement = `${message?.slice(lastIndex)}`;
         renderedElements.push(textElement);
       }
 
