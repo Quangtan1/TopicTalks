@@ -20,7 +20,7 @@ const TopicChildDetail = observer(() => {
   const [open, setOpen] = useState<boolean>(false);
   const { openRandom, setOpenRandom } = useContext(ChatContext);
   const [openRating, setOpenRating] = useState<boolean>(false);
-  const [ratingThisTopic, setRatingThisTopic] = useState<RatingByTopicChild>(null);
+  const [ratingThisTopic, setRatingThisTopic] = useState<RatingByTopicChild[]>([]);
   const account = accountStore?.account;
   const navigate = useNavigate();
 
@@ -38,10 +38,7 @@ const TopicChildDetail = observer(() => {
       .catch((err) => {
         console.log(err);
       });
-  }, [id]);
-
-  useEffect(() => {
-    getDataAPI(`/ratings/all/usr/${accountJwt?.id}/tpc/${id}`, account?.access_token, axiosJWT)
+    getDataAPI(`/ratings/all/tpc/${id}`, account?.access_token, axiosJWT)
       .then((res) => {
         setRatingThisTopic(res.data.data);
       })
@@ -49,6 +46,15 @@ const TopicChildDetail = observer(() => {
         console.log(err);
       });
   }, [id]);
+
+  const totalRating = (data: RatingByTopicChild[]) => {
+    if (data.length === 0) {
+      return 0;
+    }
+    const totalRating = data.reduce((sum, item) => sum + item.rating, 0);
+    const averageRating = Math.round(totalRating / data.length);
+    return averageRating;
+  };
 
   return (
     <LazyShow>
@@ -83,28 +89,27 @@ const TopicChildDetail = observer(() => {
               VIEW GROUP CHAT <AiOutlineArrowRight />
             </Button>
             <Box className="rating" onClick={() => setOpenRating(true)}>
-              {ratingThisTopic?.rating ? (
-                Array.from({ length: ratingThisTopic?.rating }, (_, index) => (
-                  <Box key={index}>
-                    <GiRoundStar className="star-active" />
-                  </Box>
-                ))
-              ) : (
-                <>
-                  <GiRoundStar />
-                  <GiRoundStar />
-                  <GiRoundStar />
-                  <GiRoundStar />
-                  <GiRoundStar />
-                </>
-              )}
+              {[1, 2, 3, 4, 5].map((value, index) => (
+                <GiRoundStar
+                  key={index}
+                  className={`${value <= (totalRating(ratingThisTopic) || 0) ? 'star-active' : ''}`}
+                />
+              ))}
             </Box>
           </Grid>
           {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
           {openRandom && (
             <RandomDialog open={openRandom} onClose={() => setOpenRandom(false)} topicChildProps={topicChild} />
           )}
-          {openRating && <Rating open={openRating} onClose={() => setOpenRating(false)} tpcId={id} />}
+          {openRating && (
+            <Rating
+              ratingThisTopic={ratingThisTopic}
+              open={openRating}
+              onClose={() => setOpenRating(false)}
+              tpcId={id}
+              setRatingThisTopic={setRatingThisTopic}
+            />
+          )}
         </Grid>
       </Box>
     </LazyShow>
