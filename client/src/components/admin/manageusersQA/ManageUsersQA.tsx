@@ -121,7 +121,7 @@ const ManageUserQA = observer(() => {
                         {<img src={item?.senderInfor?.avatarUrl || USER_IMAGE} alt="img" className="img" />}
                       </TableCell>
                       <TableCell className="cell_action">
-                        <Button onClick={() => handleOpenAnswerModal(item)}>Answer ❓❓❓</Button>
+                        <Button onClick={() => handleOpenAnswerModal(item)}>Reply❓</Button>
                       </TableCell>
                     </TableRow>
                   );
