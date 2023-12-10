@@ -20,6 +20,20 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 600;
+        padding-bottom: 8px;
+        border-bottom: 1px solid gainsboro;
+        position: relative;
+        width: 100%;
+        text-align: start;
+        &::after {
+          content: '';
+          background: #000c2d;
+          height: 3px;
+          width: 50px;
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+        }
       }
       .post_item {
         display: flex;
@@ -98,6 +112,20 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 600;
+        padding-bottom: 8px;
+        border-bottom: 1px solid gainsboro;
+        position: relative;
+        width: 100%;
+        text-align: start;
+        &::after {
+          content: '';
+          background: #000c2d;
+          height: 3px;
+          width: 50px;
+          position: absolute;
+          bottom: -1px;
+          left: 0;
+        }
       }
       .comment_item {
         background: #fff;

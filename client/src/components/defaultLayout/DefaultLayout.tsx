@@ -125,7 +125,16 @@ const DefaultLayout = observer(({ children }) => {
           />
           <Box className="suggested_search">
             <Typography>Suggested keywords</Typography>
-            <Typography>World Tech Healthy Science Books Travel Business Music</Typography>
+            <Box className="suggets">
+              <Typography>World</Typography>
+              <Typography>Tech</Typography>
+              <Typography>Healthy</Typography>
+              <Typography>Science</Typography>
+              <Typography>Books</Typography>
+              <Typography>Travel</Typography>
+              <Typography>Business</Typography>
+              <Typography>Music</Typography>
+            </Box>
             <AiOutlineCloseCircle onClick={() => setIsSearch(false)} />
           </Box>
         </Box>

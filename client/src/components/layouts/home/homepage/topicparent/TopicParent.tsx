@@ -24,9 +24,6 @@ const TopicParent = (props: TopicParentProps) => {
     <Box className="topic_parent_container">
       <Box className="box_title_parent">
         <Typography className="title_parent_topic">FEATURED TOPICS</Typography>
-        <div className="divider">
-          <GiPlainSquare />
-        </div>
       </Box>
       <Box className="first_box">
         <SingleCarousel

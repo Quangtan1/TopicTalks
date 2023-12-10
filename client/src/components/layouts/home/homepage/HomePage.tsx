@@ -6,19 +6,20 @@ import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import { beginChat, createAxios, getDataAPI, lettermessage, typing } from 'src/utils';
 import accountStore from 'src/store/accountStore';
-import { ListTopic, ListTopicHot, TopicChild } from 'src/types/topic.type';
+import { ListTopic, ListTopicHot, IRecommendTopic, TopicChild } from 'src/types/topic.type';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
 import TopicParent from './topicparent/TopicParent';
 import { IPost } from 'src/queries';
 import PostPopular from './postpopular/PostPopular';
 import TopicPopular from './topicpopular/TopicPopular';
+import RecommendTopic from './recommend/RecommendTopic';
 
 const HomePage = observer(() => {
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);
   const [listTopicHot, setListTopicParentHot] = useState<ListTopicHot[]>([]);
   const [listPost, setListPost] = useState<IPost[]>([]);
-  const [listPostHot, setListPostHot] = useState<IPost[]>([]);
+  const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>([]);
   const navigate = useNavigate();
   const account = accountStore?.account;
 
@@ -65,11 +66,21 @@ const HomePage = observer(() => {
         uiStore?.setLoading(false);
         console.log(err);
       });
+    getDataAPI(`/recommends/user/${account?.id}`, accountToken, axiosJWT)
+      .then((res) => {
+        setRecommendTopic(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        uiStore?.setLoading(false);
+        console.log(err);
+      });
   }, []);
 
   return (
     <Box className="home_container">
       <TopicPopular listTopic={listTopicHot} />
+      <RecommendTopic recommendTopic={recommendTopic} listTopic={listTopicHot} />
       <TopicParent listTopic={listTopic} />
       <PostPopular posts={listPost} />
     </Box>

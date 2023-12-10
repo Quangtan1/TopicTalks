@@ -26,7 +26,6 @@ const PostPopular = (props: IPostProps) => {
       <Box className="box_post_item">
         <Box className="box_post">
           <Typography className="title">Popular Posts</Typography>
-          <Divider />
           {posts?.map((item) => (
             <Box className="post_item" key={item.id}>
               <img src={item.img_url} alt="img" onClick={() => navigatedetailPost(item.id)} />
@@ -48,7 +47,6 @@ const PostPopular = (props: IPostProps) => {
         </Box>
         <Box className="box_comment">
           <Typography className="title">Last Comments</Typography>
-          <Divider />
           {posts?.map((item) => (
             <Box className="comment_item" key={item.id}>
               <Avatar

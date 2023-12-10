@@ -1,0 +1,109 @@
+.recommend_topic_container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 40px 0px;
+  .recommend_topic {
+    display: flex;
+    flex-direction: column;
+    max-width: 1180px;
+    width: 100%;
+    align-items: center;
+    gap: 20px;
+    .title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      padding-bottom: 8px;
+      border-bottom: 1px solid gainsboro;
+      position: relative;
+      width: 100%;
+      text-align: start;
+      &::after {
+        content: '';
+        background: #000c2d;
+        height: 3px;
+        width: 50px;
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+      }
+    }
+    .second_box {
+      max-width: 1120px;
+      width: 100%;
+      background: #fff;
+      .topic_parent_box {
+        max-width: 350px;
+        display: flex;
+        border-radius: 10px;
+        gap: 10px;
+        cursor: pointer;
+        border: 0.8px solid #f0f8ff;
+        align-items: center;
+        background: rgb(247, 248, 249);
+        padding: 20px;
+        svg {
+          position: absolute;
+          right: 13px;
+          top: 13px;
+          padding: 5px;
+          border-radius: 50%;
+          font-size: 30px;
+          color: #fff;
+          background: #09815c;
+          z-index: 3;
+        }
+        .avatar {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+        }
+        .topic_parent_title {
+          p:nth-child(1) {
+            color: #000;
+            font-weight: 600;
+            font-size: 14px;
+          }
+          p:nth-child(2) {
+            font-size: 12px;
+            max-height: 100px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+          }
+        }
+      }
+      .topic_parent_box:hover:before {
+        // transform: scale(1.04);
+        left: 2px;
+        max-width: 345px;
+        top: 0px;
+      }
+      .react-multi-carousel-track {
+        padding: 10px 0px 30px;
+        background: transparent;
+      }
+      .react-multi-carousel-list {
+      }
+      .react-multi-carousel-item {
+        display: flex;
+        justify-content: center;
+      }
+      .react-multiple-carousel__arrow--left {
+        left: calc(1% + -12px);
+      }
+      .react-multiple-carousel__arrow--right {
+        right: calc(2% + -20px);
+      }
+      .react-multiple-carousel__arrow {
+        z-index: 4;
+      }
+      .react-multi-carousel-item:not(:has(.topic_parent_box)) {
+        display: none;
+      }
+    }
+  }
+}

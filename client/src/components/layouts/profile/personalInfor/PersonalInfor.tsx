@@ -72,11 +72,7 @@ const PersonalInfor = observer((props: IPersonalProps) => {
           <Box className="bio_box">
             <span className="box_name">
               <Typography className="user_name">{user?.username}</Typography>
-              {isDisplay && user?.fullName && (
-                <>
-                  <Typography className="real_name">{`(${user?.fullName})`}</Typography>
-                </>
-              )}
+              {isDisplay && user?.fullName && <Typography className="real_name">{`(${user?.fullName})`}</Typography>}
               {user?.bio && (
                 <Typography className="bio">
                   <strong> Bio: </strong>

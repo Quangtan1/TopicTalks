@@ -7,12 +7,14 @@ import { FiberManualRecord } from '@mui/icons-material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { formatDatePost } from 'src/utils/helper';
 import { GiRoundStar } from 'react-icons/gi';
+import { useNavigate } from 'react-router-dom';
 
 interface TopicParentProps {
   listTopic: ListTopicHot[];
 }
 const TopicPopular = (props: TopicParentProps) => {
   const { listTopic } = props;
+  const navigate = useNavigate();
 
   const handleClickPrev = () => {
     const buttonPrev = document.querySelector('.carousel_large .control-prev') as HTMLElement;
@@ -32,6 +34,10 @@ const TopicPopular = (props: TopicParentProps) => {
       buttonNext && buttonNext.removeEventListener('click', handleClickNext);
     };
   });
+
+  const navigateTopic = (id: number) => {
+    navigate(`/topic-detail/${id}`);
+  };
   return (
     <Box className="topic_popular">
       <SingleCarousel
@@ -49,12 +55,11 @@ const TopicPopular = (props: TopicParentProps) => {
             <img src={item.image} alt="topic" />
             <Box className="box_topic_content">
               <Typography className="hot">Hot Topic</Typography>
-              <Typography>{item.topicChildrenName}</Typography>
+              <Typography onClick={() => navigateTopic(item.topicChildrenId)}>{item.topicChildrenName}</Typography>
               <Typography>
                 {formatDatePost(item.createdAt)} <FiberManualRecord /> 3K Views
               </Typography>
               <Typography className="max_rating">
-                Max Rating:
                 <Box sx={{ display: 'flex', pb: 1 }}>
                   {item?.maxRating &&
                     Array.from({ length: item?.maxRating }, (_, index) => (
@@ -92,7 +97,7 @@ const TopicPopular = (props: TopicParentProps) => {
           className="carousel_small"
         >
           {listTopic?.map((item) => (
-            <Box className="box_topic_small" key={item.id}>
+            <Box className="box_topic_small" key={item.id} onClick={() => navigateTopic(item.topicChildrenId)}>
               <img src={item.image} alt="topic" />
               <Box className="box_topic_content">
                 <Typography>{item.topicChildrenName}.</Typography>

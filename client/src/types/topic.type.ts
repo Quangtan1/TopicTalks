@@ -20,6 +20,16 @@ export interface ListTopicHot {
   updatedAt: string;
 }
 
+export interface IRecommendTopic {
+  topicChildrenId: number;
+  topicChildrenName: string;
+  image: string;
+  avgRating: number;
+  shortDescription: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface TopicChild {
   parentId: number;
   id: number;
