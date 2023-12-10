@@ -1,0 +1,42 @@
+.page_not_found_container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+  p:nth-child(2) {
+    font-family: Barlow, sans-serif;
+    color: #040a17;
+    font-size: 38px;
+    line-height: 1.21em;
+    font-weight: 700;
+    margin: 25px 0;
+  }
+  p {
+    font-family: Barlow, sans-serif;
+    font-size: 18px;
+    line-height: 1.5em;
+    font-weight: 400;
+    color: #70737a;
+  }
+  p:nth-child(5) {
+    font-weight: 600;
+  }
+  button {
+    margin-top: 20px;
+    padding: 8px 31px 11px 34px;
+    font-size: 13px;
+    line-height: 2em;
+    background-color: #ff516b;
+    border-radius: 0px;
+    color: #fff;
+    &:hover {
+      background: #f36b7f;
+    }
+  }
+}

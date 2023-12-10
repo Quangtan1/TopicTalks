@@ -20,6 +20,7 @@ import ForgotPassword from 'src/components/layouts/auth/ChangePW';
 import ChangePassword from 'src/components/layouts/auth/SendLinkForgotPW';
 import BanLayout from 'src/components/defaultLayout/BanLayout';
 import ListTopicChild from 'src/components/layouts/home/homepage/topicchild/ListTopicChild';
+import PageNotFound from 'src/components/layouts/pagenotfound/PageNotFound';
 // import PostDetailDialog from 'src/components/layouts/home/community/posts/PostDetailDialog';
 
 const publicRoutes = [
@@ -46,6 +47,7 @@ const publicRoutes = [
   { path: '/list-topic/:id/:name', component: ListTopicChild },
   { path: '/list-topic/search/:search', component: ListTopicChild },
   { path: '/ban-page', component: BanLayout, layout: null },
+  { path: '*', component: PageNotFound, layout: null },
 ];
 
 export { publicRoutes };

@@ -27,8 +27,12 @@ import image_login from 'src/assets/images/login_imag.jpeg';
 import admin_dashboard from 'src/assets/images/admin_dashboard.png';
 import chatCarousel1 from 'src/assets/images/chat_carousel_1.svg';
 import chatCarousel2 from 'src/assets/images/chat_carousel_2.svg';
+import notfound from 'src/assets/images/404-error-img.png';
+import notresponve from 'src/assets/images/Responsive.png';
 
 export {
+  notresponve,
+  notfound,
   admin_dashboard,
   chatCarousel2,
   chatCarousel1,
