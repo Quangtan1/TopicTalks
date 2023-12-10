@@ -22,6 +22,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { observer } from 'mobx-react';
 import AnswerQAModal from './answerModal';
 import _ from 'lodash';
+import AdminAnswer from './adminAnswer';
 
 const USER_IMAGE = 'https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg';
 
@@ -29,6 +30,7 @@ const ManageUserQA = observer(() => {
   dayjs.extend(relativeTime);
   const [usersQA, setUsersQA] = useState([]);
   const [isOpenAnswerModal, setIsOpenAnswerModal] = useState(false);
+  const [isOpenAnswer, setIsOpenAnswer] = useState(false);
   const [userQA, setUserQA] = useState({});
   const account = accountStore?.account;
   const setAccount = () => {
@@ -65,8 +67,15 @@ const ManageUserQA = observer(() => {
     setUserQA(item);
   };
 
-  const userList =
+  const handleOpenAnswer2 = (item) => {
+    setIsOpenAnswer(true);
+    setUserQA(item);
+  };
+
+  const userLis1 =
     typeof usersQA === 'string' ? [] : _.isEmpty(usersQA) ? [] : usersQA?.filter((user) => user?.answered === false);
+
+  const userList = typeof usersQA === 'string' ? [] : _.isEmpty(usersQA) ? [] : usersQA;
 
   return (
     <>
@@ -88,6 +97,7 @@ const ManageUserQA = observer(() => {
                 <TableCell className="cell_content">Content</TableCell>
                 <TableCell className="cell_createdAt">Created Time</TableCell>
                 <TableCell className="cell_img">Image</TableCell>
+                <TableCell className="cell_status">Status</TableCell>
                 <TableCell className="cell_action">Action</TableCell>
               </TableRow>
             </TableHead>
@@ -120,8 +130,10 @@ const ManageUserQA = observer(() => {
                       <TableCell className="cell_img">
                         {<img src={item?.senderInfor?.avatarUrl || USER_IMAGE} alt="img" className="img" />}
                       </TableCell>
+                      <TableCell className="cell_status">{item?.answered ? 'Answered' : 'Not Answered'}</TableCell>
                       <TableCell className="cell_action">
                         <Button onClick={() => handleOpenAnswerModal(item)}>Reply❓</Button>
+                        <Button onClick={() => handleOpenAnswer2(item)}>See the answer</Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -140,6 +152,7 @@ const ManageUserQA = observer(() => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
         <AnswerQAModal isOpen={isOpenAnswerModal} questionData={userQA} setIsOpenAnswerModal={setIsOpenAnswerModal} />
+        <AdminAnswer isOpen={isOpenAnswer} questionData={userQA} setIsOpenAnswer={setIsOpenAnswer} />
       </Box>
     </>
   );
