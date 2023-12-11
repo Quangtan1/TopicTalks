@@ -174,7 +174,7 @@ const RandomDialog = observer((props: DialogProps) => {
             setSeconds(30);
             socket.emit('onLeaveChatRandom', topicChildren);
             setSelected(null);
-            ToastError('No partners found');
+            ToastError('No partner found');
           }
 
           return prevSeconds - 1;
