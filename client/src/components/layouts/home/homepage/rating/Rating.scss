@@ -71,11 +71,14 @@
       }
       button {
         width: 130px;
-        background: #2186f1;
+        background: #8e6e51;
         color: #fff;
+        &:hover {
+          opacity: 0.7;
+        }
       }
       .disable {
-        background: #83b8f0;
+        background: #d4c6b8;
       }
     }
   }

@@ -149,6 +149,14 @@ export const formatTimeAt = (date: string) => {
   return `${day}-${months[monthIndex]}-${year} ${hour}h:${minute}m`;
 };
 
+export const formatStarRated = (value: number) => {
+  if (value > 1000) {
+    const newValue = Math.round(value / 1000);
+    return `${newValue}k`;
+  }
+  return `${value}`;
+};
+
 export const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },

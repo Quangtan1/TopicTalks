@@ -13,6 +13,7 @@ import RandomDialog from 'src/components/dialogs/RandomDialog';
 import LazyShow from '../../LandingView/Animated/LazyShow';
 import { GiRoundStar } from 'react-icons/gi';
 import Rating from './rating/Rating';
+import { formatStarRated } from 'src/utils/helper';
 
 const TopicChildDetail = observer(() => {
   const { id } = useParams();
@@ -97,7 +98,11 @@ const TopicChildDetail = observer(() => {
                   />
                 ))}
               </Box>
-              <Typography className="amount_rated">{`(1.5tr rated)`}</Typography>
+              {ratingThisTopic?.length !== 0 && (
+                <Typography className="amount_rated">{`(${formatStarRated(
+                  ratingThisTopic?.length,
+                )} rated)`}</Typography>
+              )}
             </Box>
           </Grid>
           {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
