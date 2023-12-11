@@ -6,47 +6,76 @@
     background: rgb(51 47 47 / 65%);
   }
   .MuiPaper-root {
-    width: 300px;
-    height: 130px;
+    width: 350px;
+    height: 340px;
     max-width: 100%;
     max-height: 100%;
     .dialog_title {
       text-align: center;
-      p:nth-child(1) {
-        font-weight: 600;
-        color: #000;
-        letter-spacing: 1px;
-        font-size: 20px;
-        font-family: 'Yeseva One', display;
-      }
-      p:nth-child(2) {
-        color: rgb(142, 110, 81);
-        font-weight: 600;
-      }
+
+      font-weight: 600;
+      color: #000;
+      letter-spacing: 1px;
+      font-size: 22px;
+      font-family: 'Yeseva One', display;
     }
     .dialog_content {
       display: flex;
-      gap: 10px;
-      justify-content: center;
+      gap: 20px;
       align-items: center;
+      flex-direction: column;
+      .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        p:nth-child(2) {
+          font-weight: 600;
+          letter-spacing: 1px;
+          font-size: 15px;
+          font-family: 'Yeseva One', display;
+        }
+      }
+      .vote {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        svg {
+          font-size: 50px;
+          color: #007bff;
+          background: #cfe9e0;
+          padding: 9px;
+          border-radius: 50%;
+        }
+      }
+      .box_star {
+        display: flex;
+        gap: 5px;
+        .star {
+          font-size: 30px;
+          stroke-width: 40px;
+          fill: #fff;
+          stroke: #000;
+          cursor: pointer;
+          transition: color 0.3s ease-in-out;
 
-      .star {
-        font-size: 30px;
-        stroke-width: 40px;
-        fill: #fff;
-        stroke: #000;
-        cursor: pointer;
-        transition: color 0.3s ease-in-out;
-
-        &:hover {
+          // &:hover {
+          //   fill: #ee4d2d;
+          //   stroke: #ee4d2d;
+          // }
+        }
+        .hovered {
           fill: #ee4d2d;
           stroke: #ee4d2d;
         }
       }
-
-      .hovered {
-        fill: #ee4d2d;
-        stroke: #ee4d2d;
+      button {
+        width: 130px;
+        background: #2186f1;
+        color: #fff;
+      }
+      .disable {
+        background: #83b8f0;
       }
     }
   }

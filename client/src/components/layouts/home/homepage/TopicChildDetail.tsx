@@ -88,13 +88,16 @@ const TopicChildDetail = observer(() => {
             >
               VIEW GROUP CHAT <AiOutlineArrowRight />
             </Button>
-            <Box className="rating" onClick={() => setOpenRating(true)}>
-              {[1, 2, 3, 4, 5].map((value, index) => (
-                <GiRoundStar
-                  key={index}
-                  className={`${value <= (totalRating(ratingThisTopic) || 0) ? 'star-active' : ''}`}
-                />
-              ))}
+            <Box>
+              <Box className="rating" onClick={() => setOpenRating(true)}>
+                {[1, 2, 3, 4, 5].map((value, index) => (
+                  <GiRoundStar
+                    key={index}
+                    className={`${value <= (totalRating(ratingThisTopic) || 0) ? 'star-active' : ''}`}
+                  />
+                ))}
+              </Box>
+              <Typography className="amount_rated">{`(1.5tr rated)`}</Typography>
             </Box>
           </Grid>
           {open && <CreateGroupDialog open={open} onClose={() => setOpen(false)} topicChildProps={topicChild} />}
@@ -103,6 +106,7 @@ const TopicChildDetail = observer(() => {
           )}
           {openRating && (
             <Rating
+              nameTopic={topicChild?.topicChildrenName}
               ratingThisTopic={ratingThisTopic}
               open={openRating}
               onClose={() => setOpenRating(false)}

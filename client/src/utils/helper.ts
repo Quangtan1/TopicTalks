@@ -131,6 +131,24 @@ export const formatDatePost = (date: string) => {
   return `${months[monthIndex]} ${day} ${year}`;
 };
 
+export const formatTimeAt = (date: string) => {
+  const dateObj = new Date(date);
+  const dateNow = new Date();
+
+  const day = dateObj.getDate();
+  const monthIndex = dateObj.getMonth();
+  const year = dateObj.getFullYear();
+  const hour = dateObj.getHours();
+  const minute = dateObj.getMinutes();
+
+  if (dateNow.getDate() - dateObj.getDate() < 1) {
+    return `${hour}h:${minute}m`;
+  }
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  return `${day}-${months[monthIndex]}-${year} ${hour}h:${minute}m`;
+};
+
 export const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },

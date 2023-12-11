@@ -13,7 +13,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import ChatContext from 'src/context/ChatContext';
 import { IMessage } from 'src/types';
 import uiStore from 'src/store/uiStore';
-import { handleImageUpload } from 'src/utils/helper';
+import { formatTimeAt, handleImageUpload } from 'src/utils/helper';
 import ReactImageFallback from 'react-image-fallback';
 import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
@@ -548,7 +548,7 @@ const ChatBox = observer((props: ChatProps) => {
                       )}
                     </span>
                   )}
-                  <Box className="message_box">
+                  <Box className="message_box" title={formatTimeAt(item.timeAt)}>
                     {isImage.some((ext) => item.data.message.endsWith(ext) && item.data.message?.length > 90) ? (
                       <ReactImageFallback
                         src={item.data.message}

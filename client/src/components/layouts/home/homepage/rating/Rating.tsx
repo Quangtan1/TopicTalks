@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './Rating.scss';
 import { GiRoundStar } from 'react-icons/gi';
@@ -7,8 +7,40 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import { RatingByTopicChild } from 'src/types/topic.type';
+import { FaSadCry, FaSadTear, FaSmileBeam, FaSmileWink } from 'react-icons/fa';
+import { BsFillEmojiSmileFill } from 'react-icons/bs';
+import { ImSad } from 'react-icons/im';
+
+const rating = [
+  {
+    id: 1,
+    title: 'Very Poor',
+    icon: <FaSadCry />,
+  },
+  {
+    id: 2,
+    title: ' Poor',
+    icon: <FaSadTear />,
+  },
+  {
+    id: 3,
+    title: 'Average',
+    icon: <BsFillEmojiSmileFill />,
+  },
+  {
+    id: 4,
+    title: 'Good',
+    icon: <FaSmileBeam />,
+  },
+  {
+    id: 5,
+    title: 'Excellent',
+    icon: <FaSmileWink />,
+  },
+];
 
 interface IDialogProps {
+  nameTopic: string;
   ratingThisTopic: RatingByTopicChild[];
   open: boolean;
   onClose: () => void;
@@ -16,33 +48,33 @@ interface IDialogProps {
   setRatingThisTopic: React.Dispatch<React.SetStateAction<RatingByTopicChild[]>>;
 }
 const Rating = observer((props: IDialogProps) => {
-  const { open, onClose, tpcId, setRatingThisTopic, ratingThisTopic } = props;
-  const [hoverValue, setHoverValue] = useState<number | null>(null);
+  const { open, onClose, tpcId, setRatingThisTopic, ratingThisTopic, nameTopic } = props;
+  const [star, setStar] = useState<number | null>(null);
   const account = accountStore?.account;
   const setAccount = () => {
     return accountStore?.setAccount;
   };
   const axiosJWT = createAxios(account, setAccount);
 
-  const handleStarHover = (value: number) => {
-    setHoverValue(value);
-  };
-
   useEffect(() => {
     getDataAPI(`/ratings/all/usr/${account?.id}/tpc/${tpcId}`, account?.access_token, axiosJWT)
       .then((res) => {
-        setHoverValue(res.data.data.rating);
+        setStar(res.data.data.rating);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  const handleStarClick = (value: number) => {
+  const handleClick = (value: number) => {
+    setStar(value);
+  };
+
+  const handleRating = () => {
     const data = {
       tpcId: tpcId,
       userId: account?.id,
-      rating: value,
+      rating: star,
     };
     postDataAPI(`/ratings/topic`, data, account.access_token, axiosJWT)
       .then((res) => {
@@ -64,19 +96,41 @@ const Rating = observer((props: IDialogProps) => {
       });
   };
 
+  const hoveredRating = rating.find((item) => item.id === star);
+
   return (
     <Dialog open={open} onClose={onClose} className="rating_container">
-      <DialogTitle className="dialog_title">Your rating</DialogTitle>
+      <DialogTitle className="dialog_title">Your Rating</DialogTitle>
       <DialogContent className="dialog_content">
-        {[1, 2, 3, 4, 5].map((value) => (
-          <GiRoundStar
-            key={value}
-            className={`star ${value <= (hoverValue || 0) ? 'hovered' : ''}`}
-            onMouseEnter={() => handleStarHover(value)}
-            onMouseLeave={() => handleStarHover(null)}
-            onClick={() => handleStarClick(value)}
-          />
-        ))}
+        <Box className="content">
+          <Typography>How would you rate</Typography>
+          <Typography>{nameTopic} ?</Typography>
+        </Box>
+        <Box className="vote">
+          {star ? (
+            <>
+              {hoveredRating?.icon}
+              <Typography>{hoveredRating?.title}</Typography>
+            </>
+          ) : (
+            <>
+              <ImSad />
+              <Typography>Rating for this topic</Typography>
+            </>
+          )}
+        </Box>
+        <Box className="box_star">
+          {[1, 2, 3, 4, 5].map((value) => (
+            <GiRoundStar
+              key={value}
+              className={`star ${value <= (star || 0) ? 'hovered' : ''}`}
+              onClick={() => handleClick(value)}
+            />
+          ))}
+        </Box>
+        <Button onClick={handleRating} disabled={!star} className={!star && 'disable'}>
+          Submit
+        </Button>
       </DialogContent>
     </Dialog>
   );
