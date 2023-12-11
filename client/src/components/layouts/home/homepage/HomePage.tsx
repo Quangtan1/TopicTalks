@@ -1,10 +1,9 @@
-import { Box, Typography } from '@mui/material';
-import { useEffect, useState, useMemo } from 'react';
-import memoizeOne from 'memoize-one';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 import './HomePage.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { beginChat, createAxios, getDataAPI, lettermessage, typing } from 'src/utils';
+import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
 import { ListTopic, ListTopicHot, IRecommendTopic, TopicChild } from 'src/types/topic.type';
 import 'react-multi-carousel/lib/styles.css';
@@ -14,6 +13,7 @@ import { IPost } from 'src/queries';
 import PostPopular from './postpopular/PostPopular';
 import TopicPopular from './topicpopular/TopicPopular';
 import RecommendTopic from './recommend/RecommendTopic';
+import SelectTopicCustomDialog from 'src/components/layouts/auth/selectTopicChildrenDialog/SelectTopicChildrenDialog';
 
 const HomePage = observer(() => {
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);

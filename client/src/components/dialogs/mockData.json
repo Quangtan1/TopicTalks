@@ -1,0 +1,47 @@
+[
+  {
+    "createdAt": "2023-10-18T16:36:22.801142",
+    "updatedAt": "2023-10-18T16:36:22.801142",
+    "id": 1,
+    "topicParentName": "Health",
+    "image": "https://res.cloudinary.com/tantqdev/image/upload/v1701182291/TopicTalks_Post/Healthy-Lifestyle_elmbt4.png",
+    "shortDescript": "Stay vibrant with our health-focused content, offering expert tips, latest trends, and practical advice for a balanced and active lifestyle.",
+    "expired": false
+  },
+  {
+    "createdAt": "2023-10-18T16:37:33.899051",
+    "updatedAt": "2023-10-18T16:37:33.899051",
+    "id": 2,
+    "topicParentName": "Technology",
+    "image": "https://res.cloudinary.com/tantqdev/image/upload/v1701182288/TopicTalks_Post/Disrupting_Tech_shutterstock_566877226_800_x_400_wfbjpo.jpg",
+    "shortDescript": "Dive into the ever-evolving world of tech with our concise updates on innovations, gadgets, and trends shaping the future.",
+    "expired": false
+  },
+  {
+    "createdAt": "2023-10-18T16:37:40.466224",
+    "updatedAt": "2023-10-18T16:37:40.466224",
+    "id": 3,
+    "topicParentName": "Education",
+    "image": "https://res.cloudinary.com/tantqdev/image/upload/v1701182289/TopicTalks_Post/pioneers-of-education-1_xultgj.jpg",
+    "shortDescript": "Unlock knowledge and ignite curiosity through our education insights, featuring engaging content on learning methodologies, career development, and the pursuit of lifelong learning.",
+    "expired": false
+  },
+  {
+    "createdAt": "2023-10-18T16:37:47.015782",
+    "updatedAt": "2023-10-18T16:37:47.015782",
+    "id": 4,
+    "topicParentName": "Sports",
+    "image": "https://res.cloudinary.com/tantqdev/image/upload/v1701182288/TopicTalks_Post/which-sports-makes-the-most-money_sziqhx.jpg",
+    "shortDescript": "Experience the thrill of victory and the agony of defeat with our dynamic sports coverage, bringing you highlights, analysis, and the latest buzz from the world of athletics.",
+    "expired": false
+  },
+  {
+    "createdAt": "2023-10-18T16:37:52.853555",
+    "updatedAt": "2023-10-18T16:37:52.853555",
+    "id": 5,
+    "topicParentName": "Music",
+    "image": "https://res.cloudinary.com/tantqdev/image/upload/v1701182288/TopicTalks_Post/Music-Therapist-JS-1024x576_eq8wna.webp",
+    "shortDescript": "Tune in to the rhythm of our music coverage, where we explore diverse genres, spotlight emerging artists, and keep you in sync with the hottest tracks and industry happenings.",
+    "expired": false
+  }
+]

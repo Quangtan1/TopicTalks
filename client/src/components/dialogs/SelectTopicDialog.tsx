@@ -6,7 +6,8 @@ import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
 import { ToastSuccess } from 'src/utils/toastOptions';
 import select from 'src/assets/images/select.svg';
-
+import SelectTopicCustomDialog from 'src/components/layouts/auth/selectTopicChildrenDialog/SelectTopicChildrenDialog';
+// import listTopic from './mockData.json';
 interface DialogProps {
   open: boolean;
   accountSignup: IUser;
@@ -22,8 +23,10 @@ const Transition = React.forwardRef(function Transition(props: any, ref) {
 });
 const SelectTopicDialog = (props: DialogProps) => {
   const { open, accountSignup, onClose } = props;
-  const [selectedTopic, setSelectedTopic] = useState<number[]>([]);
+  const [selectedTopic, setSelectedTopic] = useState<number>(null);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
+  const [selectedTopicChild, setSelectedTopicChild] = useState<number[]>([]);
+  const [openModalSelectTopicChild, setOpenModalSelectTopicChild] = useState<boolean>(false);
 
   useEffect(() => {
     axios
@@ -41,11 +44,11 @@ const SelectTopicDialog = (props: DialogProps) => {
   }, [accountSignup]);
 
   const handleSelectTopic = (topicId: number) => {
-    if (selectedTopic.includes(topicId)) {
-      const newSelectedTopic = selectedTopic.filter((itemId) => itemId !== topicId);
-      setSelectedTopic(newSelectedTopic);
+    if (selectedTopic === topicId) {
+      setSelectedTopic(null);
     } else {
-      setSelectedTopic([...selectedTopic, topicId]);
+      setSelectedTopic(topicId);
+      setOpenModalSelectTopicChild(true);
     }
   };
 
@@ -68,6 +71,12 @@ const SelectTopicDialog = (props: DialogProps) => {
     }
   };
 
+  const handleCloseTopicChild = () => {
+    setSelectedTopicChild(null);
+    setSelectedTopic(null);
+    setOpenModalSelectTopicChild(false);
+  };
+
   return (
     <Dialog open={open} className="select_topic_dialog" TransitionComponent={Transition}>
       <DialogTitle className="dialog-title">
@@ -86,7 +95,7 @@ const SelectTopicDialog = (props: DialogProps) => {
                   key={item.id}
                   style={{ marginTop: 8 }}
                   onClick={() => handleSelectTopic(item.id)}
-                  className={`${selectedTopic.includes(item.id) && 'selected'}`}
+                  className={`${selectedTopic === item.id && 'selected'}`}
                 >
                   {item.topicParentName}
                 </Typography>
@@ -102,6 +111,14 @@ const SelectTopicDialog = (props: DialogProps) => {
         <Button onClick={onClose}>Other Time</Button>
         <Button onClick={submitTopic}>Submit</Button>
       </DialogActions>
+      <SelectTopicCustomDialog
+        accountSignup={accountSignup}
+        open={openModalSelectTopicChild}
+        onClose={handleCloseTopicChild}
+        topicParentId={selectedTopic}
+        setSelectedTopicChild={setSelectedTopicChild}
+        selectedTopicChild={selectedTopicChild}
+      />
     </Dialog>
   );
 };

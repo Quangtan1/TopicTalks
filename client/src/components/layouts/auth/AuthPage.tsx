@@ -244,7 +244,6 @@ const LoginPage = observer(() => {
             {!showOTP ? (
               <Box className="forgot-password">
                 <Typography onClick={goToForgotPw}>Forgot password?</Typography>
-
                 <Typography onClick={() => setSignIn(!isSignIn)}>
                   {isSignIn ? 'Sign up account?' : 'Sign In?'}
                 </Typography>
