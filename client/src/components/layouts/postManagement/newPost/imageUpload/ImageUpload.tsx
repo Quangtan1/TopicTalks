@@ -1,10 +1,11 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Box, TextField, Typography } from '@mui/material';
 import { handleImageUpload } from 'src/utils/helper';
 import { IoDocumentAttachSharp } from 'react-icons/io5';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
+import CropEasy from 'src/components/cropImage/crop/CropEasy';
 
 interface Props {
   touched: any;
@@ -30,6 +31,12 @@ const ImageUpload: FC<Props> = observer(
   }) => {
     const fileInputRef = useRef(null);
 
+    const [isOpenCrop, setIsOpenCrop] = useState(false);
+    const [isCropped, setIsCropped] = useState(false);
+    const [file, setFile] = useState(null);
+
+    const handleClose = () => {};
+
     const handleLinkClick = () => {
       fileInputRef.current.click();
     };
@@ -37,6 +44,7 @@ const ImageUpload: FC<Props> = observer(
     useEffect(() => {
       if (selectedImage !== '') {
         uiStore?.setLoading(false);
+        setIsCropped(false);
       }
     }, [selectedImage]);
 
@@ -82,13 +90,17 @@ const ImageUpload: FC<Props> = observer(
           alt="Selected"
           className="selected-image-preview"
         />
-
-        {/* {selectedImage !== '' && (
-        <Typography>
-          {selectedImage.slice(0, 20)}
-          <AiOutlineCloseCircle width={50} height={50} onClick={() => setSelectedImage('')} />
-        </Typography>
-      )} */}
+        {/* {isCropped && (
+          <Box sx={{ height: '500px', width: '500px' }}>
+            <CropEasy
+              setFile={setFile}
+              photoURL={selectedImage}
+              setIsCropped={setIsCropped}
+              setPhotoURL={setSelectedImage}
+              setOpenCrop={() => setIsOpenCrop(true)}
+            />
+          </Box>
+        )} */}
       </>
     );
   },
