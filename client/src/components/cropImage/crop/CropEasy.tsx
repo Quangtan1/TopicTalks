@@ -6,8 +6,7 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from './utils/cropImage';
 import { ToastError } from 'src/utils/toastOptions';
 
-const CropEasy = ({ photoURL, setOpenCrop, setIsCropped, setPhotoURL, setFile }) => {
-  const [loading, setLoading] = useState(false);
+const CropEasy = ({ photoURL, setOpenCrop, onCancel, setIsCropped, setPhotoURL, setFile, setLoading }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -33,7 +32,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setIsCropped, setPhotoURL, setFile })
     setLoading(false);
   };
   return (
-    <>
+    <Box sx={{ display: 'flex', mx: 3, my: 2 }}>
       <DialogContent
         dividers
         sx={{
@@ -90,7 +89,14 @@ const CropEasy = ({ photoURL, setOpenCrop, setIsCropped, setPhotoURL, setFile })
             flexWrap: 'wrap',
           }}
         >
-          <Button variant="outlined" startIcon={<Cancel />} onClick={() => setOpenCrop(false)}>
+          <Button
+            variant="outlined"
+            startIcon={<Cancel />}
+            onClick={() => {
+              setOpenCrop(false);
+              onCancel?.();
+            }}
+          >
             Cancel
           </Button>
           <Button variant="contained" startIcon={<CropIcon />} onClick={cropImage}>
@@ -98,7 +104,7 @@ const CropEasy = ({ photoURL, setOpenCrop, setIsCropped, setPhotoURL, setFile })
           </Button>
         </Box>
       </DialogActions>
-    </>
+    </Box>
   );
 };
 

@@ -1,0 +1,79 @@
+.new-post-dialog {
+  &__app-bar {
+    &__btn {
+      border: 1px solid rgb(238, 130, 130) !important;
+      color: black !important;
+    }
+
+    background-color: #f7f8f9 !important;
+    color: black !important;
+    text-align: center;
+    &__title {
+      flex: 1;
+      font-weight: bold !important;
+    }
+  }
+
+  &__grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &__left {
+      padding-top: 100px;
+      &__dialog {
+        overflow-x: hidden;
+
+        &__label {
+          margin-bottom: 16px;
+        }
+        &__input {
+          margin: 12px 0 !important;
+        }
+        &__input-date {
+          margin: 16px 0;
+          padding: 16px 0;
+          border-radius: 4px;
+          width: 100%;
+        }
+      }
+    }
+    &__right {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+
+      &__card {
+        &__actions {
+          &__button {
+            border: 1px solid #8f7053 !important;
+            color: #8f7053 !important;
+            width: 100px !important;
+          }
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        &__action-area {
+          &__content {
+          }
+          &__text {
+            overflow-wrap: break-word;
+            padding: 4px 0;
+          }
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center !important;
+          align-items: center;
+          background-color: #fff;
+          &__img {
+            padding: 12px;
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+}

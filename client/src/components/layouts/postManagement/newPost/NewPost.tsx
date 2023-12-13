@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -9,14 +8,11 @@ import {
   DialogTitle,
   FormControl,
   InputLabel,
-  MenuItem,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
-import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import './NewPost.scss';
-import EmotionModal from './emotionModal/EmotionModal';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
@@ -31,15 +27,12 @@ import {
 } from 'src/queries/functionQuery';
 import { useMutation } from 'react-query';
 import AvatarComponent from './avatarComponent/AvatarComponent';
-// import SuggestedTopicsComponent from './suggestedTopicsComponent/SuggestedTopicsComponent';
 import ImageUpload from './imageUpload/ImageUpload';
 import { observer } from 'mobx-react';
 import { IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
 import { createAxios } from 'src/utils';
 import postItemStore from 'src/store/postStore';
-
-// const fakeDataTopic = ['AI Suggested Topic 1', 'AI Suggested Topic 2'];
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -69,9 +62,6 @@ const NewPost: React.FC<Props> = observer(
     const url_img = accountStore?.account?.url_img;
 
     // ========================== State ==========================
-    // const [suggestedTopic, setSuggestedTopic] = useState(fakeDataTopic);
-    const [isEmotionModalOpen, setIsEmotionModalOpen] = useState(false);
-    const [emotion, setEmotion] = useState('');
     const [selectedImage, setSelectedImage] = useState('');
 
     // ========================== Query ==========================
@@ -87,8 +77,6 @@ const NewPost: React.FC<Props> = observer(
     const useEditPost = useMutation((postData) => editPost(postData, account));
 
     const setDefaultValue = () => {
-      setEmotion('');
-      // setSuggestedTopic([]);
       resetForm();
     };
 
@@ -147,10 +135,6 @@ const NewPost: React.FC<Props> = observer(
       setDefaultValue();
     };
 
-    const handleClickRemoveEmotion = () => {
-      setEmotion('');
-    };
-
     const formik = useFormik({
       initialValues: {
         postContent: dataEdit?.content,
@@ -160,7 +144,7 @@ const NewPost: React.FC<Props> = observer(
         status: dataEdit?.status || 1,
       },
       validationSchema,
-      validateOnChange: false,
+      validateOnChange: true,
       validateOnBlur: false,
       innerRef: formRef,
       onSubmit: handleCreatePost,
@@ -233,18 +217,12 @@ const NewPost: React.FC<Props> = observer(
               ) : null
             }
           />
-          {/* {!values?.selectedTopicParent && (
-            <Button variant="outlined" size="small" className="post-button" onClick={() => refetchTopic()}>
-              Reload Topic Parent
-            </Button>
-          )} */}
 
           {!isLoadingTopicParent && (
             <FormControl fullWidth variant="outlined" className="topic-parent-select">
               <InputLabel htmlFor="topic-parent">Select a Topic Parent</InputLabel>
 
               <Select label="Select a Topic Parent" id="topic-parent" native {...getFieldProps('selectedTopicParent')}>
-                {/* <option aria-label="None" value="" /> */}
                 {topicParentData?.data?.map((topicParent) => (
                   <option key={topicParent.id} value={topicParent.id}>
                     {topicParent?.topicParentName}
@@ -258,39 +236,7 @@ const NewPost: React.FC<Props> = observer(
             </FormControl>
           )}
 
-          {!!emotion && (
-            <Box display={'flex'} alignItems={'center'} className="wrap-emotion">
-              {/* Emotion */}
-              <Typography variant="body2" className="emotion-text">
-                Feeling:
-              </Typography>
-              <img
-                src={emotion}
-                alt={`Emotion ${emotion.toString()}}`}
-                className="emotion-icon"
-                onClick={() => handleClickRemoveEmotion()}
-              />
-            </Box>
-          )}
-
-          <ImageUpload
-            isSelected={!!selectedImage}
-            {...{ uiStore, touched, getFieldProps, errors, selectedImage, values, setSelectedImage }}
-          />
-
-          {/* <Box className="actions-container"> */}
-
-          {/* <Button startIcon={<EmojiEmotionsIcon />} className="emotion-button" onClick={openEmotionModal}>
-              Emotion
-            </Button>
-            <EmotionModal
-              open={isEmotionModalOpen}
-              onClose={closeEmotionModal}
-              emotion={emotion}
-              setEmotion={setEmotion}
-            /> */}
-          {/* </Box> */}
-          {/* <SuggestedTopicsComponent suggestedTopic={suggestedTopic} /> */}
+          {/* <ImageUpload {...{ selectedImage, values, setSelectedImage }} /> */}
         </DialogContent>
         <DialogActions className="dialog-actions">
           <Button onClick={closePostModal} color="primary">

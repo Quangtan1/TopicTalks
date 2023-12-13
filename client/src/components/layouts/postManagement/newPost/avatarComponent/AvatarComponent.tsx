@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 import './AvatarComponent.scss';
+import dayjs from 'dayjs';
 
 interface AvatarProps {
   url: string;
@@ -27,7 +28,7 @@ const AvatarComponent: React.FC<AvatarProps> = ({ url, username }) => {
           {username}
         </Typography>
         <Typography variant="body2" className="topic-tag">
-          Topic tag
+          {dayjs(new Date()).format('DD/MM/YYYY')}
         </Typography>
       </Box>
     </Box>

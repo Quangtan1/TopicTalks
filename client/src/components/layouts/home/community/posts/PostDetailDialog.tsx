@@ -33,6 +33,7 @@ import NewPost from 'src/components/layouts/postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { MdDone, MdOutlineCancel } from 'react-icons/md';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
+import CreatePostFullScreenDialog from 'src/components/layouts/postManagement/createPostFullScreenDialog';
 
 interface DialogProps {
   open: boolean;
@@ -254,6 +255,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
           totalComment: post?.totalComment - 1,
         });
         setOpenDelete(false);
+        ToastSuccess('Delete Comment Successfully');
       })
       .catch((err) => {
         console.log(err);
@@ -504,7 +506,13 @@ const PostDetailDialog = observer((props: DialogProps) => {
         />
       )}
       {isEdit && (
-        <NewPost isEdit open={isEdit} dataEdit={post} closePostModal={() => setIsEdit(false)} setPost={setPost} />
+        <CreatePostFullScreenDialog
+          isEdit
+          open={isEdit}
+          dataEdit={post}
+          closePostModal={() => setIsEdit(false)}
+          setPost={setPost}
+        />
       )}
     </Dialog>
   );

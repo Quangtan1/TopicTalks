@@ -12,6 +12,7 @@ import NewPost from '../../postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { ListTopic } from 'src/types/topic.type';
 import { RiLoader2Line } from 'react-icons/ri';
+import CreatePostFullScreenDialog from '../../postManagement/createPostFullScreenDialog';
 
 const Community = observer(() => {
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
@@ -147,7 +148,9 @@ const Community = observer(() => {
       {openPostDetail && (
         <PostDetailDialog open={openPostDetail} onClose={() => setOpenPostDetail(false)} postId={postId} />
       )}
-      {openCreatePost && <NewPost open={openCreatePost} closePostModal={() => setOpenCreatePost(false)} />}
+      {openCreatePost && (
+        <CreatePostFullScreenDialog isOpen={openCreatePost} closePostModal={() => setOpenCreatePost(false)} />
+      )}
     </Box>
   );
 });

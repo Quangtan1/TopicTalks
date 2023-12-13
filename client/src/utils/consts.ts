@@ -29,9 +29,11 @@ import chatCarousel1 from 'src/assets/images/chat_carousel_1.svg';
 import chatCarousel2 from 'src/assets/images/chat_carousel_2.svg';
 import notfound from 'src/assets/images/404-error-img.png';
 import notresponve from 'src/assets/images/Responsive.png';
+import confirmsvg123 from 'src/assets/images/confirmsvg123.svg';
 
 export {
   notresponve,
+  confirmsvg123,
   notfound,
   admin_dashboard,
   chatCarousel2,

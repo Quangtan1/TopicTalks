@@ -3,18 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-// import { configure } from 'mobx';
 import ChatProvider from './context/ChatProvider';
 import { FacebookProvider } from 'react-facebook';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-
-// configure({
-//   enforceActions: 'always',
-//   computedRequiresReaction: true,
-//   reactionRequiresObservable: true,
-//   observableRequiresReaction: true,
-//   disableErrorBoundaries: true,
-// });
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
