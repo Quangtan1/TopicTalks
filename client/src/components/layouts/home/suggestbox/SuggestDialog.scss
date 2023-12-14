@@ -1,0 +1,141 @@
+.suggest_topic_dialog {
+  &.MuiDialog-root {
+    z-index: 3;
+  }
+  .MuiBackdrop-root {
+    background: rgb(51 47 47 / 65%);
+  }
+  .MuiPaper-root {
+    width: 800px;
+    height: 550px;
+    max-width: 100%;
+
+    .dialog_content {
+      display: flex;
+      position: relative;
+      svg {
+        position: absolute;
+        right: 15px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .image {
+        width: 50%;
+        object-fit: cover;
+        height: 100%;
+      }
+      .box_create {
+        width: 65%;
+        padding: 30px 30px 0px 110px;
+        gap: 16px;
+        display: flex;
+        flex-direction: column;
+        margin-left: -100px;
+        background: #fff;
+        border-radius: 127px 0px 0px 80px;
+        .dialog_title {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+
+          p:nth-child(1) {
+            font-weight: 600;
+            color: #000;
+            letter-spacing: 1px;
+            font-size: 20px;
+            font-family: 'Yeseva One', display;
+          }
+          p:nth-child(2) {
+            color: rgb(142, 110, 81);
+            font-weight: 600;
+            font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+            font-size: 15px;
+          }
+        }
+        .topic_box {
+          height: 355px;
+          padding-top: 30px;
+          overflow-y: auto;
+          .topic_parent_name {
+            text-transform: capitalize;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 0;
+            padding: 23px 22px;
+            border-radius: 30px;
+            margin: 0 15px 20px 0;
+            border: 1px solid #ebebeb;
+            background: #f2f3f5;
+            &:hover {
+              cursor: pointer;
+              background: #77afe0;
+              color: #fff;
+            }
+          }
+          .topic_child_name {
+            text-transform: capitalize;
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 0;
+            padding: 20px 15px;
+            border-radius: 30px;
+            margin: 0 15px 20px 0;
+            border: 1px solid #ebebeb;
+            background: #9db1d8;
+            color: #fff;
+            &:hover {
+              cursor: pointer;
+              background: #306fa7;
+              color: #fff;
+            }
+          }
+          .selected {
+            background: #306fa7;
+            color: #fff;
+          }
+
+          .load_topic {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 50px;
+            svg {
+              animation: spin 1s infinite linear;
+              font-size: 30px;
+              opacity: 0.8;
+            }
+          }
+          @keyframes spin {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        }
+        .dialog_action {
+          display: flex;
+          gap: 8px;
+          justify-content: end;
+          margin-right: -20px;
+          button {
+            background: #8e6e51;
+            color: #fff;
+          }
+          button:hover {
+            opacity: 0.7;
+          }
+          .disable {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+  }
+}

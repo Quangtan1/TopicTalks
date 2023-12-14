@@ -71,12 +71,13 @@ const TopicPopular = (props: TopicParentProps) => {
               </Typography>
               {item?.avgRating && (
                 <Typography className="max_rating">
-                  Average Rating:
-                  <Box sx={{ display: 'flex' }}>
-                    {Array.from({ length: item?.avgRating }, (_, index) => (
-                      <Box key={index}>
-                        <GiRoundStar className="star-active" />
-                      </Box>
+                  <Box sx={{ display: 'flex', pb: 1 }}>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <GiRoundStar
+                        className={` ${value <= (Math.round(item?.avgRating) || 0) ? 'star-active' : ''}`}
+                        key={value}
+                        style={{ display: `${value > (Math.round(item?.avgRating) || 0) && 'none'}` }}
+                      />
                     ))}
                   </Box>
                 </Typography>

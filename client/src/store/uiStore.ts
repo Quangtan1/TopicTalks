@@ -4,15 +4,18 @@ class UiStore {
   loading: boolean = false;
   collapse: boolean = true;
   location: string = '';
+  isSuggest: boolean = true;
 
   constructor() {
     makeObservable(this, {
       loading: observable,
       collapse: observable,
       location: observable,
+      isSuggest: observable,
       setLoading: action,
       setCollapse: action,
       setLocation: action,
+      setIsSuggest: action,
     });
   }
 
@@ -24,6 +27,9 @@ class UiStore {
   }
   setLocation(location: string) {
     this.location = location;
+  }
+  setIsSuggest(isSuggest: boolean) {
+    this.isSuggest = isSuggest;
   }
 }
 

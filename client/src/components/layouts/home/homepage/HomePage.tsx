@@ -1,27 +1,27 @@
-import { Box, Typography } from '@mui/material';
-import { useEffect, useState, useMemo } from 'react';
-import memoizeOne from 'memoize-one';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 import './HomePage.scss';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
-import { beginChat, createAxios, getDataAPI, lettermessage, typing } from 'src/utils';
+import { createAxios, getDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
-import { ListTopic, ListTopicHot, IRecommendTopic, TopicChild } from 'src/types/topic.type';
+import { ListTopic, ListTopicHot, IRecommendTopic } from 'src/types/topic.type';
 import 'react-multi-carousel/lib/styles.css';
-import { useNavigate } from 'react-router-dom';
 import TopicParent from './topicparent/TopicParent';
 import { IPost } from 'src/queries';
 import PostPopular from './postpopular/PostPopular';
 import TopicPopular from './topicpopular/TopicPopular';
 import RecommendTopic from './recommend/RecommendTopic';
+import SuggestDialog from '../suggestbox/SuggestDialog';
 
 const HomePage = observer(() => {
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);
   const [listTopicHot, setListTopicParentHot] = useState<ListTopicHot[]>([]);
   const [listPost, setListPost] = useState<IPost[]>([]);
   const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>([]);
-  const navigate = useNavigate();
   const account = accountStore?.account;
+
+  const isSuggest = uiStore?.isSuggest;
 
   const setAccount = () => {
     return accountStore?.setAccount;
@@ -53,10 +53,6 @@ const HomePage = observer(() => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-
-  useEffect(() => {
-    uiStore?.setLoading(true);
     getDataAPI(`ratings/all/topics/hot`, accountToken, axiosJWT)
       .then((res) => {
         setListTopicParentHot(res.data.data);
@@ -69,6 +65,7 @@ const HomePage = observer(() => {
     getDataAPI(`/recommends/user/${account?.id}`, accountToken, axiosJWT)
       .then((res) => {
         setRecommendTopic(res.data.data);
+        res.data.data.length > 0 && uiStore?.setIsSuggest(false);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -77,12 +74,15 @@ const HomePage = observer(() => {
       });
   }, []);
 
+  const isOpen = isSuggest && recommendTopic?.length === 0;
+
   return (
     <Box className="home_container">
       <TopicPopular listTopic={listTopicHot} />
       <RecommendTopic recommendTopic={recommendTopic} listTopic={listTopicHot} />
       <TopicParent listTopic={listTopic} />
       <PostPopular posts={listPost} />
+      {isOpen && <SuggestDialog open={isOpen} onClose={() => uiStore?.setIsSuggest(false)} listTopic={listTopic} />}
     </Box>
   );
 });

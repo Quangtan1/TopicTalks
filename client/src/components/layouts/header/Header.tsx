@@ -47,6 +47,7 @@ const Header = observer((props: IHeaderProps) => {
   const onConfirm = () => {
     accountStore?.setAccount(null);
     accountStore?.clearStore();
+    uiStore?.setIsSuggest(true);
     setAnchorEl(false);
     navigate('/auth');
   };
@@ -159,7 +160,7 @@ const Header = observer((props: IHeaderProps) => {
                 <ListItemIcon>
                   <Avatar src={account?.url_img} alt="avatar" />
                 </ListItemIcon>
-                Profile Infor
+                Your Profile
               </MenuItem>
               <Divider />
               <MenuItem onClick={() => setOpen(true)}>
