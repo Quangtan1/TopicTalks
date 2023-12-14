@@ -45,12 +45,12 @@
       &__card {
         &__actions {
           &__button {
-            border: 1px solid #8f7053 !important;
+            border: 1px solid green !important;
             color: #8f7053 !important;
             width: 100px !important;
           }
           &__button-remove {
-            border: 1px solid #8f7053 !important;
+            border: 1px solid red !important;
             color: #8f7053 !important;
           }
           display: flex;
@@ -58,8 +58,6 @@
           align-items: center;
         }
         &__action-area {
-          &__content {
-          }
           &__text {
             overflow-wrap: break-word;
             padding: 4px 0;

@@ -332,7 +332,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
             >
               <Tooltip title="Click here to edit image" placement="top">
                 <CardActionArea className="new-post-dialog__grid__right__card__action-area" onClick={onClickEditCrop}>
-                  <CardContent className="new-post-dialog__grid__right__card__action-area__content">
+                  <CardContent className="new-post-dialog__grid__right__card__action-area">
                     <Typography
                       className="new-post-dialog__grid__right__card__action-area__text"
                       variant="h6"
