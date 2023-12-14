@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogTitle,
   Grid,
   MenuItem,
   Select,
@@ -12,12 +11,12 @@ import {
   Typography,
 } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IComment, IPost } from 'src/queries';
 import accountStore from 'src/store/accountStore';
-import { API_KEY, createAxios, deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, postDataAPI, putDataAPI } from 'src/utils';
 import './PostDetailDialog.scss';
-import { BsEmojiSmile, BsThreeDots } from 'react-icons/bs';
+import { BsEmojiSmile } from 'react-icons/bs';
 import { FaRegComment, FaRegHeart } from 'react-icons/fa';
 import { FcEditImage, FcShare } from 'react-icons/fc';
 import { formatDatePost, formatTime } from 'src/utils/helper';
@@ -25,11 +24,10 @@ import uiStore from 'src/store/uiStore';
 import { useNavigate } from 'react-router-dom';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { AiOutlineEdit, AiTwotoneHeart } from 'react-icons/ai';
-import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
-import { RiDeleteBin2Line, RiDeleteBin5Line } from 'react-icons/ri';
+import { AiTwotoneHeart } from 'react-icons/ai';
+import { ToastSuccess } from 'src/utils/toastOptions';
+import { RiDeleteBin5Line } from 'react-icons/ri';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
-import NewPost from 'src/components/layouts/postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { MdDone, MdOutlineCancel } from 'react-icons/md';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
@@ -101,6 +99,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleComment = () => {

@@ -6,7 +6,16 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from './utils/cropImage';
 import { ToastError } from 'src/utils/toastOptions';
 
-const CropEasy = ({ photoURL, setOpenCrop, onCancel, setIsCropped, setPhotoURL, setFile, setLoading }) => {
+const CropEasy = ({
+  photoURL,
+  setOpenCrop,
+  onCancel,
+  setIsCropped,
+  setIsOpenModalCrop,
+  setPhotoURL,
+  setFile,
+  setLoading,
+}) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -22,6 +31,7 @@ const CropEasy = ({ photoURL, setOpenCrop, onCancel, setIsCropped, setPhotoURL, 
       const { file, url }: any = await getCroppedImg(photoURL, croppedAreaPixels, rotation);
       setPhotoURL(url);
       setFile(file);
+      setIsOpenModalCrop(false);
       setIsCropped(true);
       setOpenCrop(false);
     } catch (error) {
@@ -32,7 +42,7 @@ const CropEasy = ({ photoURL, setOpenCrop, onCancel, setIsCropped, setPhotoURL, 
     setLoading(false);
   };
   return (
-    <Box sx={{ display: 'flex', mx: 3, my: 2 }}>
+    <Box sx={{ mx: 3, my: 2 }}>
       <DialogContent
         dividers
         sx={{

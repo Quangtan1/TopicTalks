@@ -25,6 +25,7 @@ import {
   InputLabel,
   Select,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import { FormikProps, useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -78,6 +79,8 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
 
   const [selectedImage, setSelectedImage] = React.useState(dataEdit?.img_url || '');
+
+  const [isOpenModalCrop, setIsOpenModalCrop] = React.useState(false);
 
   const formRef = React.useRef<FormikProps<any>>(null);
 
@@ -176,6 +179,10 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
   });
 
   const { errors, touched, resetForm, getFieldProps, submitForm, dirty, values } = formik;
+
+  const onClickEditCrop = () => {
+    setIsOpenModalCrop(true);
+  };
 
   return (
     <React.Fragment>
@@ -299,7 +306,8 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               <ImageUpload
                 selectedImage={selectedImage}
                 setSelectedImage={setSelectedImage}
-                imageUrl={dataEdit?.img_url}
+                isOpenModalCrop={isOpenModalCrop}
+                setIsOpenModalCrop={setIsOpenModalCrop}
               />
             </DialogContent>
             <DialogActions className="dialog-actions">
@@ -322,45 +330,54 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               }
               className="new-post-dialog__grid__right__card"
             >
-              <CardActionArea className="new-post-dialog__grid__right__card__action-area">
-                <CardContent className="new-post-dialog__grid__right__card__action-area__content">
-                  <Typography
-                    className="new-post-dialog__grid__right__card__action-area__text"
-                    variant="h6"
-                    color="text.secondary"
-                  >
-                    {values?.postTitle || 'Post Title'}
-                  </Typography>
-                  <Box>
-                    {selectedImage ? (
-                      <CardMedia
-                        component="img"
-                        image={selectedImage}
-                        alt="Post Image"
-                        className="new-post-dialog__grid__right__card__action-area__img"
-                      />
-                    ) : (
-                      <Box className="new-post-dialog__grid__right__card__action-area__img" />
-                    )}
-                  </Box>
-                  <Box>
+              <Tooltip title="Click here to edit image" placement="top">
+                <CardActionArea className="new-post-dialog__grid__right__card__action-area" onClick={onClickEditCrop}>
+                  <CardContent className="new-post-dialog__grid__right__card__action-area__content">
                     <Typography
                       className="new-post-dialog__grid__right__card__action-area__text"
-                      variant="body1"
+                      variant="h6"
                       color="text.secondary"
                     >
-                      {values?.postContent || 'Post content'}
+                      {values?.postTitle || 'Post Title'}
                     </Typography>
-                  </Box>
-                </CardContent>
-              </CardActionArea>
+                    <Box>
+                      {selectedImage ? (
+                        <CardMedia
+                          component="img"
+                          image={selectedImage}
+                          alt="Post Image"
+                          className="new-post-dialog__grid__right__card__action-area__img"
+                        />
+                      ) : (
+                        <Box className="new-post-dialog__grid__right__card__action-area__img" />
+                      )}
+                    </Box>
+                    <Box>
+                      <Typography
+                        className="new-post-dialog__grid__right__card__action-area__text"
+                        variant="body1"
+                        color="text.secondary"
+                      >
+                        {values?.postContent || 'Post content'}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </CardActionArea>
+              </Tooltip>
               <CardActions className="new-post-dialog__grid__right__card__actions">
                 <Button
                   className="new-post-dialog__grid__right__card__actions__button"
                   onClick={submitForm}
-                  disabled={!dirty}
+                  disabled={!dirty && selectedImage === ''}
                 >
                   {isEdit ? 'Edit' : 'Create'}
+                </Button>
+                <Button
+                  className="new-post-dialog__grid__right__card__actions__button-remove"
+                  onClick={() => setSelectedImage('')}
+                  disabled={!selectedImage}
+                >
+                  {'Remove Image'}
                 </Button>
               </CardActions>
             </Card>

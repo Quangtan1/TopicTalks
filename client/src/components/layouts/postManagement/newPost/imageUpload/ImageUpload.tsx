@@ -1,19 +1,20 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, Skeleton, Typography } from '@mui/material';
 import { handleImageUpload } from 'src/utils/helper';
-import { IoDocumentAttachSharp } from 'react-icons/io5';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
 import './ImageUpload.scss';
 import CropEasy from 'src/components/cropImage/crop/CropEasy';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 interface Props {
   selectedImage: string;
-  imageUrl: string;
   setSelectedImage: (any) => void;
+  isOpenModalCrop: boolean;
+  setIsOpenModalCrop: (any) => void;
 }
 
-const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedImage }) => {
+const ImageUpload: FC<Props> = observer(({ isOpenModalCrop, setIsOpenModalCrop, selectedImage, setSelectedImage }) => {
   const fileInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenCrop, setIsOpenCrop] = useState(false);
@@ -22,8 +23,7 @@ const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedI
   const [isEditingImage, setIsEditingImage] = useState(false);
 
   const handleClose = () => {
-    setIsEditingImage(false);
-    setSelectedImage('');
+    setIsOpenModalCrop(false);
   };
 
   const handleLinkClick = () => {
@@ -32,7 +32,6 @@ const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedI
 
   useEffect(() => {
     if (selectedImage !== '') {
-      setIsEditingImage(true);
       uiStore?.setLoading(false);
       setIsLoading(false);
     }
@@ -41,11 +40,13 @@ const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedI
   return (
     <>
       <Box className="add_image_icon-text">
-        {!isEditingImage && (
+        {(!isEditingImage || !selectedImage) && (
           <>
             <Box className="add_image_icon-text__box">
               <Typography>Upload Image: </Typography>
-              <IoDocumentAttachSharp className="add_image_icon-text__box__icon" onClick={handleLinkClick} />
+              <Box className="add_image_icon-text__box__group" onClick={handleLinkClick}>
+                <CloudUploadIcon className="add_image_icon-text__box__group__icon" />
+              </Box>
             </Box>
             <input
               type="file"
@@ -53,6 +54,8 @@ const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedI
               style={{ display: ' none' }}
               onChange={(e) => {
                 handleImageUpload(e.target.files, setSelectedImage, true);
+                setIsOpenModalCrop(true);
+                setIsEditingImage(true);
                 setIsLoading(true);
               }}
             />
@@ -67,25 +70,29 @@ const ImageUpload: FC<Props> = observer(({ selectedImage, imageUrl, setSelectedI
           />
         )} */}
 
-        {isLoading ? (
-          <Skeleton sx={{ height: '500px', width: '500px' }} animation="wave" variant="rectangular" />
-        ) : (
-          isEditingImage && (
-            <Box sx={{ height: '500px', width: '600px' }}>
-              <CropEasy
-                setFile={setFile}
-                photoURL={selectedImage}
-                setIsCropped={setIsCropped}
-                onCancel={handleClose}
-                setLoading={setIsLoading}
-                setPhotoURL={setSelectedImage}
-                setOpenCrop={() => setIsOpenCrop(true)}
-              />
-            </Box>
-          )
-        )}
+        <Dialog open={isOpenModalCrop} onClose={handleClose}>
+          <DialogContent>
+            {isLoading ? (
+              <Skeleton sx={{ height: '500px', width: '500px' }} animation="wave" variant="rectangular" />
+            ) : (
+              isEditingImage && (
+                <Box>
+                  <CropEasy
+                    setFile={setFile}
+                    photoURL={selectedImage}
+                    setIsCropped={setIsCropped}
+                    setIsOpenModalCrop={setIsOpenModalCrop}
+                    onCancel={handleClose}
+                    setLoading={setIsLoading}
+                    setPhotoURL={setSelectedImage}
+                    setOpenCrop={() => setIsOpenCrop(true)}
+                  />
+                </Box>
+              )
+            )}
+          </DialogContent>
+        </Dialog>
       </Box>
-
       {/* {isCropped && (
           <Box sx={{ height: '500px', width: '500px' }}>
             <CropEasy

@@ -8,7 +8,6 @@ import uiStore from 'src/store/uiStore';
 import PostItem from './posts/PostItem';
 import PostDetailDialog from './posts/PostDetailDialog';
 import { IoAddCircleSharp } from 'react-icons/io5';
-import NewPost from '../../postManagement/newPost/NewPost';
 import postItemStore from 'src/store/postStore';
 import { ListTopic } from 'src/types/topic.type';
 import { RiLoader2Line } from 'react-icons/ri';

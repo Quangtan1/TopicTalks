@@ -1,11 +1,19 @@
 .add_image_icon-text {
   &__box {
     margin-bottom: 24px;
-    &__icon {
-      width: 25px;
-      height: 25px;
+    &__group{
       cursor: pointer;
+      margin: 4px;
+      padding: 16px;
+      border-radius: 50%;
+  box-shadow: 2px 3px 10px #cdd1e1;
+      &__icon {
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+      }
     }
+    
     display: flex;
     justify-content: flex-start;
     align-items: center;
