@@ -121,7 +121,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     try {
       const result = await useCreatePost.mutateAsync(postData);
       if (result.status === 201) {
-        ToastSuccess('Your post has been successfully created and is awaiting approval from the Admin!');
+        ToastSuccess('Post created! Awaiting admin approval.');
         onCreateSuccess?.();
         refetchTopic();
         refetchPost();
@@ -195,9 +195,6 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       >
         <AppBar className="new-post-dialog__app-bar">
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={closePostModal} aria-label="close">
-              <CloseIcon />
-            </IconButton>
             <Typography className="new-post-dialog__app-bar__title" variant="h6" component="div">
               Create New Post
             </Typography>

@@ -227,6 +227,7 @@ const ChatBox = observer((props: ChatProps) => {
         username: account.username,
         userId: account.id,
         conversationId: chat?.conversationInfor.id,
+        timeAt: new Date().toISOString(),
       };
 
       const lastMessage = {

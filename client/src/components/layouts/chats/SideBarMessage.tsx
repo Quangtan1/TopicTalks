@@ -46,6 +46,7 @@ const SideBarMessage = observer(() => {
   const onConfirm = () => {
     accountStore?.setAccount(null);
     accountStore?.clearStore();
+    uiStore?.setIsSuggest(true);
     setAnchorEl(false);
     navigate('/auth');
   };

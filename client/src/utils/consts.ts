@@ -30,8 +30,10 @@ import chatCarousel2 from 'src/assets/images/chat_carousel_2.svg';
 import notfound from 'src/assets/images/404-error-img.png';
 import notresponve from 'src/assets/images/Responsive.png';
 import confirmsvg123 from 'src/assets/images/confirmsvg123.svg';
+import suggest from 'src/assets/images/suggest.webp';
 
 export {
+  suggest,
   notresponve,
   confirmsvg123,
   notfound,
@@ -191,6 +193,25 @@ export const defaultStyle = {
     },
   },
 };
+
+export const imageMale = [
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b85ba036ed117da2dc_smymjy.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_5-595b40b65ba036ed117d3309_qxqagg.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_3-595b40b65ba036ed117d3307_x0rfmn.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b65ba036ed117d3308_agvcdw.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_1_2-595b40b65ba036ed117d3306_cqgvfl.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/Manager-595b40b75ba036ed117d85e3_w0mj7j.svg',
+];
+
+export const imageFemale = [
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459815/TopicTalks_Post/Spy_Female-595b40b85ba036ed117dab42_g3wv8d.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459812/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b85ba036ed117da2db_bzrcvj.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_6-595b40b65ba036ed117d3305_krx5vl.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b65ba036ed117d3303_ikax68.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_1_2-595b40b65ba036ed117d3301_kpd1s7.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_5-595b40b65ba036ed117d3304_zrfbid.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_3-595b40b65ba036ed117d3302_p2dibo.svg',
+];
 
 export const defaultMentionStyle = {
   backgroundColor: '#cee4e5',
