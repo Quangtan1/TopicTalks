@@ -10,7 +10,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import './styles.scss';
 import accountStore from 'src/store/accountStore';
-import { avatar_default, createAxios } from 'src/utils';
+import { createAxios } from 'src/utils';
 import {
   Card,
   CardActionArea,
@@ -178,7 +178,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     onSubmit: handleCreatePost,
   });
 
-  const { errors, touched, resetForm, getFieldProps, submitForm, dirty, values } = formik;
+  const { errors, touched, resetForm, getFieldProps, submitForm, dirty } = formik;
 
   const onClickEditCrop = () => {
     setIsOpenModalCrop(true);
@@ -186,7 +186,13 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   return (
     <React.Fragment>
-      <Dialog fullScreen open={true} onClose={handleClose} TransitionComponent={Transition} className="new-post-dialog">
+      <Dialog
+        fullScreen
+        open={isOpen}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+        className="new-post-dialog"
+      >
         <AppBar className="new-post-dialog__app-bar">
           <Toolbar>
             <IconButton edge="start" color="inherit" onClick={closePostModal} aria-label="close">
@@ -195,8 +201,13 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
             <Typography className="new-post-dialog__app-bar__title" variant="h6" component="div">
               Create New Post
             </Typography>
-            <Button onClick={closePostModal} className="new-post-dialog__app-bar__btn" color="primary">
-              Cancel
+
+            <Button
+              className="new-post-dialog__app-bar__btn"
+              onClick={submitForm}
+              disabled={!dirty && selectedImage === ''}
+            >
+              {isEdit ? 'Edit' : 'Create'}
             </Button>
           </Toolbar>
         </AppBar>
@@ -310,11 +321,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 setIsOpenModalCrop={setIsOpenModalCrop}
               />
             </DialogContent>
-            <DialogActions className="dialog-actions">
-              {/*  <Button className="post-button" onClick={submitForm} disabled={!dirty}>
-                {isEdit ? 'Edit' : 'Post'}
-              </Button> */}
-            </DialogActions>
+            <DialogActions className="dialog-actions"></DialogActions>
           </Grid>
           <Grid item xs={selectedImage ? 3.5 : 0} className="new-post-dialog__grid__right">
             <Card
@@ -322,7 +329,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 selectedImage
                   ? {
                       width: '600px',
-                      height: '400px',
+                      height: '410px',
                     }
                   : {
                       display: 'none',
@@ -338,7 +345,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                       variant="h6"
                       color="text.secondary"
                     >
-                      {values?.postTitle || 'Post Title'}
+                      {'Preview Image'}
                     </Typography>
                     <Box>
                       {selectedImage ? (
@@ -352,26 +359,10 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                         <Box className="new-post-dialog__grid__right__card__action-area__img" />
                       )}
                     </Box>
-                    <Box>
-                      <Typography
-                        className="new-post-dialog__grid__right__card__action-area__text"
-                        variant="body1"
-                        color="text.secondary"
-                      >
-                        {values?.postContent || 'Post content'}
-                      </Typography>
-                    </Box>
                   </CardContent>
                 </CardActionArea>
               </Tooltip>
               <CardActions className="new-post-dialog__grid__right__card__actions">
-                <Button
-                  className="new-post-dialog__grid__right__card__actions__button"
-                  onClick={submitForm}
-                  disabled={!dirty && selectedImage === ''}
-                >
-                  {isEdit ? 'Edit' : 'Create'}
-                </Button>
                 <Button
                   className="new-post-dialog__grid__right__card__actions__button-remove"
                   onClick={() => setSelectedImage('')}
