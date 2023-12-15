@@ -49,14 +49,14 @@ const Community = observer(() => {
           ? `post/all-posts/is-approved=${true}?page=${pageValue}&size=5`
           : `/post/all-posts/tpid=${selectTopic}?page=${pageValue}&size=5`
       }`,
-      account.access_token,
+      account?.access_token,
       axiosJWT,
     );
   };
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    getDataAPI(`/topic-parent/all-tparent?isDisable=false`, account.access_token, axiosJWT)
+    getDataAPI(`/topic-parent/all-tparent?isDisable=false`, account?.access_token, axiosJWT)
       .then((res) => {
         if (res.data.data !== 'Not exist any children topic.') {
           setListTopic(res.data.data);
