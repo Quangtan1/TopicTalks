@@ -63,7 +63,7 @@ const NotificationDialog = observer((props: DialogProps) => {
 
   const readNotifi = (id) => {
     navigate('/message');
-    const newNotifi = notifiSystem.filter((item) => item.conversationId !== id);
+    const newNotifi = notifiSystem?.filter((item) => item.conversationId !== id);
     setNotifiSystem(newNotifi);
     setTimeout(() => {
       const selectChat = chatStore?.chats?.find((item) => item.conversationInfor.id === id);

@@ -14,7 +14,6 @@ import './styles.scss';
 import accountStore from 'src/store/accountStore';
 import { avatar_default, createAxios, putDataAPI } from 'src/utils';
 import {
-  Avatar,
   Card,
   CardActionArea,
   CardContent,
@@ -299,21 +298,21 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
                     variant="h5"
                     component="div"
                   >
-                    {userInfor?.username}
+                    {values?.username}
                   </Typography>
                   <Typography
                     className="edit-profile-dialog__grid__right__card__action-area__text"
                     variant="body1"
                     color="text.secondary"
                   >
-                    {userInfor?.fullName || 'XXXXXXXX'}
+                    {values?.fullName || 'XXXXXXXX'}
                   </Typography>
                   <Typography
                     className="edit-profile-dialog__grid__right__card__action-area__text"
                     variant="body2"
                     color="text.secondary"
                   >
-                    {userInfor?.bio || 'Update your bio'}
+                    {values?.bio || 'Update your bio'}
                   </Typography>
                 </CardContent>
               </CardActionArea>

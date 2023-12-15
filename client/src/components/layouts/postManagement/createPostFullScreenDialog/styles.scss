@@ -1,10 +1,10 @@
 .new-post-dialog {
   &__app-bar {
     &__btn {
-      border: 1px solid rgb(238, 130, 130) !important;
-      color: black !important;
+      border: 1px solid green !important;
+      color: #8f7053 !important;
+      width: 100px !important;
     }
-
     background-color: #f7f8f9 !important;
     color: black !important;
     text-align: center;
@@ -43,12 +43,8 @@
       align-items: flex-start;
 
       &__card {
+        margin-top: 160px;
         &__actions {
-          &__button {
-            border: 1px solid green !important;
-            color: #8f7053 !important;
-            width: 100px !important;
-          }
           &__button-remove {
             border: 1px solid red !important;
             color: #8f7053 !important;
@@ -70,8 +66,8 @@
           background-color: #fff;
           &__img {
             padding: 12px;
-            width: 220px;
-            height: 220px;
+            width: 270px;
+            height: 270px;
             object-fit: contain;
           }
         }
