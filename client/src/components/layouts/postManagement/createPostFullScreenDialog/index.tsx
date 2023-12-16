@@ -214,7 +214,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
       >
         <div className="mention-avatar">
-          <Avatar src={listFriendsMap[index]?.userUrl} alt="avt" />
+          <Avatar src={suggestion?.friendUrl} alt="avt" />
         </div>
         <div className="mention-content">
           <span>{highlightedDisplay}</span>
@@ -313,7 +313,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                     appendSpaceOnAdd
                     trigger="@"
                     data={listFriendsMap?.map(
-                      (item) => ({ id: item?.friendId?.toString(), display: `${item.friendName}` } || []),
+                      (item) =>
+                        ({
+                          id: item?.friendId?.toString(),
+                          display: `${item.friendName}`,
+                          friendUrl: item?.friendUrl,
+                        } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
