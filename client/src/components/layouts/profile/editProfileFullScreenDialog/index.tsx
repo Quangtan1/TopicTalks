@@ -36,6 +36,9 @@ import { observer } from 'mobx-react';
 import './styles.scss';
 import { formatDateUserInfor } from 'src/utils/helper';
 import { IUserProfile } from 'src/types/account.types';
+import { FaUserLock } from 'react-icons/fa';
+import { IoIosUnlock } from 'react-icons/io';
+import DialogCommon from 'src/components/dialogs/DialogCommon';
 
 const validationSchema = Yup.object({
   username: Yup.string().nullable().required('User Name is required'),
@@ -62,7 +65,10 @@ const Transition = React.forwardRef(function Transition(
 
 const EditProfileFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, userInfor, setUserInfor } = props;
+  const [isConfirm, setIsConfirm] = React.useState<boolean>(false);
 
+  const CONTENT =
+    'Switching to anonymous mode will conceal your personal information, hiding it even from your friends.';
   const formRef = React.useRef<FormikProps<any>>(null);
 
   const account = accountStore?.account;
@@ -101,6 +107,24 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
     innerRef: formRef,
     onSubmit: handleUpdateProfile,
   });
+
+  const handleSwitchMode = () => {
+    const updateData = values;
+    putDataAPI(
+      `/user/status-profile?id=${account?.id}&&isPublic=${userInfor?.public ? false : true}`,
+      updateData,
+      account.access_token,
+      axiosJWT,
+    )
+      .then((res) => {
+        ToastSuccess(`Switch Mode Successfully!`);
+        setIsConfirm(false);
+        setUserInfor({ ...userInfor, public: res.data.data.public });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const { errors, touched, getFieldProps, dirty, values } = formik;
 
@@ -314,11 +338,28 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
                   >
                     {values?.bio || 'Update your bio'}
                   </Typography>
+                  {!userInfor?.public ? (
+                    <Button className="anonymous" onClick={() => setIsConfirm(true)}>
+                      Switch anonymous mode. <FaUserLock />
+                    </Button>
+                  ) : (
+                    <Button className="cancel_anonymous" onClick={handleSwitchMode}>
+                      Cancel anonymous mode. <IoIosUnlock />
+                    </Button>
+                  )}
                 </CardContent>
               </CardActionArea>
             </Card>
           </Grid>
         </Grid>
+        {isConfirm && (
+          <DialogCommon
+            open={isConfirm}
+            onClose={() => setIsConfirm(false)}
+            content={CONTENT}
+            onConfirm={handleSwitchMode}
+          />
+        )}
       </Dialog>
     </React.Fragment>
   );

@@ -29,6 +29,7 @@ export interface IUserProfile {
   username: string;
   totalNumOfPosts: string;
   totalNumOfFriends: string;
+  public: boolean;
 }
 
 export interface IFriends {

@@ -280,7 +280,7 @@ const PartnerProfile = observer(() => {
     }
   });
 
-  const isDisplay = isFriend || account?.id === user?.id;
+  const isDisplay = (isFriend && !user?.public) || account?.id === user?.id;
 
   const handleNavigateToFriendPage = (friendId: number) => {
     navigate(`/personal-profile/${friendId}`);
@@ -316,13 +316,24 @@ const PartnerProfile = observer(() => {
                 <Typography className="title_backgroud">SOME OF MY PORTFOLIO</Typography>
                 <Typography className="title_group">Get to know me</Typography>
               </Box>
-              <Box className="not_friends">
-                <Typography>
-                  This is a private account <CiLock />
-                </Typography>
-                <Typography>Be friend to see photos and infor</Typography>
-                <Typography>theirs.</Typography>
-              </Box>
+              {!user?.public ? (
+                <Box className="not_friends">
+                  <Typography>
+                    This is a private account <CiLock />
+                  </Typography>
+                  <Typography>Be friend to see photos and infor</Typography>
+                  <Typography>theirs.</Typography>
+                </Box>
+              ) : (
+                <Box className="not_friends">
+                  <Typography>
+                    This account has been set up <strong>Anonymous mode</strong>
+                    <CiLock />
+                  </Typography>
+                  <Typography>and you won't be able to view any personal details</Typography>
+                  <Typography>from the user.</Typography>
+                </Box>
+              )}
             </>
           ) : (
             <>

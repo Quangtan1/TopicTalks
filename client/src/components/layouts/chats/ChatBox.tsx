@@ -438,7 +438,6 @@ const ChatBox = observer((props: ChatProps) => {
     index: number,
     focused: boolean,
   ) => {
-    console.log(suggestion);
     return (
       <div
         className={`mention-suggestion ${focused ? 'mention-suggestion-focused' : ''}`}
