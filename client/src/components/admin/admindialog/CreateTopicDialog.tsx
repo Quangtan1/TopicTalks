@@ -48,8 +48,8 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   const fileInputRef = useRef(null);
   const account = accountStore?.account;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

@@ -118,8 +118,8 @@ const ChatBox = observer((props: ChatProps) => {
 
   const optionCode = 'option_1410#$#';
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

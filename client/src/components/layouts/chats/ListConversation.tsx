@@ -104,8 +104,8 @@ const ListConversation = observer(() => {
 
   const chat = chatStore?.selectedChat;
   const listChats = chatStore?.chats;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
   const navigate = useNavigate();
 

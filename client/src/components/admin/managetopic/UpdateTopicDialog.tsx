@@ -24,8 +24,8 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
   const [imageFile, setImageFile] = useState<string>('');
   const fileInputRef = useRef(null);
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;
@@ -36,7 +36,7 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
       const data = {
         topicName: newName || topic?.topicChildrenName,
         shortDescript: shortDescript || topic?.shortDescript,
-        urlImage: imageFile || topic?.image  ,
+        urlImage: imageFile || topic?.image,
       };
       putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
@@ -44,7 +44,12 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
           setTopicChild((prev) =>
             prev.map((item) =>
               item.id === topic?.id
-                ? { ...item, topicChildrenName: data.topicName, shortDescript: data.shortDescript, urlImage: data.urlImage }
+                ? {
+                    ...item,
+                    topicChildrenName: data.topicName,
+                    shortDescript: data.shortDescript,
+                    urlImage: data.urlImage,
+                  }
                 : item,
             ),
           );

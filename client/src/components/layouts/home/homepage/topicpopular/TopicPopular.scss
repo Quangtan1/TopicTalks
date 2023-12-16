@@ -154,6 +154,17 @@
                 }
               }
             }
+            .max-rating {
+              display: flex;
+              align-items: center;
+            }
+            .star-active {
+              stroke-width: 40px;
+              fill: #ee4d2d;
+              display: flex;
+              stroke: #ee4d2d;
+              font-size: 23px;
+            }
           }
         }
       }

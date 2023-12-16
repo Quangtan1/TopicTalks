@@ -4,7 +4,7 @@ import { IUser } from 'src/types/account.types';
 
 export const API_KEY = 'http://localhost:5000/api/v1';
 
-const refreshToken = async (resToken) => {
+const refreshToken = async (resToken, setAccount: any) => {
   try {
     const resfreshtoke = {
       refreshToken: resToken,
@@ -12,6 +12,7 @@ const refreshToken = async (resToken) => {
     const res = await axios.post(`${API_KEY}/auth/refresh-token`, resfreshtoke);
     return res.data;
   } catch (err) {
+    setAccount(null);
     console.log(err);
   }
 };
@@ -28,8 +29,9 @@ export const createAxios = (user: IUser, setAccount: any) => {
     async (config) => {
       let date = new Date();
       const decodedToken: any = jwt_decode(user?.access_token);
-      if (decodedToken.exp < date.getDate() / 1000) {
-        const data = await refreshToken(user?.refresh_token);
+
+      if (new Date(decodedToken.exp * 1000) < date) {
+        const data = await refreshToken(user?.refresh_token, setAccount);
         const refreshUser = {
           ...user,
           access_token: data?.access_token,

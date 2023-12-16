@@ -13,8 +13,8 @@ import FAQSection from './QAsection';
 import LazyShow from '../LandingView/Animated/LazyShow';
 
 const ContactUs = observer(() => {
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
   const account = accountStore?.account;
   const axiosJWT = createAxios(account, setAccount);

@@ -18,13 +18,13 @@ const HomePage = observer(() => {
   const [listTopic, setListTopicParent] = useState<ListTopic[]>([]);
   const [listTopicHot, setListTopicParentHot] = useState<ListTopicHot[]>([]);
   const [listPost, setListPost] = useState<IPost[]>([]);
-  const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>([]);
+  const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>(null);
   const account = accountStore?.account;
 
   const isSuggest = uiStore?.isSuggest;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountToken = account?.access_token;
@@ -79,7 +79,7 @@ const HomePage = observer(() => {
   return (
     <Box className="home_container">
       <TopicPopular listTopic={listTopicHot} />
-      <RecommendTopic recommendTopic={recommendTopic} listTopic={listTopicHot} />
+      {recommendTopic?.length > 0 && <RecommendTopic recommendTopic={recommendTopic} />}
       <TopicParent listTopic={listTopic} />
       <PostPopular posts={listPost} />
       {isOpen && <SuggestDialog open={isOpen} onClose={() => uiStore?.setIsSuggest(false)} listTopic={listTopic} />}

@@ -16,7 +16,6 @@ class AccountStore {
 
   setAccount(account: IUser | null) {
     this.account = account;
-    console.log('account', account);
   }
 
   async clearStore() {

@@ -45,8 +45,8 @@ const CreateGroupDialog = observer((props: DialogProps) => {
   const currentPath = location.pathname;
   const account = accountStore?.account;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

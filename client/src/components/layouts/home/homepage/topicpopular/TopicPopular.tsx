@@ -57,17 +57,7 @@ const TopicPopular = (props: TopicParentProps) => {
               <Typography className="hot">Hot Topic</Typography>
               <Typography onClick={() => navigateTopic(item.topicChildrenId)}>{item.topicChildrenName}</Typography>
               <Typography>
-                {formatDatePost(item.createdAt)} <FiberManualRecord /> 3K Views
-              </Typography>
-              <Typography className="max_rating">
-                <Box sx={{ display: 'flex', pb: 1 }}>
-                  {item?.maxRating &&
-                    Array.from({ length: item?.maxRating }, (_, index) => (
-                      <Box key={index}>
-                        <GiRoundStar className="star-active" />
-                      </Box>
-                    ))}
-                </Box>
+                {formatDatePost(item.createdAt)} {`//`}
               </Typography>
               {item?.avgRating && (
                 <Typography className="max_rating">
@@ -104,7 +94,18 @@ const TopicPopular = (props: TopicParentProps) => {
                 <Typography>{item.topicChildrenName}.</Typography>
                 <Typography>{item.shortDescription}</Typography>
                 <Typography>
-                  {formatDatePost(item.createdAt)} <FiberManualRecord /> 3K Views
+                  {formatDatePost(item.createdAt)}
+                  {item?.avgRating && (
+                    <Box sx={{ display: 'flex' }}>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <GiRoundStar
+                          className={` ${value <= (Math.round(item?.avgRating) || 0) ? 'star-active' : ''}`}
+                          key={value}
+                          style={{ display: `${value > (Math.round(item?.avgRating) || 0) && 'none'}` }}
+                        />
+                      ))}
+                    </Box>
+                  )}
                 </Typography>
               </Box>
             </Box>

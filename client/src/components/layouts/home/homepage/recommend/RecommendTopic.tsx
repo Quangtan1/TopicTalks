@@ -9,11 +9,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface IRecommendProps {
   recommendTopic: IRecommendTopic[];
-  listTopic: ListTopicHot[];
 }
 
 const RecommendTopic = (props: IRecommendProps) => {
-  const { recommendTopic, listTopic } = props;
+  const { recommendTopic } = props;
   const navigate = useNavigate();
 
   const navigateTopic = (id: number) => {
@@ -33,7 +32,7 @@ const RecommendTopic = (props: IRecommendProps) => {
             infinite={true}
             partialVisible={true}
           >
-            {listTopic?.map((item) => (
+            {recommendTopic?.map((item) => (
               <Box
                 className="topic_parent_box"
                 key={item.topicChildrenId}

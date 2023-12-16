@@ -33,8 +33,8 @@ const ManageUserQA = observer(() => {
   const [isOpenAnswer, setIsOpenAnswer] = useState(false);
   const [userQA, setUserQA] = useState({});
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

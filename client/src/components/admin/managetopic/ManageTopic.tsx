@@ -39,8 +39,8 @@ const ManageTopic = () => {
 
   const account = accountStore?.account;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

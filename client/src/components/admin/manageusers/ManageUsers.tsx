@@ -32,8 +32,8 @@ const ManageUser = () => {
   const [userBan, setUserBan] = useState<IUserProfile>(null);
   const [isBan, setIsBan] = useState<boolean>(false);
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

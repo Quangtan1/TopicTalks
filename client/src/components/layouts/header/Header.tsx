@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { headerRoute, logo, logo1, logo_center } from 'src/utils';
+import { createAxios, getDataAPI, headerRoute, logo, logo1, logo_center } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
 import { notification_worker_script, worker_script } from '../../../utils/woker';
@@ -39,6 +39,11 @@ const Header = observer((props: IHeaderProps) => {
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
+  };
+
+  const axiosJWT = createAxios(account, setAccount);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -63,29 +68,52 @@ const Header = observer((props: IHeaderProps) => {
     }
   };
 
+  // useEffect(() => {
+  //   if (account !== null) {
+  //     worker = new Worker(worker_script);
+
+  //     const params = {
+  //       id: account?.id,
+  //       access_token: account?.access_token,
+  //     };
+  //     worker?.postMessage({ params: { ...params } }, '*');
+  //     worker.onmessage = (ev) => {
+  //       if (ev.data !== 'Empty') {
+  //         friendStore?.setFriends(ev.data);
+  //       }
+  //     };
+
+  //     notificationWorker = new Worker(notification_worker_script);
+  //     notificationWorker?.postMessage(params);
+  //     notificationWorker.onmessage = (ev: any) => {
+  //       if (ev.data !== 'Empty') {
+  //         setNotifiSystem(ev.data);
+  //       }
+  //     };
+  //   }
+
+  //   return () => {
+  //     account === null && friendStore?.setFriends([]);
+  //   };
+  // }, [account, location]);
+
   useEffect(() => {
     if (account !== null) {
-      worker = new Worker(worker_script);
-      worker.onmessage = (ev) => {
-        if (ev.data !== 'Empty') {
-          friendStore?.setFriends(ev.data);
-        }
-      };
-      const params = {
-        id: account?.id,
-        access_token: account?.access_token,
-      };
-      worker.postMessage(params);
-
-      notificationWorker = new Worker(notification_worker_script);
-      notificationWorker.onmessage = (ev: any) => {
-        if (ev.data !== 'Empty') {
-          setNotifiSystem(ev.data);
-        }
-      };
-      notificationWorker.postMessage(params);
+      getDataAPI(`/friends/all/${account?.id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          friendStore?.setFriends(res.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      getDataAPI(`/notification/${account?.id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          setNotifiSystem(res.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-
     return () => {
       account === null && friendStore?.setFriends([]);
     };
@@ -171,7 +199,7 @@ const Header = observer((props: IHeaderProps) => {
               </MenuItem>
             </Box>
           )}
-          <Typography className="name_account">{account?.username?.slice(0, 11)}</Typography>
+          <Typography className="name_account">{account?.username}</Typography>
         </Grid>
       </Grid>
       <Box className="header_option">

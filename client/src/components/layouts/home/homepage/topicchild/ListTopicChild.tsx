@@ -19,8 +19,8 @@ const ListTopicChild = observer(() => {
   const [isLoadTopic, setIsLoadTopic] = useState<boolean>(false);
 
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountToken = account?.access_token;

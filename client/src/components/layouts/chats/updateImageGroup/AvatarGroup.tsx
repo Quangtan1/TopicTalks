@@ -28,8 +28,8 @@ const AvatarGroup = observer((props: DialogProps) => {
   const { socket, setMessage } = useContext(ChatContext);
 
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

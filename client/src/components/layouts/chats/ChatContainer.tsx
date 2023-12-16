@@ -23,8 +23,8 @@ const ChatContainer = observer(() => {
   const [isLast, setIsLast] = useState<boolean>(true);
   const [isLoadMessage, setIsLoadMessage] = useState<boolean>(false);
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
   const axiosJWT = createAxios(accountJwt, setAccount);
 

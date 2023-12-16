@@ -13,8 +13,8 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 const AdminAnswer = observer(({ isOpen, questionData, setIsOpenAnswer }) => {
   const account = accountStore?.account;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const handleClose = () => {

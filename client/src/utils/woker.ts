@@ -1,15 +1,18 @@
+import { createAxios } from './createAxios';
+import { getDataAPI } from './fetchData';
+
 /* eslint-disable no-restricted-globals */
 const workercode = () => {
   self.onmessage = function (e) {
-    const { id, access_token } = e.data;
-    fetch(`http://localhost:5000/api/v1/friends/all/${id}`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
+    const { account, access_token, setAccount } = e.data;
+    const axiosJWT = createAxios(account, setAccount);
+    console.log(account);
+
+    getDataAPI(`/friends/all/${account?.id}`, access_token, axiosJWT)
       .then((response) => response.json())
       .then((res) => {
-        self.postMessage(res.data);
+        const serializedAccount = JSON.parse(JSON.stringify(res.data));
+        self.postMessage(serializedAccount);
       })
       .catch((error) => {
         self.postMessage({ error: error.message });
@@ -25,15 +28,13 @@ export const worker_script = URL.createObjectURL(blob);
 
 const notificationWorkerCode = () => {
   self.onmessage = function (e) {
-    const { id, access_token } = e.data;
-    fetch(`http://localhost:5000/api/v1/notification/${id}`, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
+    const { account, access_token, setAccount } = e.data;
+    const axiosJWT = createAxios(account, setAccount);
+    getDataAPI(`/notification/${account?.id}`, access_token, axiosJWT)
       .then((response) => response.json())
       .then((res) => {
-        self.postMessage(res.data);
+        const serializedAccount = JSON.parse(JSON.stringify(res.data));
+        self.postMessage(serializedAccount);
       })
       .catch((error) => {
         self.postMessage({ error: error.message });

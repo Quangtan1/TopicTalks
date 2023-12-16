@@ -42,8 +42,8 @@ const ConversationSetting = observer((props: ChatProps) => {
   const isGroup = chat?.conversationInfor.isGroupChat;
   const isAdmin = chat?.conversationInfor.adminId === accountStore?.account.id;
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

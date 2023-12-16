@@ -86,8 +86,8 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const account = accountStore?.account;
 
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const axiosJWT = createAxios(account, setAccount);

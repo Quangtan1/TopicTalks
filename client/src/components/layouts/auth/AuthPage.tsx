@@ -136,7 +136,7 @@ const LoginPage = observer(() => {
         : ToastError('Password must contain capital letters,numbers and more than 8 characters');
     } else {
       const user = {
-        username: anonymousName,
+        // username: anonymousName,
         email: email,
         password: password,
       };

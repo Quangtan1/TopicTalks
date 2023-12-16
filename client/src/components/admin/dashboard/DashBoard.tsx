@@ -27,8 +27,8 @@ const DashBoard = observer(() => {
   const [gender, setGender] = useState<Gender>(null);
   const [topicData, setTopicData] = useState<TopicState[]>([]);
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;

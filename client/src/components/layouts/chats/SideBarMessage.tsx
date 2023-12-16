@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { headerRoute, logo, logo_center } from 'src/utils';
+import { createAxios, getDataAPI, headerRoute, logo, logo_center } from 'src/utils';
 import NotificationDialog from 'src/components/dialogs/NotificationDialog';
 import ChatContext from 'src/context/ChatContext';
 import { notification_worker_script, worker_script } from '../../../utils/woker';
@@ -36,6 +36,11 @@ const SideBarMessage = observer(() => {
 
   const account = accountStore?.account;
   const accountRole = accountStore?.account?.roles;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
+  };
+
+  const axiosJWT = createAxios(account, setAccount);
 
   const openMenu = Boolean(anchorEl);
 
@@ -51,29 +56,44 @@ const SideBarMessage = observer(() => {
     navigate('/auth');
   };
 
+  // useEffect(() => {
+  //   if (account !== null) {
+  //     worker = new Worker(worker_script);
+  //     worker.onmessage = (ev) => {
+  //       if (ev.data !== 'Empty') {
+  //         friendStore?.setFriends(ev.data);
+  //       }
+  //     };
+  //     const params = {
+  //       id: account?.id,
+  //       access_token: account?.access_token,
+  //     };
+  //     worker.postMessage(params);
+
+  //     notificationWorker = new Worker(notification_worker_script);
+  //     notificationWorker.onmessage = (ev: any) => {
+  //       if (ev.data !== 'Empty') {
+  //         // setNotification(ev.data);
+  //       }
+  //     };
+  //     notificationWorker.postMessage(params);
+  //   }
+
+  //   return () => {
+  //     account === null && friendStore?.setFriends([]);
+  //   };
+  // }, [account, location]);
+
   useEffect(() => {
     if (account !== null) {
-      worker = new Worker(worker_script);
-      worker.onmessage = (ev) => {
-        if (ev.data !== 'Empty') {
-          friendStore?.setFriends(ev.data);
-        }
-      };
-      const params = {
-        id: account?.id,
-        access_token: account?.access_token,
-      };
-      worker.postMessage(params);
-
-      notificationWorker = new Worker(notification_worker_script);
-      notificationWorker.onmessage = (ev: any) => {
-        if (ev.data !== 'Empty') {
-          // setNotification(ev.data);
-        }
-      };
-      notificationWorker.postMessage(params);
+      getDataAPI(`/friends/all/${account?.id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          friendStore?.setFriends(res.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-
     return () => {
       account === null && friendStore?.setFriends([]);
     };

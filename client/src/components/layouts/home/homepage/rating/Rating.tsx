@@ -51,8 +51,8 @@ const Rating = observer((props: IDialogProps) => {
   const { open, onClose, tpcId, setRatingThisTopic, ratingThisTopic, nameTopic } = props;
   const [star, setStar] = useState<number | null>(null);
   const account = accountStore?.account;
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
   const axiosJWT = createAxios(account, setAccount);
 

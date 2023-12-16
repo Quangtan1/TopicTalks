@@ -48,8 +48,8 @@ const RandomDialog = observer((props: DialogProps) => {
   const account = accountStore?.account;
 
   const { isRandoming, setIsRandoming, socket } = useContext(ChatContext);
-  const setAccount = () => {
-    return accountStore?.setAccount;
+  const setAccount = (value) => {
+    accountStore?.setAccount(value);
   };
 
   const accountJwt = account;
