@@ -31,6 +31,16 @@ export const APPROVE_POST = 'Do you want to approve this post?';
 
 export const REJECT_POST = 'Do you want to reject this post?';
 
+export const handleGetOnlyTitle = (title = '') => {
+  if (title.includes('#')) {
+    const titleConvert = title.split('#')[0];
+
+    return titleConvert;
+  }
+
+  return title;
+};
+
 const ManagePost = observer(() => {
   dayjs.extend(relativeTime);
   const [isOpen, setIsOpen] = useState(false);
@@ -124,16 +134,6 @@ const ManagePost = observer(() => {
       });
   };
 
-  const handleTitleAdminPost = (title = '') => {
-    if (title.includes('#')) {
-      const titleConvert = title.split('#')[0];
-
-      return titleConvert;
-    }
-
-    return title;
-  };
-
   return isLoading ? (
     <Loading />
   ) : (
@@ -172,11 +172,11 @@ const ManagePost = observer(() => {
                     <TableCell className="cell_no">{index + 1}</TableCell>
                     <TableCell className="cell_id">{item?.id}</TableCell>
                     <TableCell className="cell_content">
-                      <Tooltip title={handleTitleAdminPost(item?.title)} arrow>
+                      <Tooltip title={handleGetOnlyTitle(item?.title)} arrow>
                         <span className="cell_content">
-                          {handleTitleAdminPost(item?.title)?.length > 30
-                            ? `${handleTitleAdminPost(item?.title)?.slice(0, 30)}...`
-                            : handleTitleAdminPost(item?.title)}
+                          {handleGetOnlyTitle(item?.title)?.length > 30
+                            ? `${handleGetOnlyTitle(item?.title)?.slice(0, 30)}...`
+                            : handleGetOnlyTitle(item?.title)}
                         </span>
                       </Tooltip>
                     </TableCell>

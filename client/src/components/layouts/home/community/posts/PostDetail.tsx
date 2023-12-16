@@ -7,11 +7,13 @@ import { createAxios, getDataAPI } from 'src/utils';
 import './PostDetail.scss';
 import { formatDatePost, formatTime } from 'src/utils/helper';
 import uiStore from 'src/store/uiStore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RiDoubleQuotesL } from 'react-icons/ri';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import PostDetailDialog from './PostDetailDialog';
 import { MdOutlineErrorOutline } from 'react-icons/md';
+import { handleTitle } from 'src/components/layouts/profile/PartnerProfile';
+import { handleGetOnlyTitle } from 'src/components/admin/managepost/ManagePost';
 
 const PostDetail = observer(() => {
   const { id } = useParams();
@@ -19,6 +21,12 @@ const PostDetail = observer(() => {
   const [post, setPost] = useState<IPost>(null);
 
   const [openPostDetail, setOpenPostDetail] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const handleNavigateToFriendPage = (friendId: number) => {
+    navigate(`/personal-profile/${friendId}`);
+  };
 
   const account = accountStore?.account;
   const setAccount = (value) => {
@@ -45,7 +53,7 @@ const PostDetail = observer(() => {
       <Box className="title_topic">
         <Typography>Explore the beauty of the world</Typography>
         <Typography>
-          Post Detail {'>'} {post?.title}
+          Post Detail {'>'} {handleGetOnlyTitle(post?.title)}
         </Typography>
       </Box>
       <Box className={`card_post image_right }`}>
@@ -53,7 +61,7 @@ const PostDetail = observer(() => {
         <Box className="box_card_content">
           <RiDoubleQuotesL className="quotes" />
           <Typography className="topic_name">{post?.topicName},</Typography>
-          <Typography className="title">{post?.title}</Typography>
+          <Typography className="title">{handleTitle(post?.title, handleNavigateToFriendPage)}</Typography>
           <Typography className="date">
             {formatDatePost(post?.created_at)} / / {post?.like.totalLike} LIKES && {post?.totalComment} COMMENTS
           </Typography>
