@@ -11,6 +11,8 @@ import { observer } from 'mobx-react';
 import { HiOutlineArrowRight } from 'react-icons/hi';
 import { RiDoubleQuotesL } from 'react-icons/ri';
 import { formatDatePost } from 'src/utils/helper';
+import { handleTitle } from 'src/components/layouts/profile/PartnerProfile';
+import { useNavigate } from 'react-router-dom';
 
 interface PostProps {
   posts?: IPost[];
@@ -19,6 +21,12 @@ interface PostProps {
 
 const PostItem = observer((props: PostProps) => {
   const { posts, handleDetailPost } = props;
+
+  const navigate = useNavigate();
+
+  const handleNavigateToFriendPage = (friendId: number) => {
+    navigate(`/personal-profile/${friendId}`);
+  };
 
   const postApproves =
     posts &&
@@ -38,6 +46,7 @@ const PostItem = observer((props: PostProps) => {
     const timeB = new Date(b.created_at).getTime();
     return Math.floor(timeB / 1000) - Math.floor(timeA / 1000);
   });
+
   return (
     <Box className="postitem_container">
       {postApprovesSort?.map((item, index: number) => (
@@ -46,7 +55,7 @@ const PostItem = observer((props: PostProps) => {
           <Box className="box_card_content">
             <RiDoubleQuotesL className="quotes" />
             <Typography className="topic_name">{item.topicName},</Typography>
-            <Typography className="title">{item.title}</Typography>
+            {handleTitle(item.title, handleNavigateToFriendPage)}
             <Typography className="date">
               {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
             </Typography>

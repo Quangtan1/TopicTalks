@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Box, Button, Dialog, DialogContent, Skeleton, Typography } from '@mui/material';
+import { Box, Dialog, DialogContent, Skeleton, Typography } from '@mui/material';
 import { handleImageUpload } from 'src/utils/helper';
 import { observer } from 'mobx-react';
 import uiStore from 'src/store/uiStore';
@@ -43,7 +43,9 @@ const ImageUpload: FC<Props> = observer(({ isOpenModalCrop, setIsOpenModalCrop, 
         {(!isEditingImage || !selectedImage) && (
           <>
             <Box className="add_image_icon-text__box">
-              <Typography>Upload Image: </Typography>
+              <Typography sx={{ display: 'flex' }}>
+                Upload Image<Typography sx={{ color: 'red', px: 0.2 }}>*</Typography>:{' '}
+              </Typography>
               <Box className="add_image_icon-text__box__group" onClick={handleLinkClick}>
                 <CloudUploadIcon className="add_image_icon-text__box__group__icon" />
               </Box>
@@ -61,14 +63,6 @@ const ImageUpload: FC<Props> = observer(({ isOpenModalCrop, setIsOpenModalCrop, 
             />
           </>
         )}
-
-        {/* {selectedImage && (
-          <img
-            src={selectedImage !== '' ? selectedImage : imageUrl}
-            alt="Selected"
-            className="selected-image-preview"
-          />
-        )} */}
 
         <Dialog open={isOpenModalCrop} onClose={handleClose}>
           <DialogContent>

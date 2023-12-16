@@ -28,7 +28,13 @@ const CropEasy = ({
   const cropImage = async () => {
     setLoading(true);
     try {
-      const { file, url }: any = await getCroppedImg(photoURL, croppedAreaPixels, rotation);
+      const { file, url }: any = await getCroppedImg(
+        photoURL,
+        croppedAreaPixels,
+        rotation,
+        { horizontal: false, vertical: false },
+        setPhotoURL,
+      );
       setPhotoURL(url);
       setFile(file);
       setIsOpenModalCrop(false);

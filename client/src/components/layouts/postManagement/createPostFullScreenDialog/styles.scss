@@ -1,7 +1,11 @@
 .new-post-dialog {
   &__app-bar {
     &__btn {
-      border: 1px solid green !important;
+      &__disabled {
+        color: #a7a4a4 !important;
+        width: 100px !important;
+      }
+      border: 1px solid #8f7053 !important;
       color: #8f7053 !important;
       width: 100px !important;
     }
@@ -27,8 +31,13 @@
           margin-bottom: 16px;
         }
         &__input {
+          &__mention {
+            margin: 12px 0 !important;
+            border-radius: 12px !important;
+          }
           margin: 12px 0 !important;
         }
+
         &__input-date {
           margin: 16px 0;
           padding: 16px 0;

@@ -194,6 +194,77 @@ export const defaultStyle = {
   },
 };
 
+export const defaultMentionPostStyle = {
+  control: {
+    backgroundColor: '#fff',
+    fontSize: 14,
+    fontWeight: 'normal',
+  },
+  highlighter: {
+    overflow: 'hidden',
+  },
+  input: {
+    margin: 0,
+    overflow: 'auto',
+    borderRadius: '8px',
+    height: '100% !important',
+    maxHeight: '100px',
+    scrollBehavior: 'unset',
+  },
+  '&multiLine': {
+    control: {
+      border: '1px solid silver',
+    },
+    highlighter: {
+      padding: 9,
+      height: '100% !important',
+      maxHeight: '100px',
+      scrollBehavior: 'unset',
+    },
+    input: {
+      padding: 9,
+      minHeight: 3,
+      outline: 0,
+      border: 0,
+    },
+  },
+  suggestions: {
+    bottom: '0',
+    top: 'unset',
+    list: {
+      backgroundColor: 'white',
+      border: '1px solid rgba(0,0,0,0.15)',
+      fontSize: 14,
+    },
+    item: {
+      padding: '5px 15px',
+      borderBottom: '1px solid rgba(0,0,0,0.15)',
+      '&focused': {
+        backgroundColor: '#cee4e5',
+      },
+    },
+  },
+};
+
+export const imageMale = [
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b85ba036ed117da2dc_smymjy.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_5-595b40b65ba036ed117d3309_qxqagg.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_3-595b40b65ba036ed117d3307_x0rfmn.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b65ba036ed117d3308_agvcdw.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_1_2-595b40b65ba036ed117d3306_cqgvfl.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/Manager-595b40b75ba036ed117d85e3_w0mj7j.svg',
+];
+
+export const imageFemale = [
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459815/TopicTalks_Post/Spy_Female-595b40b85ba036ed117dab42_g3wv8d.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459812/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b85ba036ed117da2db_bzrcvj.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_6-595b40b65ba036ed117d3305_krx5vl.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b65ba036ed117d3303_ikax68.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_1_2-595b40b65ba036ed117d3301_kpd1s7.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_5-595b40b65ba036ed117d3304_zrfbid.svg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_3-595b40b65ba036ed117d3302_p2dibo.svg',
+];
+
 export const defaultMentionStyle = {
   backgroundColor: '#cee4e5',
 };

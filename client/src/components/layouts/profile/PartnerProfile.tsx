@@ -1,32 +1,81 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Button, Skeleton, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './PartnerProfile.scss';
 import { useNavigate, useParams } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import { avatar_default, createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, getDataAPI, logo, postDataAPI } from 'src/utils';
 import { IUserProfile } from 'src/types/account.types';
 import PostDetailDialog from '../home/community/posts/PostDetailDialog';
-import { HiCamera, HiOutlineArrowRight } from 'react-icons/hi';
+import { HiOutlineArrowRight } from 'react-icons/hi';
 import uiStore from 'src/store/uiStore';
 import chatStore from 'src/store/chatStore';
 import friendStore from 'src/store/friendStore';
-import { AiFillDelete, AiOutlineUserAdd } from 'react-icons/ai';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import ListFriendDialog from './listfriend/ListFriendDialog';
-import SelectTopicMessage from 'src/components/dialogs/SelectTopicMessage';
-import { TopicChild } from 'src/types/topic.type';
 import postItemStore from 'src/store/postStore';
-import EditProfileModal from './editProfileModal';
 import AvatarDialog from './avatar/AvatarDialog';
-import { formatDate, formatDatePost } from 'src/utils/helper';
-import { FiberManualRecordTwoTone } from '@mui/icons-material';
+import { formatDatePost } from 'src/utils/helper';
 import { RiDoubleQuotesL, RiLoader2Line } from 'react-icons/ri';
 import PersonalInfor from './personalInfor/PersonalInfor';
 import InforBox from './inforBox/InforBox';
 import { CiLock } from 'react-icons/ci';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import EditProfileFullScreenDialog from './editProfileFullScreenDialog';
+
+export function extractNamesAndIds(inputString) {
+  const regex = /\@\[([^\]]+)\]\((\d+)\)/g;
+  const matches = [];
+  let match;
+
+  while ((match = regex.exec(inputString)) !== null) {
+    const name = match[1];
+    const id = match[2];
+    matches.push({ name, id });
+  }
+
+  return matches;
+}
+
+export const handleTitle = (title = '', handleNavigateToFriendPage) => {
+  const regex = /(.+?)#(.+)/;
+  const match = title.match(regex);
+
+  if (match) {
+    const postDataTitle = match[1].trim();
+    const friendsMention = match[2].trim();
+    const mentions = extractNamesAndIds(friendsMention);
+    return (
+      <>
+        <Typography className="mention" sx={{ display: 'flex' }}>
+          {'With Friends:'}
+          {mentions?.map((item) => (
+            <Box
+              sx={{
+                margin: '0px 6px',
+                padding: '2px 4px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '8px',
+              }}
+            >
+              <Typography
+                sx={{ cursor: 'pointer' }}
+                variant="body1"
+                color={'seagreen'}
+                onClick={() => handleNavigateToFriendPage(item?.id)}
+              >
+                {item?.name}{' '}
+              </Typography>
+            </Box>
+          ))}
+        </Typography>
+        <Typography className="title">{postDataTitle}</Typography>
+      </>
+    );
+  }
+
+  return <Typography className="title">{title}</Typography>;
+};
 
 const PartnerProfile = observer(() => {
   const { id } = useParams();
@@ -232,6 +281,11 @@ const PartnerProfile = observer(() => {
   });
 
   const isDisplay = isFriend || account?.id === user?.id;
+
+  const handleNavigateToFriendPage = (friendId: number) => {
+    navigate(`/personal-profile/${friendId}`);
+  };
+
   return (
     <Box className="partner-profile-container">
       <Box className="box_detail_infor_container">
@@ -304,11 +358,17 @@ const PartnerProfile = observer(() => {
               <Box className="post_container">
                 {postApproves?.map((item, index: number) => (
                   <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-                    <img src={item.img_url} className="image" alt="img" />
+                    {!item.img_url ? (
+                      <Skeleton className="image" animation={false} variant="rectangular" />
+                    ) : (
+                      <img src={item.img_url} className="image" alt="img" />
+                    )}
                     <Box className="box_card_content">
                       <RiDoubleQuotesL className="quotes" />
+
                       <Typography className="topic_name">{item.topicName},</Typography>
-                      <Typography className="title">{item.title}</Typography>
+                      {handleTitle(item.title, handleNavigateToFriendPage)}
+
                       <Typography className="date">
                         {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment}{' '}
                         COMMENTS

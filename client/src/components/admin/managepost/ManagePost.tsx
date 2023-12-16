@@ -124,6 +124,16 @@ const ManagePost = observer(() => {
       });
   };
 
+  const handleTitleAdminPost = (title = '') => {
+    if (title.includes('#')) {
+      const titleConvert = title.split('#')[0];
+
+      return titleConvert;
+    }
+
+    return title;
+  };
+
   return isLoading ? (
     <Loading />
   ) : (
@@ -162,12 +172,15 @@ const ManagePost = observer(() => {
                     <TableCell className="cell_no">{index + 1}</TableCell>
                     <TableCell className="cell_id">{item?.id}</TableCell>
                     <TableCell className="cell_content">
-                      <Tooltip title={item?.title} arrow>
+                      <Tooltip title={handleTitleAdminPost(item?.title)} arrow>
                         <span className="cell_content">
-                          {item?.title?.length > 15 ? `${item?.title?.slice(0, 15)}...` : item?.title}
+                          {handleTitleAdminPost(item?.title)?.length > 30
+                            ? `${handleTitleAdminPost(item?.title)?.slice(0, 30)}...`
+                            : handleTitleAdminPost(item?.title)}
                         </span>
                       </Tooltip>
                     </TableCell>
+
                     <TableCell className="cell_content">
                       <Tooltip title={item?.content} arrow>
                         <span className="cell_content">

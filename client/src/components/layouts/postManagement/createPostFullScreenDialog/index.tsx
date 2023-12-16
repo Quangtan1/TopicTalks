@@ -10,8 +10,10 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import './styles.scss';
 import accountStore from 'src/store/accountStore';
-import { createAxios } from 'src/utils';
+import { createAxios, defaultMentionPostStyle, getDataAPI, postDataAPI } from 'src/utils';
+import { defaultMentionStyle } from 'src/utils';
 import {
+  Avatar,
   Card,
   CardActionArea,
   CardActions,
@@ -34,7 +36,6 @@ import { observer } from 'mobx-react';
 import './styles.scss';
 import ImageUpload from '../newPost/imageUpload/ImageUpload';
 import {
-  createPost,
   editPost,
   useGetAllPosts,
   useGetAllPostsByAuthorId,
@@ -47,6 +48,7 @@ import uiStore from 'src/store/uiStore';
 import postItemStore from 'src/store/postStore';
 import AvatarComponent from '../newPost/avatarComponent/AvatarComponent';
 import { Box } from '@mui/system';
+import { MentionsInput, Mention } from 'react-mentions';
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -82,6 +84,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const [isOpenModalCrop, setIsOpenModalCrop] = React.useState(false);
 
+  const [listFriends, setListFriends] = React.useState(null);
+
+  const [friendsMention, setFriendsMention] = React.useState('');
+  console.log('🚀 ~ file: index.tsx:92 ~ CreatePostFullScreenDialog ~ friendsMention:', friendsMention);
+
   const formRef = React.useRef<FormikProps<any>>(null);
 
   const account = accountStore?.account;
@@ -92,6 +99,19 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const axiosJWT = createAxios(account, setAccount);
 
+  React.useEffect(() => {
+    uiStore?.setLoading(true);
+    getDataAPI(`friends/all/${account?.id}`, account.access_token, axiosJWT)
+      .then((res) => {
+        setListFriends(res.data.data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        uiStore?.setLoading(false);
+        console.log(err);
+      });
+  }, []);
+
   // ========================== Query ==========================
   const {
     data: topicParentData,
@@ -101,7 +121,6 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
   const { refetch: refetchPost } = useGetAllPosts(account, setAccount);
   const { refetch: refetchPostByIsApproved } = useGetAllPostsByIsApproved(account, setAccount);
   const { refetch: refetchPostByAuthorId } = useGetAllPostsByAuthorId(account?.id, axiosJWT, account);
-  const useCreatePost = useMutation((postData) => createPost(postData, account));
   const useEditPost = useMutation((postData) => editPost(postData, account));
 
   const setDefaultValue = () => {
@@ -117,21 +136,19 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedImage]);
 
-  const handleMutationPost = async (postData) => {
-    try {
-      const result = await useCreatePost.mutateAsync(postData);
-      if (result.status === 201) {
+  const handleMutationPost = (postData) => {
+    postDataAPI(`/post/create`, postData, account.access_token, axiosJWT)
+      .then((res) => {
         ToastSuccess('Post created! Awaiting admin approval.');
         onCreateSuccess?.();
         refetchTopic();
         refetchPost();
         refetchPostByAuthorId();
         refetchPostByIsApproved();
-      }
-      console.log(`Post result: `, result);
-    } catch (error) {
-      ToastError(`Error creating post!`);
-    }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleEditPost = async (postData) => {
@@ -151,9 +168,9 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     const postData = {
       postId: dataEdit?.id,
       content: data?.postContent,
-      image: selectedImage !== '' ? selectedImage : data?.imageUrl,
+      image: selectedImage !== '' ? selectedImage : data?.imageUrl || '',
       author_id: +accountStore.account.id,
-      title: data?.postTitle,
+      title: friendsMention ? `${data?.postTitle}#${friendsMention}` : data?.postTitle,
       tparent_id: +data?.selectedTopicParent,
       status_id: +data?.status,
     };
@@ -178,10 +195,32 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     onSubmit: handleCreatePost,
   });
 
-  const { errors, touched, resetForm, getFieldProps, submitForm, dirty } = formik;
+  const { errors, touched, resetForm, getFieldProps, submitForm, dirty, values } = formik;
 
   const onClickEditCrop = () => {
     setIsOpenModalCrop(true);
+  };
+
+  const renderSuggestion = (
+    suggestion: any,
+    search: string,
+    highlightedDisplay: React.ReactNode,
+    index: number,
+    focused: boolean,
+  ) => {
+    return (
+      <div
+        className={`mention-suggestion ${focused ? 'mention-suggestion-focused' : ''}`}
+        style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
+      >
+        <div className="mention-avatar">
+          <Avatar src={listFriends[index]?.userUrl} alt="avt" />
+        </div>
+        <div className="mention-content">
+          <span>{highlightedDisplay}</span>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -195,14 +234,20 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       >
         <AppBar className="new-post-dialog__app-bar">
           <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={closePostModal} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+
             <Typography className="new-post-dialog__app-bar__title" variant="h6" component="div">
               Create New Post
             </Typography>
 
             <Button
-              className="new-post-dialog__app-bar__btn"
+              className={
+                selectedImage === '' ? 'new-post-dialog__app-bar__btn__disabled' : `new-post-dialog__app-bar__btn`
+              }
               onClick={submitForm}
-              disabled={!dirty && selectedImage === ''}
+              disabled={!dirty || selectedImage === ''}
             >
               {isEdit ? 'Edit' : 'Create'}
             </Button>
@@ -240,6 +285,39 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   {errors.status as string}
                 </Typography>
               </FormControl>
+
+              {values.status === '2' && (
+                <MentionsInput
+                  id="text_input"
+                  required
+                  disabled={listFriends?.length === 0 || !listFriends}
+                  value={friendsMention}
+                  placeholder={listFriends?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'}
+                  className="new-post-dialog__grid__left__dialog__input__mention"
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+                    setFriendsMention(e.target.value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.keyCode === 13 && !event.shiftKey) {
+                      event.preventDefault();
+                    }
+                  }}
+                  style={{
+                    ...defaultMentionPostStyle,
+                    border: `${listFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
+                  }}
+                >
+                  <Mention
+                    appendSpaceOnAdd
+                    trigger="@"
+                    data={listFriends?.map(
+                      (item) => ({ id: item.friendId.toString(), display: `${item.friendName}` } || []),
+                    )}
+                    style={defaultMentionStyle}
+                    renderSuggestion={renderSuggestion}
+                  />
+                </MentionsInput>
+              )}
 
               <TextField
                 autoFocus

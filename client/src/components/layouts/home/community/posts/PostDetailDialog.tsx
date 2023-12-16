@@ -301,10 +301,10 @@ const PostDetailDialog = observer((props: DialogProps) => {
   return (
     <Dialog open={open} onClose={handleClose} className="postdetail_dialog">
       <Grid container className="grid_container">
-        <Grid item md={7.5} xs={12} className="image">
-          <img src={post?.img_url} alt="img" />
+        <Grid item md={post?.img_url ? 7.5 : 0} xs={post?.img_url ? 7.5 : 0} className="image">
+          {post?.img_url && <img src={post?.img_url} alt="img" />}
         </Grid>
-        <Grid item md={4.5} xs={12} className="post_infor">
+        <Grid item md={post?.img_url ? 4.5 : 12} xs={post?.img_url ? 4.5 : 12} className="post_infor">
           <Box className="infor_user">
             <span className="active_avatar">
               <Avatar
