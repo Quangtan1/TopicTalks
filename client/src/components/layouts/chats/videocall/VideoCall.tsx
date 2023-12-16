@@ -37,6 +37,7 @@ const VideoCall = observer((props: DialogProps) => {
   const [stream, setStream] = useState<MediaStream>(null);
   const [muted, setMuted] = useState<boolean>(false);
   const [seconds, setSeconds] = useState<number>(0);
+  const [secondEnd, setSecondEnd] = useState<number>(30);
 
   const myVideoCall = useRef(null);
   const userVideo = useRef(null);
@@ -80,6 +81,25 @@ const VideoCall = observer((props: DialogProps) => {
 
       return () => {
         clearInterval(timer);
+      };
+    } else {
+      const timerEnd = setInterval(() => {
+        setSecondEnd((prevSeconds) => {
+          if (prevSeconds === 0 && !isAccepted) {
+            distroyMediaStream();
+            onLeaveCall();
+            setSecondEnd(30);
+            clearInterval(timerEnd);
+          } else if (isAccepted) {
+            setSecondEnd(-1);
+            clearInterval(timerEnd);
+          }
+          return prevSeconds - 1;
+        });
+      }, 1000);
+
+      return () => {
+        clearInterval(timerEnd);
       };
     }
   }, [isAccepted]);
