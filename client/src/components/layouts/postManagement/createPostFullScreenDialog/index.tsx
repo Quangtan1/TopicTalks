@@ -79,6 +79,7 @@ const Transition = React.forwardRef(function Transition(
 
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
+  const account = accountStore?.account;
 
   const [selectedImage, setSelectedImage] = React.useState(dataEdit?.img_url || '');
 
@@ -86,12 +87,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const [listFriends, setListFriends] = React.useState(null);
 
+  const listFriendsMap = listFriends?.filter((item) => item?.friendId !== account?.id);
+
   const [friendsMention, setFriendsMention] = React.useState('');
-  console.log('🚀 ~ file: index.tsx:92 ~ CreatePostFullScreenDialog ~ friendsMention:', friendsMention);
 
   const formRef = React.useRef<FormikProps<any>>(null);
-
-  const account = accountStore?.account;
 
   const setAccount = (value) => {
     accountStore?.setAccount(value);
@@ -214,7 +214,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
       >
         <div className="mention-avatar">
-          <Avatar src={listFriends[index]?.userUrl} alt="avt" />
+          <Avatar src={listFriendsMap[index]?.userUrl} alt="avt" />
         </div>
         <div className="mention-content">
           <span>{highlightedDisplay}</span>
@@ -290,9 +290,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 <MentionsInput
                   id="text_input"
                   required
-                  disabled={listFriends?.length === 0 || !listFriends}
+                  disabled={listFriendsMap?.length === 0 || !listFriendsMap}
                   value={friendsMention}
-                  placeholder={listFriends?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'}
+                  placeholder={
+                    listFriendsMap?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'
+                  }
                   className="new-post-dialog__grid__left__dialog__input__mention"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                     setFriendsMention(e.target.value);
@@ -304,14 +306,14 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   }}
                   style={{
                     ...defaultMentionPostStyle,
-                    border: `${listFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
+                    border: `${listFriendsMap?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
                   }}
                 >
                   <Mention
                     appendSpaceOnAdd
                     trigger="@"
-                    data={listFriends?.map(
-                      (item) => ({ id: item.friendId.toString(), display: `${item.friendName}` } || []),
+                    data={listFriendsMap?.map(
+                      (item) => ({ id: item?.friendId?.toString(), display: `${item.friendName}` } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
