@@ -18,7 +18,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import { observer } from 'mobx-react';
 import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
 import accountStore from 'src/store/accountStore';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { IoDocumentAttachSharp } from 'react-icons/io5';
 import uiStore from 'src/store/uiStore';
 import { handleImageUpload } from 'src/utils/helper';
@@ -57,9 +57,9 @@ const CreateTopicDialog = observer((props: DialogProps) => {
 
   const createTopic = () => {
     const topic = {
-      topicParentName: topicPrimary,
+      topicName: topicPrimary,
       urlImage: imageFile,
-      shortDescription: shortDescript,
+      shortDescript: shortDescript,
     };
     const topicChildParam = {
       topicParentId: selectTopic,
@@ -67,7 +67,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
       image: imageFile,
       shortDescription: shortDescript,
     };
-    if (active === 1 ? topicPrimary !== '' : topicChild !== '' && imageFile !== '') {
+    if ((active === 1 ? topicPrimary !== '' : topicChild !== '') && imageFile !== '' && shortDescript !== '') {
       postDataAPI(
         `${active === 1 ? '/topic-parent/create' : '/topic-children/create'}`,
         active === 1 ? topic : topicChildParam,
@@ -85,6 +85,8 @@ const CreateTopicDialog = observer((props: DialogProps) => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      ToastError('Please Not Empty Data');
     }
   };
   useEffect(() => {

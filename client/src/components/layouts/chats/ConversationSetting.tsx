@@ -14,7 +14,7 @@ import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import { TopicChild } from 'src/types/topic.type';
-import { createAxios, deleteDataAPI, postDataAPI, putDataAPI } from 'src/utils';
+import { createAxios, deleteDataAPI, imageGroup, postDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import AvatarGroup from './updateImageGroup/AvatarGroup';
 import { BsFillCameraFill } from 'react-icons/bs';
@@ -289,7 +289,7 @@ const ConversationSetting = observer((props: ChatProps) => {
             onClick={() => isGroup && isAdmin && setOpenUpdateAvatar(true)}
           >
             <Avatar
-              src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+              src={isGroup ? chat?.conversationInfor.avtGroupImg || imageGroup : partnerUser?.image}
               alt="avt"
               className="avatar"
             />

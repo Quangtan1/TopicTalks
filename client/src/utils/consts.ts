@@ -5,7 +5,7 @@ import logo from 'src/assets/images/logo.png';
 import loading from 'src/assets/images/loading.png';
 import iconTopic from 'src/assets/icons/icon_topic_sidebar.svg';
 import preminnum from 'src/assets/icons/preminium.svg';
-import imageGroup from 'src/assets/images/group_image.jpg';
+import imageGroup from 'src/assets/images/19198668.jpg';
 import logo_center from 'src/assets/images/logo_center.png';
 import logo1 from 'src/assets/logo/Logo1.svg';
 import aboutme from 'src/assets/images/Aboutme02.jpg';

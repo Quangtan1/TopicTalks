@@ -26,7 +26,7 @@ import friendStore from 'src/store/friendStore';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
-import { createAxios, defaultMentionStyle, defaultStyle, deleteDataAPI } from 'src/utils';
+import { createAxios, defaultMentionStyle, defaultStyle, deleteDataAPI, imageGroup } from 'src/utils';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -438,13 +438,14 @@ const ChatBox = observer((props: ChatProps) => {
     index: number,
     focused: boolean,
   ) => {
+    console.log(suggestion);
     return (
       <div
         className={`mention-suggestion ${focused ? 'mention-suggestion-focused' : ''}`}
         style={{ display: 'flex', gap: '5px', alignItems: 'center' }}
       >
         <div className="mention-avatar">
-          <Avatar src={partnerApprove[index]?.image} alt="avt" />
+          <Avatar src={suggestion?.image} alt="avt" />
         </div>
         <div className="mention-content">
           <span>{highlightedDisplay}</span>
@@ -470,7 +471,7 @@ const ChatBox = observer((props: ChatProps) => {
                 onClick={() => !isGroup && navigate(`/personal-profile/${partnerUser?.id}`)}
               >
                 <Avatar
-                  src={isGroup ? chat?.conversationInfor.avtGroupImg : partnerUser?.image}
+                  src={isGroup ? chat?.conversationInfor.avtGroupImg || imageGroup : partnerUser?.image}
                   alt="avt"
                   className="avatar_header"
                 />
@@ -659,7 +660,9 @@ const ChatBox = observer((props: ChatProps) => {
               <Mention
                 appendSpaceOnAdd
                 trigger="@"
-                data={partnerApprove?.map((item) => ({ id: item.id.toString(), display: `${item.username}` } || []))}
+                data={partnerApprove?.map(
+                  (item) => ({ id: item.id.toString(), display: `${item.username}`, image: item?.image } || []),
+                )}
                 style={defaultMentionStyle}
                 renderSuggestion={renderSuggestion}
               />

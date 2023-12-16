@@ -6,7 +6,7 @@ import { GrGroup } from 'react-icons/gr';
 import accountStore from 'src/store/accountStore';
 import { CiLogout, CiSearch, CiSettings } from 'react-icons/ci';
 import { observer } from 'mobx-react';
-import { createAxios, getDataAPI, postDataAPI } from 'src/utils';
+import { createAxios, getDataAPI, imageGroup, postDataAPI } from 'src/utils';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
 import CreateGroupDialog from 'src/components/dialogs/CreateGroupDialog';
@@ -367,7 +367,7 @@ const ListConversation = observer(() => {
                   <Avatar
                     src={
                       item?.conversationInfor.isGroupChat
-                        ? item.conversationInfor.avtGroupImg
+                        ? item.conversationInfor.avtGroupImg || imageGroup
                         : imageUser(item?.partnerDTO)
                     }
                     alt="avt"
