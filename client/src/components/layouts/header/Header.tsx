@@ -179,7 +179,7 @@ const Header = observer((props: IHeaderProps) => {
           <CiSearch className="search" onClick={() => handleSearch(true)} />
           <IoNotificationsOutline onClick={() => setOpenNotifi(true)} />
           <span className="notifi_icon">{totalNotifi}</span>
-          <IconButton onClick={() => setAnchorEl(!anchorEl)} id="anchor">
+          <IconButton className="avatar_header" onClick={() => setAnchorEl(!anchorEl)} id="anchor">
             <Avatar src={account?.url_img} alt="avatar" />
           </IconButton>
           {anchorEl && (

@@ -41,7 +41,7 @@ const ChangePassword = observer(() => {
         })
         .catch((err) => {
           uiStore?.setLoading(false);
-          ToastError(err.response.data.message);
+          ToastError(err?.response?.data?.message.split(':')[1]);
         });
     }
   };

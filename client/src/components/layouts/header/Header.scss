@@ -61,7 +61,7 @@
       .notifi_icon {
         position: absolute;
         top: 26px;
-        right: 122px;
+        right: 143px;
         color: red;
         font-size: 15px;
         background: rgb(231, 186, 186);
@@ -77,8 +77,15 @@
         font-size: 20px;
         cursor: pointer;
       }
+      .avatar_header {
+        margin-right: -17px;
+        .MuiAvatar-root {
+          width: 50px;
+          height: 50px;
+        }
+      }
       .name_account {
-        width: 30px;
+        width: 60px;
       }
       .menu_box {
         position: absolute;

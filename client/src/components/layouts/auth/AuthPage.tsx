@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './AuthPage.scss';
 import Carousels from './Carousels';
-import { logo } from 'src/utils/consts';
+import { imageRandom, logo } from 'src/utils/consts';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import axios from 'axios';
@@ -36,11 +36,11 @@ const LoginPage = observer(() => {
     try {
       uiStore?.setLoading(true);
       const decode: { picture?: string; name?: string; email?: string } = jwtDecode(credentialResponse?.credential);
-
+      const randomIndex = Math.floor(Math.random() * imageRandom.length);
       const user = {
         fullName: decode?.name,
         email: decode?.email,
-        urlImage: decode?.picture,
+        urlImage: imageRandom[randomIndex],
       };
 
       axios
@@ -69,7 +69,7 @@ const LoginPage = observer(() => {
     uiStore?.setLoading(true);
     const formData: any = new FormData(e.currentTarget);
     const user = {
-      username: formData.get('anonymousName'),
+      username: formData.get('email'),
       password: formData.get('password'),
     };
     if (!user.username || !user.password) {
@@ -85,6 +85,7 @@ const LoginPage = observer(() => {
           } else {
             ToastError('Please verify email first');
             navigate('/verify-account');
+            uiStore?.setLoading(false);
           }
         })
         .catch((err) => {
@@ -121,12 +122,11 @@ const LoginPage = observer(() => {
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: any = new FormData(e.currentTarget);
-    const anonymousName = formData.get('anonymousName');
     const email = formData.get('email');
     const password = formData.get('password');
     const cpassword = formData.get('cpassword');
 
-    if (!anonymousName || !email || !password || !cpassword) {
+    if (!email || !password || !cpassword) {
       ToastError('Please not empty textbox');
     } else if (!emailRegex.test(email)) {
       ToastError('Please input correct email');
@@ -135,10 +135,11 @@ const LoginPage = observer(() => {
         ? ToastError('Confirm Password is incorrect ')
         : ToastError('Password must contain capital letters,numbers and more than 8 characters');
     } else {
+      const randomIndex = Math.floor(Math.random() * imageRandom.length);
       const user = {
-        // username: anonymousName,
         email: email,
         password: password,
+        urlAvatar: imageRandom[randomIndex],
       };
       uiStore?.setLoading(true);
 

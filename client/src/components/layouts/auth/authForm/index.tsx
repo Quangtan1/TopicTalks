@@ -12,35 +12,19 @@ const AuthForm = ({ showOTP, isSignIn }) => {
     <>
       {!showOTP && (
         <>
-          {!isSignIn && (
-            <TextField
-              required
-              id="email"
-              placeholder="Email Address"
-              name="email"
-              autoFocus
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <MdOutlineMailOutline />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
           <TextField
-            name="anonymousName"
             required
-            id="anonymousName"
-            placeholder="Anonymous Name"
+            id="email"
+            placeholder="Email Address"
+            name="email"
+            autoFocus
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <GrUserExpert />
+                  <MdOutlineMailOutline />
                 </InputAdornment>
               ),
             }}
-            autoFocus
           />
 
           <TextField

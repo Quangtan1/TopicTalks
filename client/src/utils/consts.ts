@@ -194,25 +194,31 @@ export const defaultStyle = {
   },
 };
 
-export const imageMale = [
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b85ba036ed117da2dc_smymjy.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_5-595b40b65ba036ed117d3309_qxqagg.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_3-595b40b65ba036ed117d3307_x0rfmn.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_4-595b40b65ba036ed117d3308_agvcdw.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459813/TopicTalks_Post/School_Director_Male_Skin_Type_1_2-595b40b65ba036ed117d3306_cqgvfl.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/Manager-595b40b75ba036ed117d85e3_w0mj7j.svg',
-];
-
-export const imageFemale = [
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459815/TopicTalks_Post/Spy_Female-595b40b85ba036ed117dab42_g3wv8d.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459812/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b85ba036ed117da2db_bzrcvj.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_6-595b40b65ba036ed117d3305_krx5vl.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_4-595b40b65ba036ed117d3303_ikax68.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_1_2-595b40b65ba036ed117d3301_kpd1s7.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459810/TopicTalks_Post/School_Director_Female_Skin_Type_5-595b40b65ba036ed117d3304_zrfbid.svg',
-  'https://res.cloudinary.com/tantqdev/image/upload/v1702459811/TopicTalks_Post/School_Director_Female_Skin_Type_3-595b40b65ba036ed117d3302_p2dibo.svg',
-];
-
 export const defaultMentionStyle = {
   backgroundColor: '#cee4e5',
 };
+
+export const imageRandom = [
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698086/TopicTalks_Post/5800_8_08_akhskn.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698083/TopicTalks_Post/5800_5_08_j2is8f.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698082/TopicTalks_Post/5300_4_04_vqttkz.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698082/TopicTalks_Post/5500_9_07_nq3yo1.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698082/TopicTalks_Post/4700_9_03_obj44j.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698081/TopicTalks_Post/4500_9_07_bn72q1.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698081/TopicTalks_Post/4500_6_06_kyxovs.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698078/TopicTalks_Post/4500_4_03_advr3b.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698076/TopicTalks_Post/4500_1_01_rwzupw.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698076/TopicTalks_Post/4200_1_07_bytn2b.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698075/TopicTalks_Post/4100_4_14_rzlhyr.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698075/TopicTalks_Post/3800_2_01_dzdeqx.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698075/TopicTalks_Post/3700_4_02_msqtcl.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698075/TopicTalks_Post/3700_6_10_zfsfym.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698074/TopicTalks_Post/3700_5_02_reszdk.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698074/TopicTalks_Post/3700_4_01_mwrvnd.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698074/TopicTalks_Post/3500_7_04_owarqa.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698073/TopicTalks_Post/2173_by3rz9.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698074/TopicTalks_Post/3500_3_01_higdiy.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698073/TopicTalks_Post/1-04_c915df.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698073/TopicTalks_Post/3600_2_10_cxxtb9.jpg',
+  'https://res.cloudinary.com/tantqdev/image/upload/v1702698073/TopicTalks_Post/2262_nhtoa8.jpg',
+];
