@@ -61,7 +61,7 @@ const TopicChildDetail = observer(() => {
     <LazyShow>
       <Box className="container_topic_child">
         <Box className="title_topic_child">
-          <Typography>Detail of Topic</Typography>
+          <Typography>Topic Detail</Typography>
           <Typography>
             List Topic {`>`} {topicChild?.topicChildrenName} Topic
           </Typography>

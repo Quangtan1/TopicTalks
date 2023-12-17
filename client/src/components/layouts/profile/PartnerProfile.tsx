@@ -19,9 +19,11 @@ import { formatDatePost } from 'src/utils/helper';
 import { RiDoubleQuotesL, RiLoader2Line } from 'react-icons/ri';
 import PersonalInfor from './personalInfor/PersonalInfor';
 import InforBox from './inforBox/InforBox';
-import { CiLock } from 'react-icons/ci';
+import { CiCamera, CiLock } from 'react-icons/ci';
 import { MdOutlineErrorOutline } from 'react-icons/md';
 import EditProfileFullScreenDialog from './editProfileFullScreenDialog';
+import { BsGrid3X3Gap } from 'react-icons/bs';
+import { IoIosApps } from 'react-icons/io';
 
 export function extractNamesAndIds(inputString) {
   const regex = /\@\[([^\]]+)\]\((\d+)\)/g;
@@ -312,101 +314,101 @@ const PartnerProfile = observer(() => {
             addFriend={addFriend}
           />
 
-          {!isDisplay ? (
+          {isDisplay ? (
             <>
-              <Box className="title_box">
-                <Typography className="title_backgroud">SOME OF MY PORTFOLIO</Typography>
-                <Typography className="title_group">Get to know me</Typography>
-              </Box>
-              {!user?.public ? (
-                <Box className="not_friends">
-                  <Typography>
-                    This is a private account <CiLock />
-                  </Typography>
-                  <Typography>Be friend to see photos and infor</Typography>
-                  <Typography>theirs.</Typography>
+              {isDisplay && (
+                <Box className="title_box">
+                  <Box className="tab_option">
+                    <Button className={isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(true)}>
+                      <BsGrid3X3Gap /> POSTS
+                    </Button>
+                    {account?.id === user?.id && (
+                      <Button className={!isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(false)}>
+                        <IoIosApps /> Pending
+                      </Button>
+                    )}
+                  </Box>
+                </Box>
+              )}
+
+              {postApproves?.length > 0 ? (
+                <Box className="post_container">
+                  {postApproves?.map((item, index: number) => (
+                    <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+                      {!item.img_url ? (
+                        <Skeleton className="image" animation={false} variant="rectangular" />
+                      ) : (
+                        <img src={item.img_url} className="image" alt="img" loading="lazy" />
+                      )}
+                      <Box className="box_card_content">
+                        <RiDoubleQuotesL className="quotes" />
+
+                        <Typography className="topic_name">{item.topicName},</Typography>
+                        {handleTitle(item.title, handleNavigateToFriendPage)}
+
+                        <Typography className="date">
+                          {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment}{' '}
+                          COMMENTS
+                        </Typography>
+                        <span>_________</span>
+                        {item?.rejected && (
+                          <Typography className="reject">
+                            <MdOutlineErrorOutline />
+                            {item?.reasonRejected}
+                          </Typography>
+                        )}
+                        <Typography className="content">{item.content}</Typography>
+                        <Button onClick={() => handleDetailPost(item.id)}>
+                          Read More <HiOutlineArrowRight />
+                        </Button>
+                      </Box>
+                    </Box>
+                  ))}
+                  {isLoadPost && (
+                    <Box className="load_post">
+                      <RiLoader2Line />
+                    </Box>
+                  )}
+                </Box>
+              ) : account?.id === user?.id ? (
+                <Box className="post_container">
+                  <Box className="no_data">
+                    <CiCamera />
+                    <Typography className="title">{isTabAprrove ? 'Share Post' : 'No Post Pending Now'}</Typography>
+                    <Typography>When you share posts, they will appear on your profile.</Typography>
+                  </Box>
                 </Box>
               ) : (
-                <Box className="not_friends">
-                  <Typography>
-                    This account has been set up <strong>Anonymous mode</strong>
-                    <CiLock />
-                  </Typography>
-                  <Typography>and you won't be able to view any personal details</Typography>
-                  <Typography>from the user.</Typography>
+                <Box className="not_yet_data_container">
+                  <Box className="not_yet_data">
+                    <CiCamera />
+                    <Typography className="title">No Posts Yet</Typography>
+                  </Box>
                 </Box>
               )}
             </>
           ) : (
-            <>
-              <Box className="title_box">
-                <Typography className="title_backgroud">
-                  {account.id !== user?.id ? 'SOME OF MY POST' : 'LIST OF YOUR POST'}
-                </Typography>
-
-                {postApproves?.length > 0 ? (
-                  <>
-                    <Typography className="title_group">
-                      {isTabAprrove
-                        ? account.id !== user?.id
-                          ? 'Get to know me'
-                          : 'See details now'
-                        : 'Post Waiting Aprrove'}
-                    </Typography>
-                  </>
-                ) : (
-                  <Typography className="title_group">No posts exist</Typography>
-                )}
-                {account.id === user?.id && (
-                  <Box className="tab_option">
-                    <Button className={isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(true)}>
-                      Portfolio
-                    </Button>
-                    <Button className={!isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(false)}>
-                      Processing
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-              <Box className="post_container">
-                {postApproves?.map((item, index: number) => (
-                  <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-                    {!item.img_url ? (
-                      <Skeleton className="image" animation={false} variant="rectangular" />
-                    ) : (
-                      <img src={item.img_url} className="image" alt="img" loading="lazy" />
-                    )}
-                    <Box className="box_card_content">
-                      <RiDoubleQuotesL className="quotes" />
-
-                      <Typography className="topic_name">{item.topicName},</Typography>
-                      {handleTitle(item.title, handleNavigateToFriendPage)}
-
-                      <Typography className="date">
-                        {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment}{' '}
-                        COMMENTS
-                      </Typography>
-                      <span>_________</span>
-                      {item?.rejected && (
-                        <Typography className="reject">
-                          <MdOutlineErrorOutline />
-                          {item?.reasonRejected}
-                        </Typography>
-                      )}
-                      <Typography className="content">{item.content}</Typography>
-                      <Button onClick={() => handleDetailPost(item.id)}>
-                        Read More <HiOutlineArrowRight />
-                      </Button>
-                    </Box>
-                  </Box>
-                ))}
-                {isLoadPost && (
-                  <Box className="load_post">
-                    <RiLoader2Line />
-                  </Box>
-                )}
-              </Box>
-            </>
+            <Box className="not_display">
+              {!user?.public ? (
+                <Box className="not_friends">
+                  <CiLock />
+                  <Typography>
+                    This Account is <strong>Private</strong>
+                  </Typography>
+                  <Typography>Be friend to see their posts</Typography>
+                </Box>
+              ) : (
+                <Box className="not_friends">
+                  <CiLock />
+                  <Typography>
+                    This account has been set up <strong>Anonymous</strong> mode
+                  </Typography>
+                  <Typography>you won't be able to view any personal details</Typography>
+                  <Typography>from the user.</Typography>
+                </Box>
+              )}
+              <Box />
+            </Box>
           )}
         </Box>
       </Box>

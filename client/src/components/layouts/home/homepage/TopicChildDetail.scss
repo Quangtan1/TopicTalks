@@ -120,15 +120,12 @@
           font-size: 20px;
           color: #fff;
         }
-      }
-      .view_group:hover {
-        background: #fff;
-        color: #000;
-        border: 1px solid #000;
-        svg {
-          color: #000;
+        &:hover {
+          background: #0d1018;
+          color: #fff;
         }
       }
+
       .rating {
         display: flex;
         gap: 5px;

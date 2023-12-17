@@ -636,7 +636,6 @@ const ChatBox = observer((props: ChatProps) => {
               </span>
             )}
             <RiEmotionLaughLine onClick={toggleEmojiPicker} id="svg_emoiji" />
-            <BsCodeSlash title="Code Snippet" onClick={handleSnippetCode} className={snippets && 'snippet'} />
 
             <MentionsInput
               id="text_input"

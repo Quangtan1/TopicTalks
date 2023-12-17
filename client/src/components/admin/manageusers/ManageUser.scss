@@ -41,6 +41,20 @@
       font-size: 15px;
     }
   }
+  .search_box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px 0px 10px;
+    .MuiInputBase-root {
+      input {
+        padding: 10px 10px 10px 15px;
+      }
+      svg {
+        cursor: pointer;
+      }
+    }
+  }
   .table_container_head {
     border-radius: 6px;
     min-height: 60px;
@@ -121,6 +135,27 @@
             }
           }
         }
+      }
+    }
+    .box_no_data {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+
+      span {
+        padding: 20px;
+        border-radius: 50%;
+        background: linear-gradient(#9bc7e4, #dce1e9);
+        svg {
+          font-size: 70px;
+          color: #4f4f99;
+        }
+      }
+      p {
+        font-weight: 600;
       }
     }
   }
