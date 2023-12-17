@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, Container, Typography, TextField, Button, Grid, Box } from '@mui/material';
+import { Card, CardContent, Container, Typography, TextField, Button, Grid, Box, Paper } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import './styles.scss';
 import ReCAPTCHA from 'react-google-recaptcha';
@@ -80,6 +80,22 @@ const AdminAnswer = observer(({ isOpen, questionData, setIsOpenAnswer }) => {
                   <Typography>{questionData?.content}</Typography>
                 </Box>
               </Grid>
+              {questionData?.evdImageUrl && (
+                <Grid item xs={12}>
+                  <Typography sx={{ color: 'black', paddingY: 1, fontSize: 24 }}>Question Image:</Typography>
+
+                  <Paper
+                    sx={{
+                      p: 2,
+                      justifyContent: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <img src={questionData?.evdImageUrl} style={{ width: 'auto', height: '350px' }} alt="evdImageUrl" />
+                  </Paper>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Typography sx={{ color: 'black', paddingY: 1, fontSize: 24 }}>{'Reply Content:'}</Typography>
                 <TextField

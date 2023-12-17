@@ -1,0 +1,25 @@
+.waitingApprove {
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__left {
+    &__title {
+      font-size: 100px;
+      color: rgb(142, 110, 81);
+      font-family: 'Yeseva One';
+      padding: 12px 0;
+    }
+    &__text {
+      padding: 12px 0;
+      color: rgb(142, 110, 81);
+    }
+  }
+  &__right {
+    &__img {
+      width: 600px;
+      height: 500px;
+    }
+  }
+}

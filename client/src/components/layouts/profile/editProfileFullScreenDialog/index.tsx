@@ -316,7 +316,9 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
                   alt="green iguana"
                   className="edit-profile-dialog__grid__right__card__action-area__img"
                 />
-                <CardContent>
+                <CardContent
+                  sx={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                >
                   <Typography
                     className="edit-profile-dialog__grid__right__card__action-area__text"
                     variant="h5"

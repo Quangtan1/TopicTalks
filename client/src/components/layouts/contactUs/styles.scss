@@ -1,12 +1,41 @@
 .contactUs-container {
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
+  .boxEVD {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .paperEVD {
+      padding: 8px;
+      margin: 16px 0;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &__imgEVD {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .btnEVD {
+      margin-bottom: 12px;
+      color: red !important;
+      border: 1px solid red !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
+  .grid-recaptcha {
+    margin: 16px 0;
+  }
   .text {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
     overflow-wrap: break-word;
 
     .waitingReplyText {
-      font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
       color: red;
       padding-top: 8px;
     }

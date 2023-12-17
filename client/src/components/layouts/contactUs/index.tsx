@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, MenuItem } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, MenuItem, Paper, Tooltip, Box } from '@mui/material';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { RE_CAPTCHA_SITE_KEY, checkEmptyValueReturnArray } from 'src/utils/helper';
 import { ToastSuccess } from 'src/utils/toastOptions';
@@ -11,6 +11,7 @@ import contactusSVG from 'src/assets/images/contactus.svg';
 import './styles.scss';
 import FAQSection from './QAsection';
 import LazyShow from '../LandingView/Animated/LazyShow';
+import ImageUpload from './imageUpload/ImageUpload';
 
 const ContactUs = observer(() => {
   const setAccount = (value) => {
@@ -22,7 +23,8 @@ const ContactUs = observer(() => {
   const [isShowBtnSend, setIsShowBtnSend] = useState(false);
   const [questionAbout, setQuestionAbout] = useState('');
   const [message, setMessage] = useState('');
-
+  const [isOpenModalCrop, setIsOpenModalCrop] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const [selfQA, setSelfQA] = useState([]);
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const ContactUs = observer(() => {
         senderId: account?.id,
         subject: `I have a question about ${questionAbout}`,
         content: message,
+        evdImgUrl: selectedImage,
       };
       postDataAPI('/qa/create', qaData, account?.access_token, axiosJWT)
         .then((res) => {
@@ -110,8 +113,28 @@ const ContactUs = observer(() => {
                 fullWidth
                 margin="normal"
               />
+
+              <ImageUpload
+                isOpenModalCrop={isOpenModalCrop}
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+                setIsOpenModalCrop={setIsOpenModalCrop}
+              />
+
+              {selectedImage && (
+                <Box className="boxEVD">
+                  <Tooltip title="Click to edit image" placement={'left'} arrow>
+                    <Paper variant="elevation" className="paperEVD" onClick={() => setIsOpenModalCrop(true)}>
+                      <img className="paperEVD__imgEVD" src={selectedImage} alt="imageQA" />
+                    </Paper>
+                  </Tooltip>
+                  <Button onClick={() => setSelectedImage('')} className="btnEVD" variant="outlined">
+                    Remove Image
+                  </Button>
+                </Box>
+              )}
               {message && questionAbout && (
-                <Grid item xs={12}>
+                <Grid item xs={12} className="grid-recaptcha">
                   <ReCAPTCHA sitekey={RE_CAPTCHA_SITE_KEY} onChange={onSuccessReCaptcha} />
                 </Grid>
               )}

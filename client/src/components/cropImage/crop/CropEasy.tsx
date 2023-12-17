@@ -54,10 +54,8 @@ const CropEasy = ({
         sx={{
           background: '#333',
           position: 'relative',
-          // height: 400,
           width: 'auto',
           height: '500px',
-          // width: '500px',
           minWidth: { sm: 500 },
         }}
       >
@@ -113,7 +111,7 @@ const CropEasy = ({
               onCancel?.();
             }}
           >
-            Cancel
+            Skip
           </Button>
           <Button variant="contained" startIcon={<CropIcon />} onClick={cropImage}>
             Crop

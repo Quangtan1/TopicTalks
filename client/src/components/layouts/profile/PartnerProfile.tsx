@@ -50,7 +50,16 @@ export const handleTitle = (title = '', handleNavigateToFriendPage) => {
     return (
       <>
         <Typography className="mention" sx={{ display: 'flex', textAlign: 'center' }}>
-          {'Enjoying with: '}
+          <Typography
+            sx={{
+              color: 'rgb(142, 110, 81)',
+              textTransform: 'capitalize',
+              fontFamily: 'Yeseva One',
+              fontWeight: '600',
+            }}
+          >
+            Enjoying with:
+          </Typography>
           {mentions?.map((item) => (
             <Box
               sx={{
