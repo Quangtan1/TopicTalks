@@ -124,7 +124,8 @@ const SuggestDialog = observer((props: DialogProps) => {
             {selectTopic ? (
               <Typography className="title">Pick Topics You're Keen on Exploring</Typography>
             ) : (
-              <Typography className="title">Some topics you might be interested in. Please choose one:</Typography>
+              <Typography className="title">Some topics you might be interested in. 
+              <br></br>Please choose one:</Typography>
             )}
           </Box>
           <Box className="topic_box">

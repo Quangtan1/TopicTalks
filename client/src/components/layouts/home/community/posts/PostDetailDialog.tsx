@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { AiTwotoneHeart } from 'react-icons/ai';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import postItemStore from 'src/store/postStore';
@@ -293,8 +293,13 @@ const PostDetailDialog = observer((props: DialogProps) => {
   };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/post-detail/${post?.id}`);
-    ToastSuccess('Copied Link This Post');
+    if (!post?.approved) {
+      ToastError(`This post is still under review and needs to be approved before sharing the link.`)
+    } else {
+      navigator.clipboard.writeText(`http://localhost:3000/post-detail/${post?.id}`);
+      ToastSuccess('Copied Link This Post');
+    }
+
   };
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
 
@@ -443,12 +448,12 @@ const PostDetailDialog = observer((props: DialogProps) => {
           </Box>
           <Box className="action_post">
             <Box className="action_post_item">
-              {isLiked ? (
+              {post?.approved && (isLiked ? (
                 <AiTwotoneHeart className="liked" onClick={handleUnlike} />
               ) : (
                 <FaRegHeart onClick={handleLike} />
-              )}
-
+              ))
+              }
               <FaRegComment />
               <FcShare onClick={handleShare} />
             </Box>
@@ -465,6 +470,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
             <TextField
               id="text_input"
               placeholder="Comment here..."
+              disabled={!post?.approved}
               multiline
               value={inputComment}
               onChange={(e) => setInputComment(e.target.value)}
