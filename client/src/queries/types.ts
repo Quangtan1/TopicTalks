@@ -6,6 +6,22 @@ export enum Example {
   Class = 'class',
 }
 
+export interface IFriends {
+  friendListId: number;
+  userid: number;
+  userName: string;
+  userUrl: string;
+  userActive: boolean;
+  friendId: number;
+  friendName: string;
+  friendUrl: string;
+  friendActive: boolean;
+  updatedAt: string;
+  createdAt: string;
+  public: boolean;
+  accept: boolean;
+}
+
 export interface IExample {
   [Example.Id]?: string;
   [Example.Name]?: string;

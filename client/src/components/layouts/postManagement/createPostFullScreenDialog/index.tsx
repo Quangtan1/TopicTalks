@@ -43,7 +43,7 @@ import {
   useGetAllTopicParents,
 } from 'src/queries/functionQuery';
 import { useMutation } from 'react-query';
-import { IPost } from 'src/queries';
+import { IFriends, IPost } from 'src/queries';
 import uiStore from 'src/store/uiStore';
 import postItemStore from 'src/store/postStore';
 import AvatarComponent from '../newPost/avatarComponent/AvatarComponent';
@@ -51,6 +51,7 @@ import { Box } from '@mui/system';
 import { MentionsInput, Mention } from 'react-mentions';
 import { handleGetOnlyTitle } from 'src/components/admin/managepost/ManagePost';
 import WaitingApproveTitle from '../pendingForApproveInformation';
+import { IUser } from 'src/types/account.types';
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -103,9 +104,25 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const [isOpenModalCrop, setIsOpenModalCrop] = React.useState(false);
 
-  const [listFriends, setListFriends] = React.useState(null);
+  const [listFriends, setListFriends] = React.useState([]);
 
-  const listFriendsMap = listFriends?.filter((item) => item?.friendId !== account?.id);
+  function convertFriendList(listFriends: IFriends[], account: IUser) {
+    const listFriendNew = [];
+
+    listFriends.map((item: IFriends) => {
+      const itemConvert = {
+        friendName: item?.userName === account?.username ? item?.friendName : item?.userName,
+        friendId: item?.userid === account?.id ? item?.friendId : item?.userid,
+        friendUrl: item?.userUrl === account?.url_img ? item?.friendUrl : item?.userUrl,
+        accept: item?.accept,
+      };
+
+      listFriendNew.push(itemConvert);
+      return [];
+    });
+
+    return listFriendNew;
+  }
 
   const [friendsMention, setFriendsMention] = React.useState(friendsMentionRef.current);
 
@@ -121,7 +138,8 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     uiStore?.setLoading(true);
     getDataAPI(`friends/all/${account?.id}`, account.access_token, axiosJWT)
       .then((res) => {
-        setListFriends(res.data.data);
+        const temp = convertFriendList(res.data.data, account);
+        setListFriends(temp?.filter((item) => item?.accept === true));
         uiStore?.setLoading(false);
       })
       .catch((err) => {
@@ -283,7 +301,6 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
           {!isEdit && <WaitingApproveTitle />}
 
           <Grid item xs={selectedImage ? 7.5 : 11} className="new-post-dialog__grid__left">
-
             <DialogContent className="new-post-dialog__grid__left__dialog">
               <Box sx={{ py: 2 }}>
                 <AvatarComponent url={account?.url_img} username={account?.username} />
@@ -319,15 +336,14 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 <MentionsInput
                   id="text_input"
                   required
-                  disabled={listFriendsMap?.length === 0 || !listFriendsMap}
+                  disabled={listFriends?.length === 0 || !listFriends}
                   value={friendsMention || friendsMentionRef.current}
-                  placeholder={
-                    listFriendsMap?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'
-                  }
+                  placeholder={listFriends?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'}
                   className="new-post-dialog__grid__left__dialog__input__mention"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
                     setFriendsMention(e.target.value);
                   }}
+                  allowSpaceInQuery={false}
                   onKeyDown={(event) => {
                     if (event.keyCode === 13 && !event.shiftKey) {
                       event.preventDefault();
@@ -335,19 +351,19 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   }}
                   style={{
                     ...defaultMentionPostStyle,
-                    border: `${listFriendsMap?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
+                    border: `${listFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
                   }}
                 >
                   <Mention
                     appendSpaceOnAdd
                     trigger="@"
-                    data={listFriendsMap?.map(
+                    data={listFriends?.map(
                       (item) =>
-                      ({
-                        id: item?.friendId?.toString(),
-                        display: `${item.friendName}`,
-                        friendUrl: item?.friendUrl,
-                      } || []),
+                        ({
+                          id: item?.friendId?.toString(),
+                          display: `${item.friendName}`,
+                          friendUrl: item?.friendUrl,
+                        } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
@@ -439,12 +455,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               sx={
                 selectedImage
                   ? {
-                    width: '600px',
-                    height: '410px',
-                  }
+                      width: '600px',
+                      height: '410px',
+                    }
                   : {
-                    display: 'none',
-                  }
+                      display: 'none',
+                    }
               }
               className="new-post-dialog__grid__right__card"
             >
