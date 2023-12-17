@@ -507,7 +507,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
       {isEdit && (
         <CreatePostFullScreenDialog
           isEdit
-          open={isEdit}
+          isOpen={isEdit}
           dataEdit={post}
           closePostModal={() => setIsEdit(false)}
           setPost={setPost}

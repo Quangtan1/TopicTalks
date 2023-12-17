@@ -49,6 +49,7 @@ import postItemStore from 'src/store/postStore';
 import AvatarComponent from '../newPost/avatarComponent/AvatarComponent';
 import { Box } from '@mui/system';
 import { MentionsInput, Mention } from 'react-mentions';
+import { handleGetOnlyTitle } from 'src/components/admin/managepost/ManagePost';
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -79,6 +80,7 @@ const Transition = React.forwardRef(function Transition(
 
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
+
   const account = accountStore?.account;
 
   const [selectedImage, setSelectedImage] = React.useState(dataEdit?.img_url || '');
@@ -111,6 +113,22 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         console.log(err);
       });
   }, []);
+
+  React.useEffect(() => {
+    if (dataEdit?.title && isEdit) {
+      if (dataEdit?.title?.includes('#')) {
+        const regex = /(.+?)#(.+)/;
+        const match = dataEdit?.title.match(regex);
+        if (match) {
+          const postDataTitle = match[1].trim();
+          const friendsMentionCut = match[2].trim();
+          if (friendsMentionCut) {
+            setFriendsMention(friendsMentionCut)
+          }
+        }
+      }
+    }
+  }, [dataEdit?.title, isEdit])
 
   // ========================== Query ==========================
   const {
@@ -184,7 +202,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     initialValues: {
       postContent: dataEdit?.content,
       selectedTopicParent: dataEdit?.tparent_id || 1,
-      postTitle: dataEdit?.title,
+      postTitle: handleGetOnlyTitle(dataEdit?.title),
       imageUrl: dataEdit?.img_url,
       status: dataEdit?.status || 1,
     },
@@ -247,7 +265,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 selectedImage === '' ? 'new-post-dialog__app-bar__btn__disabled' : `new-post-dialog__app-bar__btn`
               }
               onClick={submitForm}
-              disabled={!dirty || selectedImage === ''}
+              disabled={selectedImage === ''}
             >
               {isEdit ? 'Edit' : 'Create'}
             </Button>
@@ -286,7 +304,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </Typography>
               </FormControl>
 
-              {values.status === '2' && (
+              {(values.status === '2' || dataEdit?.status === 2) && (
                 <MentionsInput
                   id="text_input"
                   required
@@ -314,11 +332,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                     trigger="@"
                     data={listFriendsMap?.map(
                       (item) =>
-                        ({
-                          id: item?.friendId?.toString(),
-                          display: `${item.friendName}`,
-                          friendUrl: item?.friendUrl,
-                        } || []),
+                      ({
+                        id: item?.friendId?.toString(),
+                        display: `${item.friendName}`,
+                        friendUrl: item?.friendUrl,
+                      } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
@@ -410,12 +428,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               sx={
                 selectedImage
                   ? {
-                      width: '600px',
-                      height: '410px',
-                    }
+                    width: '600px',
+                    height: '410px',
+                  }
                   : {
-                      display: 'none',
-                    }
+                    display: 'none',
+                  }
               }
               className="new-post-dialog__grid__right__card"
             >
