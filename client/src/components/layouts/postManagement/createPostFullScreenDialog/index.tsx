@@ -266,7 +266,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
             </IconButton>
 
             <Typography className="new-post-dialog__app-bar__title" variant="h6" component="div">
-              Create New Post
+              {isEdit ? 'Edit Your Post' : 'Create New Post'}
             </Typography>
 
             <Button
