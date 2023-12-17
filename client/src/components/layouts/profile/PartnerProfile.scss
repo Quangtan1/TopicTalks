@@ -182,8 +182,10 @@
               font-family: 'Yeseva One', display;
             }
             .mention {
-              font-size: large;
+              font-size: 16px;
+              text-transform: capitalize;
               margin: 8px 0;
+              font-weight: bold;
               font-weight: 500;
               color: rgb(142, 110, 81);
             }

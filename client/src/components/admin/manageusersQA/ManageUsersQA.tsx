@@ -128,7 +128,14 @@ const ManageUserQA = observer(() => {
                       </TableCell>
                       <TableCell className="cell_createdAt">{timeAgo}</TableCell>
                       <TableCell className="cell_img">
-                        {<img src={item?.senderInfor?.avatarUrl || USER_IMAGE} alt="img" className="img" />}
+                        {
+                          <img
+                            loading="lazy"
+                            src={item?.senderInfor?.avatarUrl || USER_IMAGE}
+                            alt="img"
+                            className="img"
+                          />
+                        }
                       </TableCell>
                       <TableCell className="cell_status">{item?.answered ? 'Answered' : 'Not Answered'}</TableCell>
                       <TableCell className="cell_action">

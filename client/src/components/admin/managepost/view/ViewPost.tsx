@@ -18,7 +18,7 @@ const ViewPost = observer((props: IDialogProps) => {
     <Dialog open={open} onClose={onClose} className="view_postdetail_dialog">
       <Grid container className="grid_container">
         <Grid item md={7.5} xs={12} className="image">
-          <img src={post?.img_url} alt="img" />
+          <img src={post?.img_url} alt="img" loading="lazy" />
         </Grid>
         <Grid item md={4.5} xs={12} className="post_infor">
           <Box className="infor_user">

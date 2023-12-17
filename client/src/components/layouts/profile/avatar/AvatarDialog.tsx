@@ -82,7 +82,7 @@ const AvatarDialog = observer((props: DialogProps) => {
         Update Avatar <AiOutlineClose onClick={onClose} />
       </DialogTitle>
       <DialogContent className="dialog_content">
-        {imageFile !== '' ? <img src={imageFile} alt="avatar" /> : <IoImagesOutline />}
+        {imageFile !== '' ? <img loading="lazy" src={imageFile} alt="avatar" /> : <IoImagesOutline />}
 
         {userInfor?.imageUrl !== '' && userInfor?.imageUrl !== null && imageFile === '' && (
           <Typography className="delete" onClick={deleteAvatar}>

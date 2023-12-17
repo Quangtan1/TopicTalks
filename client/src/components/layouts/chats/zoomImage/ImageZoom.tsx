@@ -11,7 +11,7 @@ const ImageZoom = (props: IDialogProps) => {
   const { open, onClose, image } = props;
   return (
     <Dialog open={open} onClose={onClose} className="image_zoom_container">
-      <img src={image} alt="img" />
+      <img src={image} alt="img" loading="lazy" />
     </Dialog>
   );
 };

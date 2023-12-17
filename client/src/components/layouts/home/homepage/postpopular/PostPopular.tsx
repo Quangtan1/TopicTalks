@@ -28,7 +28,7 @@ const PostPopular = (props: IPostProps) => {
           <Typography className="title">Popular Posts</Typography>
           {posts?.map((item) => (
             <Box className="post_item" key={item.id}>
-              <img src={item.img_url} alt="img" onClick={() => navigatedetailPost(item.id)} />
+              <img src={item.img_url} alt="img" onClick={() => navigatedetailPost(item.id)} loading="lazy" />
               <Box className="content_post">
                 <Typography>{item.topicName} .</Typography>
                 <Typography onClick={() => navigatedetailPost(item.id)}>

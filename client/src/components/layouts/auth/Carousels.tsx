@@ -18,7 +18,7 @@ const Carousels = () => {
       className="carousels"
     >
       <Box>
-        <img src={aboutme} alt="carousel1" />
+        <img src={aboutme} alt="carousel1" loading="lazy" />
         <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
           <Typography>Join the Community</Typography>
           <Typography>Chat Anonymously and Confidently</Typography>
@@ -30,7 +30,7 @@ const Carousels = () => {
         <div className="overlay"></div>
       </Box>
       <Box>
-        <img src={image_login} alt="carousel2" />
+        <img src={image_login} alt="carousel2" loading="lazy" />
         <Box className="legend" onClick={() => navigate('/landing-view')} sx={{ cursor: 'pointer' }}>
           <Typography> ____ Join the Conversation</Typography>
           <Typography> Connect and Share with Confidence</Typography>

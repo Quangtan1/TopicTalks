@@ -181,7 +181,7 @@ const NotificationDialog = observer((props: DialogProps) => {
             >
               {item.message.includes('option_1410#$#') ? (
                 <Box className="group_notifi">
-                  <img src={item.groupImage || imageGroup} alt="img" />
+                  <img src={item.groupImage || imageGroup} alt="img" loading="lazy" />
                   <span>
                     <Typography>
                       {notifiGroup(item.message)} <strong>{item.isGroupChat ? item.chatName : item.username}</strong>
@@ -193,7 +193,7 @@ const NotificationDialog = observer((props: DialogProps) => {
                 </Box>
               ) : (
                 <Box className="notifi_post">
-                  <img src={item.postImage} alt="post" />
+                  <img src={item.postImage} alt="post" loading="lazy" />
                   <span>
                     <Typography className="content">{item.message}</Typography>
                     <Typography className="time">{formatTime(item.createAt)}</Typography>

@@ -81,7 +81,7 @@ const Transition = React.forwardRef(function Transition(
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
 
-  const friendsMentionRef = React.useRef('')
+  const friendsMentionRef = React.useRef('');
 
   React.useEffect(() => {
     if (dataEdit?.title && isEdit) {
@@ -90,11 +90,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         const match = dataEdit?.title.match(regex);
         if (match) {
           const friendsMentionSplit = match[2].trim();
-          friendsMentionRef.current = friendsMentionSplit
+          friendsMentionRef.current = friendsMentionSplit;
         }
       }
     }
-  }, [dataEdit?.title, isEdit, dataEdit?.status])
+  }, [dataEdit?.title, isEdit, dataEdit?.status]);
 
   const account = accountStore?.account;
 
@@ -128,8 +128,6 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         console.log(err);
       });
   }, []);
-
-
 
   // ========================== Query ==========================
   const {
@@ -244,11 +242,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   React.useEffect(() => {
     if (dataEdit?.title && isEdit) {
-      if ((values?.status !== 2 || values?.status !== '2' || dataEdit?.status !== 2)) {
-        setFriendsMention('')
+      if (values?.status !== 2 || values?.status !== '2' || dataEdit?.status !== 2) {
+        setFriendsMention('');
       }
     }
-  }, [dataEdit?.title, isEdit, values?.status, dataEdit?.status])
+  }, [dataEdit?.title, isEdit, values?.status, dataEdit?.status]);
 
   return (
     <React.Fragment>
@@ -266,7 +264,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
             </IconButton>
 
             <Typography className="new-post-dialog__app-bar__title" variant="h6" component="div">
-              Create New Post
+              {isEdit ? 'Edit Your Post' : 'Create New Post'}
             </Typography>
 
             <Button
@@ -318,7 +316,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   id="text_input"
                   required
                   disabled={listFriendsMap?.length === 0 || !listFriendsMap}
-                  value={friendsMention ||friendsMentionRef.current}
+                  value={friendsMention || friendsMentionRef.current}
                   placeholder={
                     listFriendsMap?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'
                   }
@@ -341,11 +339,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                     trigger="@"
                     data={listFriendsMap?.map(
                       (item) =>
-                      ({
-                        id: item?.friendId?.toString(),
-                        display: `${item.friendName}`,
-                        friendUrl: item?.friendUrl,
-                      } || []),
+                        ({
+                          id: item?.friendId?.toString(),
+                          display: `${item.friendName}`,
+                          friendUrl: item?.friendUrl,
+                        } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
@@ -437,12 +435,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               sx={
                 selectedImage
                   ? {
-                    width: '600px',
-                    height: '410px',
-                  }
+                      width: '600px',
+                      height: '410px',
+                    }
                   : {
-                    display: 'none',
-                  }
+                      display: 'none',
+                    }
               }
               className="new-post-dialog__grid__right__card"
             >

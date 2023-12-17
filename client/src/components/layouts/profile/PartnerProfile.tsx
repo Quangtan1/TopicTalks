@@ -47,24 +47,26 @@ export const handleTitle = (title = '', handleNavigateToFriendPage) => {
     const mentions = extractNamesAndIds(friendsMention);
     return (
       <>
-        <Typography className="mention" sx={{ display: 'flex' }}>
-          {'With Friends:'}
+        <Typography className="mention" sx={{ display: 'flex', textAlign: 'center' }}>
+          {'Enjoying with: '}
           {mentions?.map((item) => (
             <Box
               sx={{
-                margin: '0px 6px',
+                margin: '0px 4px',
+                overflowWrap: 'break-word',
                 padding: '2px 4px',
                 backgroundColor: '#f0f0f0',
                 borderRadius: '8px',
+                textAlign: 'center',
               }}
             >
               <Typography
-                sx={{ cursor: 'pointer' }}
-                variant="body1"
+                sx={{ cursor: 'pointer', textAlign: 'center', overflowWrap: 'break-word' }}
+                variant="body2"
                 color={'seagreen'}
                 onClick={() => handleNavigateToFriendPage(item?.id)}
               >
-                {item?.name}{' '}
+                {item?.name}
               </Typography>
             </Box>
           ))}
@@ -372,7 +374,7 @@ const PartnerProfile = observer(() => {
                     {!item.img_url ? (
                       <Skeleton className="image" animation={false} variant="rectangular" />
                     ) : (
-                      <img src={item.img_url} className="image" alt="img" />
+                      <img src={item.img_url} className="image" alt="img" loading="lazy" />
                     )}
                     <Box className="box_card_content">
                       <RiDoubleQuotesL className="quotes" />

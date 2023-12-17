@@ -302,7 +302,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
     <Dialog open={open} onClose={handleClose} className="postdetail_dialog">
       <Grid container className="grid_container">
         <Grid item md={post?.img_url ? 7.5 : 0} xs={post?.img_url ? 7.5 : 0} className="image">
-          {post?.img_url && <img src={post?.img_url} alt="img" />}
+          {post?.img_url && <img src={post?.img_url} alt="img" loading="lazy" />}
         </Grid>
         <Grid item md={post?.img_url ? 4.5 : 12} xs={post?.img_url ? 4.5 : 12} className="post_infor">
           <Box className="infor_user">

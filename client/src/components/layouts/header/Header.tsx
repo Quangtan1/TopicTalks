@@ -163,6 +163,7 @@ const Header = observer((props: IHeaderProps) => {
             <img
               src={logo}
               alt="logoT"
+              loading="lazy"
               width={70}
               height={70}
               style={{ backgroundColor: 'white', padding: 8, marginRight: 4, marginBottom: 3 }}

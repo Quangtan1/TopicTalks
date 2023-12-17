@@ -57,7 +57,7 @@ const PostDetail = observer(() => {
         </Typography>
       </Box>
       <Box className={`card_post image_right }`}>
-        <img src={post?.img_url} className="image" alt="img" />
+        <img src={post?.img_url} className="image" alt="img" loading="eager" />
         <Box className="box_card_content">
           <RiDoubleQuotesL className="quotes" />
           <Typography className="topic_name">{post?.topicName},</Typography>

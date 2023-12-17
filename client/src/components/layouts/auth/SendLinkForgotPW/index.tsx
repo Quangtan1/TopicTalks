@@ -58,7 +58,7 @@ const ChangePassword = observer(() => {
       </Grid>
       <Grid item md={6} className="grid-login">
         <Box className="box-auth">
-          <img src={logo} alt="logo" className="logo-image" />
+          <img loading="lazy" src={logo} alt="logo" className="logo-image" />
           {isSend ? (
             <>
               <Typography variant="h2" padding={2} textAlign={'center'}>

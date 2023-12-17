@@ -12,7 +12,7 @@ const BanLayout = observer(() => {
   const navigate = useNavigate();
   return (
     <Box className="ban_view_layout">
-      <img src={banImage} alt="ban" />
+      <img loading="lazy" src={banImage} alt="ban" />
       <Box className="warning_box">
         <Typography>Warning</Typography>
         <Typography>Your account has been disabled due to violation of the system's rules.</Typography>

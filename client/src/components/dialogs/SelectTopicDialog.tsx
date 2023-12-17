@@ -94,7 +94,7 @@ const SelectTopicDialog = (props: DialogProps) => {
             )}
           </Box>
           <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <img src={select} alt="select" width={300} height={200} />
+            <img src={select} alt="select" width={300} height={200} loading="lazy" />
           </Box>
         </Box>
       </DialogContent>

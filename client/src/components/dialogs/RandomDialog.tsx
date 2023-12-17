@@ -250,7 +250,7 @@ const RandomDialog = observer((props: DialogProps) => {
         </DialogContent>
       ) : (
         <DialogContent className="dialog_content">
-          <img src={findsvg} alt="partner" className="partner" />
+          <img src={findsvg} alt="partner" className="partner" loading="lazy" />
           {topicChildProps ? (
             <Box className="selected_topic">
               <Typography className="chat_name_box">Your Topic Selected:</Typography>

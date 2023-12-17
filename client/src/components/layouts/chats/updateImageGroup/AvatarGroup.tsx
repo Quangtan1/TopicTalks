@@ -139,7 +139,7 @@ const AvatarGroup = observer((props: DialogProps) => {
         Update Avatar Group <AiOutlineClose onClick={onClose} />
       </DialogTitle>
       <DialogContent className="dialog_content">
-        {imageFile !== '' ? <img src={imageFile} alt="avatar" /> : <IoImagesOutline />}
+        {imageFile !== '' ? <img src={imageFile} alt="avatar" loading="lazy" /> : <IoImagesOutline />}
 
         {chat?.conversationInfor?.avtGroupImg !== '' &&
           chat?.conversationInfor?.avtGroupImg !== null &&

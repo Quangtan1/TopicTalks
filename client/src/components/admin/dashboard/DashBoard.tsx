@@ -98,7 +98,7 @@ const DashBoard = observer(() => {
                   <Typography className="text">Good admin theme is a tool of enthusiasm</Typography>
                   <Button disabled={true}>Discovery Now</Button>
                 </Box>
-                <img className="imageSVGChart" src={admin_dashboard} alt="chartImage" />
+                <img loading="lazy" className="imageSVGChart" src={admin_dashboard} alt="chartImage" />
               </Paper>
             </Grid>
           </Grid>
