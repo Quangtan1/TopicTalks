@@ -1,13 +1,11 @@
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
 import React from 'react';
 import { AiFillDelete, AiOutlineUserAdd } from 'react-icons/ai';
 import { HiCamera } from 'react-icons/hi';
-import friendStore from 'src/store/friendStore';
 import { IUserProfile } from 'src/types/account.types';
 import { avatar_default } from 'src/utils';
-import { formatDate } from 'src/utils/helper';
 import './PersonalInfor.scss';
 import accountStore from 'src/store/accountStore';
 

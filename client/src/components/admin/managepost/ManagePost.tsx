@@ -78,13 +78,14 @@ const ManagePost = observer(() => {
 
   const handleChangeRowsPerPage = (event) => {};
 
-  const handleApprovePost = async (post: IPost) => {
+  const handleApprovePost = async (post: IPost, title?: string) => {
     try {
       const res = await useApprovePost.mutateAsync(post.id);
       if (res?.status === 200) {
         ToastSuccess('Approve post successfully!');
         const content = `This post has approved by Admin`;
         saveNotifi(post, content);
+        saveNotificationPostMention(post);
         setIsOpen(false);
         // reLoadPostUser();
         reLoadPost();
@@ -126,6 +127,47 @@ const ManagePost = observer(() => {
       postId: post.id,
     };
     postDataAPI(`/notification/pushNoti`, dataRequest, account.access_token, axiosJWT)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  function extractIdsFromString(inputString) {
+    const regex = /\((\d+)\)/g;
+    const matches = [...inputString.matchAll(regex)];
+    const ids = matches.map((match) => match[1]);
+    return ids;
+  }
+
+  const handleGetOnlyMentionForAdmin = (title = '') => {
+    if (title.includes('#')) {
+      const titleConvert = title.split('#')[0];
+      const mentions = title.split('#')[1];
+
+      return extractIdsFromString(mentions);
+    }
+
+    return [];
+  };
+
+  const saveNotificationPostMention = (post: IPost, message?: string) => {
+    const ids = handleGetOnlyMentionForAdmin(post?.title);
+    //list gồm những id friends được mention
+
+    const dataRequest = ids?.map((item) => {
+      return {
+        conversationId: null,
+        userId: item,
+        messageNoti: `${post?.username} mentioned you in there post`,
+        postId: post.id,
+        partnerId: post.author_id,
+      };
+    });
+
+    postDataAPI(`/notification/pushMentionNoti`, dataRequest, account.access_token, axiosJWT)
       .then((res) => {
         console.log(res.data);
       })

@@ -140,7 +140,7 @@ const ManageUserQA = observer(() => {
                       <TableCell className="cell_status">{item?.answered ? 'Answered' : 'Not Answered'}</TableCell>
                       <TableCell className="cell_action">
                         <Button onClick={() => handleOpenAnswerModal(item)}>Reply❓</Button>
-                        <Button onClick={() => handleOpenAnswer2(item)}>See the answer</Button>
+                        <Button onClick={() => handleOpenAnswer2(item)}>View 👁️</Button>
                       </TableCell>
                     </TableRow>
                   );

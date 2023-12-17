@@ -6,7 +6,6 @@ import { Carousel as SingleCarousel } from 'react-responsive-carousel';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useNavigate } from 'react-router-dom';
-import { GiPlainSquare } from 'react-icons/gi';
 import { ListTopic } from 'src/types/topic.type';
 import { CiCamera } from 'react-icons/ci';
 import { responsive } from 'src/utils/helper';

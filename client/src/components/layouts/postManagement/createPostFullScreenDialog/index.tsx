@@ -82,7 +82,7 @@ const Transition = React.forwardRef(function Transition(
 
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
-
+  const friendsMentionRegex = /\@\[([^\]]+)\]\((\d+)\)/g;
   const friendsMentionRef = React.useRef('');
 
   React.useEffect(() => {
@@ -105,6 +105,23 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
   const [isOpenModalCrop, setIsOpenModalCrop] = React.useState(false);
 
   const [listFriends, setListFriends] = React.useState([]);
+
+  function isFormattedString(inputString) {
+    const atIndex = inputString.indexOf('@[');
+    const closingBracketIndex = inputString.indexOf(']', atIndex);
+    const openingParenthesisIndex = inputString.indexOf('(', closingBracketIndex);
+    const closingParenthesisIndex = inputString.indexOf(')', openingParenthesisIndex);
+
+    return (
+      atIndex !== -1 &&
+      closingBracketIndex !== -1 &&
+      openingParenthesisIndex !== -1 &&
+      closingParenthesisIndex !== -1 &&
+      closingBracketIndex > atIndex &&
+      openingParenthesisIndex > closingBracketIndex &&
+      closingParenthesisIndex === inputString.length - 1
+    );
+  }
 
   function convertFriendList(listFriends: IFriends[], account: IUser) {
     const listFriendNew = [];
@@ -288,10 +305,20 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
             <Button
               className={
-                selectedImage === '' ? 'new-post-dialog__app-bar__btn__disabled' : `new-post-dialog__app-bar__btn`
+                selectedImage === '' ||
+                (friendsMention &&
+                  !isFormattedString(friendsMention?.trim()) &&
+                  !friendsMentionRegex.exec(friendsMention))
+                  ? 'new-post-dialog__app-bar__btn__disabled'
+                  : `new-post-dialog__app-bar__btn`
               }
               onClick={submitForm}
-              disabled={selectedImage === ''}
+              disabled={
+                selectedImage === '' ||
+                (friendsMention &&
+                  !isFormattedString(friendsMention?.trim()) &&
+                  !friendsMentionRegex.exec(friendsMention))
+              }
             >
               {isEdit ? 'Edit' : 'Create'}
             </Button>
@@ -370,6 +397,15 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   />
                 </MentionsInput>
               )}
+
+              {friendsMention &&
+                friendsMention?.trim()?.length > 1 &&
+                !friendsMentionRegex.test(friendsMention?.trim()) &&
+                !isFormattedString(friendsMention?.trim()) && (
+                  <Typography color={'#d32f2f'} sx={{ textAlign: 'start', fontSize: '12px', ml: 1 }}>
+                    This friends is incorrect or does not exist
+                  </Typography>
+                )}
 
               <TextField
                 autoFocus
