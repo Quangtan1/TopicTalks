@@ -141,7 +141,7 @@ const CreateGroupDialog = observer((props: DialogProps) => {
       };
       postDataAPI('/participant/create-group-chat', groupData, account.access_token, axiosJWT)
         .then((res) => {
-          ToastSuccess('Create Group Sucessfully');
+          ToastSuccess('Create Group Successfully');
           if (chatStore?.chats.length > 0) {
             chatStore?.setChats([res.data.data, ...chatStore?.chats]);
           } else {

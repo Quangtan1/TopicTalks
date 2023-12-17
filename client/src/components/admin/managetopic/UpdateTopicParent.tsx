@@ -39,7 +39,7 @@ const UpdateTopicParent = observer((props: DialogProps) => {
       };
       putDataAPI(`/topic-parent/update?id=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
-          ToastSuccess('Update Succesfully');
+          ToastSuccess('Update Successfully!');
           setTopicParent(res.data.data);
           onClose();
         })

@@ -14,16 +14,12 @@ import {
 import React, { useEffect, memo, useState } from 'react';
 import { GrView } from 'react-icons/gr';
 import { MdOutlineErrorOutline } from 'react-icons/md';
-import DialogCommon from 'src/components/dialogs/DialogCommon';
 import accountStore from 'src/store/accountStore';
 import uiStore from 'src/store/uiStore';
 import { IUserProfile } from 'src/types/account.types';
-import { createAxios, getDataAPI, putDataAPI } from 'src/utils';
-import { ToastSuccess } from 'src/utils/toastOptions';
+import { createAxios, getDataAPI } from 'src/utils';
 import DialogBanUser from './DialogBanUser';
 import ViewDeitalUser from './ViewDeitailUser';
-
-const CONTENT = 'Do you want to Ban user?';
 
 const ManageUser = () => {
   const [users, setUsers] = useState<IUserProfile[]>([]);
@@ -31,6 +27,7 @@ const ManageUser = () => {
   const [openBan, setOpenBan] = useState<boolean>(false);
   const [userBan, setUserBan] = useState<IUserProfile>(null);
   const [isBan, setIsBan] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
   const account = accountStore?.account;
   const setAccount = (value) => {
     accountStore?.setAccount(value);
@@ -41,19 +38,25 @@ const ManageUser = () => {
 
   const rowsPerPageOptions = [10, 50, { value: -1, label: 'All' }];
   const count = 100;
-  const page = 0;
   const rowsPerPage = 10;
+
+  const fetchAPI = (pageValue: number) => {
+    return getDataAPI(`/user?page=${pageValue}&&size=10`, account.access_token, axiosJWT);
+  };
 
   useEffect(() => {
     uiStore?.setLoading(true);
-    getDataAPI(`/user`, account.access_token, axiosJWT)
+    fetchAPI(0)
       .then((res) => {
-        setUsers(res.data.data);
+        setUsers(res.data.data.content);
         uiStore?.setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
+    return () => {
+      setPage(0);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -68,9 +71,18 @@ const ManageUser = () => {
     setOpenView(true);
   };
 
-  const handleChangePage = (event, newPage) => {};
-
-  const handleChangeRowsPerPage = (event) => {};
+  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    fetchAPI(value)
+      .then((res) => {
+        const data = res.data.data?.content;
+        setUsers(data === undefined ? [] : data);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <Box className="manage_user_container">
@@ -138,7 +150,7 @@ const ManageUser = () => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        // onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <ViewDeitalUser open={openView} onClose={() => setOpenView(false)} user={userBan} />
       {openBan && (

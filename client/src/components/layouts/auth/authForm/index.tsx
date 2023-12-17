@@ -2,12 +2,12 @@ import React from 'react';
 import { TextField, InputAdornment } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import { RiLockPasswordLine } from 'react-icons/ri';
-import { GrUserExpert } from 'react-icons/gr';
 import { MdOutlineMailOutline } from 'react-icons/md';
 import { HiOutlineKey } from 'react-icons/hi';
 import '../AuthPage.scss';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
-const AuthForm = ({ showOTP, isSignIn }) => {
+const AuthForm = ({ showOTP, isSignIn, showPassword, handleShowPassword }) => {
   return (
     <>
       {!showOTP && (
@@ -31,12 +31,17 @@ const AuthForm = ({ showOTP, isSignIn }) => {
             required
             name="password"
             placeholder="Password"
-            type="password"
+            type={`${showPassword ? 'text' : 'password'}`}
             id="password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <RiLockPasswordLine />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end" style={{ cursor: 'pointer' }} onClick={handleShowPassword}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
                 </InputAdornment>
               ),
             }}
@@ -52,6 +57,11 @@ const AuthForm = ({ showOTP, isSignIn }) => {
                 startAdornment: (
                   <InputAdornment position="start">
                     <HiOutlineKey />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end" style={{ cursor: 'pointer' }} onClick={handleShowPassword}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
                   </InputAdornment>
                 ),
               }}
