@@ -52,6 +52,7 @@ import { MentionsInput, Mention } from 'react-mentions';
 import { handleGetOnlyTitle } from 'src/components/admin/managepost/ManagePost';
 import WaitingApproveTitle from '../pendingForApproveInformation';
 import { IUser } from 'src/types/account.types';
+import { debounce } from 'lodash';
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -82,7 +83,6 @@ const Transition = React.forwardRef(function Transition(
 
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
-  const friendsMentionRegex = /\@\[([^\]]+)\]\((\d+)\)/g;
   const friendsMentionRef = React.useRef('');
 
   React.useEffect(() => {
@@ -106,22 +106,17 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const [listFriends, setListFriends] = React.useState([]);
 
-  function isFormattedString(inputString) {
-    const atIndex = inputString.indexOf('@[');
-    const closingBracketIndex = inputString.indexOf(']', atIndex);
-    const openingParenthesisIndex = inputString.indexOf('(', closingBracketIndex);
-    const closingParenthesisIndex = inputString.indexOf(')', openingParenthesisIndex);
+  const newListFriends = listFriends?.filter((item) => item);
 
-    return (
-      atIndex !== -1 &&
-      closingBracketIndex !== -1 &&
-      openingParenthesisIndex !== -1 &&
-      closingParenthesisIndex !== -1 &&
-      closingBracketIndex > atIndex &&
-      openingParenthesisIndex > closingBracketIndex &&
-      closingParenthesisIndex === inputString.length - 1
-    );
-  }
+  const isFormattedString = (inputString: string): boolean => {
+    inputString = inputString.trim();
+
+    const startsWithAtBracket = inputString.startsWith('@[');
+
+    const endsWithClosingParenthesis = inputString.endsWith(')') || inputString.endsWith('@');
+
+    return startsWithAtBracket && endsWithClosingParenthesis;
+  };
 
   function convertFriendList(listFriends: IFriends[], account: IUser) {
     const listFriendNew = [];
@@ -284,6 +279,10 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     }
   }, [dataEdit?.title, isEdit, values?.status, dataEdit?.status]);
 
+  const handleInputChange = debounce((value) => {
+    setFriendsMention(value);
+  }, 50);
+
   return (
     <React.Fragment>
       <Dialog
@@ -305,20 +304,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
             <Button
               className={
-                selectedImage === '' ||
-                (friendsMention &&
-                  !isFormattedString(friendsMention?.trim()) &&
-                  !friendsMentionRegex.exec(friendsMention))
+                selectedImage === '' || (!!friendsMention && !isFormattedString(friendsMention?.trim()))
                   ? 'new-post-dialog__app-bar__btn__disabled'
                   : `new-post-dialog__app-bar__btn`
               }
               onClick={submitForm}
-              disabled={
-                selectedImage === '' ||
-                (friendsMention &&
-                  !isFormattedString(friendsMention?.trim()) &&
-                  !friendsMentionRegex.exec(friendsMention))
-              }
+              disabled={selectedImage === '' || (!!friendsMention && !isFormattedString(friendsMention?.trim()))}
             >
               {isEdit ? 'Edit' : 'Create'}
             </Button>
@@ -363,12 +354,14 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 <MentionsInput
                   id="text_input"
                   required
-                  disabled={listFriends?.length === 0 || !listFriends}
+                  disabled={newListFriends?.length === 0 || !newListFriends}
                   value={friendsMention || friendsMentionRef.current}
-                  placeholder={listFriends?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'}
+                  placeholder={
+                    newListFriends?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'
+                  }
                   className="new-post-dialog__grid__left__dialog__input__mention"
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                    setFriendsMention(e.target.value);
+                    handleInputChange(e.target.value);
                   }}
                   allowSpaceInQuery={false}
                   onKeyDown={(event) => {
@@ -378,13 +371,13 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   }}
                   style={{
                     ...defaultMentionPostStyle,
-                    border: `${listFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
+                    border: `${newListFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
                   }}
                 >
                   <Mention
                     appendSpaceOnAdd
                     trigger="@"
-                    data={listFriends?.map(
+                    data={newListFriends?.map(
                       (item) =>
                         ({
                           id: item?.friendId?.toString(),
@@ -398,14 +391,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </MentionsInput>
               )}
 
-              {friendsMention &&
-                friendsMention?.trim()?.length > 1 &&
-                !friendsMentionRegex.test(friendsMention?.trim()) &&
-                !isFormattedString(friendsMention?.trim()) && (
-                  <Typography color={'#d32f2f'} sx={{ textAlign: 'start', fontSize: '12px', ml: 1 }}>
-                    This friends is incorrect or does not exist
-                  </Typography>
-                )}
+              {!!friendsMention && friendsMention?.trim()?.length > 1 && !isFormattedString(friendsMention) && (
+                <Typography color={'#d32f2f'} sx={{ textAlign: 'start', fontSize: '12px', ml: 1 }}>
+                  This friends is incorrect or does not exist
+                </Typography>
+              )}
 
               <TextField
                 autoFocus

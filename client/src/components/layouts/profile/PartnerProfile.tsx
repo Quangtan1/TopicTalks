@@ -1,4 +1,4 @@
-import { Box, Button, Skeleton, Typography } from '@mui/material';
+import { Box, Button, Grid, Skeleton, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import './PartnerProfile.scss';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -49,39 +49,56 @@ export const handleTitle = (title = '', handleNavigateToFriendPage) => {
     const mentions = extractNamesAndIds(friendsMention);
     return (
       <>
-        <Typography className="mention" sx={{ display: 'flex', textAlign: 'center' }}>
+        <Grid
+          xs={12}
+          container
+          className="mention"
+          sx={{
+            display: 'flex',
+            textAlign: 'center',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
           <Typography
             sx={{
               color: 'rgb(142, 110, 81)',
               textTransform: 'capitalize',
               fontFamily: 'Yeseva One',
+              textAlign: 'start',
               fontWeight: '600',
             }}
           >
             Enjoying with:
           </Typography>
           {mentions?.map((item) => (
-            <Box
+            <Grid
+              item
               sx={{
-                margin: '0px 4px',
-                overflowWrap: 'break-word',
-                padding: '2px 4px',
+                margin: '0 4px',
                 backgroundColor: '#f0f0f0',
                 borderRadius: '8px',
                 textAlign: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '14px',
               }}
             >
               <Typography
-                sx={{ cursor: 'pointer', textAlign: 'center', overflowWrap: 'break-word' }}
+                sx={{
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  padding: '4px 6px',
+                }}
                 variant="body2"
                 color={'seagreen'}
                 onClick={() => handleNavigateToFriendPage(item?.id)}
               >
                 {item?.name}
               </Typography>
-            </Box>
+            </Grid>
           ))}
-        </Typography>
+        </Grid>
         <Typography className="title">{postDataTitle}</Typography>
       </>
     );

@@ -161,7 +161,7 @@ const ManagePost = observer(() => {
       return {
         conversationId: null,
         userId: item,
-        messageNoti: `${post?.username} mentioned you in there post`,
+        messageNoti: `${post?.username} mentioned you in their post.`,
         postId: post.id,
         partnerId: post.author_id,
       };
