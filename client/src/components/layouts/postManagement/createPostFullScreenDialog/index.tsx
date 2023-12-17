@@ -81,6 +81,21 @@ const Transition = React.forwardRef(function Transition(
 const CreatePostFullScreenDialog = observer((props: Props) => {
   const { isOpen, handleClose, closePostModal, onCreateSuccess, open, setPost, isEdit, dataEdit } = props;
 
+  const friendsMentionRef = React.useRef('')
+
+  React.useEffect(() => {
+    if (dataEdit?.title && isEdit) {
+      if (dataEdit?.title?.includes('#')) {
+        const regex = /(.+?)#(.+)/;
+        const match = dataEdit?.title.match(regex);
+        if (match) {
+          const friendsMentionSplit = match[2].trim();
+          friendsMentionRef.current = friendsMentionSplit
+        }
+      }
+    }
+  }, [dataEdit?.title, isEdit, dataEdit?.status])
+
   const account = accountStore?.account;
 
   const [selectedImage, setSelectedImage] = React.useState(dataEdit?.img_url || '');
@@ -91,7 +106,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
 
   const listFriendsMap = listFriends?.filter((item) => item?.friendId !== account?.id);
 
-  const [friendsMention, setFriendsMention] = React.useState('');
+  const [friendsMention, setFriendsMention] = React.useState(friendsMentionRef.current);
 
   const formRef = React.useRef<FormikProps<any>>(null);
 
@@ -114,7 +129,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       });
   }, []);
 
- 
+
 
   // ========================== Query ==========================
   const {
@@ -226,22 +241,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       </div>
     );
   };
-  
+
   React.useEffect(() => {
     if (dataEdit?.title && isEdit) {
-      if (dataEdit?.title?.includes('#')) {
-        const regex = /(.+?)#(.+)/;
-        const match = dataEdit?.title.match(regex);
-        if (match) {
-          const postDataTitle = match[1].trim();
-          const friendsMentionCut = match[2].trim();
-     
-          if((values?.status !==2 || values?.status !=='2'|| dataEdit?.status!==2) && friendsMentionCut ){
-            setFriendsMention('')
-          }else{
-            setFriendsMention(friendsMentionCut)
-          }
-        }
+      if ((values?.status !== 2 || values?.status !== '2' || dataEdit?.status !== 2)) {
+        setFriendsMention('')
       }
     }
   }, [dataEdit?.title, isEdit, values?.status, dataEdit?.status])
@@ -309,12 +313,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </Typography>
               </FormControl>
 
-              {(values.status === '2' ||values.status === 2) && (
+              {(values.status === '2' || values.status === 2) && (
                 <MentionsInput
                   id="text_input"
                   required
                   disabled={listFriendsMap?.length === 0 || !listFriendsMap}
-                  value={friendsMention}
+                  value={friendsMention ||friendsMentionRef.current}
                   placeholder={
                     listFriendsMap?.length === 0 ? "You don't have any friends to mention" : 'Mention Friend'
                   }

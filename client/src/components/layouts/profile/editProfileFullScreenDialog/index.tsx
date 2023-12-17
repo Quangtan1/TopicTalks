@@ -334,6 +334,7 @@ const EditProfileFullScreenDialog = observer((props: Props) => {
                   <Typography
                     className="edit-profile-dialog__grid__right__card__action-area__text"
                     variant="body2"
+                    sx={{ mb: 1 }}
                     color="text.secondary"
                   >
                     {values?.bio || 'Update your bio'}
