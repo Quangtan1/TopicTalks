@@ -114,21 +114,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       });
   }, []);
 
-  React.useEffect(() => {
-    if (dataEdit?.title && isEdit) {
-      if (dataEdit?.title?.includes('#')) {
-        const regex = /(.+?)#(.+)/;
-        const match = dataEdit?.title.match(regex);
-        if (match) {
-          const postDataTitle = match[1].trim();
-          const friendsMentionCut = match[2].trim();
-          if (friendsMentionCut) {
-            setFriendsMention(friendsMentionCut)
-          }
-        }
-      }
-    }
-  }, [dataEdit?.title, isEdit])
+ 
 
   // ========================== Query ==========================
   const {
@@ -240,6 +226,25 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       </div>
     );
   };
+  
+  React.useEffect(() => {
+    if (dataEdit?.title && isEdit) {
+      if (dataEdit?.title?.includes('#')) {
+        const regex = /(.+?)#(.+)/;
+        const match = dataEdit?.title.match(regex);
+        if (match) {
+          const postDataTitle = match[1].trim();
+          const friendsMentionCut = match[2].trim();
+     
+          if((values?.status !==2 || values?.status !=='2'|| dataEdit?.status!==2) && friendsMentionCut ){
+            setFriendsMention('')
+          }else{
+            setFriendsMention(friendsMentionCut)
+          }
+        }
+      }
+    }
+  }, [dataEdit?.title, isEdit, values?.status, dataEdit?.status])
 
   return (
     <React.Fragment>
@@ -304,7 +309,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </Typography>
               </FormControl>
 
-              {(values.status === '2' || dataEdit?.status === 2) && (
+              {(values.status === '2' ||values.status === 2) && (
                 <MentionsInput
                   id="text_input"
                   required
