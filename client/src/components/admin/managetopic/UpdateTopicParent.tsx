@@ -100,7 +100,7 @@ const UpdateTopicParent = observer((props: DialogProps) => {
             }}
           />
         </Box>
-        <img src={imageFile || topic?.image} alt="img" />
+        <img src={imageFile || topic?.image} alt="img" loading="lazy" />
       </DialogContent>
       <DialogActions className="dialog_action">
         <Button onClick={onClose}>Cancel</Button>

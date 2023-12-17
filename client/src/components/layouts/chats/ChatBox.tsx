@@ -624,7 +624,7 @@ const ChatBox = observer((props: ChatProps) => {
             />
             {imageFile !== '' && (
               <span className="image-name">
-                <img src={imageFile} alt="img" />
+                <img loading="lazy" src={imageFile} alt="img" />
                 <span>
                   <IoIosCloseCircle
                     onClick={() => {

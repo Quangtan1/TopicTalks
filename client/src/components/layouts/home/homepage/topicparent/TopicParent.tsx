@@ -38,7 +38,7 @@ const TopicParent = (props: TopicParentProps) => {
         >
           {listTopic?.map((item) => (
             <Box key={item.id}>
-              <img src={item.image} alt="carousel1" />
+              <img loading="lazy" src={item.image} alt="carousel1" />
               <Box className="legend" onClick={() => navigateListTopic(item.id, item.topicParentName)}>
                 <Typography>{}</Typography>
                 <Typography>{item.topicParentName}</Typography>

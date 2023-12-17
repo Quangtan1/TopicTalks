@@ -97,7 +97,7 @@ const ForgotPassword = observer(() => {
       </Grid>
       <Grid item md={6} className="grid-login">
         <Box className="box-auth">
-          <img src={logo} alt="logo" className="logo-image" />
+          <img src={logo} alt="logo" className="logo-image" loading="lazy" />
           <Typography variant="h4" padding={2} textAlign={'center'}>
             Forgot password
           </Typography>

@@ -147,7 +147,7 @@ const SideBarMessage = observer(() => {
   ];
   return (
     <Box className="sidebar_message">
-      <img src={logo} alt="logo" className="logo" onClick={() => navigate('/home')} />
+      <img loading="lazy" src={logo} alt="logo" className="logo" onClick={() => navigate('/home')} />
       <Box className="route">
         {routeData.map((item, index: number) => (
           <Box

@@ -90,7 +90,7 @@ const SideBar = observer(() => {
   return (
     <Box className="sidebar_container_admin">
       <Box className="logo_sidebar">
-        <img src={logo} alt="logo" />
+        <img loading="lazy" src={logo} alt="logo" />
         <Box className="title_logo">
           <Typography>TopicTalks</Typography>
           <Typography>Admintration</Typography>

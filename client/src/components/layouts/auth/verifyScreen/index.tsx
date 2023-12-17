@@ -117,7 +117,7 @@ const VerifyScreen = observer(() => {
       </Grid>
       <Grid item md={6} className="grid-login">
         <Box className="box-auth">
-          <img src={logo} alt="logo" className="logo-image" />
+          <img loading="lazy" src={logo} alt="logo" className="logo-image" />
           <Typography variant="h4" padding={2} textAlign={'center'}>
             Verify Email
           </Typography>

@@ -189,7 +189,9 @@ const ManagePost = observer(() => {
                       </Tooltip>
                     </TableCell>
                     <TableCell className="cell_createdAt">{timeAgo}</TableCell>
-                    <TableCell className="cell_img">{<img src={item?.img_url} alt="img" className="img" />}</TableCell>
+                    <TableCell className="cell_img">
+                      {<img loading="lazy" src={item?.img_url} alt="img" className="img" />}
+                    </TableCell>
                     <TableCell className="cell_action">
                       <Button onClick={() => handleOpenModalApproveReject(item)}>Approve ✅</Button>
                       <Button onClick={() => handleOpenModalApproveReject(item, true)}>Reject ❌</Button>

@@ -68,9 +68,9 @@ const TopicChildDetail = observer(() => {
         </Box>
         <Grid container className="topic_child_container">
           <Grid item md={6} className="box_image_topic">
-            <img src={topicdetail} alt="topic" className="backgroup_topic" />
+            <img src={topicdetail} alt="topic" className="backgroup_topic" loading="lazy" />
             <div className="overlay" />
-            <img src={topicChild?.image} alt="img" className="image_topic" />
+            <img src={topicChild?.image} alt="img" className="image_topic" loading="lazy" />
           </Grid>
           <Grid item md={6} className="box_topic_child">
             <Typography>MAKE YOUR EMOTION FUN</Typography>

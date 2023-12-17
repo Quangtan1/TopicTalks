@@ -51,7 +51,7 @@ const PostItem = observer((props: PostProps) => {
     <Box className="postitem_container">
       {postApprovesSort?.map((item, index: number) => (
         <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-          <img src={item.img_url} className="image" alt="img" />
+          <img src={item.img_url} className="image" alt="img" loading="lazy" />
           <Box className="box_card_content">
             <RiDoubleQuotesL className="quotes" />
             <Typography className="topic_name">{item.topicName},</Typography>

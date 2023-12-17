@@ -116,7 +116,7 @@ const ContactUs = observer(() => {
                 </Grid>
               )}
               {isShowBtnSend && (
-                <Grid item xs={12} className="btn-wrap">
+                <Grid item xs={12} className="btn-wrap" sx={{ mt: 1 }}>
                   <Button
                     className="button-Send"
                     variant="contained"
@@ -132,9 +132,7 @@ const ContactUs = observer(() => {
           </div>
         </Grid>
       </Grid>
-      <LazyShow>
-        <FAQSection selfQA={QAList} />
-      </LazyShow>
+      <LazyShow>{QAList?.length > 0 && <FAQSection selfQA={QAList} />}</LazyShow>
     </Container>
   );
 });

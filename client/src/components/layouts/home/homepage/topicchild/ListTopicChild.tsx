@@ -87,7 +87,7 @@ const ListTopicChild = observer(() => {
         {topicChild?.map((topicChild) => (
           <Grid item md={4} key={topicChild.id} className="grid_item">
             <Box className="card_topic_child" onClick={() => navigateToDetailTopic(topicChild.id)}>
-              <img src={topicChild?.image} alt="topic" className="image_topic" />
+              <img loading="eager" src={topicChild?.image} alt="topic" className="image_topic" />
               <Typography className="topic_child_title">{topicChild.topicChildrenName}</Typography>
               <Typography className="description">
                 Lorem ipsum dolor sit amet, con sectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
