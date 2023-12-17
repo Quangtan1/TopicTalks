@@ -50,6 +50,7 @@ import AvatarComponent from '../newPost/avatarComponent/AvatarComponent';
 import { Box } from '@mui/system';
 import { MentionsInput, Mention } from 'react-mentions';
 import { handleGetOnlyTitle } from 'src/components/admin/managepost/ManagePost';
+import WaitingApproveTitle from '../pendingForApproveInformation';
 
 const validationSchema = Yup.object({
   postContent: Yup.string().nullable().required('Post content is required'),
@@ -279,7 +280,10 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
           </Toolbar>
         </AppBar>
         <Grid container className="new-post-dialog__grid">
+          {!isEdit && <WaitingApproveTitle />}
+
           <Grid item xs={selectedImage ? 7.5 : 11} className="new-post-dialog__grid__left">
+
             <DialogContent className="new-post-dialog__grid__left__dialog">
               <Box sx={{ py: 2 }}>
                 <AvatarComponent url={account?.url_img} username={account?.username} />
@@ -339,11 +343,11 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                     trigger="@"
                     data={listFriendsMap?.map(
                       (item) =>
-                        ({
-                          id: item?.friendId?.toString(),
-                          display: `${item.friendName}`,
-                          friendUrl: item?.friendUrl,
-                        } || []),
+                      ({
+                        id: item?.friendId?.toString(),
+                        display: `${item.friendName}`,
+                        friendUrl: item?.friendUrl,
+                      } || []),
                     )}
                     style={defaultMentionStyle}
                     renderSuggestion={renderSuggestion}
@@ -435,12 +439,12 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               sx={
                 selectedImage
                   ? {
-                      width: '600px',
-                      height: '410px',
-                    }
+                    width: '600px',
+                    height: '410px',
+                  }
                   : {
-                      display: 'none',
-                    }
+                    display: 'none',
+                  }
               }
               className="new-post-dialog__grid__right__card"
             >

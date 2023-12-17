@@ -31,12 +31,14 @@ import notfound from 'src/assets/images/404-error-img.png';
 import notresponve from 'src/assets/images/Responsive.png';
 import confirmsvg123 from 'src/assets/images/confirmsvg123.svg';
 import suggest from 'src/assets/images/suggest.webp';
+import watingApproveImage from 'src/assets/images/watingApproveImage.png';
 
 export {
   suggest,
   notresponve,
   confirmsvg123,
   notfound,
+  watingApproveImage,
   admin_dashboard,
   chatCarousel2,
   chatCarousel1,
