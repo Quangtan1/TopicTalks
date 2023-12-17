@@ -164,7 +164,7 @@ const GroupChat = observer(() => {
         <Box className="title_topic">
           <Typography>Expand your network, join enthusiasts</Typography>
           <Typography>
-            List of group chats {'>'} {name || 'All'}
+            Group Chats {'>'} {name || 'All'}
           </Typography>
         </Box>
         <Grid container className="group_container">
