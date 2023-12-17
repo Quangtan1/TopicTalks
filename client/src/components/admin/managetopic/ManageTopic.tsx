@@ -97,7 +97,7 @@ const ManageTopic = () => {
       axiosJWT,
     )
       .then((res) => {
-        ToastSuccess('Succesfully');
+        ToastSuccess('Successfully');
         setTopicChild((prev) =>
           prev.map((item) => (item.id === topicSelected?.id ? { ...item, expired: !topicSelected?.expired } : item)),
         );

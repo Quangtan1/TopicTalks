@@ -94,7 +94,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
           const result = chatStore?.chats.some((item) => item.conversationInfor.id === data?.conversationInfor.id);
           setIsRandoming(false);
           chatStore?.setSelectedChat(data);
-          ToastSuccess('You access random chat succesfully');
+          ToastSuccess('You access random chat successfully!');
           if (chatStore?.chats?.length > 0) {
             if (!result) {
               chatStore?.setChats([data, ...chatStore?.chats]);

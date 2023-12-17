@@ -9,7 +9,7 @@ import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
 import axios from 'axios';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
-import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
+// import SelectTopicDialog from 'src/components/dialogs/SelectTopicDialog';
 import { IUser } from 'src/types/account.types';
 import { API_KEY } from 'src/utils';
 import uiStore from 'src/store/uiStore';
@@ -27,11 +27,10 @@ const LoginPage = observer(() => {
   let timeoutId;
   const navigate = useNavigate();
   const [isSignIn, setSignIn] = useState<boolean>(true);
-  const [openSelect, setOpenSelect] = useState<boolean>(false);
   const [showOTP, setShowOTP] = useState<boolean>(false);
   const [otp, setOtp] = useState('');
-  const [accountSignup, setAccountSignup] = useState<IUser>(null);
   const [remainingSeconds, setRemainingSeconds] = useState(30);
+  const [showPassword, setShowPassWord] = useState<boolean>(false);
   const handleLoginGGSuccess = async (credentialResponse) => {
     try {
       uiStore?.setLoading(true);
@@ -152,10 +151,6 @@ const LoginPage = observer(() => {
               return ToastError('This user email or username already exist!');
             }
             setShowOTP(true);
-            if (res?.data?.access_token) {
-              setAccountSignup(res.data);
-              accountStore?.setAccount(res.data);
-            }
             emailRef.current = email;
             ToastSuccess('The OTP code has been sent to your email, please verify to continue');
             startCountdown();
@@ -178,7 +173,7 @@ const LoginPage = observer(() => {
 
   const onClose = () => {
     setSignIn(!isSignIn);
-    setOpenSelect(false);
+    // setOpenSelect(false);
   };
 
   const goToForgotPw = () => {
@@ -200,7 +195,8 @@ const LoginPage = observer(() => {
           timeoutId = setTimeout(() => {
             ToastSuccess('Verify account successfully');
             setShowOTP(false);
-            setOpenSelect(true);
+            setSignIn(true);
+            // setOpenSelect(true);
             setOtp('');
             clearTimeout(timeoutId);
             uiStore?.setLoading(false);
@@ -219,6 +215,10 @@ const LoginPage = observer(() => {
     setRemainingSeconds(30);
   };
 
+  const handleShowPassword = () => {
+    setShowPassWord(!showPassword);
+  };
+
   const handleTimeout = () => {};
 
   return (
@@ -234,7 +234,12 @@ const LoginPage = observer(() => {
             {showOTP ? 'Verify Email' : isSignIn ? 'Sign In' : 'Sign Up'}
           </Typography>
           <Box component="form" noValidate onSubmit={isSignIn ? handleSignIn : handleSignUp} className="form">
-            <AuthForm isSignIn={isSignIn} showOTP={showOTP} />
+            <AuthForm
+              isSignIn={isSignIn}
+              showOTP={showOTP}
+              showPassword={showPassword}
+              handleShowPassword={handleShowPassword}
+            />
             {isSignIn && (
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" className="checkbox" />}
@@ -246,7 +251,12 @@ const LoginPage = observer(() => {
               <Box className="forgot-password">
                 <Typography onClick={goToForgotPw}>Forgot password?</Typography>
 
-                <Typography onClick={() => setSignIn(!isSignIn)}>
+                <Typography
+                  onClick={() => {
+                    setSignIn(!isSignIn);
+                    setShowPassWord(false);
+                  }}
+                >
                   {isSignIn ? 'Sign up account?' : 'Sign In?'}
                 </Typography>
               </Box>
@@ -284,7 +294,7 @@ const LoginPage = observer(() => {
           </Box>
         </Box>
       </Grid>
-      {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={accountSignup} onClose={onClose} />}
+      {/* {openSelect === true && <SelectTopicDialog open={openSelect} accountSignup={accountSignup} onClose={onClose} />} */}
     </Grid>
   );
 });

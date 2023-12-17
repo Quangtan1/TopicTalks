@@ -200,7 +200,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
   const deletePost = () => {
     deleteDataAPI(`/post/${post?.id}`, account.access_token, axiosJWT)
       .then(() => {
-        ToastSuccess('Delete Post Succesfully');
+        ToastSuccess('Delete Post Successfully!');
         const newPosts = postItemStore?.posts.filter((item) => item.id !== post?.id);
         postItemStore?.setPosts(newPosts);
         handleClose();

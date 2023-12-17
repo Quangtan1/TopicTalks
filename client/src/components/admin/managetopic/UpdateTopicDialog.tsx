@@ -40,7 +40,7 @@ const UpdateTopicDialog = observer((props: DialogProps) => {
       };
       putDataAPI(`/topic-children/update?pid=${topicParentId}&&cid=${topic?.id}`, data, account.access_token, axiosJWT)
         .then((res) => {
-          ToastSuccess('Update Succesfully');
+          ToastSuccess('Update Successfully!');
           setTopicChild((prev) =>
             prev.map((item) =>
               item.id === topic?.id
