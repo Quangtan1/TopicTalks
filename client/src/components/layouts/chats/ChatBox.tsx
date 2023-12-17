@@ -388,11 +388,11 @@ const ChatBox = observer((props: ChatProps) => {
   };
 
   const processMessage = (message: string) => {
-    const mentionRegex = /(@\[(\w+)\]\((\d+)\))/g;
+    const mentionRegex = /(@\[(\w+(\s\w+)*)\]\((\d+)\))/g;
     const matches = Array.from(message?.matchAll(mentionRegex), (match) => ({
       mention: match[1],
       username: match[2],
-      memberId: match[3],
+      memberId: match[4],
     }));
 
     if (matches?.length > 0) {

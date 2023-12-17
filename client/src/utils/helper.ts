@@ -33,7 +33,6 @@ export const formatDateUserInfor = (value: string, format: string = 'YYYY-MM-DD'
 const isImage = ['png', 'jpg', 'svg', 'webp', 'jpeg'];
 
 export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
-  console.log('11111');
   const data = new FormData();
   for (let i = 0; i < image.length; i++) {
     const fileExtension = image[i].name.split('.').pop().toLowerCase();
@@ -48,7 +47,6 @@ export const handleImageUpload = (image, setImageUrl, isPost: boolean) => {
         .then((res) => res.json())
         .then((data) => {
           setImageUrl(data?.url);
-          console.log('data', data?.url);
         })
         .catch((err) => {
           console.log(err);

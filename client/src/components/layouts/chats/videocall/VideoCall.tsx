@@ -7,6 +7,7 @@ import accountStore from 'src/store/accountStore';
 import { TbPhoneCall } from 'react-icons/tb';
 import { MdCallEnd } from 'react-icons/md';
 import { BsFillCameraVideoFill, BsFillCameraVideoOffFill, BsMicFill, BsMicMuteFill } from 'react-icons/bs';
+import { ToastError } from 'src/utils/toastOptions';
 
 interface DialogProps {
   open: boolean;
@@ -88,6 +89,7 @@ const VideoCall = observer((props: DialogProps) => {
           if (prevSeconds === 0 && !isAccepted) {
             distroyMediaStream();
             onLeaveCall();
+            ToastError('The user missed your call!');
             setSecondEnd(30);
             clearInterval(timerEnd);
           } else if (isAccepted) {
