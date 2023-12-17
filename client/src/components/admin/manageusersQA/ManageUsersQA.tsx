@@ -72,8 +72,8 @@ const ManageUserQA = observer(() => {
     setUserQA(item);
   };
 
-  const userLis1 =
-    typeof usersQA === 'string' ? [] : _.isEmpty(usersQA) ? [] : usersQA?.filter((user) => user?.answered === false);
+  // const userLis1 =
+  //   typeof usersQA === 'string' ? [] : _.isEmpty(usersQA) ? [] : usersQA?.filter((user) => user?.answered === false);
 
   const userList = typeof usersQA === 'string' ? [] : _.isEmpty(usersQA) ? [] : usersQA;
 

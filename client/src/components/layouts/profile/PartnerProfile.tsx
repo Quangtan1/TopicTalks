@@ -39,7 +39,7 @@ export function extractNamesAndIds(inputString) {
   return matches;
 }
 
-export const handleTitle = (title = '', handleNavigateToFriendPage) => {
+export const handleTitle = (title = '', handleNavigateToFriendPage, postId?: string | number) => {
   const regex = /(.+?)#(.+)/;
   const match = title.match(regex);
 
@@ -47,11 +47,13 @@ export const handleTitle = (title = '', handleNavigateToFriendPage) => {
     const postDataTitle = match[1].trim();
     const friendsMention = match[2].trim();
     const mentions = extractNamesAndIds(friendsMention);
+
+    const checkedMentions = mentions?.length > 3 ? mentions?.slice(0, 3)?.concat({ name: '...' }) : mentions;
+
     return (
       <>
         <Grid
           xs={12}
-          container
           className="mention"
           sx={{
             display: 'flex',
@@ -71,9 +73,8 @@ export const handleTitle = (title = '', handleNavigateToFriendPage) => {
           >
             Enjoying with:
           </Typography>
-          {mentions?.map((item) => (
+          {checkedMentions?.map((item) => (
             <Grid
-              item
               sx={{
                 margin: '0 4px',
                 backgroundColor: '#f0f0f0',
@@ -313,6 +314,7 @@ const PartnerProfile = observer(() => {
   const isDisplay = (isFriend && !user?.public) || account?.id === user?.id;
 
   const handleNavigateToFriendPage = (friendId: number) => {
+    if (!friendId) return;
     navigate(`/personal-profile/${friendId}`);
   };
 

@@ -1,10 +1,6 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Typography } from '@mui/material';
 import './PostItem.scss';
 import { IPost } from 'src/queries';
-import PostDetailDialog from './PostDetailDialog';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { FaRegComment } from 'react-icons/fa';
 import friendStore from 'src/store/friendStore';
 import accountStore from 'src/store/accountStore';
 import { observer } from 'mobx-react';
@@ -25,6 +21,7 @@ const PostItem = observer((props: PostProps) => {
   const navigate = useNavigate();
 
   const handleNavigateToFriendPage = (friendId: number) => {
+    if (!friendId) return;
     navigate(`/personal-profile/${friendId}`);
   };
 

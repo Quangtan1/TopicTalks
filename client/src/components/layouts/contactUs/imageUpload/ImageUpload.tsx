@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Dialog, DialogContent, Skeleton, Typography } from '@mui/material';
 import { handleImageUpload } from 'src/utils/helper';

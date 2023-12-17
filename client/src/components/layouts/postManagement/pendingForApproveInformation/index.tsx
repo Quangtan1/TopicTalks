@@ -6,9 +6,7 @@ const WaitingApproveTitle = () => {
   return (
     <Grid container xs={12} className="waitingApprove">
       <Grid item xs={5} className="waitingApprove__left">
-        <Typography variant="h5" className="waitingApprove__left__title">
-          Submit Your Post
-        </Typography>
+        <Typography className="waitingApprove__left__title">Submit Your Post</Typography>
         <Typography variant="h6" className="waitingApprove__left__text">
           Submit your stories and Share your experience.
         </Typography>

@@ -1,10 +1,11 @@
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { Avatar, Box, Dialog, Grid, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import React from 'react';
 import { IPost } from 'src/queries';
 import { formatDatePost } from 'src/utils/helper';
 import './ViewPost.scss';
+import { handleMentionsDetail } from 'src/components/layouts/home/community/posts/PostDetailDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface IDialogProps {
   open: boolean;
@@ -13,7 +14,15 @@ interface IDialogProps {
 }
 
 const ViewPost = observer((props: IDialogProps) => {
+  const navigate = useNavigate();
+
+  const handleNavigateToFriendPage = (friendId: number) => {
+    if (!friendId) return;
+    navigate(`/personal-profile/${friendId}`);
+  };
+
   const { open, post, onClose } = props;
+
   return (
     <Dialog open={open} onClose={onClose} className="view_postdetail_dialog">
       <Grid container className="grid_container">
@@ -52,6 +61,7 @@ const ViewPost = observer((props: IDialogProps) => {
                   <Typography>
                     {`---`} {formatDatePost(post?.created_at)} {`---`}
                   </Typography>
+                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                 </Box>
               </Box>
             )}

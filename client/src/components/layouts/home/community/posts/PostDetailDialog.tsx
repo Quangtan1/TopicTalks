@@ -32,12 +32,81 @@ import postItemStore from 'src/store/postStore';
 import { MdDone, MdOutlineCancel } from 'react-icons/md';
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import CreatePostFullScreenDialog from 'src/components/layouts/postManagement/createPostFullScreenDialog';
+import { extractNamesAndIds } from 'src/components/layouts/profile/PartnerProfile';
 
 interface DialogProps {
   open: boolean;
   onClose: () => void;
   postId: number;
 }
+
+export const handleMentionsDetail = (title = '', handleNavigateToFriendPage) => {
+  const regex = /(.+?)#(.+)/;
+  const match = title.match(regex);
+
+  if (match) {
+    const postDataTitle = match[1].trim();
+    const friendsMention = match[2].trim();
+    const mentions = extractNamesAndIds(friendsMention);
+    return (
+      <>
+        <Grid
+          xs={12}
+          container
+          className="mention"
+          sx={{
+            display: 'flex',
+            textAlign: 'center',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            sx={{
+              color: 'rgb(142, 110, 81)',
+              textTransform: 'capitalize',
+              fontFamily: 'Yeseva One',
+              textAlign: 'start',
+              fontWeight: '600',
+            }}
+          >
+            Enjoying with:
+          </Typography>
+          {mentions?.map((item) => (
+            <Grid
+              item
+              sx={{
+                margin: '0 4px',
+                backgroundColor: '#f0f0f0',
+                borderRadius: '8px',
+                textAlign: 'center',
+                justifyContent: 'center',
+                mb: 1,
+                alignItems: 'center',
+                fontSize: '14px',
+              }}
+            >
+              <Typography
+                sx={{
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  padding: '4px 6px',
+                }}
+                variant="body2"
+                color={'seagreen'}
+                onClick={() => handleNavigateToFriendPage(item?.id)}
+              >
+                {item?.name}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </>
+    );
+  }
+
+  return <Typography className="title">{title}</Typography>;
+};
 const PostDetailDialog = observer((props: DialogProps) => {
   const { open, onClose, postId } = props;
   const [post, setPost] = useState<IPost>(null);
@@ -294,14 +363,18 @@ const PostDetailDialog = observer((props: DialogProps) => {
 
   const handleShare = () => {
     if (!post?.approved) {
-      ToastError(`This post is still under review and needs to be approved before sharing the link.`)
+      ToastError(`This post is still under review and needs to be approved before sharing the link.`);
     } else {
       navigator.clipboard.writeText(`http://localhost:3000/post-detail/${post?.id}`);
       ToastSuccess('Copied Link This Post');
     }
-
   };
   const isLiked = post?.like.userLike.some((item) => item.id === account.id);
+
+  const handleNavigateToFriendPage = (friendId: number) => {
+    if (!friendId) return;
+    navigate(`/personal-profile/${friendId}`);
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} className="postdetail_dialog">
@@ -381,10 +454,11 @@ const PostDetailDialog = observer((props: DialogProps) => {
                   )}
                 </span>
                 <Box className="content">
-                  <Typography>{post?.content}</Typography>
+                  <Typography> {post?.content}</Typography>
                   <Typography>
                     {`---`} {formatDatePost(post?.created_at)} {`---`}
                   </Typography>
+                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                 </Box>
               </Box>
             )}
@@ -448,12 +522,12 @@ const PostDetailDialog = observer((props: DialogProps) => {
           </Box>
           <Box className="action_post">
             <Box className="action_post_item">
-              {post?.approved && (isLiked ? (
-                <AiTwotoneHeart className="liked" onClick={handleUnlike} />
-              ) : (
-                <FaRegHeart onClick={handleLike} />
-              ))
-              }
+              {post?.approved &&
+                (isLiked ? (
+                  <AiTwotoneHeart className="liked" onClick={handleUnlike} />
+                ) : (
+                  <FaRegHeart onClick={handleLike} />
+                ))}
               <FaRegComment />
               <FcShare onClick={handleShare} />
             </Box>

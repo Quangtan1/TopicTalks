@@ -5,7 +5,7 @@ import { IPost } from 'src/queries';
 import accountStore from 'src/store/accountStore';
 import { createAxios, getDataAPI } from 'src/utils';
 import './PostDetail.scss';
-import { formatDatePost, formatTime } from 'src/utils/helper';
+import { formatDatePost } from 'src/utils/helper';
 import uiStore from 'src/store/uiStore';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RiDoubleQuotesL } from 'react-icons/ri';
@@ -25,6 +25,7 @@ const PostDetail = observer(() => {
   const navigate = useNavigate();
 
   const handleNavigateToFriendPage = (friendId: number) => {
+    if (!friendId) return;
     navigate(`/personal-profile/${friendId}`);
   };
 
@@ -61,7 +62,7 @@ const PostDetail = observer(() => {
         <Box className="box_card_content">
           <RiDoubleQuotesL className="quotes" />
           <Typography className="topic_name">{post?.topicName},</Typography>
-          <Typography className="title">{handleTitle(post?.title, handleNavigateToFriendPage)}</Typography>
+          {handleTitle(post?.title, handleNavigateToFriendPage)}
           <Typography className="date">
             {formatDatePost(post?.created_at)} / / {post?.like.totalLike} LIKES && {post?.totalComment} COMMENTS
           </Typography>

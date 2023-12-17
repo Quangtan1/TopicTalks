@@ -158,7 +158,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
         uiStore?.setLoading(false);
         console.log(err);
       });
-  }, []);
+  }, [friendsMention]);
 
   // ========================== Query ==========================
   const {
