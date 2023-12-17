@@ -45,7 +45,7 @@ const ContactUs = observer(() => {
     const sendQA = () => {
       const qaData = {
         senderId: account?.id,
-        subject: `I have a question about ${questionAbout}`,
+        subject: `I have a problems about ${questionAbout}`,
         content: message,
         evdImgUrl: selectedImage,
       };
@@ -90,7 +90,7 @@ const ContactUs = observer(() => {
             <form>
               <TextField
                 select
-                label="I have a question about"
+                label="I have a problems about"
                 fullWidth
                 margin="normal"
                 value={questionAbout}

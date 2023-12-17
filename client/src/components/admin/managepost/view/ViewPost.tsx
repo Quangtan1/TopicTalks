@@ -14,13 +14,6 @@ interface IDialogProps {
 }
 
 const ViewPost = observer((props: IDialogProps) => {
-  const navigate = useNavigate();
-
-  const handleNavigateToFriendPage = (friendId: number) => {
-    if (!friendId) return;
-    navigate(`/personal-profile/${friendId}`);
-  };
-
   const { open, post, onClose } = props;
 
   return (
@@ -61,7 +54,7 @@ const ViewPost = observer((props: IDialogProps) => {
                   <Typography>
                     {`---`} {formatDatePost(post?.created_at)} {`---`}
                   </Typography>
-                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
+                  {handleMentionsDetail(post?.title, () => {})}
                 </Box>
               </Box>
             )}

@@ -325,7 +325,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
               </Box>
 
               <DialogContentText sx={{ mb: 2 }} className="new-post-dialog__grid__left__dialog__label">
-                Post a post you are interested:
+                Submit a post you are interested:
               </DialogContentText>
 
               <FormControl fullWidth variant="outlined" className="topic-parent-select">

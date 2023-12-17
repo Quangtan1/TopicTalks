@@ -71,7 +71,7 @@ const AnswerQAModal = observer(({ isOpen, questionData, setIsOpenAnswerModal }) 
         </Card>
         <Formik
           initialValues={{
-            content: questionData?.content,
+            content: questionData?.answerContent,
           }}
           onSubmit={handleSubmit}
         >
