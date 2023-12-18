@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Dialog,
+  Divider,
   Grid,
   MenuItem,
   Select,
@@ -476,9 +477,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
                   )}
                 </span>
                 <Box className="content">
-                  <Typography variant="body1" className="content-text">
-                    {post?.content}
-                  </Typography>
+                  <Typography className="content-text">{post?.content}</Typography>
 
                   {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                   <Typography>
@@ -487,6 +486,9 @@ const PostDetailDialog = observer((props: DialogProps) => {
                 </Box>
               </Box>
             )}
+            <span className="divider">
+              <Divider />
+            </span>
             <Box className="list_comment">
               {comments?.length > 0 &&
                 comments?.map((item) => (

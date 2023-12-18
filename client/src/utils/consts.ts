@@ -122,7 +122,7 @@ export const notifiData = [
     title: 'Leave',
     messageA: '',
     isName: true,
-    messageB: 'just leaved',
+    messageB: 'just left',
   },
   {
     title: 'UpdateTopic',

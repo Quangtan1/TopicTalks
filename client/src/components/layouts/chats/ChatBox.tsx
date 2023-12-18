@@ -619,7 +619,7 @@ const ChatBox = observer((props: ChatProps) => {
               style={{ display: ' none' }}
               onChange={(e) => {
                 handleImageUpload(e.target.files, setImageFile, false);
-                uiStore?.setLoading(true);
+                e.target.files?.length > 0 && uiStore?.setLoading(true);
               }}
             />
             {imageFile !== '' && (

@@ -240,7 +240,7 @@
 
             .content {
               .content-text {
-                // color: '#907053';
+                font-size: 15px;
               }
 
               display: flex;
@@ -251,17 +251,21 @@
                 font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
               }
 
-              p:nth-child(1) {
-                font-size: 13px;
-              }
-
               p:nth-child(3) {
                 font-size: 13px;
                 letter-spacing: 1px;
               }
             }
           }
-
+          .divider {
+            width: 100%;
+            padding: 0px 30px;
+            display: flex;
+            justify-content: center;
+            .MuiDivider-root {
+              width: calc(100% - 50px);
+            }
+          }
           .list_comment {
             .comment_item_box {
               display: flex;
