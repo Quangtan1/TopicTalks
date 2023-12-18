@@ -77,11 +77,11 @@ export const handleMentionsDetail = (title = '', handleNavigateToFriendPage) => 
               item
               sx={{
                 margin: '0 4px',
+                marginBottom: '2px',
                 backgroundColor: '#f0f0f0',
                 borderRadius: '8px',
                 textAlign: 'center',
                 justifyContent: 'center',
-                mb: 1,
                 alignItems: 'center',
                 fontSize: '14px',
               }}
@@ -376,11 +376,33 @@ const PostDetailDialog = observer((props: DialogProps) => {
     navigate(`/personal-profile/${friendId}`);
   };
 
+  const [isDoubleClicked, setIsDoubleClicked] = useState<boolean>(false);
+
+  const handleDoubleClick = async () => {
+    if (!isDoubleClicked) {
+      setIsDoubleClicked(true);
+
+      if (!isLiked) {
+        handleLike();
+      }
+
+      setTimeout(() => {
+        setIsDoubleClicked(false);
+      }, 1000);
+    }
+  };
+
   return (
     <Dialog open={open} onClose={handleClose} className="postdetail_dialog">
       <Grid container className="grid_container">
-        <Grid item md={post?.img_url ? 7.5 : 0} xs={post?.img_url ? 7.5 : 0} className="image">
-          {post?.img_url && <img src={post?.img_url} alt="img" loading="lazy" />}
+        <Grid
+          item
+          md={post?.img_url ? 7.5 : 0}
+          xs={post?.img_url ? 7.5 : 0}
+          className={`image ${isDoubleClicked ? 'liked' : ''}`}
+        >
+          {isDoubleClicked && <AiTwotoneHeart className="heart-liked-animation" />}
+          {post?.img_url && <img onDoubleClick={handleDoubleClick} src={post?.img_url} alt="img" loading="lazy" />}
         </Grid>
         <Grid item md={post?.img_url ? 4.5 : 12} xs={post?.img_url ? 4.5 : 12} className="post_infor">
           <Box className="infor_user">
@@ -454,11 +476,14 @@ const PostDetailDialog = observer((props: DialogProps) => {
                   )}
                 </span>
                 <Box className="content">
-                  <Typography> {post?.content}</Typography>
+                  <Typography variant="body1" className="content-text" color="#907053">
+                    {post?.content}
+                  </Typography>
+
+                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                   <Typography>
                     {`---`} {formatDatePost(post?.created_at)} {`---`}
                   </Typography>
-                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                 </Box>
               </Box>
             )}
