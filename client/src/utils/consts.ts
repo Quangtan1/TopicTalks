@@ -198,8 +198,10 @@ export const defaultStyle = {
 
 export const defaultMentionPostStyle = {
   control: {
+    margin: '6px 0',
     backgroundColor: '#fff',
     fontSize: 14,
+    borderRadius: '4px',
     fontWeight: 'normal',
   },
   highlighter: {

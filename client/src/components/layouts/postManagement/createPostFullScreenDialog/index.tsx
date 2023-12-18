@@ -109,6 +109,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
   const newListFriends = listFriends?.filter((item) => item);
 
   const isFormattedString = (inputString: string): boolean => {
+    if (!inputString) return true;
     inputString = inputString.trim();
 
     const startsWithAtBracket = inputString.startsWith('@[');
@@ -350,7 +351,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </Typography>
               </FormControl>
 
-              {(values.status === '2' || values.status === 2) && (
+              {values.status === '2' && (
                 <MentionsInput
                   id="text_input"
                   required
@@ -371,7 +372,14 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                   }}
                   style={{
                     ...defaultMentionPostStyle,
-                    border: `${newListFriends?.length === 0 ? 'none' : '1px solid #C0C0C0'}`,
+                    control: {
+                      margin: '6px 0',
+                      backgroundColor: '#fff',
+                      fontSize: 14,
+                      borderRadius: '4px',
+                      fontWeight: 'normal',
+                      borderColor: !isFormattedString(friendsMention) ? '#d32f2f' : 'rgba(0, 0, 0, 0.26)',
+                    },
                   }}
                 >
                   <Mention
@@ -391,11 +399,14 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
                 </MentionsInput>
               )}
 
-              {!!friendsMention && friendsMention?.trim()?.length > 1 && !isFormattedString(friendsMention) && (
-                <Typography color={'#d32f2f'} sx={{ textAlign: 'start', fontSize: '12px', ml: 1 }}>
-                  This friends is incorrect or does not exist
-                </Typography>
-              )}
+              {values.status === '2' &&
+                !!friendsMention &&
+                friendsMention?.trim()?.length > 1 &&
+                !isFormattedString(friendsMention) && (
+                  <Typography color={'#d32f2f'} sx={{ textAlign: 'start', fontSize: '12px', ml: 2 }}>
+                    This friends is incorrect or does not exist
+                  </Typography>
+                )}
 
               <TextField
                 autoFocus
