@@ -116,7 +116,7 @@ const SuggestDialog = observer((props: DialogProps) => {
   return (
     <Dialog open={open} onClose={onClose} className="suggest_topic_dialog">
       <DialogContent className="dialog_content">
-        <AiOutlineClose onClick={onClose} />
+        <AiOutlineClose onClick={onClose} className="close_icon" />
         <img src={suggest} alt="about" className="image" />
         <Box className="box_create">
           <Box className="dialog_title">
@@ -124,8 +124,10 @@ const SuggestDialog = observer((props: DialogProps) => {
             {selectTopic ? (
               <Typography className="title">Pick Topics You're Keen on Exploring</Typography>
             ) : (
-              <Typography className="title">Some topics you might be interested in. 
-              <br></br>Please choose one:</Typography>
+              <Typography className="title">
+                Some topics you might be interested in.
+                <br></br>Please choose one:
+              </Typography>
             )}
           </Box>
           <Box className="topic_box">

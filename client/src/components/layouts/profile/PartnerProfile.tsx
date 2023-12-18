@@ -24,6 +24,7 @@ import { MdOutlineErrorOutline } from 'react-icons/md';
 import EditProfileFullScreenDialog from './editProfileFullScreenDialog';
 import { BsGrid3X3Gap } from 'react-icons/bs';
 import { IoIosApps } from 'react-icons/io';
+import { FaComment, FaHeart } from 'react-icons/fa';
 
 export function extractNamesAndIds(inputString) {
   const regex = /\@\[([^\]]+)\]\((\d+)\)/g;
@@ -344,7 +345,7 @@ const PartnerProfile = observer(() => {
 
           {isDisplay ? (
             <>
-              {isDisplay && (
+              {(user?.id === account?.id || (isFriend && postApproves?.length > 0)) && (
                 <Box className="title_box">
                   <Box className="tab_option">
                     <Button className={isTabAprrove && 'selected'} onClick={() => setIsTabAprrove(true)}>
@@ -360,44 +361,36 @@ const PartnerProfile = observer(() => {
               )}
 
               {postApproves?.length > 0 ? (
-                <Box className="post_container">
+                <Grid container className="post_container">
                   {postApproves?.map((item, index: number) => (
-                    <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-                      {!item.img_url ? (
-                        <Skeleton className="image" animation={false} variant="rectangular" />
-                      ) : (
-                        <img src={item.img_url} className="image" alt="img" loading="lazy" />
-                      )}
-                      <Box className="box_card_content">
-                        <RiDoubleQuotesL className="quotes" />
+                    <Grid
+                      item
+                      md={4}
+                      xs={6}
+                      className="card_post"
+                      key={item.id}
+                      spacing={2}
+                      onClick={() => handleDetailPost(item.id)}
+                    >
+                      <img src={item.img_url} className="image" alt="img" loading="lazy" />
 
-                        <Typography className="topic_name">{item.topicName},</Typography>
-                        {handleTitle(item.title, handleNavigateToFriendPage)}
-
-                        <Typography className="date">
-                          {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment}{' '}
-                          COMMENTS
-                        </Typography>
-                        <span>_________</span>
-                        {item?.rejected && (
-                          <Typography className="reject">
-                            <MdOutlineErrorOutline />
-                            {item?.reasonRejected}
-                          </Typography>
-                        )}
-                        <Typography className="content">{item.content}</Typography>
-                        <Button onClick={() => handleDetailPost(item.id)}>
-                          Read More <HiOutlineArrowRight />
-                        </Button>
+                      <Box className="overlay">
+                        <span>
+                          <FaHeart /> {item?.like.totalLike}{' '}
+                        </span>
+                        <span>
+                          <FaComment />
+                          {item?.totalComment}
+                        </span>
                       </Box>
-                    </Box>
+                    </Grid>
                   ))}
                   {isLoadPost && (
                     <Box className="load_post">
                       <RiLoader2Line />
                     </Box>
                   )}
-                </Box>
+                </Grid>
               ) : account?.id === user?.id ? (
                 <Box className="post_container">
                   <Box className="no_data">

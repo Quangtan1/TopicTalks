@@ -50,7 +50,7 @@ const PersonalInfor = observer((props: IPersonalProps) => {
     <Box className="partner_profile">
       <Box className="box_infor_first">
         <Box className="avt_image">
-          <img src={user?.imageUrl || avatar_default} alt="avt" loading="lazy" />
+          <img src={(isDisplay ? user?.imageUrlRandom : user?.imageUrl) || avatar_default} alt="avt" loading="lazy" />
 
           {isProfile ? (
             <HiCamera className="update_image" onClick={() => setUpdateAvatar(true)} />

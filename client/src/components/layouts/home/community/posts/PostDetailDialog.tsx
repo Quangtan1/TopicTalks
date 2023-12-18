@@ -63,8 +63,8 @@ export const handleMentionsDetail = (title = '', handleNavigateToFriendPage) => 
         >
           <Typography
             sx={{
-              color: 'rgb(142, 110, 81)',
-              textTransform: 'capitalize',
+              // color: 'rgb(142, 110, 81)',
+              // textTransform: 'capitalize',
               fontFamily: 'Yeseva One',
               textAlign: 'start',
               fontWeight: '600',
@@ -476,7 +476,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
                   )}
                 </span>
                 <Box className="content">
-                  <Typography variant="body1" className="content-text" color="#907053">
+                  <Typography variant="body1" className="content-text">
                     {post?.content}
                   </Typography>
 

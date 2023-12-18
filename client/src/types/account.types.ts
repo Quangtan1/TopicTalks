@@ -30,6 +30,7 @@ export interface IUserProfile {
   totalNumOfPosts: string;
   totalNumOfFriends: string;
   public: boolean;
+  imageUrlRandom: string;
 }
 
 export interface IFriends {
