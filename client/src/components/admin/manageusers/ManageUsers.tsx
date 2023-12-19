@@ -164,7 +164,7 @@ const ManageUser = () => {
             <TableRow>
               <TableCell className="cell_no">No.</TableCell>
               <TableCell className="cell_name">Name</TableCell>
-              <TableCell className="cell_age">Age</TableCell>
+              <TableCell className="cell_age">Role</TableCell>
               <TableCell className="cell_email">Email</TableCell>
               <TableCell className="cell_action">Action</TableCell>
             </TableRow>

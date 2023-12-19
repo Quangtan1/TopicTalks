@@ -64,7 +64,7 @@ const ManageTopic = () => {
       .then((res) => {
         if (res.data.data !== 'Not exist any children topic.') {
           setListTopic(res.data.data);
-          setSelectTopic(1);
+          setSelectTopic(res.data.data[0]?.id);
           setTopicParent(res.data.data[0]);
         }
       })
