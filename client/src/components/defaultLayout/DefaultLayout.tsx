@@ -36,37 +36,6 @@ const DefaultLayout = observer(({ children }) => {
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
   const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>(null);
 
-  // const recommendTopic = [
-  //   {
-  //     topicChildrenName: 'Relationships',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Artificial Intelligence',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Cybersecurity',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Mobile Applications',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Web Development',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Web Development 2',
-  //     topicChildrenId: '',
-  //   },
-  //   {
-  //     topicChildrenName: 'Hobbies and Interests',
-  //     topicChildrenId: '',
-  //   },
-  // ];
-
   useEffect(() => {
     if (transcript !== '') {
       setInputSearch(transcript);
@@ -106,16 +75,18 @@ const DefaultLayout = observer(({ children }) => {
   };
 
   useEffect(() => {
-    getDataAPI(`/recommends/user/${account?.id}`, account?.access_token, axiosJWT)
-      .then((res) => {
-        setRecommendTopic(res.data.data);
-        res.data.data.length > 0 && uiStore?.setIsSuggest(false);
-        uiStore?.setLoading(false);
-      })
-      .catch((err) => {
-        uiStore?.setLoading(false);
-        console.log(err);
-      });
+    if (isSearch) {
+      getDataAPI(`/recommends/user/${account?.id}`, account?.access_token, axiosJWT)
+        .then((res) => {
+          setRecommendTopic(res.data.data);
+          res.data.data.length > 0 && uiStore?.setIsSuggest(false);
+          uiStore?.setLoading(false);
+        })
+        .catch((err) => {
+          uiStore?.setLoading(false);
+          console.log(err);
+        });
+    }
   }, [isSearch]);
 
   const handleGetMessage = () => {
@@ -216,14 +187,6 @@ const DefaultLayout = observer(({ children }) => {
                         <Typography className="suggets____box__text">{item.topicChildrenName}</Typography>
                       </Box>
                     ))}
-                    {/* <Typography>World</Typography>
-                <Typography>Tech</Typography>
-                <Typography>Healthy</Typography>
-                <Typography>Science</Typography>
-                <Typography>Books</Typography>
-                <Typography>Travel</Typography>
-                <Typography>Business</Typography>
-                <Typography>Music</Typography> */}
                   </Box>
                 </>
               )}
