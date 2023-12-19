@@ -367,7 +367,7 @@ const PostDetailDialog = observer((props: DialogProps) => {
     if (!post?.approved) {
       ToastError(`This post is still under review and needs to be approved before sharing the link.`);
     } else {
-      navigator.clipboard.writeText(`http://localhost:3000/post-detail/${post?.id}`);
+      navigator.clipboard.writeText(`http://topictalks.online/post-detail/${post?.id}`);
       ToastSuccess('Copied Link This Post');
     }
   };
