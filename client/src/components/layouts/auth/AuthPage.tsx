@@ -73,6 +73,7 @@ const LoginPage = observer(() => {
     };
     if (!user.username || !user.password) {
       ToastError('Please not empty textbox');
+      uiStore?.setLoading(false);
     } else {
       axios
         .post(`${API_KEY}/auth/authenticate`, user)
