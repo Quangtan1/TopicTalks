@@ -69,6 +69,7 @@ export const handleMentionsDetail = (title = '', handleNavigateToFriendPage) => 
               fontFamily: 'Yeseva One',
               textAlign: 'start',
               fontWeight: '600',
+              fontSize: '14px',
             }}
           >
             Enjoying with:
