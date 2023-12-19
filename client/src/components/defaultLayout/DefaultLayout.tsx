@@ -15,11 +15,12 @@ import { ListMesage } from 'src/types/chat.type';
 import { MdNotificationsActive } from 'react-icons/md';
 import ChatContext from 'src/context/ChatContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CiSearch } from 'react-icons/ci';
+import { CiMicrophoneOff, CiMicrophoneOn, CiSearch } from 'react-icons/ci';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { ToastError } from 'src/utils/toastOptions';
 import Footer from '../layouts/footer/Footer';
 import PageNotResponsive from '../layouts/pagenotfound/PageNotResponsive';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -30,7 +31,23 @@ const DefaultLayout = observer(({ children }) => {
   const [inputSearch, setInputSearch] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { startListening, stopListening } = SpeechRecognition;
+  const { transcript, listening, resetTranscript } = useSpeechRecognition();
 
+  useEffect(() => {
+    if (transcript !== '') {
+      setInputSearch(transcript);
+      resetTranscript();
+    }
+  }, [transcript]);
+
+  const handleSpeechRecognition = () => {
+    if (listening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
   const { notification } = useContext(ChatContext);
 
   const account = accountStore?.account;
@@ -115,7 +132,14 @@ const DefaultLayout = observer(({ children }) => {
               placeholder="Search topics here..."
               endAdornment={
                 <InputAdornment position="end">
-                  <CiSearch onClick={navigateTopic} />
+                  <>
+                    {listening ? (
+                      <CiMicrophoneOn onClick={handleSpeechRecognition} />
+                    ) : (
+                      <CiMicrophoneOff onClick={handleSpeechRecognition} />
+                    )}
+                    <CiSearch style={{ marginLeft: '6px' }} onClick={navigateTopic} />
+                  </>
                 </InputAdornment>
               }
               onKeyDown={(e) => {
@@ -138,7 +162,9 @@ const DefaultLayout = observer(({ children }) => {
                 <Typography>Business</Typography>
                 <Typography>Music</Typography>
               </Box>
-              <AiOutlineCloseCircle onClick={() => setIsSearch(false)} />
+              <>
+                <AiOutlineCloseCircle onClick={() => setIsSearch(false)} />
+              </>
             </Box>
           </Box>
         ) : (
