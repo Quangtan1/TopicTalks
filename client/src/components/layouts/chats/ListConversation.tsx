@@ -16,8 +16,7 @@ import ChatContext from 'src/context/ChatContext';
 import uiStore from 'src/store/uiStore';
 import friendStore from 'src/store/friendStore';
 import { IFriends } from 'src/types/account.types';
-import { TbCircleDotFilled } from 'react-icons/tb';
-import { Circle, FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
+import { FiberManualRecord, FiberManualRecordTwoTone } from '@mui/icons-material';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
 import { useNavigate } from 'react-router-dom';
 import { FaEnvelopeOpen, FaImage } from 'react-icons/fa';
@@ -25,7 +24,7 @@ import { IoCloseCircleOutline } from 'react-icons/io5';
 import { RiDeleteBack2Line } from 'react-icons/ri';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import { FcCallback } from 'react-icons/fc';
-import { formatTime, formatTimeMessage } from 'src/utils/helper';
+import { formatTimeMessage } from 'src/utils/helper';
 
 const notifeMessageData = [
   {
@@ -163,13 +162,6 @@ const ListConversation = observer(() => {
   const listFriend = friendStore?.friends && friendStore?.friends.filter((item) => item.accept);
   const handleSelectTab = (tab: number) => {
     setSelectedTab(tab);
-    // if (tab === 0) {
-    //   chatStore?.setChats(sortChats);
-    // } else if (tab === 2) {
-    //   const groupChat =
-    //     chatStore?.chats !== null && chatStore?.chats.filter((item) => item.conversationInfor.isGroupChat);
-    //   chatStore?.setChats(groupChat);
-    // }
   };
 
   const imageUser = (partnerDTO: IPartnerDTO[]) => {
@@ -465,7 +457,12 @@ const ListConversation = observer(() => {
       </Box>
       <Box className="chat_setting">
         <Box className="infor_box">
-          <Avatar src={account?.url_img} alt="avt" />
+          <Avatar
+            src={account?.url_img}
+            alt="avt"
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate(`/personal-profile/${account?.id}`)}
+          />
           <Typography>{account?.username}</Typography>
         </Box>
         <CiLogout onClick={() => setOpenLogout(true)} />

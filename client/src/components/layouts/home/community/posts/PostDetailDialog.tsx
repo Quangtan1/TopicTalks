@@ -477,9 +477,9 @@ const PostDetailDialog = observer((props: DialogProps) => {
                   )}
                 </span>
                 <Box className="content">
+                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                   <Typography className="content-text">{post?.content}</Typography>
 
-                  {handleMentionsDetail(post?.title, handleNavigateToFriendPage)}
                   <Typography>
                     {`---`} {formatDatePost(post?.created_at)} {`---`}
                   </Typography>

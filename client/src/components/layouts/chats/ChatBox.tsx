@@ -1,24 +1,21 @@
 import React, { memo, useContext, useEffect, useRef, useState } from 'react';
-import { Box, Typography, TextField, Avatar } from '@mui/material';
+import { Box, Typography, Avatar } from '@mui/material';
 import { BiDotsVerticalRounded, BiPhoneCall } from 'react-icons/bi';
-import { BsCameraVideo, BsCodeSlash } from 'react-icons/bs';
+import { BsCameraVideo } from 'react-icons/bs';
 import { GrSend } from 'react-icons/gr';
-import { ImAttachment } from 'react-icons/im';
 import { RiDeleteBack2Line, RiEmotionLaughLine, RiLoader2Line } from 'react-icons/ri';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { observer } from 'mobx-react';
 import accountStore from 'src/store/accountStore';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import ChatContext from 'src/context/ChatContext';
 import { IMessage } from 'src/types';
 import uiStore from 'src/store/uiStore';
 import { formatTimeAt, handleImageUpload } from 'src/utils/helper';
 import ReactImageFallback from 'react-image-fallback';
-import { CiCircleRemove } from 'react-icons/ci';
 import chatStore from 'src/store/chatStore';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
+import { ListMesage } from 'src/types/chat.type';
 import { FcCallback } from 'react-icons/fc';
 import { HiPhoneMissedCall } from 'react-icons/hi';
 import AccessTooltip from 'src/components/dialogs/AccessTooltip';
@@ -102,7 +99,6 @@ const ChatBox = observer((props: ChatProps) => {
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [snippets, setSnippet] = useState<boolean>(false);
   const [zoomImage, setZoomImage] = useState<string>('');
-  const mentionRegex = /(@\[@\w+\]\(\d+\))/g;
 
   const fileInputRef = useRef(null);
   const emoijiRef = useRef(null);
@@ -302,10 +298,6 @@ const ChatBox = observer((props: ChatProps) => {
 
   const handleLinkClick = () => {
     fileInputRef.current.click();
-  };
-
-  const handleSnippetCode = () => {
-    setSnippet(!snippets);
   };
 
   const handleOpenTooltip = (data: IMessage) => {

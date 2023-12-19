@@ -1,19 +1,17 @@
 import { FiberManualRecordTwoTone } from '@mui/icons-material';
 import { Avatar, Box, Button, TextField, Typography } from '@mui/material';
 import { observer } from 'mobx-react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { memo, useContext, useState } from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { FcCollapse, FcExpand, FcOk, FcTimeline } from 'react-icons/fc';
 import { MdDone, MdOutlineAccountCircle, MdOutlineCancel } from 'react-icons/md';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import DialogCommon from 'src/components/dialogs/DialogCommon';
-import SelectTopicMessage from 'src/components/dialogs/SelectTopicMessage';
 import ChatContext from 'src/context/ChatContext';
 import accountStore from 'src/store/accountStore';
 import chatStore from 'src/store/chatStore';
 import { IPartnerDTO, ListMesage } from 'src/types/chat.type';
-import { TopicChild } from 'src/types/topic.type';
 import { createAxios, deleteDataAPI, imageGroup, postDataAPI, putDataAPI } from 'src/utils';
 import { ToastError, ToastSuccess } from 'src/utils/toastOptions';
 import AvatarGroup from './updateImageGroup/AvatarGroup';
@@ -29,7 +27,6 @@ const ConversationSetting = observer((props: ChatProps) => {
   const [openConfirmGroup, setOpenConFirmGroup] = useState<boolean>(false);
   const [edit, setEdit] = useState<number>(null);
   const [renameGroup, setRenameGroup] = useState<string>('');
-  const [openUpdateTopic, setOpenUpdateTopic] = useState<boolean>(false);
   const [statusDelete, setStatusDelete] = useState<string>('');
   const [openLeave, setOpenLeave] = useState<boolean>(false);
   const [openUpdateAvatar, setOpenUpdateAvatar] = useState<boolean>(false);
@@ -271,9 +268,6 @@ const ConversationSetting = observer((props: ChatProps) => {
     setEdit(1);
     setRenameGroup(chat?.conversationInfor.chatName);
   };
-  const clickEditTopic = () => {
-    setOpenUpdateTopic(true);
-  };
 
   const isActive = chat?.partnerDTO.some((item) => item.active);
 
@@ -434,4 +428,4 @@ const ConversationSetting = observer((props: ChatProps) => {
   );
 });
 
-export default ConversationSetting;
+export default memo(ConversationSetting);
