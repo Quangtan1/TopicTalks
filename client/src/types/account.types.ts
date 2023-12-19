@@ -13,7 +13,7 @@ export interface IUser {
 }
 
 export interface IUserProfile {
-  isBanned: boolean;
+  banned: boolean;
   bannedDate: string | null;
   bio: string;
   country: string;

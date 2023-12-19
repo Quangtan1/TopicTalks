@@ -183,7 +183,7 @@ const ManageUser = () => {
                     <TableCell className="cell_age">{item.role}</TableCell>
                     <TableCell className="cell_email">{item.email}</TableCell>
                     <TableCell className="cell_action">
-                      {item.isBanned ? (
+                      {item.banned ? (
                         <Button onClick={() => handleOpenModalBan(item, false)} className="un_ban">
                           UnBan
                         </Button>
