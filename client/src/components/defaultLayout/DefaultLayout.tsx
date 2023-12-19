@@ -1,4 +1,4 @@
-import { Box, Button, Input, InputAdornment, Typography } from '@mui/material';
+import { Avatar, Box, Button, Input, InputAdornment, Typography } from '@mui/material';
 import './DefaultLayout.scss';
 import Header from '../layouts/header/Header';
 import Loading from '../loading/Loading';
@@ -21,6 +21,7 @@ import { ToastError } from 'src/utils/toastOptions';
 import Footer from '../layouts/footer/Footer';
 import PageNotResponsive from '../layouts/pagenotfound/PageNotResponsive';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { IRecommendTopic } from 'src/types/topic.type';
 
 const DefaultLayout = observer(({ children }) => {
   const isLoading = uiStore?.loading;
@@ -33,6 +34,38 @@ const DefaultLayout = observer(({ children }) => {
   const navigate = useNavigate();
   const { startListening, stopListening } = SpeechRecognition;
   const { transcript, listening, resetTranscript } = useSpeechRecognition();
+  const [recommendTopic, setRecommendTopic] = useState<IRecommendTopic[]>(null);
+
+  // const recommendTopic = [
+  //   {
+  //     topicChildrenName: 'Relationships',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Artificial Intelligence',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Cybersecurity',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Mobile Applications',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Web Development',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Web Development 2',
+  //     topicChildrenId: '',
+  //   },
+  //   {
+  //     topicChildrenName: 'Hobbies and Interests',
+  //     topicChildrenId: '',
+  //   },
+  // ];
 
   useEffect(() => {
     if (transcript !== '') {
@@ -71,6 +104,19 @@ const DefaultLayout = observer(({ children }) => {
       behavior: 'smooth',
     });
   };
+
+  useEffect(() => {
+    getDataAPI(`/recommends/user/${account?.id}`, account?.access_token, axiosJWT)
+      .then((res) => {
+        setRecommendTopic(res.data.data);
+        res.data.data.length > 0 && uiStore?.setIsSuggest(false);
+        uiStore?.setLoading(false);
+      })
+      .catch((err) => {
+        uiStore?.setLoading(false);
+        console.log(err);
+      });
+  }, [isSearch]);
 
   const handleGetMessage = () => {
     if (!openList) {
@@ -118,6 +164,12 @@ const DefaultLayout = observer(({ children }) => {
     }
   };
 
+  const navigateSuggestKeyword = (topicDetailId) => {
+    if (topicDetailId) {
+      navigate(`/topic-detail/${topicDetailId}`);
+    }
+  };
+
   return (
     <>
       <PageNotResponsive />
@@ -151,17 +203,31 @@ const DefaultLayout = observer(({ children }) => {
               className="input_search"
             />
             <Box className="suggested_search">
-              <Typography>Suggested keywords</Typography>
-              <Box className="suggets">
-                <Typography>World</Typography>
+              {recommendTopic?.length !== 0 && (
+                <>
+                  <Typography>Suggested keywords</Typography>
+                  <Box className="suggets">
+                    {recommendTopic?.map((item) => (
+                      <Box
+                        className="suggets__box"
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => navigateSuggestKeyword(item.topicChildrenId)}
+                      >
+                        <Typography className="suggets____box__text">{item.topicChildrenName}</Typography>
+                      </Box>
+                    ))}
+                    {/* <Typography>World</Typography>
                 <Typography>Tech</Typography>
                 <Typography>Healthy</Typography>
                 <Typography>Science</Typography>
                 <Typography>Books</Typography>
                 <Typography>Travel</Typography>
                 <Typography>Business</Typography>
-                <Typography>Music</Typography>
-              </Box>
+                <Typography>Music</Typography> */}
+                  </Box>
+                </>
+              )}
+
               <>
                 <AiOutlineCloseCircle onClick={() => setIsSearch(false)} />
               </>

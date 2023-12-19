@@ -3,15 +3,18 @@
   height: 100%;
   overflow-y: hidden;
   display: block;
+
   @media screen and (max-width: 1200px) {
     display: none;
   }
+
   .search_container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 50px;
     gap: 20px;
+
     .title_search {
       font-size: 80px;
       opacity: 0.1;
@@ -19,13 +22,16 @@
       line-height: 120px;
       text-align: center;
     }
+
     .input_search {
       width: 100%;
       max-width: 800px;
+
       input {
         font-size: 20px;
         padding-left: 10px;
       }
+
       .MuiInputAdornment-root {
         svg {
           font-size: 20px;
@@ -33,6 +39,7 @@
         }
       }
     }
+
     .suggested_search {
       padding: 50px 0px 30px;
       display: flex;
@@ -40,28 +47,53 @@
       gap: 20px;
       align-items: center;
       max-width: 700px;
+
       p,
       svg {
         color: rgb(104, 115, 133);
       }
+
       p:nth-child(1) {
         font-weight: 600;
         font-size: 20px;
       }
+
       .suggets {
+        display: flex;
+        width: fit-content;
+        justify-content: center;
+        align-items: center;
+
+        &__box {
+          cursor: pointer;
+          width: 120px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          height: auto;
+
+          &__text {
+            width: fit-content;
+
+          }
+        }
+
         p {
           text-transform: capitalize;
+          overflow-wrap: break-word;
           display: inline-block;
           font-size: 13px;
           font-weight: 400;
-          line-height: 0;
-          padding: 15px 20px;
+          line-height: normal;
+          padding: 4px 10px;
           border-radius: 30px;
           margin: 0 5px 10px 0;
           border: 1px solid #ebebeb;
           background: #f2f3f5;
         }
       }
+
       svg {
         margin-top: 10px;
         font-size: 30px;
@@ -69,15 +101,18 @@
       }
     }
   }
+
   .route-container {
     display: flex;
     overflow-x: hidden;
     flex-direction: column;
     position: relative;
+
     .scroll-to-top {
       position: fixed;
       bottom: 80px;
       right: 60px;
+
       svg {
         padding: 5px;
         font-size: 40px;
@@ -86,6 +121,7 @@
         border: 1px solid #000;
       }
     }
+
     .message_tooltip {
       position: fixed;
       bottom: 60px;
@@ -100,6 +136,7 @@
       padding: 7px;
       animation: shake 0.5s infinite;
     }
+
     .notifi_message {
       position: fixed;
       bottom: 96px;
@@ -116,12 +153,15 @@
       0% {
         transform: rotate(0deg);
       }
+
       25% {
         transform: rotate(10deg);
       }
+
       75% {
         transform: rotate(-10deg);
       }
+
       100% {
         transform: rotate(0deg);
       }
