@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { IUser } from 'src/types/account.types';
 
-export const API_KEY = 'http://localhost:5000/api/v1';
+export const API_KEY = 'https://topictalksbackendv11-production.up.railway.app/api/v1';
 
 const refreshToken = async (resToken, setAccount: any) => {
   try {
