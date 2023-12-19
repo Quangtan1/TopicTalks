@@ -40,7 +40,7 @@ const tabOptions = [
 const CreateTopicDialog = observer((props: DialogProps) => {
   const { open, onClose, listTopic, setListTopic } = props;
   const [active, setActive] = useState(1);
-  const [selectTopic, setSelectTopic] = useState<number>(1);
+  const [selectTopic, setSelectTopic] = useState<number>(0);
   const [topicPrimary, setTopicPrimary] = useState<string>('');
   const [topicChild, setTopicChild] = useState<string>('');
   const [imageFile, setImageFile] = useState<string>('');
@@ -99,7 +99,7 @@ const CreateTopicDialog = observer((props: DialogProps) => {
   }, [imageFile]);
 
   useEffect(() => {
-    setSelectTopic(1);
+    setSelectTopic(listTopic[0]?.id);
   }, []);
 
   useEffect(() => {
