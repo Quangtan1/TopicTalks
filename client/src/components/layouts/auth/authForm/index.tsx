@@ -52,7 +52,7 @@ const AuthForm = ({ showOTP, isSignIn, showPassword, handleShowPassword }) => {
               id="cpassword"
               placeholder="Confirm Password"
               name="cpassword"
-              type="password"
+              type={`${showPassword ? 'text' : 'password'}`}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
