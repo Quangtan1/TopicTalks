@@ -51,7 +51,7 @@ const AvatarDialog = observer((props: DialogProps) => {
     postDataAPI(`/user/upload`, data, account.access_token, axiosJWT)
       .then(() => {
         ToastSuccess('Update Avatar Successfully');
-        setUserInfor({ ...userInfor, imageUrl: imageFile });
+        setUserInfor({ ...userInfor, imageUrlRandom: imageFile });
         accountStore?.setAccount({ ...account, url_img: imageFile });
         onClose();
       })
@@ -68,7 +68,7 @@ const AvatarDialog = observer((props: DialogProps) => {
     postDataAPI(`/user/upload`, data, account.access_token, axiosJWT)
       .then(() => {
         ToastSuccess('Delete Avatar Successfully');
-        setUserInfor({ ...userInfor, imageUrl: '' });
+        setUserInfor({ ...userInfor, imageUrlRandom: '' });
         accountStore?.setAccount({ ...account, url_img: '' });
         onClose();
       })
