@@ -111,4 +111,16 @@
       }
     }
   }
+  .no_data {
+    padding: 40px;
+    p {
+      font-family: Roboto, Helvetica, Arial, Lucida, sans-serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      color: rgb(104, 115, 133);
+      font-weight: 600;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgb(104, 115, 133);
+    }
+  }
 }

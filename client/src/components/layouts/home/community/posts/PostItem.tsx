@@ -46,24 +46,30 @@ const PostItem = observer((props: PostProps) => {
 
   return (
     <Box className="postitem_container">
-      {postApprovesSort?.map((item, index: number) => (
-        <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
-          <img src={item.img_url} className="image" alt="img" loading="lazy" />
-          <Box className="box_card_content">
-            <RiDoubleQuotesL className="quotes" />
-            <Typography className="topic_name">{item.topicName},</Typography>
-            {handleTitle(item.title, handleNavigateToFriendPage)}
-            <Typography className="date">
-              {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
-            </Typography>
-            <span>_________</span>
-            <Typography className="content">{item.content}</Typography>
-            <Button onClick={() => handleDetailPost(item.id)}>
-              Read More <HiOutlineArrowRight />
-            </Button>
+      {postApprovesSort?.length > 0 ? (
+        postApprovesSort?.map((item, index: number) => (
+          <Box className={`card_post ${index % 2 === 0 ? 'image_right' : 'image_left'}`} key={item.id}>
+            <img src={item.img_url} className="image" alt="img" loading="lazy" />
+            <Box className="box_card_content">
+              <RiDoubleQuotesL className="quotes" />
+              <Typography className="topic_name">{item.topicName},</Typography>
+              {handleTitle(item.title, handleNavigateToFriendPage)}
+              <Typography className="date">
+                {formatDatePost(item.created_at)} / / {item.like.totalLike} LIKES && {item.totalComment} COMMENTS
+              </Typography>
+              <span>_________</span>
+              <Typography className="content">{item.content}</Typography>
+              <Button onClick={() => handleDetailPost(item.id)}>
+                Read More <HiOutlineArrowRight />
+              </Button>
+            </Box>
           </Box>
+        ))
+      ) : (
+        <Box className="no_data">
+          <Typography>There are no results found</Typography>
         </Box>
-      ))}
+      )}
     </Box>
   );
 });
