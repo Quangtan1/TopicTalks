@@ -1,0 +1,17 @@
+name: react-frontend
+services:
+  app:
+    image: react-frontend
+    expose:
+      - '3000'
+    environment:
+      - VIRTUAL_HOST=topictalks.online
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=topictalks.online
+      - LETSENCRYPiT_EMAIL=verified-mail-id
+    networks:
+      production: {}
+networks:
+  production:
+    external: true
+    name: production
