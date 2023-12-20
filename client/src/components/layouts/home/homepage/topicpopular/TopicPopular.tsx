@@ -56,9 +56,7 @@ const TopicPopular = (props: TopicParentProps) => {
             <Box className="box_topic_content">
               <Typography className="hot">Hot Topic</Typography>
               <Typography onClick={() => navigateTopic(item.topicChildrenId)}>{item.topicChildrenName}</Typography>
-              <Typography>
-                {formatDatePost(item.createdAt)} {`//`}
-              </Typography>
+              <Typography>{formatDatePost(item.createdAt)}</Typography>
               {item?.avgRating && (
                 <Typography className="max_rating">
                   <Box sx={{ display: 'flex', pb: 1 }}>
