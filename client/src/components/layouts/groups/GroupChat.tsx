@@ -168,7 +168,7 @@ const GroupChat = observer(() => {
           </Typography>
         </Box>
         <Grid container className="group_container">
-          {listGroup?.length > 0 &&
+          {listGroup?.length > 0 ? (
             listGroup?.map((item) => (
               <Grid item md={4} key={item.conversationInfor.id} className="group_box">
                 <Card>
@@ -202,7 +202,12 @@ const GroupChat = observer(() => {
                   </CardActions>
                 </Card>
               </Grid>
-            ))}
+            ))
+          ) : (
+            <Box className="no_data">
+              <Typography>There are no results found</Typography>
+            </Box>
+          )}
         </Grid>
         {isLoadGroup && (
           <Box className="load_group">
