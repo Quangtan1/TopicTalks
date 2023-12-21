@@ -63,7 +63,7 @@ const ChatProvider: React.FC<ChatProviderProps> = observer((props) => {
   };
   useEffect(() => {
     if (account !== null) {
-      socket = io(`http://socket.quiznow-pmp.online?uid=${account.id}`);
+      socket = io(`http://socket.quiznow-pmp.online:8085?uid=${account.id}`);
       socket.on('sendMessage', handleReceiveMessage);
       socket.on('1V1CommunicateVideo', (data: ICallData) => {
         const statusCall = data.data.message;
