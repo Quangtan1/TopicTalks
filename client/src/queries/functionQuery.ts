@@ -3,7 +3,7 @@ import { IUser } from 'src/types/account.types';
 import { API_KEY, createAxios } from 'src/utils';
 import { ICommentBody } from './types';
 
-export const TOPIC_TALKS_DOMAIN = 'http://localhost:5000/api/v1';
+export const TOPIC_TALKS_DOMAIN = API_KEY;
 
 // ============================== Topic Parent ==============================
 const fetchTopic = async (
