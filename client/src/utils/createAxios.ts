@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { IUser } from 'src/types/account.types';
 
-export const API_KEY = 'http://topictalks-zz-hehe.us-east-2.elasticbeanstalk.com/api/v1';
+export const API_KEY = 'https://topictalks-zz-hehe.us-east-2.elasticbeanstalk.com/api/v1';
 
 const refreshToken = async (resToken, setAccount: any) => {
   try {
