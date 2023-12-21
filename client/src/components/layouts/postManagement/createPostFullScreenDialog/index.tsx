@@ -213,6 +213,8 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
     }
   };
 
+  const firstId = topicParentData?.data?.[0]?.id;
+
   const handleCreatePost = (data) => {
     const postData = {
       postId: dataEdit?.id,
@@ -220,7 +222,7 @@ const CreatePostFullScreenDialog = observer((props: Props) => {
       image: selectedImage !== '' ? selectedImage : data?.imageUrl || '',
       author_id: +accountStore.account.id,
       title: friendsMention ? `${data?.postTitle}#${friendsMention}` : data?.postTitle,
-      tparent_id: +data?.selectedTopicParent,
+      tparent_id: +data?.selectedTopicParent || firstId,
       status_id: +data?.status,
     };
 
