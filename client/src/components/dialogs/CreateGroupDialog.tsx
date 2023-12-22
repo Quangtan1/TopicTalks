@@ -32,7 +32,7 @@ interface DialogProps {
 const CreateGroupDialog = observer((props: DialogProps) => {
   const { open, onClose, topicChildProps } = props;
   const [inputName, setInputName] = useState<string>('');
-  const [selectTopic, setSelectTopic] = useState<number | ''>(1);
+  const [selectTopic, setSelectTopic] = useState<number | ''>(4);
   const [listTopic, setListTopic] = useState<ListTopic[]>([]);
   const [topicChild, setTopicChild] = useState<TopicChild[]>([]);
   const [selected, setSelected] = useState<TopicChild>(null);
